@@ -1,0 +1,42 @@
+# Data
+data/
+*.csv
+*.pdf
+*.parquet
+*.npy
+*.npz
+*.h5
+*.hd5
+
+# Model artifacts / checkpoints / outputs
+checkpoints/
+outputs/
+runs/
+wandb/
+*.pt
+*.ckpt
+*.pth
+*.onnx
+*.bin
+
+# Environments
+.venv/
+venv/
+env/
+*.egg-info/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Secrets / config
+.env
+*.key
+*.pem
+secrets.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*~
