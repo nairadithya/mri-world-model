@@ -8,6 +8,7 @@ Research repo for building / studying world models. Starting fresh with a clean,
 - `scripts/` — runnable code (data acquisition, probes, utilities).
 - `src/` — library code (to be added).
 - `experiments/` — per-experiment configs, logs, and results (to be added).
+- `PROPOSAL.md` — the research proposal this repo is built around.
 
 ## Setup
 
