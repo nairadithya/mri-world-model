@@ -189,8 +189,12 @@ Components:
 ## 9. Open decisions
 
 - ~~Transition-model family~~ — **decided: JEPA with temporal transformer (§4.1).**
-- BRAINIAC backbone: frozen vs. LoRA / partial finetune.
-- Multi-sequence visits: per-sequence latents + fusion vs. channel stacking.
+- ~~BRAINIAC backbone: frozen vs. LoRA / partial finetune~~ — **decided: LoRA**
+  (adapters on attention/MLP blocks; input stem untouched).
+- Multi-sequence visits: per-sequence latents + fusion vs. channel stacking
+  (stacking sequences as input channels requires a multi-channel stem, which
+  LoRA does not cover — per-sequence encoding + latent fusion pairs cleanly
+  with LoRA; confirm BRAINIAC's pretraining input format before locking in).
 - How to encode "actions" from free-text treatment regimens.
 - Train/val/test split ratio and cohort-inclusion criteria (patient-level
   independence is fixed; the exact split protocol is not).
