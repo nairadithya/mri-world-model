@@ -50,8 +50,11 @@ Such that the model supports:
 
 ## 3. Data
 
-Primary: **LUMIERE** longitudinal glioma MRI cohort, which ships the annotations
-this proposal is built around:
+Two complementary longitudinal glioma cohorts:
+
+### 3.1 LUMIERE — breadth
+
+Multi-site longitudinal glioma MRI cohort:
 
 - `completeness__*.csv` — per-visit data availability.
 - `demographics__*.csv` — demographics + pathology.
@@ -60,6 +63,49 @@ this proposal is built around:
 - `rano_rating__*.csv` — expert RANO-style progression ratings (reward /
   supervision signal).
 - Imaging (`./data/lumiere_sample/Imaging`, raw volumes to be fetched).
+
+**Role:** main training corpus for the JEPA dynamics (patient scale,
+acquisition variation for axis B).
+
+### 3.2 SAILOR v1 — depth
+
+27 high-grade-glioma patients, 3–19 timepoints each through the full Stupp
+protocol (pre-surgery → post-surgery → CRT → TMZ cycles), median OS 19 months
+(Hovden et al., EBRAINS; descriptor: `data-descriptor_a866425efff8.pdf`):
+
+- **Per-timepoint treatment status (CRT / TMZ / none / unknown)** — the `a_t`
+  actions of §2, natively categorical.
+- **RANO classes per timepoint** — clinical grounding / supervision.
+- **Expert + ONCOHabitats tissue masks per timepoint** (enhancing tumour,
+  necrosis, oedema, NAWM, brain) — ground truth for latent probing (RQ3) and
+  tumour-burden correlation.
+- Structural sequences (t1w, t1wc, t2w, t2wflair) + functional /
+  physiological (dti, adc, trace, dce, dsc with derived cbv/cbf, t1wll).
+- Radiation dose distribution maps from CRT; overall survival; inter-visit
+  day counts.
+- Versions: DICOM `sourcedata`, NIfTI `rawdata`, BIDS 1.8, and an MNI152
+  (ICBM 2009c) `derivatives` version — skull-stripped, 1 mm iso — whose
+  pipeline already performs **rigid intra-patient registration** (visits
+  aligned to a patient reference before MNI) and **longitudinal intensity
+  normalisation (PLHM)**, i.e. the visit-consistency handling stage A needs.
+- `missing.tsv` — documented per-session sequence availability; the
+  per-sequence encoding + missing-token design absorbs this naturally.
+
+**Role:** rich-annotation training signal and primary held-out evaluation set
+(actions, masks, RANO, dose maps). N = 27 forbids training-scale use.
+
+### 3.3 Cross-dataset cautions
+
+- SAILOR MNI-version inter-visit intervals may be inaccurate — derive
+  intervals from source/raw exam dates via `raw-mni-link.tsv`.
+- SAILOR MNI intensities are scaled to uint8 0–255 — re-normalise to the
+  BRAINIAC input contract before the backbone.
+- Verify template compatibility (SAILOR: ICBM MNI152 2009c nonlinear
+  symmetric; confirm BRAINIAC's registration target).
+- Functional sequences (dce/dsc/dti/t1wll/adc/trace) lie outside BRAINIAC's
+  structural pretraining — see open decisions (§9). Note Larsson et al. (2020)
+  found perfusion changes predictive of progression, so cbv/cbf may warrant a
+  separate encoding path.
 
 **Data governance:** raw data stays out of git (`.gitignore`). Provenance,
 cohort definitions, and a fetch/derivation script are the committed artifacts.
@@ -142,11 +188,12 @@ Components:
 
 - **A. Anatomy / representation.** Reproduce BRAINIAC's preprocessing contract
   (N4 → 1 mm iso resample → rigid MNI registration → HD-BET) with
-  visit-consistency checks. BRAINIAC's pipeline registers each visit to MNI
-  *independently*; compare against a patient-template-anchored variant
-  (visits registered to a per-patient reference) to reduce visit-to-visit
-  preprocessing jitter. Deliverable: per-sequence latent-quality report
-  (T1CE is the at-risk sequence).
+  visit-consistency checks. Reuse SAILOR's MNI derivatives (already
+  intra-patient registered, PLHM-normalised, skull-stripped, 1 mm iso) as the
+  visit-consistent reference pipeline; re-normalise intensities to the
+  BRAINIAC contract. Compare against independent per-visit MNI registration
+  to quantify visit-to-visit preprocessing jitter. Deliverable:
+  per-sequence latent-quality report (T1CE is the at-risk sequence).
 - **B. Physical acquisition.** Model / correct scanner- and protocol-level
   confounds in `mri_params` so predictions reflect biology, not acquisition
   drift.
@@ -216,6 +263,12 @@ Components:
   (one forward pass per sequence); multi-channel input is explicitly future
   work in the paper, and channel stacking would require a new stem that LoRA
   does not cover.
-- How to encode "actions" from free-text treatment regimens.
+- How to encode "actions": **resolved for SAILOR** (categorical per-timepoint
+  treatment status: CRT / TMZ / none / unknown). LUMIERE treatment encoding,
+  if used, remains open (free-text regimens).
+- SAILOR functional sequences (dce/dsc/dti/t1wll/adc/trace; outside BRAINIAC's
+  structural pretraining): separate small encoders vs. auxiliary prediction
+  targets vs. defer to a follow-up. Include cbv/cbf if pursued (perfusion
+  changes are progression-predictive per Larsson et al. 2020).
 - Train/val/test split ratio and cohort-inclusion criteria (patient-level
   independence is fixed; the exact split protocol is not).
