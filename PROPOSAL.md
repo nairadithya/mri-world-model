@@ -86,10 +86,26 @@ h_n = TemporalTransformer(token_1..n)            (time-delta encodings for
 
 Components:
 
-- **Vision encoder (BRAINIAC backbone).** Produces a latent per MRI scan per
-  timepoint per patient. Frozen vs finetuned is an open decision (§9); the
-  backbone must support the sequences that carry longitudinal signal (FLAIR /
-  T2 / T1c).
+- **Vision encoder (BRAINIAC, LoRA-finetuned).** 3D ViT-B pretrained with
+  SimCLR contrastive SSL on 32k brain MRIs (Tak et al., *Nat. Neurosci.* 2026;
+  code/weights: `github.com/AIM-KannLab/BrainIAC`). Key facts that constrain
+  our design:
+  - **Single-sequence model**: one forward pass per sequence; multi-channel
+    stacking is explicitly future work in the paper. → per-sequence latents +
+    fusion is the only supported option, and pairs cleanly with LoRA (stem
+    untouched).
+  - **Input contract**: 96×96×96 voxels @ 1 mm iso; N4 bias correction,
+    1 mm resample, rigid MNI registration, HD-BET skull-strip. Our
+    preprocessing (stage A) must reproduce this exactly.
+  - **Pretraining coverage**: T1W 24.5k, FLAIR 15.4k, T2W 5.4k, T1CE 3.3k —
+    T1CE latents are expected to be the weakest, exactly where glioma RANO
+    assessment leans (T1CE + FLAIR). A per-sequence latent-quality check is a
+    stage-A deliverable.
+  - **No temporal modeling** in BRAINIAC (longitudinal scans were treated as
+    independent images during pretraining) — the temporal JEPA here is the
+    novelty, not a re-implementation.
+  - Check the repo's code license before building on it (paper states only its
+    own CC BY-NC-ND).
 - **Clinical encoders (MLPs).** One per annotation family (demographics,
   pathology, labs, treatment), mapped to a shared clinical latent `C_i`.
   Clinical data is *conditioning only* — it never enters the target branch.
@@ -124,9 +140,13 @@ Components:
 
 ### 4.3 Program stages
 
-- **A. Anatomy / representation.** Longitudinal-aware preprocessing
-  (registration, resampling, modality normalisation) with visit-consistency
-  checks; verify BRAINIAC latent quality on our contrasts.
+- **A. Anatomy / representation.** Reproduce BRAINIAC's preprocessing contract
+  (N4 → 1 mm iso resample → rigid MNI registration → HD-BET) with
+  visit-consistency checks. BRAINIAC's pipeline registers each visit to MNI
+  *independently*; compare against a patient-template-anchored variant
+  (visits registered to a per-patient reference) to reduce visit-to-visit
+  preprocessing jitter. Deliverable: per-sequence latent-quality report
+  (T1CE is the at-risk sequence).
 - **B. Physical acquisition.** Model / correct scanner- and protocol-level
   confounds in `mri_params` so predictions reflect biology, not acquisition
   drift.
@@ -191,10 +211,11 @@ Components:
 - ~~Transition-model family~~ — **decided: JEPA with temporal transformer (§4.1).**
 - ~~BRAINIAC backbone: frozen vs. LoRA / partial finetune~~ — **decided: LoRA**
   (adapters on attention/MLP blocks; input stem untouched).
-- Multi-sequence visits: per-sequence latents + fusion vs. channel stacking
-  (stacking sequences as input channels requires a multi-channel stem, which
-  LoRA does not cover — per-sequence encoding + latent fusion pairs cleanly
-  with LoRA; confirm BRAINIAC's pretraining input format before locking in).
+- ~~Multi-sequence visits: per-sequence latents + fusion vs. channel stacking~~
+  — **decided: per-sequence latents + fusion.** BRAINIAC is single-sequence
+  (one forward pass per sequence); multi-channel input is explicitly future
+  work in the paper, and channel stacking would require a new stem that LoRA
+  does not cover.
 - How to encode "actions" from free-text treatment regimens.
 - Train/val/test split ratio and cohort-inclusion criteria (patient-level
   independence is fixed; the exact split protocol is not).
