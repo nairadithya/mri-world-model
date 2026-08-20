@@ -1,6 +1,7 @@
 # Proposal: World Models for Longitudinal MRI with Clinical Annotations
 
-**Status:** Draft v0.1 — proposal stage
+**Status:** Draft v0.2 — proposal stage; architecture direction decided (JEPA,
+see §4)
 **Goal:** Define a research program that learns *world models* over longitudinal
 medical imaging, conditioned on and evaluated against attached clinical
 annotations.
@@ -65,21 +66,75 @@ cohort definitions, and a fetch/derivation script are the committed artifacts.
 
 ## 4. Approach
 
-A staged program (mirrors the earlier investigation axes):
+### 4.1 Architecture: multimodal JEPA
 
-- **A. Anatomy / representation.** Build a robust longitudinal-aware encoder
-  that aligns scans across visits (registration, resampling, modality
-  normalisation) and produces a compact latent per visit.
-- **B. Physical acquisition.** Model / correct for scanner- and protocol-level
+The dynamics model is a **JEPA** (Joint-Embedding Predictive Architecture): we
+predict the *latent* of the next scan, never its pixels. Per timepoint, a
+vision backbone and clinical encoders are fused; a temporal transformer rolls
+the sequence forward; a predictor is trained to match an EMA target encoder's
+representation of the next scan.
+
+```
+CONTEXT (online, gradient-updated)               TARGET (EMA, stop-grad)
+──────────────────────────────────               ────────────────────────
+V_i = BRAINIAC(MRI_i)          i ≤ n            Z_{n+1} = proj_EMA(backbone_EMA(MRI_{n+1}))
+C_i = clinMLP(clinical_i)                          ↑ image only — no clinical input
+token_i = concat(LN(V_i), LN(C_i))
+h_n = TemporalTransformer(token_1..n)            (time-delta encodings for
+Ẑ_{n+1} = predictor(h_n)      ──── loss ────►    Z_{n+1}                  irregular visits)
+```
+
+Components:
+
+- **Vision encoder (BRAINIAC backbone).** Produces a latent per MRI scan per
+  timepoint per patient. Frozen vs finetuned is an open decision (§9); the
+  backbone must support the sequences that carry longitudinal signal (FLAIR /
+  T2 / T1c).
+- **Clinical encoders (MLPs).** One per annotation family (demographics,
+  pathology, labs, treatment), mapped to a shared clinical latent `C_i`.
+  Clinical data is *conditioning only* — it never enters the target branch.
+- **Fusion.** LayerNorm each branch, concatenate. (Learnable fusion /
+  cross-attention is an upgrade path if the concat bottleneck shows.)
+- **Temporal transformer.** Consumes fused tokens with **time-delta encodings**
+  (visits are irregularly spaced). Outputs the longitudinal state `h_n`.
+- **Target encoder.** EMA twin of (backbone → image projector). Updated by
+  EMA of online weights, stop-gradient; **takes the n+1-th MRI only** — no
+  clinical input (rationale in §4.2).
+- **Predictor.** MLP/small transformer mapping `h_n` → `Ẑ_{n+1}` in the target
+  projection space (output dim = `dim(proj)`, not the fused dim).
+- **Optional auxiliary head.** `ĉ_{n+1} = aux(h_n)` predicting the next
+  *clinical* embedding under a separate, separately-weighted loss — keeps
+  clinical forecasting as a signal without polluting the JEPA target.
+- **Training objective.** Cosine / L2-on-normalised-embeddings between
+  `Ẑ_{n+1}` and `Z_{n+1}` (unnormalised L2 invites scale shrinkage). Predict
+  **every timepoint from its prefix**, not only the last — multiplies targets
+  ~4–6× per patient on short (2–8 visit) sequences.
+
+### 4.2 Failure modes and design mitigations
+
+| Failure mode | Mechanism | Mitigation |
+| --- | --- | --- |
+| Representational collapse | Predictor + target conspire to constants; loss → 0 silently | EMA target + stop-grad; monitor per-dim std / effective rank of target embeddings each epoch |
+| Clinical shortcut | Autocorrelated annotations extrapolated trivially; model ignores imaging | Clinical data excluded from target; image-only `Z_{n+1}`; optional separate clinical aux head |
+| Regression to the mean | Small cohort, hard task → predictor emits population-average latent | Report persistence baseline (last visit's latent as prediction); check per-patient variance of predictions |
+| Acquisition confound | Latent deltas reflect scanner/protocol drift, not biology | Condition context on `mri_params`; harmonisation study (axis B) |
+| Temporal leakage | n+1 clinical annotations encode treatments applied before n+1 | Only t ≤ n data enters context; actions encoded as occurring in `(t, t+1]` |
+| Scale imbalance at fusion | Vision and clinical latents have different norms; one branch dominates | LayerNorm per branch pre-concat; clinical-only baseline to verify `C_i` isn't near-constant |
+| Transformer overfits short sequences | 2–8 visits per patient | Prefix-wise targets; GRU / last-visit-MLP baseline must be beaten to justify the transformer |
+
+### 4.3 Program stages
+
+- **A. Anatomy / representation.** Longitudinal-aware preprocessing
+  (registration, resampling, modality normalisation) with visit-consistency
+  checks; verify BRAINIAC latent quality on our contrasts.
+- **B. Physical acquisition.** Model / correct scanner- and protocol-level
   confounds in `mri_params` so predictions reflect biology, not acquisition
   drift.
-- **C. Dynamics (the world model).** Recurrent / latent-ODE / diffusion
-  transition model over the visit latents, conditioned on actions `a` and
-  context `c`.
+- **C. Dynamics (the JEPA world model).** As specified in §4.1.
 - **D. Safety / calibration.** Uncertainty, out-of-distribution behaviour, and
   failure modes before any clinical-facing use.
 - **E. Agent (optional).** Treat treatment selection as action; explore
-  counterfactual trajectories.
+  counterfactual trajectories through the learned dynamics.
 - **F. Benchmark.** Fixed evaluation against RANO ratings and a held-out
   forecasting task; a reproducible scorecard.
 
@@ -96,12 +151,21 @@ A staged program (mirrors the earlier investigation axes):
 
 ## 6. Evaluation
 
-- **Forecast metrics:** voxel/region error, structural similarity, tumour-
-  region overlap vs. ground-truth next visit.
-- **Clinical grounding:** AUROC / lead-time of "surprise" vs. subsequent RANO
-  progression; correlation of latent tumour-burden factor with RANO.
+- **Forecast metrics:** latent-space error vs. ground-truth next visit
+  (cosine / normalised L2), plus decoder-based voxel/region error and tumour-
+  region overlap where a decoder is available.
+- **Baselines (mandatory):** persistence (last visit's latent as the
+  prediction), GRU / last-visit-MLP dynamics, clinical-only forecaster. The
+  JEPA model must beat these to justify its complexity.
+- **Clinical grounding:** AUROC / lead-time of "surprise" (target-vs-predicted
+  latent distance) vs. subsequent RANO progression; correlation of latent
+  tumour-burden factor with RANO.
 - **Ablations:** unconditional vs. action-conditioned; with/without acquisition
-  correction; with/without clinical context.
+  correction; with/without clinical context; frozen vs. finetuned backbone.
+- **Training health:** per-dim std / effective rank of target embeddings
+  (collapse monitor); prediction variance across patients (regression-to-mean
+  monitor).
+- **Splits:** patient-level train/val/test — no patient spans splits.
 - **Reproducibility:** fixed seeds, pinned deps, every scorecard tied to a
   commit hash.
 
@@ -124,6 +188,9 @@ A staged program (mirrors the earlier investigation axes):
 
 ## 9. Open decisions
 
-- Transition-model family (latent ODE vs. diffusion vs. autoregressive).
+- ~~Transition-model family~~ — **decided: JEPA with temporal transformer (§4.1).**
+- BRAINIAC backbone: frozen vs. LoRA / partial finetune.
+- Multi-sequence visits: per-sequence latents + fusion vs. channel stacking.
 - How to encode "actions" from free-text treatment regimens.
-- Train/val/test split strategy that respects patient-level independence.
+- Train/val/test split ratio and cohort-inclusion criteria (patient-level
+  independence is fixed; the exact split protocol is not).
