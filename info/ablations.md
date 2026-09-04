@@ -77,3 +77,28 @@ Append-only. Each entry: setup → numbers → inference. IDs referenced from
   epochs on 4 patients against near-static targets. Beating persistence
   is the explicit gate for the hero run (proposal §6); it needs scale
   (more patients, more epochs, LoRA fully warmed), not a redesign.
+
+## A7 — Extended 25-epoch pilot (2026-09-04/05)
+
+- Setup: same 5 patients + `config/pilot.yaml` as Run 2, `--epochs 25`,
+  official weights, CPU. Best val 0.0093 (plateau ~0.0093–0.0100 from
+  epoch 13 on; monitors healthy throughout: std 0.0791, rank 2.2).
+  Per-patient JEPA vs persistence on `checkpoints/pilot/best.pt`:
+- Numbers:
+
+  | patient | JEPA | persistence | split |
+  |---|---|---|---|
+  | Patient-067 | 0.0100 | 0.0047 | train |
+  | Patient-031 | 0.0051 | 0.0043 | train |
+  | Patient-073 | 0.0042 | 0.0045 | train, JEPA wins |
+  | Patient-078 | 0.0093 | 0.0041 | train |
+  | Patient-029 | 0.0262 | 0.0040 | val (held-out) |
+  | mean | 0.0110 | 0.0043 | — |
+
+- Inference: gap narrowed 13× → ~2.5×, with the first patient-level win
+  (073) and a near-tie (031). But the only held-out patient (029) is the
+  worst by far — the model fit train dynamics, not general ones. Mean
+  persistence (0.0043, identical to A6) still unbeaten. Scale (more
+  patients, not more epochs — epochs stopped helping at ~13) is the
+  remaining lever; the train/val generalization gap is what the hero run
+  must close.

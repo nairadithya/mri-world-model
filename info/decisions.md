@@ -109,3 +109,21 @@ referenced, not repeated — only session decisions are recorded here in full.
   Patients 067/031/073/078/029 (top imaged-volume counts). Same code path
   as full-scale; only config + patient list change. Purpose: prove the
   loop learns (loss drops, beats persistence) before GPU spend.
+
+## Scale-up execution
+
+- **D18 — Hero run on free Kaggle GPU, not a paid 4090.** A7 showed epochs
+  are spent (plateau ~13) and patients are the lever — the paid 4090 buys
+  speed, not capability. Kaggle free tier (30 h GPU/week, ~9 h sessions,
+  16 GB VRAM) fits: batch 2 (chunked encoding, D15; drop to 1 on OOM),
+  one private input dataset (`lumiere_preprocessed/` + `lumiere_meta/` +
+  official `BrainIAC.ckpt`), `kaggle/hero_run.ipynb` wires paths into a
+  generated `kaggle.yaml`. Consequences: (a) new `--resume-from` flag
+  (weights only, fresh optimizer/schedule) to split across sessions —
+  trainer already checkpoints every epoch; (b) no hd-bet in the Kaggle
+  env (preprocessing stays local; hd-bet would reintroduce the D16
+  transformers/torchvision conflict); (c) torchvision left at the image's
+  matched version unless peft's import errors; (d) full local preprocess
+  (~2051 remaining volumes, `--workers 2` — 4+ workers crash the pool
+  with BrokenPipe at startup, cause still open) must finish before the
+  dataset upload.

@@ -37,8 +37,12 @@ def main() -> None:
     ap.add_argument("--random-init", action="store_true",
                     help="Skip BRAINIAC checkpoint; random init (dev/smoke-test only).")
     ap.add_argument("--patients", nargs="*", default=None,
-                    help="restrict to these patient IDs (pilot runs); "
-                         "splits 80/20 train/val within the list.")
+                     help="restrict to these patient IDs (pilot runs); "
+                          "splits 80/20 train/val within the list.")
+    ap.add_argument("--resume-from", default=None, metavar="CKPT",
+                     help="resume weights from a previous run's best.pt/last.pt "
+                          "(fresh optimizer + LR schedule; for splitting long runs "
+                          "across Kaggle sessions).")
     args = ap.parse_args()
 
     with open(args.config) as f:
@@ -90,6 +94,11 @@ def main() -> None:
     print(f"train/val patients: {len(train_ds)}/{len(val_ds)}")
 
     model = JEPAWorldModel(cfg)
+    if args.resume_from:
+        ckpt = torch.load(args.resume_from, map_location="cpu")
+        model.load_state_dict(ckpt["model"])
+        print(f"resumed weights from {args.resume_from} "
+              f"(epoch {ckpt.get('epoch', '?')}, fresh optimizer/schedule)")
     n_trainable = sum(p.numel() for p in model.trainable_parameters())
     n_total = sum(p.numel() for p in model.parameters())
     print(f"params: {n_trainable/1e6:.1f}M trainable / {n_total/1e6:.1f}M total")

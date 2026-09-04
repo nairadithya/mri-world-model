@@ -6,7 +6,8 @@
   352 volumes). Split 4 train / 1 val (sorted order). No test split.
 - Config: `config/pilot.yaml` — batch 1, lr 1e-4, warmup 1, 5 epochs,
   AMP off (CPU), `checkpoints/pilot/`, real `BrainIAC.ckpt` weights.
-- Command: `run_train.py --config config/pilot.yaml --patients ... --no-wandb`
+- Command: `run_train.py --config config/pilot.yaml --patients Patient-067 Patient-031 Patient-073 Patient-078 Patient-029 --no-wandb`
+  (Runs 1–2 used `max_epochs: 5` from `pilot.yaml`; Run 3 overrides `--epochs 25`.)
 - Success criteria: (a) train/val loss drops substantially from ~1.0;
   (b) collapse monitors stay healthy (target std ≫ 0, rank > 1);
   (c) trained JEPA beats persistence (A6).
@@ -18,7 +19,7 @@
   constant-target collapse in the heads. Checkpoints deleted.
 - Lesson: a falling loss without healthy monitors proves nothing (I2).
 
-## Run 2 (2026-09-04) — in progress, official weights
+## Run 2 (2026-09-04) — complete, official weights
 
 - Weights: official `BrainIAC.ckpt` (362MB). Pre-train drift audit:
   longitudinal mean 0.0046 (max 0.028) — small but real signal for LoRA
@@ -45,3 +46,31 @@
 2. Full preprocess: 2455 volumes, `--workers 8`, same script.
 3. SAILOR adapter dataset (`sub-XX/ses-YY` + `RANO.txt`) for held-out eval.
 4. `config/default.yaml` unchanged code path; raise batch size to GPU fit.
+
+## Run 3 (2026-09-04/05) — extended 25-epoch pilot, official weights — COMPLETE
+
+- Purpose: de-risk the hero run on free CPU before spending (own money).
+  Gate: does the JEPA-vs-persistence gap (Run 2: 0.0576 vs 0.0043, A6)
+  narrow with more epochs, or plateau far above persistence?
+- Code state: commit `8193bde`, `config/pilot.yaml` unchanged (batch 1,
+  lr 1e-4, warmup 1, AMP off, seed 42); epochs via CLI override.
+- Pre-step (trainer starts fresh, overwrites `best.pt`/`last.pt` — no
+  resume): `cp checkpoints/pilot/best.pt checkpoints/pilot/best_run2_ep5.pt`
+- Command (background, log ignored by `*.log` gitignore rule):
+
+  ```bash
+  nohup .venv/bin/python scripts/run_train.py --config config/pilot.yaml \
+    --patients Patient-067 Patient-031 Patient-073 Patient-078 Patient-029 \
+    --no-wandb --epochs 25 > logs_pilot_extended.log 2>&1 &
+  ```
+
+- ETA: ~8 min/epoch, ~3.5 h total. Per-epoch lines (`val epoch N:
+  loss=... std=... rank=...`) stream to `logs_pilot_extended.log`.
+- Results: best val 0.0093 (plateau from epoch ~13; monitors healthy:
+  std 0.0791, rank 2.2). Per-patient JEPA vs persistence — 067:
+  0.0100/0.0047; 031: 0.0051/0.0043; 073: 0.0042/0.0045 (first JEPA
+  win); 078: 0.0093/0.0041; 029 (held-out val): 0.0262/0.0040. Means:
+  JEPA 0.0110 vs persistence 0.0043. Full numbers + inference: A7.
+  Gate verdict: gap narrowed 13× → 2.5× but persistence unbeaten on
+  average and the held-out patient is worst — more epochs are spent
+  (plateaued); what remains is more patients, i.e. the hero run.
