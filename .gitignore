@@ -36,6 +36,10 @@ __pycache__/
 *.pem
 secrets.json
 
+# Logs
+*.log
+logs/
+
 # OS / editor
 .DS_Store
 Thumbs.db

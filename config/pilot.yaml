@@ -1,0 +1,62 @@
+# Pilot config: 5-patient subset, CPU-friendly. Same code path as default;
+# scale by switching config + hardware only.
+data:
+  root: data/lumiere_preprocessed
+  raw_root: data/lumiere_sample/Imaging
+  meta_dir: data/lumiere_meta
+  modalities: [CT1, T1, T2, FLAIR]
+  max_visits: 21
+  min_visits: 2
+  train_split: 0.7
+  val_split: 0.15
+  seed: 42
+
+preprocessing:
+  template: MNI152
+  voxel_size: [1.0, 1.0, 1.0]
+  target_size: [96, 96, 96]
+
+model:
+  brainiac:
+    checkpoint: checkpoints/BrainIAC.ckpt
+    lora_rank: 8
+    lora_alpha: 16
+    lora_dropout: 0.05
+    freeze_backbone: true
+  clinical:
+    hidden_dim: 128
+    dropout: 0.1
+  fusion:
+    vision_dim: 768
+    clinical_dim: 384
+  temporal:
+    d_model: 1152
+    nhead: 8
+    num_layers: 6
+    dim_feedforward: 2048
+    dropout: 0.1
+    max_time_delta_days: 3000
+  predictor:
+    hidden_dim: 1024
+    output_dim: 768
+    dropout: 0.1
+  target:
+    ema_momentum: 0.996
+    projection_dim: 768
+
+actions:
+  classes: [Pre-Op, Post-Op, SD, PD, CR, PR]
+
+training:
+  batch_size: 1
+  lr: 1.0e-04
+  weight_decay: 0.01
+  warmup_epochs: 1
+  max_epochs: 5
+  grad_clip: 1.0
+  use_amp: false
+  checkpoint_dir: checkpoints/pilot/
+  log_wandb: false
+  project_name: world-model-jepa-pilot
+  log_every: 2
+  eval_every: 1
