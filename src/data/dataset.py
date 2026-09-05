@@ -112,12 +112,16 @@ class LUMIEREDataset(Dataset):
         return len(self.patients)
 
     def _image_path(self, patient: str, visit: str, mod: str) -> str | None:
+        # Accept .nii.gz (pipeline output) and bare .nii: Kaggle's dataset
+        # ingestion gunzips archives in place, so the same bytes may arrive
+        # uncompressed. nibabel loads both transparently.
         for root in (self.processed_root, self.raw_root or ""):
             if not root:
                 continue
-            p = os.path.join(root, patient, visit, f"{mod}.nii.gz")
-            if os.path.exists(p):
-                return p
+            for ext in (".nii.gz", ".nii"):
+                p = os.path.join(root, patient, visit, f"{mod}{ext}")
+                if os.path.exists(p):
+                    return p
         return None
 
     @staticmethod

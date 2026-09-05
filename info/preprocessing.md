@@ -80,3 +80,10 @@ pre-aligned arrays, not world-coordinate images). Final:
 - A "workers 4+ BrokenPipe crash" was reported and then exonerated (D18
   correction): 4 workers ran 12+ min clean; the crashes were collateral of
   a process-group kill and a load-38 machine, not a worker-count bug.
+- **Kaggle gunzips in place.** Dataset ingestion (web-UI zip AND API tar
+  upload alike) decompresses `*.nii.gz` → `*.nii`, so a byte-complete
+  upload still presents zero `.nii.gz` files. `LUMIEREDataset._image_path`
+  therefore accepts both extensions (preferring `.nii.gz`); nibabel loads
+  either. Symptom of a miss: hundreds of "imageless visits" dropped and an
+  empty train split (`num_samples=0`). Do NOT "fix" by re-uploading —
+  verify with `find <root> -name '*.nii*'` first.
