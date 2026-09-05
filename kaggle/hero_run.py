@@ -125,10 +125,12 @@ for p in prev:
     shutil.copy(p, '/kaggle/working/checkpoints/')
     print('staged', os.path.basename(p))
 
-# %env EPOCHS=30  # additional epochs this leg (counter restarts; best.pt is safe)
+# %env EPOCHS=30
+# (additional epochs this leg; counter restarts, best.pt is safe)
 # %env BATCH=1
-# %env LR=0.00002  # leg 2+: 5x below the 1e-4 that found the ep-8 optimum (Run 4
-# overfit past it). Exploit with small steps; omit --lr for config default.
+# %env LR=0.00002
+# (leg 2+: 5x below the 1e-4 that found the ep-8 optimum. Exploit with small
+# steps; omit --lr for config default.)
 !(echo "CLI: --epochs $EPOCHS --batch-size $BATCH --lr $LR --resume-from best.pt"; python scripts/run_train.py --config kaggle.yaml --epochs $EPOCHS --batch-size $BATCH --lr $LR --no-wandb --resume-from /kaggle/working/checkpoints/best.pt) 2>&1 | tee /kaggle/working/train_ep$EPOCHS.log
 
 # %% [markdown]
