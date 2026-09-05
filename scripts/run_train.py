@@ -33,6 +33,10 @@ def main() -> None:
     ap.add_argument("--config", default="config/default.yaml")
     ap.add_argument("--epochs", type=int, default=None)
     ap.add_argument("--batch-size", type=int, default=None)
+    ap.add_argument("--lr", type=float, default=None,
+                     help="peak LR (default from config; leg 2+ typically lower, e.g. 2e-5).")
+    ap.add_argument("--warmup-epochs", type=int, default=None,
+                     help="linear warmup epochs (default from config).")
     ap.add_argument("--no-wandb", action="store_true")
     ap.add_argument("--random-init", action="store_true",
                     help="Skip BRAINIAC checkpoint; random init (dev/smoke-test only).")
@@ -53,6 +57,10 @@ def main() -> None:
         cfg["training"]["max_epochs"] = args.epochs
     if args.batch_size is not None:
         cfg["training"]["batch_size"] = args.batch_size
+    if args.lr is not None:
+        cfg["training"]["lr"] = args.lr
+    if args.warmup_epochs is not None:
+        cfg["training"]["warmup_epochs"] = args.warmup_epochs
     if args.no_wandb:
         cfg["training"]["log_wandb"] = False
 
