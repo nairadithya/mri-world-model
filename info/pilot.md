@@ -105,3 +105,37 @@
   patients) — the mandatory baseline is beaten at scale.
 - Next: leg 2 resumes from `best.pt` (epoch ~8 weights), NOT `last.pt`
   (epoch-30 overfit weights).
+
+## Run 5 (2026-09-05) — hero leg 2, resume best.pt at LR 2e-5 — COMPLETE, exploit FAILED
+
+- Setup: resume `/kaggle/working/checkpoints/best.pt` (Run 4 champion,
+  val 0.0081) via `prev-checkpoints` dataset, `--epochs 30 --batch-size
+  1 --lr 0.00002`, fresh optimizer/schedule, code `80f7b10` (D21
+  checkpointing — batch-12 long-history patient passes, 1.4 s/it).
+  `PYTORCH_ALLOC_CONF=expandable_segments:True` kept from the OOM
+  fight (harmless, possibly helpful).
+- Val trajectory: ep1 0.0089 → ep5 0.0167 → ep10 0.0210 → ep15 0.0267 →
+  ep20 0.0291 → ep25 0.0309 → ep30 0.0308. Monotonic rise then plateau;
+  this leg's best is ep1 (0.0089), champion 0.0081 never touched.
+  Monitors healthy throughout (std 0.10→0.19, rank 1.7→2.2 — drift,
+  not collapse). Train loss bouncy 0.007–0.042, no trend.
+- Isolated `std=0.0000 rank=1.0` train rows (ep 4/24/27/29) are
+  degenerate batches with no valid pairs (monitor prints 0 per
+  `collapse_metrics` empty-input guard) — logging artifact, val
+  unaffected those epochs.
+- Eval (leg-2 `best.pt` = ep1 weights ≈ champion + 65 warmup-tiny
+  steps): MEAN JEPA 0.0085 vs persistence 0.0221 over 91 (~2.6×).
+  Merit intact (cf. A8 0.0081/0.0218).
+- Verdict (D22): the epoch-6/7 optimum is NOT holdable by continued
+  training. Leg-1 tail ascended at decaying LR (→ 0.0704), leg 2
+  ascends at flat 2e-5 (→ 0.031 plateau) — same direction, LR only sets
+  drift speed. Suspect: fresh optimizer discards leg-1 momentum that
+  held the narrow basin (batch-1 noise ejects from ep1, even during
+  warmup). No more 30-epoch legs. Remaining LUMIERE question is one
+  10-epoch 5e-6 probe from the 0.0081 champion (~25 min, confirmatory):
+  holds → exploit path exists; drifts → champion is final, effort
+  pivots to SAILOR eval + writeup.
+- Housekeeping: leg-2 `best.pt` on disk is ep1 weights (val 0.0089),
+  NOT the 0.0081 champion — it overwrote the staged copy. Champion
+  survives in `prev-checkpoints` + leg-1 outputs. Label all future
+  downloads with (leg, epoch, val).

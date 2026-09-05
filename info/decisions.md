@@ -178,12 +178,30 @@ referenced, not repeated — only session decisions are recorded here in full.
     checkpointed run OOMed again at the same batch inside a SINGLE
     prefix, 20 MB short: ViT activations for every volume of the
     long-history patient, held for backward, dominate the peak — not
-    the T−1 prefix graphs. Follow-up (`0338c9c`, verified bit-identical
+    the T−1 prefix graphs. Follow-up (`80f7b10`, verified bit-identical
     forward + finite backward): `encode_chunked` now checkpoints the
     backbone call on the grad path only (target no-grad path keeps the
     plain call). Peak is ~1 chunk transient + ~1 prefix instead of all
     volumes + all prefixes, at ~30–40% slower steps — still inside the
     session budget.
+
+- **D22 — Leg-2 verdict: the optimum is not holdable; stop training
+  LUMIERE, probe once, then pivot.** Run 5 (resume 0.0081 champion, 30
+  epochs flat 2e-5) ascended monotonically 0.0089 → 0.031 plateau;
+  Run 4's tail did the same at decaying LR (0.0081 → 0.0704). Two
+  schedules, same direction: continued gradient steps cannot hold or
+  improve the epoch-6/7 basin. Leading suspect is the documented
+  `--resume-from` limitation — fresh optimizer discards the momentum
+  that held the narrow basin (drift starts in ep1 even at warmup-tiny
+  LR, so it is direction, not size; monitors stay healthy, so it is
+  not collapse). Consequences: (a) no more 30-epoch legs; (b) one
+  final 10-epoch probe at 5e-6 from the 0.0081 champion (~25 min) —
+  holds means an exploit path exists, drifts means the champion
+  (val 0.0081 / test 0.0074, merit ~2.6× banked) is the final model;
+  (c) all remaining effort pivots to SAILOR held-out eval + writeup.
+  Housekeeping rule from the same night: a resume leg's `best.pt`
+  overwrites the staged champion with that leg's best — always label
+  downloads with (leg, epoch, val) and ferry the true champion file.
 
 ## Future work (after hero leg 2)
 
