@@ -67,6 +67,13 @@ python scripts/run_train.py --epochs 1 --batch-size 1 --no-wandb --random-init
 - **Data**: pandas NaN is truthy — coerce clinical numerics via explicit
   `isna` guards. Drop imageless visits; require pixels on both sides of
   every loss pair.
+- **Gitignore**: anchor data-dir rules (`/data/`, not `data/`) — an
+  unanchored pattern silently unmatched `src/data/` and the whole data
+  layer went uncommitted until the first fresh clone (Kaggle) failed.
+  Audit with `git ls-files` after ignore changes.
+- **Kaggle**: T4 only (P100/sm_60 has no torch kernels in the image);
+  batch 1 on 16 GB; ingestion gunzips `.nii.gz`→`.nii` in place (dataset
+  accepts both); uninstall torchao (0.10 breaks fresh peft imports).
 - **Auth**: EBRAINS device codes expire in 5 min. Refresh tokens rotate —
   exactly one consumer at a time or the chain invalidates (400).
   SAILOR is controlled-access; the data-proxy v1 object API is
