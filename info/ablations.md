@@ -120,3 +120,28 @@ Append-only. Each entry: setup → numbers → inference. IDs referenced from
   test-only persistence comparison still open. Even so, the A6/A7 gate
   is cleared: at scale, the architecture beats persistence.
 - Next: leg 2 resumes from `best.pt` (epoch-8 weights), not `last.pt`.
+
+## A9 — Frozen RANO probe, champion representation (2026-09-05, local CPU)
+
+- Setup (D23): freeze leg-1 champion (val 0.0081), linear/MLP probes on
+  per-visit latents → 4-class response {PD, SD, PR, CR} (operative
+  states + missing excluded; n=393 labelled visits: train 298 / val 46
+  / test 49). Reuses hero 65/13/13 splits. Script `scripts/probe_rano.py`;
+  encode ~6 min CPU total (96³ volumes → short ViT sequences), probe
+  seconds. Class-weighted CE, macro-F1 primary (PD 64% of labels).
+- Numbers (test, n=49; majority-PD acc 0.6531, macro-F1 ~0.20):
+  fused-linear acc 0.43 F1 0.31; fused-mlp 0.37/0.17; vision-linear
+  0.35/0.21; vision-mlp 0.43/0.30; clinical-linear 0.20/0.17;
+  clinical-mlp 0.39/0.19. Follow-up delta features [fused_t,
+  fused_t−fused_{t−1}]: linear 0.47/0.24, mlp 0.51/0.23. Test PR n=1,
+  CR n=2 — minority recalls are noise.
+- Inference: WEAK-POSITIVE at best. Representation probes (F1 ~0.3)
+  beat clinical-only (~0.17) and majority on macro-F1 (~0.20), and
+  fused-linear recovers SD at 0.57 — but everything loses to majority
+  on accuracy, CIs are huge at n=49, and the delta-feature follow-up
+  (change SHOULD be the signal for response classes) did not improve
+  F1. D23's "clearly beats" bar is NOT met. No D19 retrain on this
+  evidence. Next cheap steps before any retraining: (a) temporal-state
+  features (true history summary; needs re-encode caching states),
+  (b) cross-validation over splits to shrink CIs, (c) only then
+  revisit D19/multi-task RANO loss.
