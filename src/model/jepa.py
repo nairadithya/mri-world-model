@@ -6,6 +6,7 @@ import copy
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.utils.checkpoint import checkpoint
 
 # Max volumes per backbone forward. A full batch can hold B*T*M volumes
 # (e.g. 4*14*4=224); chunking keeps ViT-B peak memory flat. Grad flows fine
@@ -21,7 +22,14 @@ def encode_chunked(backbone: nn.Module, flat: torch.Tensor,
     idx = torch.nonzero(mask, as_tuple=False).squeeze(1)
     for s in range(0, idx.numel(), chunk):
         sub = idx[s:s + chunk]
-        v = backbone(flat[sub].float())
+        inp = flat[sub].float()
+        # Checkpoint the grad path (online encoder): ViT activations for
+        # every volume of a long-history patient otherwise sit alive until
+        # backward and blow the 16 GB budget (D21). Recomputed at backward
+        # with identical math (RNG preserved). The no-grad target path
+        # keeps the plain call (nothing retained anyway).
+        v = checkpoint(backbone, inp, use_reentrant=False) \
+            if torch.is_grad_enabled() else backbone(inp)
         if isinstance(v, (tuple, list)):
             v = v[0]
             v = v[:, 0] if v.dim() == 3 else v

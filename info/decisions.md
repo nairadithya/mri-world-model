@@ -174,6 +174,17 @@ referenced, not repeated — only session decisions are recorded here in full.
   swallows trailing `#` comments into the value (keep them on separate
   lines) — both bit leg-2 startup.
 
+  - **D21 correction (same night) — the prefixes were not the hog.** The
+    checkpointed run OOMed again at the same batch inside a SINGLE
+    prefix, 20 MB short: ViT activations for every volume of the
+    long-history patient, held for backward, dominate the peak — not
+    the T−1 prefix graphs. Follow-up (`0338c9c`, verified bit-identical
+    forward + finite backward): `encode_chunked` now checkpoints the
+    backbone call on the grad path only (target no-grad path keeps the
+    plain call). Peak is ~1 chunk transient + ~1 prefix instead of all
+    volumes + all prefixes, at ~30–40% slower steps — still inside the
+    session budget.
+
 ## Future work (after hero leg 2)
 
 - **D19 — Additive clinical conditioning (fusion upgrade).** Today fusion
