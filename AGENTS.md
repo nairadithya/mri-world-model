@@ -14,6 +14,9 @@ and `info/` for why things are the way they are.
   `lumiere_fetch.py`, `sailor_fetch.py`, `ebrains_auth.py`,
   `sailor_request_access.py`, `access_probe.py`.
 - `config/` — `default.yaml` (full run), `pilot.yaml` (5-patient CPU pilot).
+- `kaggle/` — hero-run notebook. `hero_run.py` is the source of truth;
+  never edit the `.ipynb` directly (JSON churn breaks diffs). Regenerate
+  with `jupytext --to ipynb kaggle/hero_run.py` after editing.
 - `info/` — decision log (`decisions.md`, IDs D0–), ablations (`ablations.md`,
   IDs A–/I–), pilot notes (`pilot.md`). Append-only; reference IDs.
 - `data/`, `checkpoints/`, `.venv/`, `.env` — NEVER commit (gitignored).
