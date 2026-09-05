@@ -44,6 +44,9 @@
 
 1. GPU host (no GPU on this machine — pilot epochs take ~8 min on CPU).
 2. Full preprocess: 2455 volumes, `--workers 8`, same script.
+   → DONE 2026-09-05: 2051 volumes, 0 failures (`logs_preprocess_full.log`);
+   91/91 patients, 2487 finals (CT1 632 / T1 617 / T2 626 / FLAIR 612),
+   60-file nibabel spot-check clean. Ran `--workers 2` (see D18).
 3. SAILOR adapter dataset (`sub-XX/ses-YY` + `RANO.txt`) for held-out eval.
 4. `config/default.yaml` unchanged code path; raise batch size to GPU fit.
 

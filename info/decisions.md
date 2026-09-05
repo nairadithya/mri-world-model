@@ -123,7 +123,22 @@ referenced, not repeated — only session decisions are recorded here in full.
   trainer already checkpoints every epoch; (b) no hd-bet in the Kaggle
   env (preprocessing stays local; hd-bet would reintroduce the D16
   transformers/torchvision conflict); (c) torchvision left at the image's
-  matched version unless peft's import errors; (d) full local preprocess
+  matched version unless peft's import errors; (d)   full local preprocess
   (~2051 remaining volumes, `--workers 2` — 4+ workers crash the pool
   with BrokenPipe at startup, cause still open) must finish before the
   dataset upload.
+
+  - **D18 correction (same night) — no worker-count bug.** A 4-worker
+    diagnostic on Patient-025 ran 12+ min with zero errors; the earlier
+    BrokenPipes were collateral, not a code bug: (1) the 8-worker pool
+    was murdered mid-flight by a tool-timeout process-group kill, and
+    its orphaned workers spun at 80% for 20+ min; (2) the 4-worker
+    restart launched straight into that load-38 wreckage. The 2-worker
+    run continues by choice (stability + laptop headroom), not
+    necessity. Collateral lessons: kill orphaned forkserver workers
+    after any killed pool run (`ps` for `multiprocessing.forkserver`
+    with the script's `main_path`); never run two preprocess
+    invocations concurrently (both raced Patient-025 — duplicate killed,
+    finals verified 16/16 valid 96³ finite via nibabel). Note the
+    pipeline keeps `_tmp/` intermediates (~4× file count) next to final
+    `{CT1,T1,T2,FLAIR}.nii.gz` — only finals matter downstream.
