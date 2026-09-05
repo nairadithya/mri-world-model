@@ -140,5 +140,52 @@ referenced, not repeated — only session decisions are recorded here in full.
     with the script's `main_path`); never run two preprocess
     invocations concurrently (both raced Patient-025 — duplicate killed,
     finals verified 16/16 valid 96³ finite via nibabel). Note the
-    pipeline keeps `_tmp/` intermediates (~4× file count) next to final
-    `{CT1,T1,T2,FLAIR}.nii.gz` — only finals matter downstream.
+  pipeline keeps `_tmp/` intermediates (~4× file count) next to final
+  `{CT1,T1,T2,FLAIR}.nii.gz` — only finals matter downstream.
+
+- **D20 — Leg 2 resumes from best.pt at 5× lower LR, never from last.pt.**
+  Run 4 (leg 1, 30 epochs, LR 1e-4) found its optimum at epoch ~7 then
+  overfit the tail, so `last.pt` holds overfit weights while `best.pt`
+  (val 0.0081) is the lowest-val checkpoint. Leg 2 (`--resume-from
+  best.pt`, `--lr 2e-5`, fresh optimizer/schedule per the documented
+  `--resume-from` limitation) exploits with small steps. `--epochs` per
+  leg means ADDITIONAL epochs (counter restarts); best.pt tracking makes
+  over-long legs safe. Previous-session outputs ferry via a
+  `prev-checkpoints` input dataset (opt-stripped best.pt, ~1 GB).
+
+- **D21 — Gradient-checkpoint temporal prefixes; T4 peak is one long
+  patient, not fragmentation.** Leg 2 OOMed twice at batch 12/65 on a
+  14.56 GiB T4, 20 MB short both times — first in the ViT backbone,
+  then (with `PYTORCH_ALLOC_CONF=expandable_segments:True`) in the
+  temporal encoder. Root cause: `forward_prefixes` ran the full 6-layer
+  encoder once per prefix (T−1 encodes, all graphs held for backward),
+  so a long-history patient spiked GBs. Fix (`b8af83b`): each prefix
+  encode is `torch.utils.checkpoint`ed (`use_reentrant=False`) —
+  activations freed after forward, recomputed at backward, peak drops
+  from T−1 live encodes to ~1 with identical math (RNG preserved, so
+  dropout matches) at ~30% slower temporal steps. Same commit sets
+  `enable_nested_tensor=False` (the pre-norm encoder was already
+  falling back; silences the UserWarning, no behavior change). Leg 1
+  survived the same patient on allocator luck; batch 12 is the memory
+  worst-case, so passing it clears the leg. Collateral Kaggle lessons
+  from the same night: datasets may mount at
+  `/kaggle/input/datasets/<user>/<slug>/` instead of
+  `/kaggle/input/<slug>/` (resume glob is now recursive), and `%env`
+  swallows trailing `#` comments into the value (keep them on separate
+  lines) — both bit leg-2 startup.
+
+## Future work (after hero leg 2)
+
+- **D19 — Additive clinical conditioning (fusion upgrade).** Today fusion
+  is concat of LayerNormed vision + clinical branches (proposal §4.1;
+  the LayerNorm-per-branch is the standing mitigation for scale
+  imbalance). The upgrade: an MLP mapping the clinical vector to the
+  vision latent dim, ADDED to the ViT latent (residual-style offset),
+  with the joint representation learned around that sum. Rationale:
+  addition keeps the backbone dim (no concat bottleneck), lets clinical
+  context steer the representation without overwhelming it, and is a
+  smaller step than cross-attention (still reserved as the further
+  upgrade). Evaluation stays the same gate: beat persistence, ablate
+  with/without the additive path, confirm `C_i` isn't near-constant
+  (clinical-only baseline must stay weak). Status: parked until leg 2
+  lands — no architecture churn mid-hero-run.
