@@ -1,5 +1,5 @@
-# Data
-data/
+# Data (top-level only — unanchored `data/` would also ignore src/data/)
+/data/
 *.csv
 *.pdf
 *.parquet
