@@ -5,6 +5,7 @@ import math
 
 import torch
 import torch.nn as nn
+from torch.utils.checkpoint import checkpoint
 
 
 class Fusion(nn.Module):
@@ -67,7 +68,8 @@ class TemporalTransformer(nn.Module):
             dim_feedforward=dim_feedforward, dropout=dropout,
             batch_first=True, norm_first=True,
         )
-        self.encoder = nn.TransformerEncoder(layer, num_layers=num_layers)
+        self.encoder = nn.TransformerEncoder(
+            layer, num_layers=num_layers, enable_nested_tensor=False)
         self.norm = nn.LayerNorm(d_model)
 
     def forward(
@@ -83,6 +85,17 @@ class TemporalTransformer(nn.Module):
         lengths = visit_mask.sum(dim=1).clamp_min(1) - 1  # (B,)
         idx = lengths.view(-1, 1, 1).expand(-1, 1, h.shape[-1])
         return h.gather(1, idx).squeeze(1)  # (B, d_model)
+
+    def _encode_prefix(
+        self,
+        tok_slice: torch.Tensor,      # (B, t+1, d) fused tokens
+        dt_slice: torch.Tensor,       # (B, t+1) days
+        mask_slice: torch.Tensor,     # (B, t+1) bool
+    ) -> torch.Tensor:
+        """Single-prefix encode, factored out for gradient checkpointing."""
+        h = tok_slice + self.time_enc(dt_slice)
+        h = self.encoder(h, src_key_padding_mask=~mask_slice)
+        return self.norm(h)
 
     def forward_prefixes(
         self,
@@ -103,9 +116,14 @@ class TemporalTransformer(nn.Module):
         states, valids = [], []
         for t in range(T - 1):
             sub_mask = visit_mask[:, : t + 1]
-            h = tokens[:, : t + 1] + self.time_enc(time_deltas[:, : t + 1])
-            h = self.encoder(h, src_key_padding_mask=~sub_mask)
-            h = self.norm(h)
+            # Checkpoint each prefix: activations freed after forward,
+            # recomputed at backward. Peak drops from (T-1) encodes to ~1
+            # (same math; RNG state is preserved); ~30% slower temporal.
+            h = checkpoint(
+                self._encode_prefix,
+                tokens[:, : t + 1], time_deltas[:, : t + 1], sub_mask,
+                use_reentrant=False,
+            )
             lengths = sub_mask.sum(dim=1).clamp_min(1) - 1
             idx = lengths.view(-1, 1, 1).expand(-1, 1, h.shape[-1])
             states.append(h.gather(1, idx).squeeze(1))
