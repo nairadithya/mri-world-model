@@ -117,7 +117,9 @@ print('wrote kaggle.yaml; checkpoint_dir -> /kaggle/working/checkpoints')
 # safe — the optimum is kept regardless.
 import glob, shutil, os
 os.makedirs('/kaggle/working/checkpoints', exist_ok=True)
-prev = sorted(glob.glob('/kaggle/input/prev-checkpoints/*.pt'))
+# Recursive: Kaggle mounts datasets at varying depths
+# (/kaggle/input/<slug>/ vs /kaggle/input/datasets/<user>/<slug>/).
+prev = sorted(glob.glob('/kaggle/input/**/prev-checkpoints/*.pt', recursive=True))
 assert prev, 'attach previous session output as prev-checkpoints first'
 for p in prev:
     shutil.copy(p, '/kaggle/working/checkpoints/')
