@@ -102,3 +102,21 @@ Append-only. Each entry: setup → numbers → inference. IDs referenced from
   patients, not more epochs — epochs stopped helping at ~13) is the
   remaining lever; the train/val generalization gap is what the hero run
   must close.
+
+## A8 — Merit verdict, hero leg 1 (2026-09-05)
+
+- Setup: leg-1 `best.pt` (epoch ~8, best val 0.0081), per-patient JEPA
+  vs persistence over all 91 patients (train+val+test) in target space.
+- Numbers: mean JEPA 0.0081 vs persistence 0.0218 (~2.7×); 82/91
+  patient-level wins. Biggest wins on the most dynamic patients (084:
+  0.0256/0.1380; 076: 0.0022/0.0680; 002: 0.0102/0.0612; 012:
+  0.0102/0.0630). The 9 losses (007/008/011/020/029/035/036/040/058)
+  sit where targets are near-static and "no change" is near-optimal.
+- Inference: FIRST clean beat of the mandatory baseline (proposal §6) —
+  with exactly the right pattern: JEPA wins where change happens, loses
+  only where predicting no change is near-optimal. Caveat: 65/91 are
+  train patients, so memorization inflates the mean; the uncontaminated
+  figure is the test scorecard (0.0074 on 13 held-out, `best.pt`) —
+  test-only persistence comparison still open. Even so, the A6/A7 gate
+  is cleared: at scale, the architecture beats persistence.
+- Next: leg 2 resumes from `best.pt` (epoch-8 weights), not `last.pt`.

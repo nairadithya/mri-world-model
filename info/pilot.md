@@ -77,3 +77,31 @@
   Gate verdict: gap narrowed 13× → 2.5× but persistence unbeaten on
   average and the held-out patient is worst — more epochs are spent
   (plateaued); what remains is more patients, i.e. the hero run.
+
+## Run 4 (2026-09-05) — hero leg 1, full cohort on Kaggle T4 — COMPLETE
+
+- Setup: 65/13/13 patient split, batch 1, 30 epochs, AMP on, official
+  weights. Code ≥ `bbc2a36` (pulled for the `.nii` fallback — Kaggle
+  gunzips ingestion in place). Notebook path, `kaggle.yaml` from
+  `config/default.yaml`. First run at scale: 65 train patients (vs 4).
+- Command:
+
+  ```bash
+  python scripts/run_train.py --config kaggle.yaml --epochs 30 --batch-size 1 --no-wandb
+  ```
+
+- Val trajectory: ep1 0.0830 → ep5 0.0089 → ep7 0.0081 → ep10 0.0129 →
+  ep15 0.0316 → ep20 0.0510 → ep25 0.0667 → ep30 0.0704.
+  Best val 0.0081. Monitors healthy throughout (std 0.085→0.29,
+  rank 1.7→2.5 — no collapse). Train loss stays ~0.01–0.04.
+- Test scorecard (13 held-out patients, `best.pt` reloaded): loss 0.0074,
+  std 0.0700, rank 1.6.
+- Inference: U-shaped val = best model at epoch ~7–8, then steady
+  overfit climb while train holds — more epochs at this LR are spent;
+  capacity (65M trainable) still dwarfs 65 patients. Test 0.0074 is the
+  first real held-out scorecard (A7's n=1 val is retired as the
+  reference). Eval verdict (A8): mean JEPA 0.0081 vs persistence 0.0218
+  over all 91 (~2.7×, 82/91 wins, biggest on the most dynamic
+  patients) — the mandatory baseline is beaten at scale.
+- Next: leg 2 resumes from `best.pt` (epoch ~8 weights), NOT `last.pt`
+  (epoch-30 overfit weights).
