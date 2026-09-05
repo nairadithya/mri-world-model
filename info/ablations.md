@@ -145,3 +145,21 @@ Append-only. Each entry: setup → numbers → inference. IDs referenced from
   features (true history summary; needs re-encode caching states),
   (b) cross-validation over splits to shrink CIs, (c) only then
   revisit D19/multi-task RANO loss.
+
+### A9 addendum — temporal-state readout (same night)
+
+- Same task/labels/splits; inputs now temporal states s_t (history ≤ t):
+  `states_current` (RANO_t) and `states_forecast` (RANO_{t+1}, no
+  visit-t+1 pixels in input — no leakage). Test n=49.
+- Numbers: states_current-linear acc 0.48 F1 0.33; states_forecast-linear
+  0.57/0.38; **states_forecast-mlp acc 0.6735 (beats majority 0.6531)
+  macro-F1 0.4483** — PD recall 0.72 (23/32), SD 0.64 (9/14); PR 1/1,
+  CR 0/2 (minority still noise). No leakage: s_t sees visits ≤ t only.
+- Inference: UPGRADED to positive. Frozen temporal readout lands in
+  SOTA territory (Tikhonov hybrid 0.50, TRACE 0.477) with a 2-layer MLP
+  and zero task training of the encoder — the history summary DOES
+  encode progression dynamics (thesis 1, temporal level). D24's D19
+  gate ("approaching 0.50") is now in play: 0.45 frozen vs 0.50
+  end-to-end-hybrid. Remaining gaps to a writeup-grade claim: n=49 CIs
+  (cross-val), CR/PR minority (volume/auto-mask probe as second
+  result), LUMIERE→SAILOR generalization.

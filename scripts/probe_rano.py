@@ -94,6 +94,12 @@ def encode_all(cfg, champion_path, cache_path):
                     "labels": torch.tensor(labels, dtype=torch.long),
                     "n_labeled": sum(l >= 0 for l in labels),
                 }
+                # Temporal states: state s_t summarizes visits 0..t.
+                # Cached alongside so probes test the history summary
+                # (thesis: RANO/volume read out from temporal latent).
+                states, _ = model.temporal.forward_prefixes(
+                    tok, batch["time_deltas"], batch["visit_mask"])
+                cache["patients"][pid]["states"] = states[0, :n - 1].clone()
                 done += 1
                 if done == 1 or done % 10 == 0 or done == total:
                     el = time.time() - t0
@@ -106,18 +112,32 @@ def encode_all(cfg, champion_path, cache_path):
 
 
 def rows_for(patients, splits, split_names, feat):
+    """Feature rows + clean RANO labels for a probe config.
+
+    Snapshot feats (fused/vision/clinical): one row per labelled visit.
+    states_current: row s_t (history<=t) with label RANO_t.
+    states_forecast: row s_t with label RANO_{t+1} (future status).
+    """
     xs, ys = [], []
     wanted = [split_names] if isinstance(split_names, str) else split_names
     for pid in [p for s in wanted for p in splits[s]]:
         p = patients[pid]
-        keep = p["labels"] >= 0
-        if feat == "fused":
-            xs.append(p["fused"][keep])
-        elif feat == "vision":
-            xs.append(p["vision"][keep])
-        else:  # clinical: broadcast static vector per labelled visit
-            xs.append(p["clinical"].unsqueeze(0).expand(int(keep.sum()), -1))
-        ys.append(p["labels"][keep])
+        if feat in ("states_current", "states_forecast"):
+            off = 0 if feat == "states_current" else 1
+            idx = [t for t in range(len(p["states"])) if p["labels"][t + off] >= 0]
+            if not idx:
+                continue
+            xs.append(p["states"][idx])
+            ys.append(p["labels"][[t + off for t in idx]])
+        else:
+            keep = p["labels"] >= 0
+            if feat == "fused":
+                xs.append(p["fused"][keep])
+            elif feat == "vision":
+                xs.append(p["vision"][keep])
+            else:  # clinical: broadcast static vector per labelled visit
+                xs.append(p["clinical"].unsqueeze(0).expand(int(keep.sum()), -1))
+            ys.append(p["labels"][keep])
     return torch.cat(xs), torch.cat(ys)
 
 
@@ -174,7 +194,7 @@ def run_probe(cache_path):
     print(f"majority baseline (predict {RANO_PROBE_NAMES[maj]}): "
           f"acc={(y_te == maj).float().mean():.4f} (macro-F1 ~0 by construction)")
 
-    for feat in ["fused", "vision", "clinical"]:
+    for feat in ["fused", "vision", "clinical", "states_current", "states_forecast"]:
         x_tr, y_tr = rows_for(cache["patients"], splits, ["train"], feat)
         x_te, y_te = rows_for(cache["patients"], splits, ["test"], feat)
         for hidden in [0, 256]:
