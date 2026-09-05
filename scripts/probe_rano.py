@@ -206,6 +206,32 @@ def run_probe(cache_path):
             print(f"  confusion (true x pred):\n{cm}")
 
 
+def run_cv(cache_path, k=5, feat="states_forecast", hidden=256, seed=42):
+    """k-fold patient-wise CV of one probe config (field protocol)."""
+    import random
+    cache = torch.load(cache_path, map_location="cpu", weights_only=False)
+    patients = cache["patients"]
+    pids = sorted(patients)
+    rng = random.Random(seed)
+    rng.shuffle(pids)
+    folds = [pids[i::k] for i in range(k)]
+    accs, f1s = [], []
+    for i in range(k):
+        te, tr = folds[i], [p for j in range(k) if j != i for p in folds[j]]
+        sp = {"tr": tr, "te": te}
+        x_tr, y_tr = rows_for(patients, sp, "tr", feat)
+        x_te, y_te = rows_for(patients, sp, "te", feat)
+        net = fit_linear(x_tr, y_tr, hidden=hidden)
+        acc, f1, _, _ = scores(net, x_te, y_te)
+        accs.append(acc)
+        f1s.append(f1)
+        print(f"fold {i}: n_te={len(y_te)} acc={acc:.4f} macro-F1={f1:.4f}", flush=True)
+    import statistics
+    print(f"CV {feat}-{'mlp' if hidden else 'linear'}: "
+          f"acc={statistics.mean(accs):.4f}±{statistics.pstdev(accs):.4f} "
+          f"macro-F1={statistics.mean(f1s):.4f}±{statistics.pstdev(f1s):.4f}")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="config/default.yaml")
@@ -213,13 +239,17 @@ def main():
     ap.add_argument("--cache", default="checkpoints/probe_cache.pt")
     ap.add_argument("--encode", action="store_true")
     ap.add_argument("--probe", action="store_true")
+    ap.add_argument("--cv", action="store_true",
+                    help="5-fold patient-wise CV of states_forecast-mlp")
     args = ap.parse_args()
     with open(args.config) as f:
         cfg = yaml.safe_load(f)
     if args.encode:
         encode_all(cfg, args.champion, args.cache)
-    if args.probe or not args.encode:
+    if args.probe or (not args.encode and not args.cv):
         run_probe(args.cache)
+    if args.cv:
+        run_cv(args.cache)
 
 
 if __name__ == "__main__":

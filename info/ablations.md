@@ -163,3 +163,29 @@ Append-only. Each entry: setup → numbers → inference. IDs referenced from
   end-to-end-hybrid. Remaining gaps to a writeup-grade claim: n=49 CIs
   (cross-val), CR/PR minority (volume/auto-mask probe as second
   result), LUMIERE→SAILOR generalization.
+
+## A10 — Surprise-as-signal: JEPA error anticipates PD (2026-09-05, local CPU)
+
+- Setup (D24.c): frozen champion, per valid (t → t+1) pair err =
+  1 − cos(predictor(state_t), target_{t+1}); label = clean RANO of visit
+  t+1. Script `scripts/surprise_signal.py`. n=393 pairs, PD-rate 0.639.
+- Numbers: mean err PD 0.0074 (n=251) / SD 0.0061 (95) / PR 0.0088 (20) /
+  CR 0.0115 (27). **AUC(err → next-visit PD) 0.7677** — zero training.
+- Inference: prediction surprise anticipates progression: flat/stable
+  futures are predictable, change is not, and response transitions
+  (PR/CR, rare in training) surprise most of all. Caveat: partly
+  expected (PD = big change = hard to predict); the quantification and
+  the PR/CR pattern are the new bits. A persistence-error baseline is
+  still open — change-detection alone may explain part of the AUC.
+
+### A9 second addendum — CV corrects the headline (same night)
+
+- 5-fold patient-wise CV of states_forecast-mlp (`--cv`): F1 =
+  0.25/0.38/0.30/0.42/0.32 → **mean 0.334±0.060**, acc 0.536±0.083.
+  The hero-split 0.45 was the lucky end, not the centre.
+- Inference: honest headline is **0.33, not 0.45** — above volumes-only
+  (0.30) and majority (~0.20), below SOTA 0.50. D24's D19 gate
+  ("approaching 0.50") is NOT met; no fusion retrain. The representation
+  carries real but modest progression signal; volume probes (auto-masks
+  downloading) and SAILOR generalization are now the load-bearing next
+  results.
