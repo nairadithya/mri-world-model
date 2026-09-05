@@ -203,6 +203,35 @@ referenced, not repeated — only session decisions are recorded here in full.
   overwrites the staged champion with that leg's best — always label
   downloads with (leg, epoch, val) and ferry the true champion file.
 
+- **D23 — Frozen RANO probe: first downstream test, runs local on CPU.**
+  JEPA loss (~0.008, cosine ≈ 0.992) is saturated as an objective;
+  tumour-size/RANO performance is the metric now. Labels exist:
+  `rano_rating__LUMIERE-ExpertRating-v202211.csv`, 616 rows / 91
+  patients — PD 253, SD 97, CR 27, PR 20 (+ operative states Pre-Op 92,
+  Post-Op ~124, Post-Op/PD 1). Task: 4-class response classification
+  {PD, SD, PR, CR} (n=397 visits; operative states excluded — surgical
+  status, not response). No tumour-size labels exist anywhere (no
+  masks/volumes/diameters); RANO-as-proxy, since response categories
+  ARE size-change categories. Design: freeze 0.0081 champion, per-visit
+  features = fused tokens (vision+clinical, 1152-d), ablate vision-only
+  (768-d) vs clinical-only; linear probe (class-weighted CE) + optional
+  1-hidden MLP. Splits: patient-level, reuse the 65/13/13 hero split
+  (probe trains on train patients, scores test — no leakage).
+  Baselines: majority-PD (64% acc floor), clinical-only probe
+  (separates "representation knows progression" from "demographics
+  knows it"). Metrics: macro-F1 primary (PD-heavy imbalance), accuracy,
+  confusion matrix. Local runbook: (0) `kaggle datasets download
+  nairadithya/prev-checkpoints` — the 0.0081 champion is NOT on local
+  disk (only leg-2 files are); (1) encode-and-cache all visit latents
+  overnight on CPU (one-time, hours; chunk 1–2 for laptop RAM, save
+  `.pt` cache, subset to RANO-labelled visits optional); (2) probe
+  training = minutes on CPU. Success bar: fused probe clearly beats
+  clinical-only + majority on macro-F1 → representation earns its keep
+  and decides D19/multi-task RANO loss (awin) vs straight to SAILOR.
+  Failure mode it rules out first: representation holds no progression
+  signal, in which case no JEPA-loss squeezing would ever have fixed
+  it.
+
 ## Future work (after hero leg 2)
 
 - **D19 — Additive clinical conditioning (fusion upgrade).** Today fusion
