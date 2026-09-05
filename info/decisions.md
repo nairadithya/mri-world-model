@@ -203,6 +203,31 @@ referenced, not repeated — only session decisions are recorded here in full.
   overwrites the staged champion with that leg's best — always label
   downloads with (leg, epoch, val) and ferry the true champion file.
 
+- **D24 — Literature survey pivots the program to representation
+  quality (2026-09-05).** Frontier on LUMIERE: TaDiff-Net (TMI 2025,
+  10.1109/TMI.2025.3533038) generates future MRI+masks but never
+  touches RANO and reports no representation metric; RANO-4-class
+  SOTA is Tikhonov 2025 hybrid (ResNet-18 + radiomics/volumetry →
+  CatBoost, macro F1 0.50 / AUC 0.81 / acc 0.72, patient-wise CV),
+  then TRACE 2026 (F1 0.477) and Matoso 2025 (balanced acc 0.51).
+  Our frozen probe (A9, F1 0.31) trails — but all SOTA trains
+  end-to-end on visit-pairs with volumetry, ours reads frozen
+  single-visit snapshots. Consequences: (a) adopt the field's
+  pair-framing (consecutive-visit-pair → 4-class, patient-wise CV) so
+  numbers read against 0.50; (b) volume unblocked — LUMIERE ships
+  automated segmentations (DeepBraTumIA + HD-GLIO-AUTO, ~599 studies,
+  zero expert masks), enabling volume-from-latent and
+  next-visit-volume probes nobody has published; (c) cheapest new
+  experiment is surprise-as-signal (per-patient JEPA errors from A8 ×
+  RANO labels: does prediction error anticipate PD? zero GPU);
+  (d) SAILOR access becomes a priority track — it is TaDiff's Oslo
+  training cohort, making LUMIERE→SAILOR the cross-site test the
+  field lacks; (e) D19 retrain gated on frozen probes approaching
+  0.50 on pair-framing. Unchanged: 5e-6 probe, no more 30-epoch legs.
+  Glossary: PD = Progressive Disease (RANO; tumour grew/new lesions);
+  SD/PR/CR = stable/partial/complete. PD is our majority class
+  (253/397, ~64%), hence macro-F1 over accuracy.
+
 - **D23 — Frozen RANO probe: first downstream test, runs local on CPU.**
   JEPA loss (~0.008, cosine ≈ 0.992) is saturated as an objective;
   tumour-size/RANO performance is the metric now. Labels exist:
