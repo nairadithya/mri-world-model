@@ -109,7 +109,7 @@ test split; "CV" means 5-fold patient-wise cross-validation. Only CV counts.
 |---|---|---|
 | Does the dynamics model beat persistence in-domain? | **Yes: held-out test loss 0.0074; mean error 0.0081 vs persistence 0.0218 (~2.7×), wins on 82/91 patients** | Biggest wins on the most changing patients; the 9 losses sit where scans are near-static and "no change" is near-optimal. The 91-patient sweep includes 65 training patients, so memorization inflates the mean — the uncontaminated number is the held-out test 0.0074. |
 | Does the frozen representation encode progression status? | **Modestly: CV macro-F1 0.33** | Beats the always-guess-PD floor (~0.20) and a volumes-only probe (0.30); trails supervised end-to-end literature (0.50). The single-split 0.45 was the lucky end of the spread (folds: 0.25–0.42), not the centre. |
-| Does prediction surprise anticipate progression? | **AUC 0.77 in-domain (393 visit-pairs), 0.87 cross-site (240 pairs), zero training** | Stable futures are predictable, change is not. Open caveat: a trivial "any change" detector may explain part of the AUC — the persistence-error baseline is still unrun. |
+| Does prediction surprise anticipate progression? | **Weakly and non-specifically: JEPA-error AUC 0.77 in-domain (393 pairs) vs 0.75 for trivial persistence error; 0.87 cross-site (240 pairs) vs 0.86** | Stable futures are predictable, change is not — but raw scan-to-scan change predicts progression nearly as well. Surprise is change-detection, not a JEPA-specific signal. One divergence: JEPA is most surprised by rare response transitions (PR/CR), persistence least by CR — task-blindness signal raw change misses, but on n=20–27 samples. |
 | Does the latent encode tumour size? | **Weakly: readout R² ≈ 0.15 (mean error 1.26 vs 1.38 for predicting the mean, log-mm³); forecasting next-visit size loses to persistence (1.52 vs 1.07, forecast R² ≈ 0.04)** | Tumour volumes come from automated (not expert) masks. Size signal exists but is diffuse; volumes evolve slowly, so "same as last visit" wins. |
 | Do dynamics transfer across site/scanner/protocol? | **Split: mean-error dynamics do NOT transfer (0.0290 vs persistence 0.0056); discriminative readouts DO (F1 0.37 ≈ in-domain CV 0.33; surprise AUC 0.87)** | Likely cause is visit-interval regime, not representation: SAILOR gaps average ~14 days (near-static targets where "no change" wins) vs LUMIERE's weekly on-treatment changes. Interval-stratified comparison is the open decider. |
 | Did task-specific fine-tuning help? | **No: CV F1 unchanged (0.328 vs 0.334) while dynamics error grew ~2.5× (0.0081 → 0.0191)** | The joint RANO fine-tune tilted the encoder toward the classifier without adding generalizable signal. Champion weights stand untouched. |
@@ -315,10 +315,13 @@ instability) is not earned. The champion stands untouched.
   progression (recall 0.72) from stable (0.64), far above demographics (~0.17)
   — unsupervised dynamics learned progression structure for free, at the
   trajectory level (not single snapshots, not volume).
-- **Surprise signal:** prediction error anticipates progression with no
-  training (AUC 0.77 in-domain over 393 pairs, 0.87 cross-site over 240).
-  Response transitions surprise most of all — rare in training, hardest to
-  predict. The trivial-change-detector baseline remains the open confound.
+- **Surprise signal (baselined):** prediction error anticipates progression
+  (AUC 0.77 in-domain over 393 pairs, 0.87 cross-site over 240) — but trivial
+  persistence error reaches 0.75/0.86 on the identical pairs
+  (`scripts/persistence_baseline.py`). The signal is change-detection, not
+  JEPA-specific. Partial exception: response transitions surprise JEPA most
+  (PR 0.0088, CR 0.0115) while CR surprises persistence least (0.0031) —
+  rare-transition signal raw change misses, on n=20–27 samples.
 - **Cross-site (SAILOR, frozen champion, zero training):** mean-error dynamics
   lose ~5× (interval regime, see scorecard) while the progression readout
   transfers exactly at the in-domain CV level and surprise improves. The
