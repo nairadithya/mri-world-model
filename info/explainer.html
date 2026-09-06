@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>JEPA World Model — Runs &amp; Experiments Explainer</title>
+<style>
+body{font-family:system-ui,-apple-system,sans-serif;max-width:900px;margin:2em auto;padding:0 1.5em;line-height:1.55;color:#1a1a1a}
+h1{border-bottom:3px solid #222;padding-bottom:.3em}
+h2{border-bottom:1px solid #ccc;padding-bottom:.2em;margin-top:2em}
+h3{margin-bottom:.2em}
+table{border-collapse:collapse;margin:.8em 0;width:100%}
+th,td{border:1px solid #bbb;padding:.35em .6em;text-align:left;font-size:.93em}
+th{background:#f0f0f0}
+code{background:#f4f4f4;padding:.1em .3em;border-radius:3px;font-size:.9em}
+.why{background:#f7f9ff;border-left:4px solid #4060c0;padding:.6em 1em;margin:.6em 0}
+.verdict{background:#f6fff6;border-left:4px solid #2a8a2a;padding:.6em 1em;margin:.6em 0}
+.warn{background:#fff8f0;border-left:4px solid #c08020;padding:.6em 1em;margin:.6em 0}
+.toc a{display:block;padding:.15em 0}
+ Small{color:#555}
+</style>
+</head>
+<body>
+<h1>JEPA World Model over Longitudinal Glioma MRI — Runs &amp; Experiments</h1>
+<p>Research repo explainer. Model: BRAINIAC ViT (LoRA) → clinical fusion → temporal
+transformer → predictor vs EMA target (JEPA). Data: LUMIERE, 91 glioblastoma patients,
+65/13/13 split. Gate (proposal §6): <b>beat persistence</b> — a falling loss alone proves nothing.</p>
+
+<h2>0. Theses</h2>
+<div class="why"><b>T1 — encoder latent holds tumour state</b> (RANO class, volume).
+Test = frozen probes. <b>T2 — temporal latent predicts the future.</b> Test = next-visit
+latent prediction vs persistence. T2's ceiling is T1's quality: dynamics over noise is hollow.</div>
+
+<h2>1. Training runs</h2>
+<h3>Run 1 — INVALID (corrupt weights)</h3>
+<p>HF community BRAINIAC port. Loss fell (0.37→0.03) but target std 0.0024 / rank 1.1:
+constant-target collapse. Checkpoints deleted.</p>
+<div class="why">Why it matters: the founding lesson (I2) — <b>monitors over loss</b>.
+Every later run reports target std ≫ 0 and rank &gt; 1 alongside loss.</div>
+
+<h3>Run 2 — pilot, official weights (CPU, 5 patients)</h3>
+<p>First valid run. A6 numbers: JEPA 0.0576 vs persistence 0.0043 (GRU 0.9993,
+clinical-only 1.0027). Learning signal proven (far below chance), persistence not beaten —
+expected at this scale.</p>
+
+<h3>Run 3 — extended 25-epoch pilot (CPU)</h3>
+<p>Best val 0.0093 (plateau from epoch ~13). A7: gap 13×→2.5×, first patient-level win
+(Patient-073: 0.0042 vs 0.0045). Verdict: epochs are spent, <b>patients are the lever</b> —
+motivates the full-cohort hero run, not longer pilots.</p>
+
+<h3>Run 4 — hero leg 1 (Kaggle T4, all 91 patients, 30 epochs, LR 1e-4)</h3>
+<p>Val: ep1 0.083 → ep5 0.0089 → <b>ep~7 0.0081</b> → ep30 0.0704 (U-shape: optimum then
+steady overfit climb). Test 0.0074. A8: mean JEPA 0.0081 vs persistence 0.0218 (~2.7×,
+82/91 wins, biggest on most dynamic patients) — <b>the mandatory baseline falls</b>.
+Engineering: batch 1 on 16 GB, chunked encoding, T4-only (P100 has no kernels),
+ingestion gunzips .nii.gz→.nii, torchao uninstalled.</p>
+
+<h3>Run 5 — hero leg 2 (resume best.pt, LR 2e-5, 30 epochs) — exploit FAILED</h3>
+<p>Val rose every epoch: 0.0089 → 0.031 plateau; leg best = epoch 1. D22 verdict: the
+epoch-7 optimum is a narrow basin unholdable by continued training (leg-1 tail ascended
+at decaying LR too — two schedules, same direction). Suspect: fresh optimizer discards
+basin-holding momentum. Engineering side-quest: two T4 OOMs → gradient checkpointing of
+prefixes (D21, then corrected: backbone chunks dominate) — verified bit-identical math.</p>
+<div class="verdict">Champion stands: <code>best.pt</code>, val <b>0.0081</b> / test <b>0.0074</b>.
+No more 30-epoch legs.</div>
+
+<h2>2. Ablations &amp; probes</h2>
+<table>
+<tr><th>ID</th><th>Question</th><th>Result</th></tr>
+<tr><td>A6</td><td>Learning signal? (pilot)</td><td>JEPA 0.058 &lt; chance; persistence 0.0043 unbeaten</td></tr>
+<tr><td>A7</td><td>Do epochs close the gap? (25-ep pilot)</td><td>Gap 13×→2.5×, first win; epochs spent, need patients</td></tr>
+<tr><td>A8</td><td>Merit at scale? (leg 1, 91 pts)</td><td><b>0.0081 vs 0.0218, 82/91 wins</b> — gate cleared</td></tr>
+<tr><td>A9</td><td>RANO from frozen latents? (393 visits, 4-class)</td><td>Snapshots F1 0.31; <b>temporal-forecast MLP F1 0.45, acc 0.67</b>; CV-corrected <b>0.33±0.06</b></td></tr>
+<tr><td>A10</td><td>Does surprise anticipate PD? (393 pairs)</td><td><b>AUC 0.77</b>, zero training; PR/CR surprise most</td></tr>
+<tr><td>A11</td><td>Volume from latents? (599 auto-mask studies)</td><td>Readout R² 0.15; forecast loses to persistence</td></tr>
+</table>
+<div class="why">Why probes, not lower loss: JEPA loss 0.008 ≈ cosine 0.992 — saturated.
+Downstream metrics (RANO F1, volume error) are the game now. A9's arc is the template:
+snapshot F1 0.31 → temporal-forecast 0.45 → CV-honest 0.33 (hero split was lucky).
+Regularization lesson: plain least-squares on 1152-d/450-row gives R² ≈ −100 (p≫n);
+ridge + CV-λ is mandatory.</div>
+<div class="warn">Field context (D24, <code>info/frontier_lumiere.md</code>): RANO SOTA on
+LUMIERE is Tikhonov 2025 hybrid, <b>F1 0.50</b> (end-to-end + radiomics). Our frozen 0.33
+trails but is representation-only. Volume labels are auto-masks (DeepBraTumIA/HD-GLIO —
+zero expert masks). SAILOR (143 GB, local) is TaDiff's training cohort: the cross-site
+test nobody has.</div>
+
+<h2>3. Scoreboard</h2>
+<table>
+<tr><th>Claim</th><th>Number</th><th>Status</th></tr>
+<tr><td>Beat persistence (held-out dynamics)</td><td>0.0074 test vs 0.0218-mean persist</td><td>Proven (A8)</td></tr>
+<tr><td>RANO from frozen temporal latent</td><td>CV F1 0.33±0.06 (SOTA 0.50)</td><td>Modest, real</td></tr>
+<tr><td>Surprise → next PD</td><td>AUC 0.77</td><td>New, needs persist-baseline</td></tr>
+<tr><td>Volume from latent</td><td>R² 0.15; forecast &lt; persistence</td><td>Weak</td></tr>
+<tr><td>Cross-site (SAILOR) generalization</td><td>—</td><td>Next</td></tr>
+</table>
+
+<h2>4. What's next (D22/D24)</h2>
+<ol>
+<li>SAILOR adapter + eval: JEPA-vs-persistence and volume probes cross-site (data local).</li>
+<li>Persistence-error baseline for A10; enhancing-core/growth-rate volume framings.</li>
+<li>Optional 10-epoch 5e-6 basin probe. D19 fusion retrain stays gated on ~0.50 frozen F1.</li>
+</ol>
+<p><small>Generated 2026-09-06 from <code>info/</code> (D0–D24, A6–A11, Runs 1–5). Details +
+citations: <code>info/decisions.md</code>, <code>info/ablations.md</code>,
+<code>info/pilot.md</code>, <code>info/frontier_lumiere.md</code>.</small></p>
+</body>
+</html>
