@@ -206,3 +206,13 @@ Append-only. Each entry: setup → numbers → inference. IDs referenced from
   dynamics — expected, volumes evolve slowly and the dynamics add noise.
   Volume half of the thesis: unblocked and measurable, not yet
   competitive. Enhancing-core-only + growth-rate framings still open.
+
+### A11 addendum — CV-tuned ridge lowers the headline (same night)
+
+- λ picked by 5-fold CV on train rows (grid 0.1–1000): λ=1000 both
+  tasks (heavy shrinkage — size signal is weak/diffuse). Readout:
+  MAE 1.26 (base 1.38), R2 0.15 (was 0.27 at fixed λ=10 — partly
+  train-overfit). Forecast: MAE 1.52 vs persistence 1.07, R2 0.04.
+- Honest headline: R2 ≈ 0.15 readout, forecast loses to persistence.
+  Volume half stays uncompetitive; enhancing-core/growth-rate framings
+  open but low-priority behind SAILOR generalization.
