@@ -174,7 +174,7 @@ common = dict(meta_dir=cfg['data']['meta_dir'], processed_root=cfg['data']['root
                 min_visits=cfg['data'].get('min_visits', 2))
 collate = make_collate(size)
 model = JEPAWorldModel(cfg)
-model.load_state_dict(torch.load('/kaggle/working/checkpoints/best.pt', map_location='cpu')['model'])
+model.load_state_dict(torch.load('/kaggle/working/checkpoints/best.pt', map_location='cpu')['model'], strict=False)  # champion predates rano_heads (D25)
 model.eval().to(device)
 pers = PersistenceBaseline(model.projector)
 pats = sorted(os.listdir(cfg['data']['root']))
