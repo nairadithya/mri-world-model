@@ -189,3 +189,20 @@ Append-only. Each entry: setup → numbers → inference. IDs referenced from
   carries real but modest progression signal; volume probes (auto-masks
   downloading) and SAILOR generalization are now the load-bearing next
   results.
+
+## A11 — Volume probes from frozen latents (2026-09-06, local CPU)
+
+- Setup (D24.b): labels = DeepBraTumIA `measured_volumes_in_mm3.json`
+  (auto-masks, 599 studies; total = necrotic + enhancing + edema).
+  Log-mm3 least squares, hero splits. Script `scripts/volume_probe.py`.
+  Debugging note: plain LSQ on 1152-d/450-row gave R2 ≈ −100 (p≫n
+  overfit) — ridge (λ=10) + standardization is mandatory at this
+  sample regime; any future probe above ~100-d features must regularize.
+- Numbers: readout log-vol from fused_t — test n=73, MAE 1.34 (mean
+  baseline 1.38), R2 0.27. Forecast log-vol_{t+1} from state_t — test
+  n=56, MAE 1.53 vs persistence 1.07, R2 0.21.
+- Inference: latent holds weak size signal (readout beats mean), but
+  next-visit volume is better predicted by current volume than by state
+  dynamics — expected, volumes evolve slowly and the dynamics add noise.
+  Volume half of the thesis: unblocked and measurable, not yet
+  competitive. Enhancing-core-only + growth-rate framings still open.
