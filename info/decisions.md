@@ -203,6 +203,36 @@ referenced, not repeated — only session decisions are recorded here in full.
   overwrites the staged champion with that leg's best — always label
   downloads with (leg, epoch, val) and ferry the true champion file.
 
+- **D26 — SAILOR adapter + cross-site eval.** Data local (143 GB,
+  `data/sailor/`, access done). Derivatives are MNI-registered,
+  skull-stripped, uint8-ish 0–255 — `runtime_transform`
+  (load→resize-96³→zscore) absorbs all of that, no preprocessing
+  needed. Adapter (`src/data/sailor.py`) maps per subject/session:
+  T1c-icor→CT1, T1-icor→T1, T2-icor→T2, Flair-icor→FLAIR (`-icor`
+  bias-corrected, natural intensities; zscore at load); sessions with
+  any missing quad modality dropped (mask False, cf. imageless-drop);
+  `intervals-days.txt` → time_deltas (manual DICOM extraction, may be
+  approximate — soft input only); RANO.txt codes → labels via the
+  empirical codebook {1:PD, 2:SD, 3:PR, 5:CR} (D26 recon: code 1
+  follows +2.6 mL enhancing growth, 2 flat, 3/5 shrink; 3-vs-5
+  tentative); ONCO masks (ContrastEnhanced/Necrosis/Edema,
+  ~270 sessions) → volumes. Evals, all with frozen champion, zero
+  training: (a) JEPA-vs-persistence mean over all SAILOR pairs
+  (A8-style, label-free — the cross-site dynamics test); (b) RANO
+  forecast probe applied as-is (LUMIERE-trained linear/MLP → SAILOR
+  rows: direct transfer) + SAILOR-fit probe (ceiling); (c) volume
+  readout/forecast with SAILOR masks; (d) surprise-AUC with SAILOR
+  RANO. Success = (a) still beats persistence AND (b-transfer) above
+  majority F1:   representation generalizes across site/scanner/protocol.
+
+  - **D26 recon note — SAILOR `-icor` files carry background NaNs.**
+    T2-icor (plus 1 Flair-icor, 1 T1-icor) holds NaNs in ~200 sessions
+    (up to 79% of voxels; bias-correction wrote NaN outside the brain
+    mask), which poisoned the first cache (NaN latents) and crashed
+    eval in SVD metrics. Base variants are 99.6% present and fully
+    finite — adapter prefers base, `-icor` fallback only. Lesson:
+    finite-check a new site's files before first encode, not after.
+
 - **D24 — Literature survey pivots the program to representation
   quality (2026-09-05).** Frontier on LUMIERE: TaDiff-Net (TMI 2025,
   10.1109/TMI.2025.3533038) generates future MRI+masks but never
