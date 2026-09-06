@@ -120,6 +120,18 @@ patient-wise CV); our frozen-encoder readout at 0.33 uses no task training and
 no volumetry — a real but modest signal, best read as the price of
 task-blindness rather than a failure.
 
+Fix attempt (gap-conditioned head applied cross-site, zero training,
+`scripts/sailor_gap_probe.py`): the LUMIERE-trained gap head beats the
+champion 1-step head on SAILOR in every gap bin (0-21d: 0.0245 vs 0.0284;
+61-180d: 0.0220 vs 0.0283 — ~15–20% better, and its error no longer sits
+flat). But it still loses to persistence ~5–8× everywhere (0.0049/0.0026/
+0.0035/0.0047). Time-awareness was indeed part of the failure — and fixing
+it isn't enough. The residual is feature-level shift: SAILOR latents live in
+a quieter neighborhood than LUMIERE dynamics expect. Per the pre-registered
+reading this localizes the failure below the head and ends spending on it:
+remaining options (site shrinkage, adapters on N=27) concede the transfer
+claim rather than rescue it.
+
 ---
 
 ## The training story, run by run

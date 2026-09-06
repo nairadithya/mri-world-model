@@ -162,12 +162,14 @@ class HorizonPredictor(nn.Module):
 
 
 def train_predictor(patients, epochs=300, lr=1e-3, seed=42, weight="inv_n",
-                    hidden=1024, layers=2, per_horizon=False):
+                    hidden=1024, layers=2, per_horizon=False,
+                    save_path=None, load_path=None):
     """weight: 'inv_n' (1/n per pair) or 'inv_gap_err' (1/mean-train-
     persistence-error of the pair's gap-days bin — day-based unit with the
     empirically correct sign: hard bins count less).
     per_horizon: one net per horizon n (no cross-horizon capacity
     competition); horizons with <30 train pairs fall back to the joint net.
+    save/load: persist the joint net + gap normalizer for cross-site use.
     """
     g = torch.Generator().manual_seed(seed)
     tr = pairs_for(patients, ("train",))
@@ -248,7 +250,24 @@ def train_predictor(patients, epochs=300, lr=1e-3, seed=42, weight="inv_n",
           f"per_horizon={per_horizon}")
 
     nets = {}  # horizon n -> net (per_horizon mode); joint net under key 0
-    if per_horizon:
+    if load_path:
+        saved = torch.load(load_path, map_location="cpu", weights_only=False)
+        nets[0] = make_net()
+        nets[0].load_state_dict(saved["net"])
+        mu, sd = saved["mu"], saved["sd"]
+        # rebuild standardized gap features under the loaded normalizer
+        def refeats(rows):
+            s = torch.stack([r[1] for r in rows])
+            zt = torch.stack([r[2] for r in rows])
+            z = torch.stack([r[3] for r in rows])
+            gg = (torch.log1p(torch.tensor([r[4] for r in rows])) - mu) / sd
+            nn_ = torch.tensor([r[5] for r in rows])
+            return s, zt, gg, z, nn_
+        Xtr, Zttr, Gtr, Ytr, Ntr = refeats(tr)
+        Xva, _, Gva, Yva, Nva = refeats(va)
+        Xte, Ztte, Gte, Yte, Nte = refeats(te)
+        print(f"loaded joint net from {load_path} (no training)")
+    elif per_horizon:
         avail = sorted(set(Ntr.tolist()))
         for h in avail:
             m = Ntr == h
@@ -267,6 +286,10 @@ def train_predictor(patients, epochs=300, lr=1e-3, seed=42, weight="inv_n",
     else:
         nets[0] = run_epochs(make_net(), Xtr, Gtr, Ytr, joint_weights(),
                              "joint", (Xva, Gva, Yva))
+        if save_path and load_path is None:
+            torch.save({"net": nets[0].state_dict(), "mu": mu, "sd": sd,
+                        "hidden": hidden, "layers": layers}, save_path)
+            print(f"saved joint net + normalizer -> {save_path}")
 
     for net in nets.values():
         net.eval()
@@ -301,6 +324,10 @@ def main():
     ap.add_argument("--per-horizon", action="store_true",
                     help="one dedicated net per horizon (thin horizons "
                          "fall back to a joint net)")
+    ap.add_argument("--save", default=None,
+                    help="save joint net + gap normalizer (mu/sd) to this path")
+    ap.add_argument("--load", default=None,
+                    help="load joint net + gap normalizer instead of training")
     ap.add_argument("--weight", default="inv_n", choices=["inv_n", "inv_gap_err"],
                     help="pair weighting: 1/n or 1/mean-gap-bin-persistence-error")
     args = ap.parse_args()
@@ -317,7 +344,8 @@ def main():
     if args.train:
         train_predictor(patients, epochs=args.epochs, lr=args.lr,
                         weight=args.weight, hidden=args.hidden,
-                        layers=args.layers, per_horizon=args.per_horizon)
+                        layers=args.layers, per_horizon=args.per_horizon,
+                        save_path=args.save, load_path=args.load)
 
 
 if __name__ == "__main__":
