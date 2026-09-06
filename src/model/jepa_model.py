@@ -15,6 +15,7 @@ import torch.nn as nn
 
 from .brainiac import BrainiacEncoder
 from .clinical import ClinicalEncoders
+from .heads import RANOHeads
 from .jepa import (
     ImageProjector,
     Predictor,
@@ -67,6 +68,10 @@ class JEPAWorldModel(nn.Module):
             self.backbone, self.projector,
             momentum=m["target"].get("ema_momentum", 0.996),
         )
+        # RANO aux heads (D25): built always (tiny), active only when the
+        # run enables aux loss. Random init — champion checkpoints predate
+        # them, so resume uses strict=False (see run_train.py).
+        self.rano_heads = RANOHeads(d_model=t.get("d_model", 1152))
         # Fail fast on inconsistent dims (fusion out must feed temporal;
         # predictor/target-projection dims must agree).
         assert self.fusion.out_dim == t.get("d_model", 1152), (
@@ -125,11 +130,25 @@ class JEPAWorldModel(nn.Module):
             if flat_valid.any()
             else z_hat.sum() * 0.0  # degenerate batch guard
         )
+        # RANO aux (D25): forecast framing on clean-labelled valid pairs.
+        # best-val tracks the TOTAL so best.pt follows the joint objective.
+        aux_cfg = (self.cfg.get("aux") or {})
+        aux = {"flat": loss * 0.0, "prog": loss * 0.0,
+               "resp": loss * 0.0, "n_aux": 0}
+        lam = aux_cfg.get("lambda", 0.0)
+        if lam > 0 and "actions" in batch:
+            cw = aux_cfg.get("class_weights")
+            aux = self.rano_heads.aux_losses(
+                states, batch["actions"], valid,
+                {"class_weights": torch.tensor(cw) if cw else None,
+                 "prog_pos_weight": aux_cfg.get("prog_pos_weight", 0.56),
+                 "resp_pos_weight": aux_cfg.get("resp_pos_weight", 2.0)})
+            loss = loss + lam * (aux["flat"] + aux["prog"] + aux["resp"])
         with torch.no_grad():
             metrics = collapse_metrics(z_tgt.reshape(-1, z_tgt.shape[-1])[flat_valid]) \
                 if flat_valid.any() else {"target_std": 0.0, "target_eff_rank": 0.0}
         return {"loss": loss, "z_hat": z_hat, "z_target": z_tgt,
-                "valid": valid, **metrics}
+                "valid": valid, "aux": aux, **metrics}
 
     def update_target(self) -> None:
         self.target.update_ema(self.backbone, self.projector)

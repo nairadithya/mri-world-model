@@ -225,8 +225,24 @@ referenced, not repeated — only session decisions are recorded here in full.
   field lacks; (e) D19 retrain gated on frozen probes approaching
   0.50 on pair-framing. Unchanged: 5e-6 probe, no more 30-epoch legs.
   Glossary: PD = Progressive Disease (RANO; tumour grew/new lesions);
-  SD/PR/CR = stable/partial/complete. PD is our majority class
+  SD/PR/CR = stable/partial/complete.   PD is our majority class
   (253/397, ~64%), hence macro-F1 over accuracy.
+
+- **D25 — Joint JEPA + RANO aux fine-tune (path B, TRACE-style).**
+  Frozen probes price task-blindness (~0.17 F1 gap to SOTA); plan is
+  aux fine-tune of the 0.0081 champion, not joint-from-scratch (cheap,
+  keeps champion intact, fails fast if D22 ejection repeats). Heads
+  (`src/model/heads.py`) read prefix states, forecast framing
+  (state_t → status of visit t+1, no leakage): flat 4-class CE (vs
+  0.50 line / frozen 0.33), prog binary PD-vs-rest (vs TRACE 0.71),
+  resp binary (PR|CR)-vs-SD on non-PD visits (pools the n=1-PR
+  problem). Clean response labels only; loss = JEPA + λ·(flat + prog
+  + resp) with class/pos weights from the global distribution.
+  Eval protocol fixed: frozen-probe F1 (did the encoder improve?),
+  JEPA val (tension check), persistence re-gate (A8 must re-pass —
+  encoder changed), monitors healthy (aux must not collapse states
+  to class constants). No D19 fusion retrain until frozen probes
+  approach 0.50.
 
 - **D23 — Frozen RANO probe: first downstream test, runs local on CPU.**
   JEPA loss (~0.008, cosine ≈ 0.992) is saturated as an objective;

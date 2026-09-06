@@ -93,6 +93,11 @@ def train(
             if global_step % log_every == 0:
                 msg = {"loss": loss.item(), "target_std": out["target_std"],
                        "target_eff_rank": out["target_eff_rank"], "lr": opt.param_groups[0]["lr"]}
+                aux = out.get("aux") or {}
+                if aux.get("n_aux", 0):
+                    msg["aux_flat"] = aux["flat"].item()
+                    msg["aux_prog"] = aux["prog"].item()
+                    msg["aux_resp"] = aux["resp"].item()
                 pbar.set_postfix({k: f"{v:.4f}" for k, v in msg.items() if k != "lr"})
                 if run is not None:
                     run.log({"train/" + k: v for k, v in msg.items()}, step=global_step)

@@ -60,3 +60,12 @@ training:
   project_name: world-model-jepa
   log_every: 10
   eval_every: 1
+
+# RANO aux fine-tune (D25): joint JEPA + readout heads. lambda 0 = JEPA only
+# (default; preserves all prior behavior). class_weights follow the global
+# response distribution PD/SD/PR/CR ≈ .64/.24/.05/.07 (inverse, normalized).
+aux:
+  lambda: 0.0
+  class_weights: [0.39, 1.04, 5.0, 3.57]
+  prog_pos_weight: 0.56
+  resp_pos_weight: 2.0
