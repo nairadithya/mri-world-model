@@ -359,14 +359,35 @@ dominate). Tested with the encoder frozen via `scripts/horizon_probe.py`
 - Gate verdict: **passed.** A full Kaggle run with a horizon-conditioned head
   and 1/n weighting is earned; the probe result is the baseline it must beat.
 
-Hero-run spec (implemented, not yet launched): `--horizon` flag in
-`scripts/run_train.py` enables the gap-conditioned head in `JEPAWorldModel`
-(loss = 1/n-weighted multi-horizon loss; plain 1-step predictor unused;
-`best.pt` resume lists the 14 fresh `horizon_*` keys). Leg plan in
-`kaggle/hero_run.py`: resume the 0.0081 champion, 30 epochs at LR 2e-5,
-batch 1, plus a per-horizon JEPA-vs-persistence eval cell (same-pair
-comparison via the model's `horizon` output). Gate: val loss AND beating
-the probe numbers above per horizon.
+Hero-run leg (2026-09-06, Kaggle T4, launched programmatically — see
+`AGENTS.md`): resumed the 0.0081 champion, 30 epochs at LR 2e-5, batch 1.
+Resume listed exactly the 14 fresh `horizon_*` keys. Val: 0.49 → 0.072 →
+best **0.0170 at epoch 4**, then slow rise to ~0.029 plateau; monitors
+healthy throughout (std 0.08→0.16, rank ~2 — drift, not collapse). Test
+0.0147. (Val/test here are 1/n-weighted multi-horizon losses — not
+comparable to 1-step or probe numbers; the gate is the per-horizon table.)
+
+Per-horizon test eval of the trained leg (`scripts/horizon_eval.py`, same
+pairs both sides):
+
+| n | pairs | trained leg | persistence | frozen probe (reference) |
+|---|---|---|---|---|
+| 1 | 71 | 0.0137 (loses) | 0.0088 | **0.0050** |
+| 2 | 58 | 0.0133 (loses) | 0.0079 | — |
+| 3 | 48 | 0.0139 (tie) | 0.0083 | — |
+| 4 | 40 | **0.0144** | 0.0109 | — |
+| 5 | 33 | **0.0157** | 0.0134 | 0.0065 |
+| 6–7 | 26/19 | **wins** | — | — |
+| 8–11 | 13/9/6/4 | **wins** (thin counts) | — | — |
+
+Gate verdict: **FAILED where it matters most.** Joint encoder+head training
+bought far-horizon wins (n≥4) but damaged near horizons ~2.7× vs the frozen
+probe (n=1: 0.0137 vs 0.0050) and ~1.9× vs the champion's own 1-step head
+(0.0074). Same moral as the aux fine-tune: training the encoder tilts it —
+here toward far-horizon targets — while the frozen encoder plus a trained
+head keeps near accuracy. The production multi-horizon predictor is therefore
+the frozen probe head, not this leg. No further GPU legs; a head-only
+(frozen-encoder) training with more capacity is the cheap open option.
 
 ## Open work (not claimed)- Interval-stratified cross-site comparison: long-gap SAILOR pairs should favor
   the forecaster — the decider between regime and representation explanations.

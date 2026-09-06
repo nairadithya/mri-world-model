@@ -12,15 +12,20 @@ and `info/` for why things are the way they are.
   `heads.py`), `train/` (trainer, baselines), `preprocessing/` (BRAINIAC
   contract pipeline).
 - `scripts/` — runnable entry points. `run_train.py` (+`--aux-lambda`,
-  `--resume-from`), `preprocess.py`, `probe_rano.py` (frozen RANO probes
-  + `--cv`), `surprise_signal.py` (error→PD AUC), `volume_probe.py`
-  (auto-mask volumetry), `sailor_eval.py` (cross-site eval), fetch/auth
-  scripts.
+  `--resume-from`, `--horizon`), `preprocess.py`, `probe_rano.py` (frozen
+  RANO probes + `--cv`), `surprise_signal.py` (error→PD AUC), `volume_probe.py`
+  (auto-mask volumetry), `sailor_eval.py` (cross-site eval),
+  `horizon_probe.py` (`--encode`/`--curve`/`--train`: multi-horizon gate),
+  `horizon_eval.py` (per-horizon JEPA-vs-persistence for a trained leg),
+  fetch/auth scripts.
 - `config/` — `default.yaml` (full run; `aux:` section, lambda 0 = JEPA
   only), `pilot.yaml` (5-patient CPU pilot).
 - `kaggle/` — hero-run notebook. `hero_run.py` is the source of truth;
   never edit the `.ipynb` directly (JSON churn breaks diffs). Regenerate
   with `jupytext --to ipynb kaggle/hero_run.py` after editing.
+  `kernel-horizon/` is the pushable-run variant (own `.py` source +
+  `kernel-metadata.json`; shell commands LIVE — push executes the notebook
+  as-is, so never `py_compile` it, only `jupytext --to ipynb`).
 - `info/` — decision log (`decisions.md`, IDs D0–), ablations (`ablations.md`,
   IDs A–/I–), pilot notes (`pilot.md`). Append-only; reference IDs.
 - `data/`, `checkpoints/`, `.venv/`, `.env` — NEVER commit (gitignored).
@@ -98,6 +103,48 @@ python scripts/run_train.py --epochs 1 --batch-size 1 --no-wandb --random-init
 - **Scale**: checkpoints are ~1.5GB each; batch 4 fits 24GB VRAM
   (chunked encoding). No GPU on the dev host — pilot on CPU, hero run
   needs one (≈6 h all-in, see `info/pilot.md` scale-up checklist).
+
+## Programmatic Kaggle runs (verified 2026-09-06, horizon leg)
+
+The CLI (`kaggle`, creds in `~/.kaggle/`) can push, monitor, and fetch a GPU
+run end-to-end — no browser needed except for live logs (the API exposes
+status only; the kernel page streams the live log).
+
+```bash
+kaggle quota                                            # GPU hours remaining
+kaggle kernels push -p kaggle/kernel-horizon \
+  -t 32400 --accelerator NvidiaTeslaT4                  # push + start (v1, v2, …)
+kaggle kernels status -k nairadithya/horizon-leg        # RUNNING / COMPLETE / ERROR
+kaggle kernels logs -k nairadithya/horizon-leg > logs_run.json   # JSON array AFTER finish
+kaggle kernels output -k nairadithya/horizon-leg -p outputs/horizon-leg/  # best.pt + logs (~1.5GB)
+```
+
+Rules, all earned:
+
+- **T4 selection needs `machine_shape`.** `enable_gpu: true` alone lands on
+  P100, which this image's torch build cannot use (no sm_60 kernels — CUDA
+  available but every op fails). Set `"machine_shape": "NvidiaTeslaT4"` in
+  `kernel-metadata.json` AND pass `--accelerator NvidiaTeslaT4` (belt and
+  suspenders; the flag alone has mixed reports).
+- **Push executes the notebook as-is.** Training shell commands must be LIVE
+  in the pushed `.ipynb` (unlike `hero_run.py`, where they stay commented).
+  Keep the `.py` jupytext source as truth; regenerate after editing.
+- **Fail fast on the wrong GPU.** First code cell asserts `torch.cuda` and
+  `'T4' in device name` — a P100 session aborts in seconds instead of burning
+  quota. Verify from the log (`device: Tesla T4`), never assume.
+- **Persist CLI-set flags to `kaggle.yaml`.** `run_train.py` flags mutate the
+  in-memory config only; later eval cells re-read the file. The horizon leg
+  lost its whole eval table to this (training completed, assert tripped on a
+  stale file). Write every flag the run depends on into `kaggle.yaml` at wire-up.
+- **Datasets by slug + recursive glob.** Attach inputs by dataset name; mounts
+  land at varying depths (`/kaggle/input/<slug>/` vs
+  `/kaggle/input/datasets/<user>/<slug>/`). Never hardcode one depth.
+- **Background launches need `setsid`.** A tool-timeout process-group kill
+  takes plain `nohup … &` children with it (killed the first local eval).
+  Use `setsid nohup … & disown` for anything outliving the call.
+- **Outputs are gitignored, always.** `outputs/` holds ~1.5GB `best.pt` files;
+  judge the gate locally (`scripts/horizon_eval.py` runs CPU-only), commit
+  only code + notes.
 
 ## Verification bar
 
