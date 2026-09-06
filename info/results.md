@@ -413,7 +413,9 @@ Weighting unit is second-order; 1/n stays (monotonic in difficulty,
 validated). Day gaps matter for predictor *conditioning* (already in both
 probe and head — SAILOR n=1 ≈ 14 days ≈ LUMIERE n=2), not for weighting.
 
-## Open work (not claimed)- Interval-stratified cross-site comparison: long-gap SAILOR pairs should favor
+## Open work (not claimed)
+
+- Interval-stratified cross-site comparison: long-gap SAILOR pairs should favor
   the forecaster — the decider between regime and representation explanations.
 - Persistence-error baselines for both surprise AUCs.
 - Cross-site volume probes from expert/automated masks; enhancing-core and
@@ -446,8 +448,6 @@ training needs a GPU (~6 h all-in on a free Kaggle T4, batch size 1 on 16 GB;
 see `kaggle/hero_run.py`, the notebook source of truth).
 
 Final model: first-leg best checkpoint (validation 0.0081, test 0.0074).
-Full-scale training needs a GPU (~6 h all-in on a free Kaggle T4; see
-`kaggle/hero_run.py`, the notebook source of truth). Local prerequisites —
-official weights at `checkpoints/BrainIAC.ckpt`, preprocessed volumes, metadata
-CSVs, MNI template — are gitignored and documented in `README.md`, never
-committed.
+Local prerequisites — official weights at `checkpoints/BrainIAC.ckpt`,
+preprocessed volumes, metadata CSVs, MNI template — are gitignored and
+documented in `README.md`, never committed.

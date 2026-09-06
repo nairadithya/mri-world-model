@@ -99,7 +99,10 @@ python scripts/run_train.py --epochs 1 --batch-size 1 --no-wandb --random-init
   exactly one consumer at a time or the chain invalidates (400).
   SAILOR is controlled-access; the data-proxy v1 object API is
   `GET /v1/datasets/{id}` (list) and `GET /v1/datasets/{id}/{object}`
-  (bytes). There is no `/files` endpoint.
+  (bytes). There is no `/files` endpoint. Read 401s literally: missing
+  scopes (token needs `roles`, `email`, `team`, `profile`) means re-auth;
+  "access has expired, please request access again" means file a request
+  (`sailor_request_access.py`), not a token bug.
 - **Scale**: checkpoints are ~1.5GB each; batch 4 fits 24GB VRAM
   (chunked encoding). No GPU on the dev host — pilot on CPU, hero run
   needs one (≈6 h all-in, see `info/pilot.md` scale-up checklist).
