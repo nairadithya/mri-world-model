@@ -134,6 +134,21 @@ for p in prev:
 !(echo "CLI: --epochs $EPOCHS --batch-size $BATCH --lr $LR --resume-from best.pt"; python scripts/run_train.py --config kaggle.yaml --epochs $EPOCHS --batch-size $BATCH --lr $LR --no-wandb --resume-from /kaggle/working/checkpoints/best.pt) 2>&1 | tee /kaggle/working/train_ep$EPOCHS.log
 
 # %% [markdown]
+# ## AUX fine-tune (path B, D25) — 10 epochs, NOT 30
+# Resume the 0.0081 champion with joint JEPA + RANO heads (flat/prog/resp,
+# `--aux-lambda`). Tiny LR (5e-6), 1 warmup epoch (5 wastes half the run).
+# Expect the resume line to list the six `rano_heads.*` keys as randomly
+# initialized — correct, the champion predates them. Download best.pt after;
+# frozen-probe + persistence re-gate happen locally.
+
+# %env AUXEPOCHS=10
+# %env AUXBATCH=1
+# %env AUXLR=0.000005
+# %env AUXLAM=1.0
+# %env AUXWARMUP=1
+# !(echo "CLI(aux): --epochs $AUXEPOCHS --batch-size $AUXBATCH --lr $AUXLR --aux-lambda $AUXLAM --warmup-epochs $AUXWARMUP --resume-from champion"; python scripts/run_train.py --config kaggle.yaml --epochs $AUXEPOCHS --batch-size $AUXBATCH --lr $AUXLR --aux-lambda $AUXLAM --warmup-epochs $AUXWARMUP --no-wandb --resume-from /kaggle/working/checkpoints/best.pt) 2>&1 | tee /kaggle/working/train_aux.log
+
+# %% [markdown]
 # ## After each session
 #
 # 1. `/kaggle/working/checkpoints/best.pt` + `last.pt` are your outputs — download them, or save the version to attach as `prev-checkpoints` next time.
