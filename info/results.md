@@ -111,7 +111,22 @@ test split; "CV" means 5-fold patient-wise cross-validation. Only CV counts.
 | Does the frozen representation encode progression status? | **Modestly: CV macro-F1 0.33** | Beats the always-guess-PD floor (~0.20) and a volumes-only probe (0.30); trails supervised end-to-end literature (0.50). The single-split 0.45 was the lucky end of the spread (folds: 0.25–0.42), not the centre. |
 | Does prediction surprise anticipate progression? | **Weakly and non-specifically: JEPA-error AUC 0.77 in-domain (393 pairs) vs 0.75 for trivial persistence error; 0.87 cross-site (240 pairs) vs 0.86** | Stable futures are predictable, change is not — but raw scan-to-scan change predicts progression nearly as well. Surprise is change-detection, not a JEPA-specific signal. One divergence: JEPA is most surprised by rare response transitions (PR/CR), persistence least by CR — task-blindness signal raw change misses, but on n=20–27 samples. |
 | Does the latent encode tumour size? | **Weakly: readout R² ≈ 0.15 (mean error 1.26 vs 1.38 for predicting the mean, log-mm³); forecasting next-visit size loses to persistence (1.52 vs 1.07, forecast R² ≈ 0.04)** | Tumour volumes come from automated (not expert) masks. Size signal exists but is diffuse; volumes evolve slowly, so "same as last visit" wins. |
-| Do dynamics transfer across site/scanner/protocol? | **Split, decided against regime: mean-error dynamics do NOT transfer at any gap (persistence wins 0-21d through 180d+); discriminative readouts DO (F1 0.37 ≈ in-domain CV 0.33; surprise AUC 0.87)** | Interval stratification (`scripts/sailor_interval_eval.py`, 243 pairs, median gap 76d — not ~14d as earlier notes said) rules out the interval excuse: persistence wins 7–14× in every bin (e.g. 61-180d: 0.0035 vs 0.0283; 180d+: 0.0047 vs 0.0292). Mechanism: the champion systematically over-predicts change on SAILOR — its error sits flat ~0.03 at all gaps while SAILOR targets stay near-static even 76 days apart (LUMIERE-calibrated dynamics expecting weekly on-treatment volatility, applied to mostly-stable disease). Dynamics scale doesn't transfer; representation readouts do. |
+| Do dynamics transfer across site/scanner/protocol? | **Split, decided against regime: mean-error dynamics do NOT transfer at any gap (persistence wins 0-21d through 180d+); discriminative readouts DO (F1 0.37 ≈ in-domain CV 0.33; surprise AUC 0.87)** | Interval stratification (`scripts/sailor_interval_eval.py`, 243 pairs, median gap 76d — not ~14d as earlier notes said) rules out the interval excuse: persistence wins 7–14× in every bin (e.g. 61-180d: 0.0035 vs 0.0283; 180d+: 0.0047 vs 0.0292). Mechanism: the champion systematically over-predicts change on SAILOR — its error sits flat ~0.03 at all gaps while SAILOR targets stay near-static even 76 days apart (LUMIERE-calibrated dynamics expecting weekly on-treatment volatility, applied to mostly-stable disease). Dynamics scale doesn't transfer; representation readouts do.
+
+Disease-mismatch check (is SAILOR a different disease?): no, mostly. SAILOR
+is 23 glioblastomas + 4 grade-III gliomas (Hovden's own slides); LUMIERE is
+91 glioblastomas, same Stupp protocol both, median overall survival nearly
+identical (16.7 vs 19 months). Grade mix is exonerated as the cause:
+per-subject persistence error is uniformly tiny (~0.002–0.005) across all 27
+SAILOR subjects regardless of survival — 4-month and 91-month survivors
+alike, long-OS mean only 2× below short-OS, both an order of magnitude under
+JEPA's 0.03. The real disease-related difference is *phase*, not entity:
+LUMIERE densely samples the volatile early on-treatment window (weekly,
+PD 64%); SAILOR sparsely spans the full course including long stable
+maintenance stretches (SD 48%). Same disease, different chapter — plus one
+unverified suspect: SAILOR's PLHM longitudinal intensity normalization is
+designed to make visits comparable and may itself dampen visit-to-visit
+change signal. |
 | Did task-specific fine-tuning help? | **No: CV F1 unchanged (0.328 vs 0.334) while dynamics error grew ~2.5× (0.0081 → 0.0191)** | The joint RANO fine-tune tilted the encoder toward the classifier without adding generalizable signal. Champion weights stand untouched. |
 
 Reference numbers for the field: published 4-class RANO prediction on similar
