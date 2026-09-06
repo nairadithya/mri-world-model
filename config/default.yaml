@@ -49,6 +49,15 @@ model:
     ema_momentum: 0.996
     projection_dim: 768
 
+  # Time-continuous dynamics: velocity field integrated across true gaps.
+  # Replaces the 1-step and horizon losses when enabled (--dynamics).
+  # Disabled by default (all prior behavior preserved).
+  dynamics:
+    enabled: false
+    steps: 3
+    weight_power: 1.0
+    phase_dim: 32
+
 actions:
   classes: [Pre-Op, Post-Op, SD, PD, CR, PR]
   # Post-Op/PD and missing map to PD-like / unknown ids at dataset level;

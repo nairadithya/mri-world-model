@@ -8,11 +8,12 @@ and `info/` for why things are the way they are.
 
 - `src/` — library code. `data/` (LUMIERE dataset/collate/splits,
   SAILOR adapter `sailor.py`), `model/` (BRAINIAC+LoRA, clinical encoders,
-  fusion, temporal transformer, predictor, EMA target, JEPA loss, RANO aux
+  fusion, temporal transformer, predictor, gap-conditioned horizon head,
+  velocity-field dynamics `dynamics_field.py`, EMA target, JEPA loss, RANO aux
   `heads.py`), `train/` (trainer, baselines), `preprocessing/` (BRAINIAC
   contract pipeline).
 - `scripts/` — runnable entry points. `run_train.py` (+`--aux-lambda`,
-  `--resume-from`, `--horizon`), `preprocess.py`, `probe_rano.py` (frozen
+  `--resume-from`, `--horizon`, `--dynamics`), `preprocess.py`, `probe_rano.py` (frozen
   RANO probes + `--cv`), `surprise_signal.py` (error→PD AUC), `volume_probe.py`
   (auto-mask volumetry), `sailor_eval.py` (cross-site eval),
   `horizon_probe.py` (`--encode`/`--curve`/`--train`: multi-horizon gate),

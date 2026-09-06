@@ -16,6 +16,7 @@ import torch.nn.functional as F
 
 from .brainiac import BrainiacEncoder
 from .clinical import ClinicalEncoders
+from .dynamics_field import PatientTempo, VelocityField, integrate
 from .heads import RANOHeads
 from .jepa import (
     HorizonPredictor,
@@ -84,6 +85,31 @@ class JEPAWorldModel(nn.Module):
             output_dim=p.get("output_dim", 768),
             dropout=p.get("dropout", 0.1),
         )
+        # Time-continuous dynamics (velocity field integrated across true
+        # gaps). Built always (small); active only when
+        # model.dynamics.enabled is true, in which case it REPLACES both the
+        # 1-step and horizon JEPA losses below. Phase conditions on the
+        # visit-t action id (treatment-phase proxy; LUMIERE actions are
+        # response-derived — true treatment conditioning needs per-visit
+        # treatment labels, open). Absent from pre-dynamics checkpoints, so
+        # resume uses strict=False (see run_train.py).
+        dyn_cfg = (m.get("dynamics") or {})
+        self.dynamics_enabled = bool(dyn_cfg.get("enabled", False))
+        self.dynamics_steps = int(dyn_cfg.get("steps", 3))
+        self.dynamics_power = float(
+            dyn_cfg.get("weight_power",
+                        p.get("horizon", {}).get("weight_power", 1.0)))
+        n_actions = len(self.cfg.get("actions", {}).get("classes", [])) or 6
+        self.velocity_field = VelocityField(
+            proj_dim=m["target"].get("projection_dim", 768),
+            state_dim=t.get("d_model", 1152),
+            n_actions=n_actions,
+            phase_dim=dyn_cfg.get("phase_dim", 32),
+            clin_dim=self.clinical.out_dim,
+            hidden_dim=p.get("hidden_dim", 1024),
+            dropout=p.get("dropout", 0.1),
+        )
+        self.patient_tempo = PatientTempo(clin_dim=self.clinical.out_dim)
         self.projector = ImageProjector(768, m["target"].get("projection_dim", 768))
         self.target = TargetEncoder(
             self.backbone, self.projector,
@@ -123,6 +149,72 @@ class JEPAWorldModel(nn.Module):
         vmean = (lat * w).sum(dim=2) / w.sum(dim=2).clamp_min(1e-9)  # (B,T,768)
         return self.target.projector(vmean.reshape(-1, 768)).view(B, T, -1)
 
+    @staticmethod
+    def _gather_pairs(visit_mask, has_img, time_deltas, T):
+        """All valid (t, u>t) pairs with pixel-backed endpoints.
+
+        Returns (b_idx, t_idx, u_idx, gaps_days) flat tensors, or Nones when
+        no valid pair exists. Gap t->u = cumsum(deltas)[u] - ..[t].
+        """
+        cum = time_deltas.cumsum(dim=1)
+        b_idx, t_idx, u_idx = [], [], []
+        for t in range(T - 1):
+            ok = ((visit_mask[:, t] & has_img[:, t]).unsqueeze(1)
+                  & visit_mask[:, t + 1:] & has_img[:, t + 1:])
+            bb, uu = torch.nonzero(ok, as_tuple=True)
+            if bb.numel() == 0:
+                continue
+            b_idx.append(bb)
+            t_idx.append(torch.full_like(bb, t))
+            u_idx.append(uu + t + 1)
+        if not b_idx:
+            return None, None, None, None
+        b_idx = torch.cat(b_idx)
+        t_idx = torch.cat(t_idx)
+        u_idx = torch.cat(u_idx)
+        gaps = cum[b_idx, u_idx] - cum[b_idx, t_idx]  # (P,) days
+        return b_idx, t_idx, u_idx, gaps
+
+    def _dynamics_loss(self, states, z_all, visit_mask, has_img, time_deltas,
+                       actions, clinical, z_hat_1, z_tgt_1, valid_1):
+        """Velocity-field loss: integrate dz/dt across each pair's true gap.
+
+        Returns (loss, z_hat_1, z_tgt_1, valid_1, horizon_info) with the same
+        contract as _horizon_loss, plus mean velocity norm in the info dict
+        (zero-velocity-collapse monitor: must stay >> 0).
+        """
+        B, Tm1, _ = states.shape
+        out = self._gather_pairs(visit_mask, has_img, time_deltas, Tm1 + 1)
+        b_idx, t_idx, u_idx, gaps = out
+        if b_idx is None:  # degenerate batch guard (no valid pair)
+            return states.sum() * 0.0, z_hat_1, z_tgt_1, valid_1, None
+        n = (u_idx - t_idx).to(states.dtype)
+        w = 1.0 / n.clamp_min(1).pow(self.dynamics_power)
+        w = w / w.sum().clamp_min(1e-12)
+        tempo = self.patient_tempo(clinical)[b_idx]  # (P,) per-pair tempo
+        pred = integrate(
+            self.velocity_field, tempo, z_all[b_idx, t_idx],
+            states[b_idx, t_idx],
+            actions[b_idx, t_idx] if actions is not None
+            else torch.zeros_like(t_idx),
+            clinical[b_idx], gaps, steps=self.dynamics_steps)
+        tgt = z_all[b_idx, u_idx]
+        err = 1 - (F.normalize(pred, dim=-1)
+                   * F.normalize(tgt, dim=-1)).sum(dim=-1)
+        loss = (w * err).sum()
+        with torch.no_grad():
+            metrics_t = collapse_metrics(tgt)
+            vel = (pred - z_all[b_idx, t_idx]).detach()
+            vel_norm = vel.norm(dim=-1).mean().item()
+        info = {"n": (u_idx - t_idx).detach(),
+                "err": err.detach(),
+                "zt": z_all[b_idx, t_idx].detach(),
+                "zu": tgt.detach(),
+                "velocity_norm": vel_norm,
+                "target_std": metrics_t["target_std"],
+                "target_eff_rank": metrics_t["target_eff_rank"]}
+        return loss, z_hat_1, z_tgt_1, valid_1, info
+
     def _horizon_loss(self, states, time_deltas, visit_mask, has_img,
                       mri, mri_mask, z_hat_1, z_tgt_1, valid_1, loss_1):
         """Weighted multi-horizon JEPA loss: every state_t predicts every
@@ -135,28 +227,15 @@ class JEPAWorldModel(nn.Module):
         """
         B, Tm1, _ = states.shape
         T = Tm1 + 1
-        cum = time_deltas.cumsum(dim=1)  # cum[u]-cum[t] = days t -> u
         with torch.no_grad():
             z_all = self.encode_target_visit(mri, mri_mask)  # (B,T,proj)
-        b_idx, t_idx, u_idx = [], [], []
-        for t in range(T - 1):
-            ok = ((visit_mask[:, t] & has_img[:, t]).unsqueeze(1)
-                  & visit_mask[:, t + 1:] & has_img[:, t + 1:])
-            bb, uu = torch.nonzero(ok, as_tuple=True)
-            if bb.numel() == 0:
-                continue
-            b_idx.append(bb)
-            t_idx.append(torch.full_like(bb, t))
-            u_idx.append(uu + t + 1)
-        if not b_idx:  # degenerate batch guard (no valid pair)
+        out = self._gather_pairs(visit_mask, has_img, time_deltas, T)
+        b_idx, t_idx, u_idx, gaps = out
+        if b_idx is None:  # degenerate batch guard (no valid pair)
             return states.sum() * 0.0, z_hat_1, z_tgt_1, valid_1, None
-        b_idx = torch.cat(b_idx)
-        t_idx = torch.cat(t_idx)
-        u_idx = torch.cat(u_idx)
         n = (u_idx - t_idx).to(states.dtype)
         w = 1.0 / n.clamp_min(1).pow(self.horizon_power)
         w = w / w.sum().clamp_min(1e-12)
-        gaps = cum[b_idx, u_idx] - cum[b_idx, t_idx]  # (P,) days
         gap_enc = self.horizon_gap_enc(gaps.unsqueeze(0)).squeeze(0)
         pred = self.horizon_predictor(states[b_idx, t_idx], gap_enc)
         tgt = z_all[b_idx, u_idx]
@@ -201,7 +280,14 @@ class JEPAWorldModel(nn.Module):
             else z_hat.sum() * 0.0  # degenerate batch guard
         )
         horizon = None
-        if self.horizon_enabled:
+        if self.dynamics_enabled:
+            with torch.no_grad():
+                z_all = self.encode_target_visit(mri, mri_mask)
+            loss, z_hat, z_tgt, valid, horizon = self._dynamics_loss(
+                states, z_all, visit_mask, has_img, batch["time_deltas"],
+                batch.get("actions"), c,
+                z_hat, z_tgt, valid)
+        elif self.horizon_enabled:
             loss, z_hat, z_tgt, valid, horizon = self._horizon_loss(
                 states, batch["time_deltas"], visit_mask, has_img, mri, mri_mask,
                 z_hat, z_tgt, valid, loss)
@@ -226,6 +312,9 @@ class JEPAWorldModel(nn.Module):
             # Monitors over all valid horizon targets (stricter pool).
             metrics = {"target_std": horizon["target_std"],
                        "target_eff_rank": horizon["target_eff_rank"]}
+            if "velocity_norm" in horizon:
+                # Zero-velocity-collapse monitor: must stay >> 0.
+                metrics["velocity_norm"] = horizon["velocity_norm"]
         return {"loss": loss, "z_hat": z_hat, "z_target": z_tgt,
                 "valid": valid, "aux": aux, "horizon": horizon, **metrics}
 

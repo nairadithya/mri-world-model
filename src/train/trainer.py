@@ -92,7 +92,9 @@ def train(
             global_step += 1
             if global_step % log_every == 0:
                 msg = {"loss": loss.item(), "target_std": out["target_std"],
-                       "target_eff_rank": out["target_eff_rank"], "lr": opt.param_groups[0]["lr"]}
+                        "target_eff_rank": out["target_eff_rank"], "lr": opt.param_groups[0]["lr"]}
+                if "velocity_norm" in out:
+                    msg["velocity_norm"] = out["velocity_norm"]
                 aux = out.get("aux") or {}
                 if aux.get("n_aux", 0):
                     msg["aux_flat"] = aux["flat"].item()

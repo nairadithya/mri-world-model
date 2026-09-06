@@ -43,6 +43,10 @@ def main() -> None:
                       help="multi-horizon JEPA: state_t predicts every future "
                            "z_{t+n} via the gap-conditioned head, 1/n-weighted "
                            "loss (probe-gated; see scripts/horizon_probe.py).")
+    ap.add_argument("--dynamics", action="store_true",
+                      help="time-continuous dynamics: velocity field integrated "
+                           "across true gaps (replaces 1-step and horizon "
+                           "losses; mutually exclusive with --horizon).")
     ap.add_argument("--no-wandb", action="store_true")
     ap.add_argument("--random-init", action="store_true",
                     help="Skip BRAINIAC checkpoint; random init (dev/smoke-test only).")
@@ -71,6 +75,11 @@ def main() -> None:
         cfg.setdefault("aux", {})["lambda"] = args.aux_lambda
     if args.horizon:
         cfg["model"].setdefault("predictor", {}).setdefault("horizon", {})["enabled"] = True
+    if args.dynamics:
+        if args.horizon:
+            raise ValueError("--dynamics replaces the horizon loss; "
+                             "pass only one of --dynamics/--horizon.")
+        cfg["model"].setdefault("dynamics", {})["enabled"] = True
     if args.no_wandb:
         cfg["training"]["log_wandb"] = False
 
