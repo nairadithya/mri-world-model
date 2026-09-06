@@ -139,3 +139,46 @@
   NOT the 0.0081 champion — it overwrote the staged copy. Champion
   survives in `prev-checkpoints` + leg-1 outputs. Label all future
   downloads with (leg, epoch, val).
+
+## Run 6 (2026-09-06) — aux fine-tune, champion + RANO heads, 10 epochs — COMPLETE, verdict PENDING re-gate
+
+- Setup (D25, path B): resume 0.0081 champion, joint JEPA + λ=1.0
+  (flat/prog/resp heads, fresh random), `--lr 5e-6 --warmup-epochs 1`,
+  batch 1, T4. Code `f6a4ffe`. Resume line correctly listed the six
+  `rano_heads.*` keys as randomly initialized.
+- Train: total loss aux-dominated (1.43 → 7.01 spike ep2 as random heads
+  engage → 0.66 ep10); aux_flat 3.08 → 0.37, aux_prog 0.53 → 0.23,
+  aux_resp 3.37 → 0.04. Val total 1.89 → 1.69 (best ep6, 1.6850).
+  Monitors healthy throughout (std 0.09→0.15, rank 1.7→2.0 — no
+  collapse). Isolated std=0 blank train rows (ep 4/7/9) = degenerate
+  batches again, val unaffected.
+- Eval (aux-tuned best.pt, all 91): MEAN JEPA 0.0191 vs persistence
+  0.0220 — still beats persistence on mean, but the margin collapsed
+  (was 0.0081/0.0218): JEPA error more than doubled while persistence
+  stood still. Patient-level losses multiplied (004/008/010/011/018/
+  019/029/032/034/037/043/045/046/054/061/063/064/066/068/072/075/077/
+  080/082/083/086/087/091); mean survives on remaining big wins
+  (076/084/002/074/...). Predicted tension confirmed: encoder tilted
+  toward the classifier, dynamics paid.
+- Verdict PENDING: worth it iff the frozen RANO re-probe with the NEW
+  encoder jumps (target 0.33 → 0.40+). Needs downloaded best.pt +
+  train_aux.log → local re-gate (frozen-probe F1, JEPA val decomposed,
+  persistence from this table). If probe flat: aux run was pure damage,
+  champion unchanged, path A (joint-from-scratch) likely not worth its
+  session either.
+
+### Run 6 verdict — RE-GATE FAILED, champion stands (2026-09-06, local CPU)
+
+- Re-gate (`checkpoints/aux10/`, re-encoded cache, frozen probes):
+  hero-split states_forecast-mlp F1 0.509 (up from 0.448) — but CV
+  (5-fold, same protocol) 0.328±0.038 vs pre-aux 0.334±0.060:
+  UNCHANGED. The hero-split gain is split luck, same trap as A9.
+  JEPA-only val 0.0205 (was 0.0081), test 0.0174 (was 0.0074):
+  dynamics damaged ~2.5× while the honest task number didn't move.
+- Inference: path B failed its gate. Aux pressure tilted the encoder
+  (hero-split numbers dance) without improving generalizable RANO
+  signal, and charged 2.5× JEPA error. Champion (0.0081/0.0074) stands
+  untouched. Path A (joint-from-scratch, full session) is NOT earned —
+  same pressure, more instability, no evidence of headroom. D19 fusion
+  retrain stays gated. Representation program continues via SAILOR
+  generalization + volume framings, not more LUMIERE gradient steps.
