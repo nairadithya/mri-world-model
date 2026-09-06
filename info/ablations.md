@@ -239,3 +239,34 @@ Append-only. Each entry: setup → numbers → inference. IDs referenced from
   interval-regime-dependent. Follow-ups: interval-stratified JEPA-vs-
   persistence (long-gap SAILOR pairs should favor JEPA), persistence-
   error baseline for both AUCs, SAILOR volume probes (ONCO masks).
+
+## Synthesis — what the RANO + cross-site results mean (2026-09-06)
+
+Logged inferences (evidence-backed; see A9/A10/A12 for numbers):
+
+1. History beats snapshot structurally: snapshot F1 0.31 →
+   states_current 0.33 → states_forecast 0.38–0.45. RANO is a
+   trajectory label; the representation is useful only with time.
+   Learned summarization beats raw deltas (0.24): the temporal
+   transformer does real work (supports T2).
+2. Unsupervised dynamics learned progression structure for free:
+   frozen states separate PD (recall 0.72) from SD (0.64), far above
+   demographics (F1 ~0.17). T1 holds at trajectory level — not
+   snapshot, not volume.
+3. The binary framing is where signal lives: PR (n=1)/CR (n=2) are
+   noise; the clinical question is progression-vs-not. 4-class framing
+   undersells the model.
+4. The 0.51 explained: PD-F1 ~0.77 + SD-F1 ~0.62 + one free PR point +
+   CR 0, on a favorable repeatedly-selected 13-patient split (above
+   every CV fold). CV 0.33 is the contact-with-SAILOR number. Only CV
+   counts from here on.
+5. Gap to SOTA 0.50 ≈ price of task-blindness (frozen generic latents
+   + tiny MLP vs supervised end-to-end + volumetry) — an achievement
+   framing, not just a deficit.
+6. Nonlinear readout for futures only (MLP>linear on forecast alone):
+   futures stored folded; current status reads linearly.
+7. Cross-site split (A12): mean-loss dynamics fail on 14-day-interval
+   SAILOR (persistence wins 5× — regime, cf. A8's 9 losses), while
+   discriminative readouts transfer (F1 0.37 ≈ LUMIERE-CV;
+   surprise-AUC 0.87 > LUMIERE 0.77). Representation generalizes;
+   the mean-loss gate is interval-regime-dependent.

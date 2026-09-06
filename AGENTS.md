@@ -6,14 +6,18 @@ and `info/` for why things are the way they are.
 
 ## Layout
 
-- `src/` — library code. `data/` (LUMIERE dataset/collate/splits),
-  `model/` (BRAINIAC+LoRA, clinical encoders, fusion, temporal transformer,
-  predictor, EMA target, JEPA loss), `train/` (trainer, baselines),
-  `preprocessing/` (BRAINIAC contract pipeline).
-- `scripts/` — runnable entry points. `run_train.py`, `preprocess.py`,
-  `lumiere_fetch.py`, `sailor_fetch.py`, `ebrains_auth.py`,
-  `sailor_request_access.py`, `access_probe.py`.
-- `config/` — `default.yaml` (full run), `pilot.yaml` (5-patient CPU pilot).
+- `src/` — library code. `data/` (LUMIERE dataset/collate/splits,
+  SAILOR adapter `sailor.py`), `model/` (BRAINIAC+LoRA, clinical encoders,
+  fusion, temporal transformer, predictor, EMA target, JEPA loss, RANO aux
+  `heads.py`), `train/` (trainer, baselines), `preprocessing/` (BRAINIAC
+  contract pipeline).
+- `scripts/` — runnable entry points. `run_train.py` (+`--aux-lambda`,
+  `--resume-from`), `preprocess.py`, `probe_rano.py` (frozen RANO probes
+  + `--cv`), `surprise_signal.py` (error→PD AUC), `volume_probe.py`
+  (auto-mask volumetry), `sailor_eval.py` (cross-site eval), fetch/auth
+  scripts.
+- `config/` — `default.yaml` (full run; `aux:` section, lambda 0 = JEPA
+  only), `pilot.yaml` (5-patient CPU pilot).
 - `kaggle/` — hero-run notebook. `hero_run.py` is the source of truth;
   never edit the `.ipynb` directly (JSON churn breaks diffs). Regenerate
   with `jupytext --to ipynb kaggle/hero_run.py` after editing.
@@ -67,6 +71,13 @@ python scripts/run_train.py --epochs 1 --batch-size 1 --no-wandb --random-init
 - **Data**: pandas NaN is truthy — coerce clinical numerics via explicit
   `isna` guards. Drop imageless visits; require pixels on both sides of
   every loss pair.
+- **Probes**: hero-split probe numbers are noise (0.45→0.51 across encoders
+  while CV sits at 0.33) — only 5-fold CV counts. Ridge + CV-λ mandatory
+  above ~100-d features (plain LSQ on 1152-d/450-row gives R²≈−100).
+- **SAILOR**: `-icor` files carry background NaNs (~200 sessions, up to 79%
+  of voxels) — prefer base variants; finite-check any new site before first
+  encode. RANO codes {1:PD, 2:SD, 3:PR, 5:CR} are empirical (volume deltas);
+  3-vs-5 tentative. Intervals ~14 days → persistence regime (A12).
 - **Gitignore**: anchor data-dir rules (`/data/`, not `data/`) — an
   unanchored pattern silently unmatched `src/data/` and the whole data
   layer went uncommitted until the first fresh clone (Kaggle) failed.
@@ -74,6 +85,11 @@ python scripts/run_train.py --epochs 1 --batch-size 1 --no-wandb --random-init
 - **Kaggle**: T4 only (P100/sm_60 has no torch kernels in the image);
   batch 1 on 16 GB; ingestion gunzips `.nii.gz`→`.nii` in place (dataset
   accepts both); uninstall torchao (0.10 breaks fresh peft imports).
+- **Kaggle notebook**: `%env` swallows trailing `#` comments into the value
+  (keep comments on separate lines); datasets may mount at
+  `/kaggle/input/datasets/<user>/<slug>/` — glob recursively.
+  A resume leg's `best.pt` overwrites the staged champion: label downloads
+  with (leg, epoch, val).
 - **Auth**: EBRAINS device codes expire in 5 min. Refresh tokens rotate —
   exactly one consumer at a time or the chain invalidates (400).
   SAILOR is controlled-access; the data-proxy v1 object API is
@@ -89,5 +105,6 @@ python scripts/run_train.py --epochs 1 --batch-size 1 --no-wandb --random-init
 - Smoke test above must pass; forward + backward + EMA + baselines finite.
 - Clinical vectors swept NaN-free over all 91 patients after data changes.
 - Success criteria for training changes: loss drops, monitors healthy
-  (target std ≫ 0, rank > 1), JEPA beats persistence (currently 0.0043
-  pilot) — a falling loss alone proves nothing.
+  (target std ≫ 0, rank > 1), JEPA beats persistence (A8: 0.0081 vs 0.0218
+  in-domain; A12: SAILOR short-interval regime favors persistence) —
+  a falling loss alone proves nothing.
