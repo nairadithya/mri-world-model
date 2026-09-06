@@ -112,6 +112,17 @@ def pairs_for(patients, split_names):
     return rows
 
 
+GAP_BINS = [0, 8, 15, 30, 60, 200, float("inf")]
+GAP_LABELS = ["0-8d", "8-15d", "15-30d", "30-60d", "60-200d", "200d+"]
+
+
+def gap_bin(g):
+    for i in range(len(GAP_BINS) - 1):
+        if GAP_BINS[i] <= g < GAP_BINS[i + 1]:
+            return i
+    return len(GAP_BINS) - 2
+
+
 def cos_err(a, b):
     return (1 - (F.normalize(a, dim=-1) * F.normalize(b, dim=-1)
                  ).sum(dim=-1)).tolist()
@@ -149,7 +160,10 @@ class HorizonPredictor(nn.Module):
         return self.net(torch.cat([s, g.unsqueeze(-1)], dim=-1))
 
 
-def train_predictor(patients, epochs=300, lr=1e-3, seed=42):
+def train_predictor(patients, epochs=300, lr=1e-3, seed=42, weight="inv_n"):
+    """weight: 'inv_n' (1/n per pair) or 'inv_gap_err' (1/mean-train-
+    persistence-error of the pair's gap-days bin — day-based unit with the
+    empirically correct sign: hard bins count less)."""
     g = torch.Generator().manual_seed(seed)
     tr = pairs_for(patients, ("train",))
     va = pairs_for(patients, ("val",))
@@ -171,6 +185,24 @@ def train_predictor(patients, epochs=300, lr=1e-3, seed=42):
     Xtr, Zttr, Gtr, Ytr, Ntr = feats(tr)
     Xva, _, Gva, Yva, Nva = feats(va)
     Xte, Ztte, Gte, Yte, Nte = feats(te)
+
+    if weight == "inv_gap_err":
+        with torch.no_grad():
+            perr = 1 - (F.normalize(Zttr, dim=-1) *
+                        F.normalize(Ytr, dim=-1)).sum(dim=-1)
+        bin_err, bin_n = {}, {}
+        for gap, e in zip([r[4] for r in tr], perr.tolist()):
+            b = gap_bin(gap)
+            bin_err[b] = bin_err.get(b, 0.0) + e
+            bin_n[b] = bin_n.get(b, 0) + 1
+        bin_w = {b: 1.0 / (bin_err[b] / bin_n[b]) for b in bin_err}
+        print("gap-bin mean persistence err / weight:",
+              {GAP_LABELS[b]: (round(bin_err[b] / bin_n[b], 4), round(bin_w[b], 1))
+               for b in sorted(bin_err)})
+        Wtr = torch.tensor([bin_w[gap_bin(r[4])] for r in tr])
+    else:
+        Wtr = 1.0 / Ntr.float()
+    print(f"weighting: {weight}")
 
     net = HorizonPredictor()
     opt = torch.optim.Adam(net.parameters(), lr=lr)
@@ -228,6 +260,8 @@ def main():
     ap.add_argument("--train", action="store_true")
     ap.add_argument("--epochs", type=int, default=300)
     ap.add_argument("--lr", type=float, default=1e-3)
+    ap.add_argument("--weight", default="inv_n", choices=["inv_n", "inv_gap_err"],
+                    help="pair weighting: 1/n or 1/mean-gap-bin-persistence-error")
     args = ap.parse_args()
 
     if args.encode:
@@ -240,7 +274,8 @@ def main():
     if args.curve:
         persistence_curve(patients)
     if args.train:
-        train_predictor(patients, epochs=args.epochs, lr=args.lr)
+        train_predictor(patients, epochs=args.epochs, lr=args.lr,
+                        weight=args.weight)
 
 
 if __name__ == "__main__":

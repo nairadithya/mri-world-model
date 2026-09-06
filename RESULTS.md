@@ -403,6 +403,16 @@ Bottom line: worse at the highest-weight horizon, identical on every
 downstream probe, better only at far horizons. The leg is a narrow
 long-range forecaster, not a better representation.
 
+Weighting-unit check (`--weight inv_gap_err` in the probe script): visit
+count n conflates 1–1085 days at n=1 alone, so day-gap weighting was tested
+— but short gaps are the *hardest* pairs (0–8d persistence err 0.0108, mostly
+surgery transitions; 30–60d is easiest at 0.0069), giving 1/gap the wrong
+sign. Empirical gap-bin weights (1/mean-bin-persistence-err) span only 1.7×
+and match the 1/n run to ±0.0001 at every horizon (n=1: 0.0051 vs 0.0050).
+Weighting unit is second-order; 1/n stays (monotonic in difficulty,
+validated). Day gaps matter for predictor *conditioning* (already in both
+probe and head — SAILOR n=1 ≈ 14 days ≈ LUMIERE n=2), not for weighting.
+
 ## Open work (not claimed)- Interval-stratified cross-site comparison: long-gap SAILOR pairs should favor
   the forecaster — the decider between regime and representation explanations.
 - Persistence-error baselines for both surprise AUCs.
