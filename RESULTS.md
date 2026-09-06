@@ -389,6 +389,20 @@ head keeps near accuracy. The production multi-horizon predictor is therefore
 the frozen probe head, not this leg. No further GPU legs; a head-only
 (frozen-encoder) training with more capacity is the cheap open option.
 
+Head-to-head re-gate vs the champion (frozen encoders, identical protocols,
+`checkpoints/horizon_probe_cache.pt` re-encoded from the leg's weights):
+
+| Task | Champion | Horizon leg | Reading |
+|---|---|---|---|
+| RANO states_forecast-mlp, hero split (n=49) | F1 0.448 | F1 0.358 | Noise band either way — splits this small swing ±0.1 |
+| Same, 5-fold patient-wise CV (the honest number) | 0.334±0.060 | 0.323±0.054 | **No difference.** Tilt neither helped nor destroyed progression signal |
+| Volume readout (log-mm³, ridge λ=1000) | R2 0.15, MAE 1.26 vs 1.38 | R2 0.153, MAE 1.26 vs 1.38 | **Identical** — size signal untouched |
+| Volume forecast vs persistence | loses (1.52 vs 1.07) | loses (1.53 vs 1.07) | **Identically uncompetitive** |
+
+Bottom line: worse at the highest-weight horizon, identical on every
+downstream probe, better only at far horizons. The leg is a narrow
+long-range forecaster, not a better representation.
+
 ## Open work (not claimed)- Interval-stratified cross-site comparison: long-gap SAILOR pairs should favor
   the forecaster — the decider between regime and representation explanations.
 - Persistence-error baselines for both surprise AUCs.
