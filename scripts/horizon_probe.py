@@ -146,24 +146,29 @@ def persistence_curve(patients):
 class HorizonPredictor(nn.Module):
     """[state_t (1152), standardized log-gap (1)] -> z_{t+n} (768)."""
 
-    def __init__(self, hidden=1024, dropout=0.1):
+    def __init__(self, hidden=1024, layers=2, dropout=0.1):
         super().__init__()
-        self.net = nn.Sequential(
-            nn.Linear(1152 + 1, hidden), nn.LayerNorm(hidden), nn.GELU(),
-            nn.Dropout(dropout),
-            nn.Linear(hidden, hidden), nn.LayerNorm(hidden), nn.GELU(),
-            nn.Dropout(dropout),
-            nn.Linear(hidden, 768),
-        )
+        blocks = []
+        in_dim = 1152 + 1
+        for _ in range(layers):
+            blocks += [nn.Linear(in_dim, hidden), nn.LayerNorm(hidden),
+                       nn.GELU(), nn.Dropout(dropout)]
+            in_dim = hidden
+        blocks.append(nn.Linear(hidden, 768))
+        self.net = nn.Sequential(*blocks)
 
     def forward(self, s, g):
         return self.net(torch.cat([s, g.unsqueeze(-1)], dim=-1))
 
 
-def train_predictor(patients, epochs=300, lr=1e-3, seed=42, weight="inv_n"):
+def train_predictor(patients, epochs=300, lr=1e-3, seed=42, weight="inv_n",
+                    hidden=1024, layers=2, per_horizon=False):
     """weight: 'inv_n' (1/n per pair) or 'inv_gap_err' (1/mean-train-
     persistence-error of the pair's gap-days bin — day-based unit with the
-    empirically correct sign: hard bins count less)."""
+    empirically correct sign: hard bins count less).
+    per_horizon: one net per horizon n (no cross-horizon capacity
+    competition); horizons with <30 train pairs fall back to the joint net.
+    """
     g = torch.Generator().manual_seed(seed)
     tr = pairs_for(patients, ("train",))
     va = pairs_for(patients, ("val",))
@@ -186,59 +191,90 @@ def train_predictor(patients, epochs=300, lr=1e-3, seed=42, weight="inv_n"):
     Xva, _, Gva, Yva, Nva = feats(va)
     Xte, Ztte, Gte, Yte, Nte = feats(te)
 
-    if weight == "inv_gap_err":
-        with torch.no_grad():
-            perr = 1 - (F.normalize(Zttr, dim=-1) *
-                        F.normalize(Ytr, dim=-1)).sum(dim=-1)
-        bin_err, bin_n = {}, {}
-        for gap, e in zip([r[4] for r in tr], perr.tolist()):
-            b = gap_bin(gap)
-            bin_err[b] = bin_err.get(b, 0.0) + e
-            bin_n[b] = bin_n.get(b, 0) + 1
-        bin_w = {b: 1.0 / (bin_err[b] / bin_n[b]) for b in bin_err}
-        print("gap-bin mean persistence err / weight:",
-              {GAP_LABELS[b]: (round(bin_err[b] / bin_n[b], 4), round(bin_w[b], 1))
-               for b in sorted(bin_err)})
-        Wtr = torch.tensor([bin_w[gap_bin(r[4])] for r in tr])
-    else:
-        Wtr = 1.0 / Ntr.float()
-    print(f"weighting: {weight}")
+    def make_net():
+        return HorizonPredictor(hidden=hidden, layers=layers)
 
-    net = HorizonPredictor()
-    opt = torch.optim.Adam(net.parameters(), lr=lr)
-    B = 512
-    n = len(Xtr)
-    # Horizon weighting: closer futures count more, farther futures less.
-    # w = 1/n per pair (renormalized per batch); eval stays per-horizon and
-    # unweighted so the weighting choice itself remains auditable.
-    Wtr = 1.0 / Ntr.float()
-    for ep in range(epochs):
-        net.train()
-        perm = torch.randperm(n, generator=g)
-        tot, cnt = 0.0, 0
-        for s in range(0, n, B):
-            idx = perm[s:s + B]
-            pred = net(Xtr[idx], Gtr[idx])
-            err = 1 - (F.normalize(pred, dim=-1) *
-                       F.normalize(Ytr[idx], dim=-1)).sum(dim=-1)
-            w = Wtr[idx] / Wtr[idx].sum()
-            loss = (w * err).sum()
-            opt.zero_grad()
-            loss.backward()
-            opt.step()
-            tot += loss.item() * len(idx)
-            cnt += len(idx)
-        if (ep + 1) % 50 == 0 or ep == 0:
-            net.eval()
+    def joint_weights():
+        """Per-train-row weights for joint training (uniform for per-n nets)."""
+        if weight == "inv_gap_err":
             with torch.no_grad():
-                pv = 1 - (F.normalize(net(Xva, Gva), dim=-1) *
-                          F.normalize(Yva, dim=-1)).sum(dim=-1).mean().item()
-            print(f"epoch {ep + 1}/{epochs}: train {tot / cnt:.4f} val {pv:.4f}",
-                  flush=True)
+                perr = 1 - (F.normalize(Zttr, dim=-1) *
+                            F.normalize(Ytr, dim=-1)).sum(dim=-1)
+            bin_err, bin_n = {}, {}
+            for gap, e in zip([r[4] for r in tr], perr.tolist()):
+                b = gap_bin(gap)
+                bin_err[b] = bin_err.get(b, 0.0) + e
+                bin_n[b] = bin_n.get(b, 0) + 1
+            bin_w = {b: 1.0 / (bin_err[b] / bin_n[b]) for b in bin_err}
+            print("gap-bin mean persistence err / weight:",
+                  {GAP_LABELS[b]: (round(bin_err[b] / bin_n[b], 4), round(bin_w[b], 1))
+                   for b in sorted(bin_err)})
+            return torch.tensor([bin_w[gap_bin(r[4])] for r in tr])
+        return 1.0 / Ntr.float()  # inv_n
 
-    net.eval()
+    def run_epochs(net, X, G, Y, W, tag, val_tup=None):
+        opt = torch.optim.Adam(net.parameters(), lr=lr)
+        B = 512
+        n = len(X)
+        for ep in range(epochs):
+            net.train()
+            perm = torch.randperm(n, generator=g)
+            tot, cnt = 0.0, 0
+            for s in range(0, n, B):
+                idx = perm[s:s + B]
+                pred = net(X[idx], G[idx])
+                err = 1 - (F.normalize(pred, dim=-1) *
+                           F.normalize(Y[idx], dim=-1)).sum(dim=-1)
+                w = W[idx] / W[idx].sum()
+                loss = (w * err).sum()
+                opt.zero_grad()
+                loss.backward()
+                opt.step()
+                tot += loss.item() * len(idx)
+                cnt += len(idx)
+            if (ep + 1) % 50 == 0 or ep == 0:
+                msg = f"[{tag}] epoch {ep + 1}/{epochs}: train {tot / cnt:.4f}"
+                if val_tup is not None:
+                    net.eval()
+                    with torch.no_grad():
+                        Xv, Gv, Yv = val_tup
+                        pv = 1 - (F.normalize(net(Xv, Gv), dim=-1) *
+                                  F.normalize(Yv, dim=-1)).sum(dim=-1).mean().item()
+                    msg += f" val {pv:.4f}"
+                print(msg, flush=True)
+        return net
+
+    print(f"weighting: {weight} | hidden={hidden} x{layers} | "
+          f"per_horizon={per_horizon}")
+
+    nets = {}  # horizon n -> net (per_horizon mode); joint net under key 0
+    if per_horizon:
+        avail = sorted(set(Ntr.tolist()))
+        for h in avail:
+            m = Ntr == h
+            if m.sum() < 30:
+                continue
+            print(f"training dedicated n={h} head on {m.sum()} pairs")
+            net = run_epochs(make_net(), Xtr[m], Gtr[m], Ytr[m],
+                             torch.ones(m.sum()), f"n={h}")
+            nets[h] = net
+        # fallback joint net for thin horizons
+        thin = [h for h in avail if h not in nets]
+        if thin:
+            print(f"thin horizons {thin}: fallback joint net")
+            nets[0] = run_epochs(make_net(), Xtr, Gtr, Ytr, joint_weights(),
+                                 "joint-fallback", (Xva, Gva, Yva))
+    else:
+        nets[0] = run_epochs(make_net(), Xtr, Gtr, Ytr, joint_weights(),
+                             "joint", (Xva, Gva, Yva))
+
+    for net in nets.values():
+        net.eval()
     with torch.no_grad():
-        Pte = net(Xte, Gte)
+        Pte = torch.empty_like(Yte)
+        for h in sorted(set(Nte.tolist())):
+            m = Nte == h
+            Pte[m] = nets.get(h, nets[0])(Xte[m], Gte[m])
     print(f"\n{'n':>4} {'pairs':>7} {'probe_err':>10} {'persist_err':>11}")
     for h in sorted(set(Nte.tolist())):
         m = Nte == h
@@ -260,6 +296,11 @@ def main():
     ap.add_argument("--train", action="store_true")
     ap.add_argument("--epochs", type=int, default=300)
     ap.add_argument("--lr", type=float, default=1e-3)
+    ap.add_argument("--hidden", type=int, default=1024)
+    ap.add_argument("--layers", type=int, default=2)
+    ap.add_argument("--per-horizon", action="store_true",
+                    help="one dedicated net per horizon (thin horizons "
+                         "fall back to a joint net)")
     ap.add_argument("--weight", default="inv_n", choices=["inv_n", "inv_gap_err"],
                     help="pair weighting: 1/n or 1/mean-gap-bin-persistence-error")
     args = ap.parse_args()
@@ -275,7 +316,8 @@ def main():
         persistence_curve(patients)
     if args.train:
         train_predictor(patients, epochs=args.epochs, lr=args.lr,
-                        weight=args.weight)
+                        weight=args.weight, hidden=args.hidden,
+                        layers=args.layers, per_horizon=args.per_horizon)
 
 
 if __name__ == "__main__":

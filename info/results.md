@@ -413,6 +413,25 @@ Weighting unit is second-order; 1/n stays (monotonic in difficulty,
 validated). Day gaps matter for predictor *conditioning* (already in both
 probe and head — SAILOR n=1 ≈ 14 days ≈ LUMIERE n=2), not for weighting.
 
+Head-only sweep, frozen champion (all local CPU, `scripts/horizon_probe.py`
+`--hidden/--layers/--epochs/--per-horizon`; test errors, persistence in
+brackets):
+
+| config | n=1 | n=2 | n=5 | n=7 |
+|---|---|---|---|---|
+| baseline 1024-wide ×2 layers, 300ep | **0.0050** (0.0088) | **0.0048** (0.0079) | **0.0065** (0.0134) | 0.0087 (0.0142) |
+| bigger 2048×3, 300ep | 0.0057 | 0.0054 | 0.0070 | 0.0096 |
+| longer 1024×2, 600ep | 0.0054 | 0.0053 | 0.0068 | 0.0089 |
+| per-horizon dedicated heads | 0.0052 | 0.0051 | 0.0063 | **0.0073** |
+
+Verdict: the small joint head is the ceiling. Bigger/longer both overfit
+(train keeps falling, val rises — same signature as every full training
+run); per-horizon heads win only at n≥7 on 4–19 test pairs (noise). 0.0050
+stands as the production n=1 number. No capacity, time, or specialization
+variant opens headroom a GPU leg could exploit — the multi-horizon story is
+closed: frozen champion + small joint head, best at every horizon that has
+the counts to matter.
+
 ## Open work (not claimed)
 
 - Interval-stratified cross-site comparison: long-gap SAILOR pairs should favor
