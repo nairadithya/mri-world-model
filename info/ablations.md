@@ -216,3 +216,26 @@ Append-only. Each entry: setup → numbers → inference. IDs referenced from
 - Honest headline: R2 ≈ 0.15 readout, forecast loses to persistence.
   Volume half stays uncompetitive; enhancing-core/growth-rate framings
   open but low-priority behind SAILOR generalization.
+
+## A12 — SAILOR cross-site eval, frozen champion (2026-09-06, local CPU)
+
+- Setup (D26): 27 subjects / 270 sessions via `src/data/sailor.py`
+  (base variants after the NaN recon; intervals-days deltas; empirical
+  codebook {1:PD, 2:SD, 3:PR, 5:CR}); 243 valid pairs, 240 RANO-labelled
+  (PD-rate 0.31; SAILOR majority is SD 0.48 — different regime phase
+  than LUMIERE's PD 0.64). Script `scripts/sailor_eval.py`.
+- Numbers: (a) JEPA 0.0290 vs persistence 0.0056 — persistence WINS ~5×.
+  (b) LUMIERE-trained forecast-mlp transferred: acc 0.52 (maj 0.48),
+  macro-F1 0.37, PD recall 0.63 / SD 0.60. (b2) SAILOR-fit ceiling
+  0.85/0.85 (train=test, memorization — ceiling only). (d) surprise-AUC
+  0.87 (n=240).
+- Inference: SPLIT. Mean-loss dynamics do NOT transfer — but the likely
+  cause is regime, not representation: SAILOR intervals run ~14 days,
+  targets near-static, "no change" near-optimal (cf. A8's 9 losses,
+  same pattern). Discriminative readouts DO transfer: F1 0.37 ≈
+  LUMIERE-CV 0.33 with zero SAILOR training, and surprise-AUC 0.87
+  beats LUMIERE's 0.77. Representation generalizes across
+  site/scanner/protocol; the dynamics gate (A8-style mean win) is
+  interval-regime-dependent. Follow-ups: interval-stratified JEPA-vs-
+  persistence (long-gap SAILOR pairs should favor JEPA), persistence-
+  error baseline for both AUCs, SAILOR volume probes (ONCO masks).
