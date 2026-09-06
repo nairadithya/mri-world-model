@@ -38,6 +38,13 @@ model:
     hidden_dim: 1024
     output_dim: 768
     dropout: 0.1
+    # Multi-horizon forecasting: state_t predicts every future z_{t+n},
+    # conditioned on the day gap, loss weighted 1/n^weight_power.
+    # Disabled by default (all prior behavior preserved); the hero run
+    # enables it with --horizon. Frozen-probe gate: scripts/horizon_probe.py.
+    horizon:
+      enabled: false
+      weight_power: 1.0
   target:
     ema_momentum: 0.996
     projection_dim: 768

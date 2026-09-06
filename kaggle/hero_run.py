@@ -81,6 +81,15 @@ import os, yaml
 IN = '/kaggle/input/datasets/nairadithya/preprocessed-mri-data'
 # (dataset root holds lumiere_preprocessed/, lumiere_meta/, BrainIAC.ckpt directly;
 # adjust if your mount path differs — the asserts below will tell you)
+if not os.path.exists(os.path.join(IN, 'lumiere_preprocessed')):
+    # Auto-detect: datasets may mount at /kaggle/input/<slug>/ or
+    # /kaggle/input/datasets/<user>/<slug>/ — search both.
+    import glob
+    found = [d for d in glob.glob('/kaggle/input/**/lumiere_preprocessed', recursive=True)
+             if os.path.isdir(d)]
+    assert found, 'lumiere_preprocessed/ not found under /kaggle/input — attach the input dataset first'
+    IN = os.path.dirname(found[0])
+    print('auto-detected inputs at', IN)
 for p in ['lumiere_preprocessed', 'lumiere_meta', 'BrainIAC.ckpt']:
     assert os.path.exists(os.path.join(IN, p)), f'missing {p} — check Step 0 dataset layout'
 print('input patients:', len(os.listdir(os.path.join(IN, 'lumiere_preprocessed'))))
@@ -147,6 +156,76 @@ for p in prev:
 # %env AUXLAM=1.0
 # %env AUXWARMUP=1
 # !(echo "CLI(aux): --epochs $AUXEPOCHS --batch-size $AUXBATCH --lr $AUXLR --aux-lambda $AUXLAM --warmup-epochs $AUXWARMUP --resume-from champion"; python scripts/run_train.py --config kaggle.yaml --epochs $AUXEPOCHS --batch-size $AUXBATCH --lr $AUXLR --aux-lambda $AUXLAM --warmup-epochs $AUXWARMUP --no-wandb --resume-from /kaggle/working/checkpoints/best.pt) 2>&1 | tee /kaggle/working/train_aux.log
+
+# %% [markdown]
+# ## HORIZON leg — multi-horizon JEPA (probe-gated, 30 epochs)
+# Resume the 0.0081 champion with `--horizon`: every state_t predicts every
+# future z_{t+n} via the gap-conditioned head, 1/n-weighted loss
+# (frozen-probe gate passed in `scripts/horizon_probe.py`: probe beats
+# persistence at every horizon; n=1 probe 0.0050 vs champion 1-step 0.0074).
+# Expect the resume line to list the 14 `horizon_*` keys as randomly
+# initialized — correct, the champion predates the head. LR 2e-5 (5x below
+# the 1e-4 that found the basin; the head is fresh but the encoder must not
+# be ejected — same-objective resumes at this LR drifted). Gate: val loss
+# AND the per-horizon eval cell below vs the frozen-probe numbers (n=1:
+# 0.0050; n=5: 0.0065 vs persistence 0.0134).
+
+# %env HZEPOCHS=30
+# %env HZBATCH=1
+# %env HZLR=0.00002
+# !(echo "CLI(horizon): --epochs $HZEPOCHS --batch-size $HZBATCH --lr $HZLR --horizon --resume-from champion"; python scripts/run_train.py --config kaggle.yaml --epochs $HZEPOCHS --batch-size $HZBATCH --lr $HZLR --horizon --no-wandb --resume-from /kaggle/working/checkpoints/best.pt) 2>&1 | tee /kaggle/working/train_hz.log
+
+# %% [markdown]
+# ## Per-horizon eval (JEPA vs persistence, same pairs)
+# JEPA error per (t, t+n) pair comes from the model's `horizon` info; the
+# cached endpoints score persistence (z_t as the prediction) on the
+# identical pair set. Run after any `--horizon` leg.
+
+# %%
+# Per-horizon JEPA vs persistence on the current best.pt (GPU; fast).
+import sys, os
+import torch
+import torch.nn.functional as F
+import yaml
+sys.path.insert(0, '.')
+from torch.utils.data import DataLoader
+from src.data.collate import make_collate
+from src.data.dataset import LUMIEREDataset
+from src.model.jepa_model import JEPAWorldModel
+
+cfg = yaml.safe_load(open('kaggle.yaml'))
+assert cfg['model']['predictor'].get('horizon', {}).get('enabled'), \
+    'horizon leg weights need a horizon-enabled config (re-wire kaggle.yaml with horizon.enabled: true)'
+device = torch.device('cuda')
+size = tuple(cfg['preprocessing'].get('target_size', [96, 96, 96]))
+common = dict(meta_dir=cfg['data']['meta_dir'], processed_root=cfg['data']['root'],
+              raw_root=None, modalities=tuple(cfg['data'].get('modalities', ['CT1', 'T1', 'T2', 'FLAIR'])),
+              min_visits=cfg['data'].get('min_visits', 2))
+collate = make_collate(size)
+model = JEPAWorldModel(cfg)
+model.load_state_dict(torch.load('/kaggle/working/checkpoints/best.pt', map_location='cpu')['model'], strict=False)
+model.eval().to(device)
+by_n = {}
+pats = sorted(os.listdir(cfg['data']['root']))
+with torch.no_grad():
+    for p in pats:
+        ds = LUMIEREDataset(patients=[p], **common)
+        if len(ds) == 0:
+            continue
+        loader = DataLoader(ds, batch_size=1, shuffle=False, num_workers=0, collate_fn=collate)
+        for b in loader:
+            b = {k: (v.to(device) if isinstance(v, torch.Tensor) else v) for k, v in b.items()}
+            hz = model(b)['horizon']
+            if hz is None:
+                continue
+            pe = 1 - (F.normalize(hz['zt'], dim=-1) * F.normalize(hz['zu'], dim=-1)).sum(dim=-1)
+            for n_, je, pe_ in zip(hz['n'].tolist(), hz['err'].tolist(), pe.tolist()):
+                by_n.setdefault(int(n_), []).append((je, pe_))
+print(f"{'n':>4} {'pairs':>7} {'jepa':>8} {'persist':>8}")
+for n_ in sorted(by_n):
+    je = sum(r[0] for r in by_n[n_]) / len(by_n[n_])
+    pe = sum(r[1] for r in by_n[n_]) / len(by_n[n_])
+    print(f"{n_:>4} {len(by_n[n_]):>7} {je:>8.4f} {pe:>8.4f}")
 
 # %% [markdown]
 # ## After each session

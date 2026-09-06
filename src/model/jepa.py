@@ -59,9 +59,36 @@ class Predictor(nn.Module):
         return self.net(h)
 
 
+class HorizonPredictor(nn.Module):
+    """Horizon-conditioned MLP: [state (d), gap encoding (d)] -> target space.
+
+    The gap (days from state time t to target visit u) is mandatory input:
+    one state must predict many different futures, and without the horizon
+    the optimum is their mean (regression-to-the-mean built into the loss).
+    """
+
+    def __init__(self, state_dim: int = 1152, gap_dim: int = 1152,
+                 hidden_dim: int = 1024, output_dim: int = 768,
+                 dropout: float = 0.1):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(state_dim + gap_dim, hidden_dim),
+            nn.LayerNorm(hidden_dim),
+            nn.GELU(),
+            nn.Dropout(dropout),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.LayerNorm(hidden_dim),
+            nn.GELU(),
+            nn.Dropout(dropout),
+            nn.Linear(hidden_dim, output_dim),
+        )
+
+    def forward(self, h: torch.Tensor, gap_enc: torch.Tensor) -> torch.Tensor:
+        return self.net(torch.cat([h, gap_enc], dim=-1))
+
+
 class ImageProjector(nn.Module):
     """Online/target projection head: vision latent 768 -> projection space."""
-
     def __init__(self, in_dim: int = 768, out_dim: int = 768):
         super().__init__()
         self.net = nn.Sequential(nn.Linear(in_dim, out_dim), nn.LayerNorm(out_dim))
