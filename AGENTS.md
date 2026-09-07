@@ -95,7 +95,13 @@ python scripts/run_train.py --epochs 1 --batch-size 1 --no-wandb --random-init
   (keep comments on separate lines); datasets may mount at
   `/kaggle/input/datasets/<user>/<slug>/` — glob recursively.
   A resume leg's `best.pt` overwrites the staged champion: label downloads
-  with (leg, epoch, val).
+  with (leg, epoch, val). Select resume checkpoints BY DEFINITION (lowest
+  val_loss), never by filename. Ferried checkpoints are opt-stripped —
+  resume-opt designs need an optimizer-bearing file or must drop those legs.
+- **Kaggle notebook parsing**: test every log-regex against a REAL log line
+  before push (an untested `" epoch"`-vs-`"(epoch"` mismatch voided the R11
+  verdict cell on complete logs). Verdict/eval cells record UNKNOWN, never
+  assert-fail the session. Run train commands with `python -u`.
 - **Auth**: EBRAINS device codes expire in 5 min. Refresh tokens rotate —
   exactly one consumer at a time or the chain invalidates (400).
   SAILOR is controlled-access; the data-proxy v1 object API is

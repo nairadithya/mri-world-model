@@ -68,7 +68,10 @@ but JEPA val 0.0081→<b>0.0205</b>: dynamics paid 2.5×. Frozen re-probe: hero-
 (up) but <b>CV 0.33±0.04 — unchanged</b>. Verdict: tilted the encoder without generalizable
 gain; champion stands; joint-from-scratch not earned.</p>
 <div class="verdict">Champion stands: <code>checkpoints/champion_0.0081.pt</code>
-(val 0.0081 / test 0.0074). No more LUMIERE gradient steps without passing R11 first.</div>
+(val 0.0081 / test 0.0074). R11 partial (A17): accum-8 leg holds flat 5 epochs
+(0.0078→0.0080) where batch-1 replicates the ejection (0.0086→0.0139) — noise
+isolated as (part of) the ejector, no momentum data (opt-stripped ferry).
+Repair leg (C-extended durability + accum-4 dose) decides whether training continues.</div>
 
 <h2>2. Ablations &amp; probes (in-domain)</h2>
 <table>

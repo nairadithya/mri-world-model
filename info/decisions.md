@@ -349,6 +349,23 @@ referenced, not repeated — only session decisions are recorded here in full.
   the transfer gate (localizes failure to dynamics scale — R16 realized).
   Status: done, no GPU spent.
 
+- **D31 — R11 push + monitor (2026-09-07).** Kernel `nairadithya/r11-basin`
+  (new `kaggle/kernel-r11/` pushable-run dir per convention; pins code
+  commit; champion selected BY DEFINITION = lowest val_loss in
+  prev-checkpoints, not by filename — D22's overwrite lesson). A monitor
+  subagent (Task tool, worked this time) polled status → caught ERROR with
+  diagnosis + partial trajectories from kernel stdout. Post-mortem from
+  fetched outputs: (a) ferried champions are opt-stripped (D20) — any
+  resume-opt design must stage an optimizer-bearing checkpoint or drop the
+  loaded cells; the fail-loud guard worked exactly as designed;
+  (b) the verdict-cell death was an UNTESTED LOG PARSER, not buffering:
+  the regex required `" epoch"` (space) but the line reads `"(epoch"`
+  (paren) — it could never match any real log, and tee files were complete
+  all along. Durable rules now in AGENTS.md: test every log-regex against a
+  real log line before push (train_A.log is the standing fixture); verdict
+  cells record UNKNOWN instead of assert-failing the session; `python -u`
+  on train commands as cheap hygiene.
+
 ## Future work (after hero leg 2)
 
 - **D19 — Additive clinical conditioning (fusion upgrade).** Today fusion

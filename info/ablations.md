@@ -422,6 +422,37 @@ Append-only. Each entry: setup → numbers → inference. IDs referenced from
   only tuning (the A8-correction site) and raw-vs-PLHM deltas are the two
   still-open targeted tests; full LoRA unfreeze is NOT earned.
 
+## A17 — R11 basin-hold, partial verdict: noise isolated, momentum untestable (2026-09-07, Kaggle T4)
+
+- Setup: 4 legs × 5 epochs from the 0.0081 champion, flat LR 2e-5, identical
+  schedules; {fresh, loaded-opt} × {accum 1, accum 8}. Kernel
+  `nairadithya/r11-basin` errored at the verdict cell, but legs A and C
+  completed and their trajectories survive in kernel stdout.
+- Numbers (val loss by epoch):
+
+  | leg | setup | ep1 | ep2 | ep3 | ep4 | ep5 |
+  |---|---|---|---|---|---|---|
+  | A | accum1/fresh | 0.0086 | 0.0092 | 0.0108 | 0.0121 | 0.0139 |
+  | C | accum8/fresh | 0.0078 | 0.0078 | 0.0078 | 0.0079 | 0.0080 |
+  | B/D | loaded-opt | — | — | — | — | crashed (no opt state in checkpoint) |
+- Monitors: leg C std 0.091→0.095, rank 1.7 throughout (healthy drift, no
+  collapse); leg A same signature while ascending. Staged champion
+  byte-verified post-hoc (975,963,368 B = local file exactly) — the
+  by-definition selection picked the right weights.
+
+- Inference: (a) A replicates Run 5's ejection step-for-step (0.0089→0.0167
+  by ep5 there) — batch-1 drift is real and reproducible. (b) C HOLDS flat
+  5 epochs at/below champion level with the ONLY change being pair-weighted
+  accumulation ×8. Batch-1 noise is (at least part of) the ejector — and
+  continued training is NOT impossible: with accumulation the basin holds.
+  (c) The momentum half (B/D) is untestable from any existing file: all
+  ferried champions are opt-stripped by design (D20), leg-1's Adam moments
+  died with that session, and moments cannot be reconstructed. D22's
+  specific suspect (discarded momentum) stays open but is now secondary —
+  the operational question (can training continue?) answers YES via C.
+  (d) Caveat: 5 epochs is short; C's durability beyond needs the repair leg
+  (C-extended 20 epochs + accum-4 dose cell, proposed).
+
 ## Synthesis — what the RANO + cross-site results mean (2026-09-06)
 
 Logged inferences (evidence-backed; see A9/A10/A12 for numbers):
