@@ -12,25 +12,27 @@
 # ---
 
 # %% [markdown]
-# # R11 — basin-hold matrix (does continued training eject, or the resume?)
+# # R11 repair — durability + dose-response (v1 partial verdict in hand)
 #
 # _Maintainer note: this .py file is the source of truth. Never edit the
 # .ipynb directly — regenerate it with `jupytext --to ipynb kaggle/kernel-r11/r11_basin.py`.
 # Shell commands here are LIVE — `kaggle kernels push` executes the notebook
 # as-is. Do not py_compile this file; it is notebook source, not a script._
 #
-# Plan: resume the 0.0081 champion, 4 legs × 5 epochs, flat LR 2e-5, batch 1,
-# warmup 1 (identical schedules — the ONLY differences are optimizer state and
-# accumulation). D22's hypothesis (fresh momentum ejects the narrow basin)
-# predicts: fresh-opt legs drift from epoch 1, loaded-opt legs hold.
-# - A: accum 1, fresh opt (Run-5 replication — expect drift)
-# - B: accum 1, loaded opt (--resume-opt)
-# - C: accum 8, fresh opt
-# - D: accum 8, loaded opt
-# Gate: epoch-1 val per leg (drift-from-ep1 is the D22 signature) + best val.
-# Verdict rule: B holds while A drifts → momentum was the ejector; C/D hold
-# while A/B drift → batch-1 noise was; all drift → basin truly unholdable
-# (D22 stands, no more training ever).
+# v1 outcome (A17): leg A (accum-1/fresh) ejected 0.0086→0.0139, replicating
+# Run 5; leg C (accum-8/fresh) held flat 0.0078→0.0080 — and leg-C best
+# (0.0078) sits BELOW champion (0.0081): accumulation may improve, not just
+# hold. Legs B/D (loaded-opt) crashed correctly: ferried champions are
+# opt-stripped, so momentum data does not exist anywhere — dropped, not
+# retried. v1's verdict cell died on an untested log-regex (space-vs-paren);
+# every parser below is tested against v1's real logs before push.
+#
+# Plan (flat LR 2e-5, batch 1, warmup 1, identical schedules):
+# - C2: accum-8 fresh, 20 epochs from champion (durability: does the hold last?)
+# - E: accum-4 fresh, 10 epochs from champion (dose-response midpoint)
+# Gate: C2 holds 20ep → training continues (R13 unblocked); C2 drifts after
+# epN → hold is transient (report N); E between A-ref and C2 → noise mechanism
+# confirmed by dose. A-ref (v1): 0.0086→0.0092→0.0108→0.0121→0.0139.
 
 # %%
 # Fail fast on the wrong GPU: P100 (sm_60) has no kernels in this image's
@@ -51,8 +53,8 @@ print('transformers', transformers.__version__, '| peft', peft.__version__, '| m
 assert transformers.__version__.startswith('4'), 'need transformers<5 for peft'
 
 # %%
-# Pin the exact code the R11 gate was designed on (accumulation + --resume-opt
-# + --checkpoint-dir all in this tree).
+# Pin the exact code v1 was gated on (accumulation + bucketing + G2/G3 all in
+# this tree; repair changes notebook only).
 !rm -rf world-model && git clone https://github.com/nairadithya/mri-world-model.git world-model
 %cd world-model
 !git checkout acf7503
@@ -105,55 +107,75 @@ yaml.safe_dump(cfg, open('kaggle.yaml', 'w'))
 print('wrote kaggle.yaml (plain 1-step JEPA; per-leg flags live in the train cells below)')
 
 # %%
-# Leg A: accum 1, FRESH opt (Run-5 replication — expect drift from epoch 1).
-!python scripts/run_train.py --config kaggle.yaml --epochs 5 --batch-size 1 --lr 0.00002 --warmup-epochs 1 --no-wandb --accum-steps 1 --resume-from $(cat /kaggle/working/CHAMPION) --checkpoint-dir /kaggle/working/checkpoints/legA 2>&1 | tee /kaggle/working/train_A.log
+# Leg C2: accum-8 fresh, 20 epochs from champion (durability).
+# -u: unbuffered stdout so the tee'd log is complete by construction.
+!python -u scripts/run_train.py --config kaggle.yaml --epochs 20 --batch-size 1 --lr 0.00002 --warmup-epochs 1 --no-wandb --accum-steps 8 --resume-from $(cat /kaggle/working/CHAMPION) --checkpoint-dir /kaggle/working/checkpoints/legC2 2>&1 | tee /kaggle/working/train_C2.log
 
 # %%
-# Leg B: accum 1, LOADED opt. Resume line must say "loaded optimizer".
-!python scripts/run_train.py --config kaggle.yaml --epochs 5 --batch-size 1 --lr 0.00002 --warmup-epochs 1 --no-wandb --accum-steps 1 --resume-from $(cat /kaggle/working/CHAMPION) --resume-opt --checkpoint-dir /kaggle/working/checkpoints/legB 2>&1 | tee /kaggle/working/train_B.log
+# Leg E: accum-4 fresh, 10 epochs from champion (dose-response midpoint).
+!python -u scripts/run_train.py --config kaggle.yaml --epochs 10 --batch-size 1 --lr 0.00002 --warmup-epochs 1 --no-wandb --accum-steps 4 --resume-from $(cat /kaggle/working/CHAMPION) --checkpoint-dir /kaggle/working/checkpoints/legE 2>&1 | tee /kaggle/working/train_E.log
 
 # %%
-# Leg C: accum 8, fresh opt.
-!python scripts/run_train.py --config kaggle.yaml --epochs 5 --batch-size 1 --lr 0.00002 --warmup-epochs 1 --no-wandb --accum-steps 8 --resume-from $(cat /kaggle/working/CHAMPION) --checkpoint-dir /kaggle/working/checkpoints/legC 2>&1 | tee /kaggle/working/train_C.log
-
-# %%
-# Leg D: accum 8, loaded opt.
-!python scripts/run_train.py --config kaggle.yaml --epochs 5 --batch-size 1 --lr 0.00002 --warmup-epochs 1 --no-wandb --accum-steps 8 --resume-from $(cat /kaggle/working/CHAMPION) --resume-opt --checkpoint-dir /kaggle/working/checkpoints/legD 2>&1 | tee /kaggle/working/train_D.log
-
-# %%
-# Verdict table: val trajectory per leg straight from the logs.
+# Verdict table. NEVER assert-fails the session: every leg reports a status
+# (OK / CRASH / NO LOG / UNKNOWN) and the table is written regardless.
+# Parser patterns below were tested against v1's real logs (train_A/B/C/D)
+# before push — the v1 failure was an untested `" epoch"`-vs-`"(epoch"`
+# mismatch, never again.
 import datetime, re, subprocess
 
 commit = subprocess.run('git rev-parse --short HEAD', shell=True,
                         capture_output=True, text=True).stdout.strip()
 print('code:', commit)
-print(f"{'leg':>5} {'setup':>22} {'ep1-val':>8} {'best-val':>9} {'ep5-val':>8}")
-verdict = {}
-for leg, setup in [('A', 'accum1/fresh'), ('B', 'accum1/loaded'),
-                   ('C', 'accum8/fresh'), ('D', 'accum8/loaded')]:
+
+VAL_RE = r'^val epoch (\d+): loss=([0-9.]+)'
+RESUME_RE = r'epoch ([^,]+), (\w+) optimizer'
+CRASH_RES = [r'(ValueError: [^\n]{0,150})', r'(RuntimeError: [^\n]{0,150})',
+             r'(CUDA out of memory[^\n]{0,80})']
+
+
+def parse_leg(leg):
     try:
         txt = open(f'/kaggle/working/train_{leg}.log').read()
     except FileNotFoundError:
-        print(f"{leg:>5} {setup:>22} NO LOG — leg never ran")
-        verdict[leg] = (float('nan'), float('nan'), float('nan'))
-        continue
-    vals = re.findall(r'^val epoch (\d+): loss=([0-9.]+) std=([0-9.]+) rank=([0-9.]+)', txt, re.M)
-    res = re.findall(r'resumed weights from .* epoch ([^,]+), (\w+) optimizer', txt)
-    assert res and res[0][1] == ('loaded' if 'loaded' in setup else 'fresh'), \
-        f'leg {leg}: optimizer mode wrong in log — {res} vs {setup}; DO NOT TRUST THIS LEG'
-    ep1 = float(vals[0][1]) if vals else float('nan')
-    best = min(float(v[1]) for v in vals) if vals else float('nan')
-    last = float(vals[-1][1]) if vals else float('nan')
-    verdict[leg] = (ep1, best, last)
-    print(f"{leg:>5} {setup:>22} {ep1:>8.4f} {best:>9.4f} {last:>8.4f}")
+        return {'status': 'NO LOG', 'vals': [], 'resume': '?', 'crash': ''}
+    vals = re.findall(VAL_RE, txt, re.M)
+    res = re.findall(RESUME_RE, txt)
+    crash = ''
+    for pat in CRASH_RES:
+        m = re.findall(pat, txt)
+        if m:
+            crash = m[0][:150]
+            break
+    return {'status': 'CRASH' if crash and not vals else 'OK',
+            'vals': [(int(e), float(v)) for e, v in vals],
+            'resume': res[0][1] if res else 'UNKNOWN (warn: resume line unparsed)',
+            'crash': crash}
+
+
+print(f"{'leg':>5} {'setup':>14} {'status':>8} {'ep1':>8} {'ep5':>8} "
+      f"{'ep10':>8} {'ep20':>8} {'best':>8} {'resume':>8}")
+verdict = {}
+for leg, setup in [('C2', 'accum8/fresh'), ('E', 'accum4/fresh')]:
+    r = parse_leg(leg)
+    by_ep = dict(r['vals'])
+    get = lambda e: f"{by_ep[e]:.4f}" if e in by_ep else 'n/a'
+    best = min((v for _, v in r['vals']), default=float('nan'))
+    verdict[leg] = (by_ep.get(1, float('nan')), best, r['status'])
+    best_s = f"{best:.4f}" if best == best else "n/a"
+    print(f"{leg:>5} {setup:>14} {r['status']:>8} {get(1):>8} {get(5):>8} "
+          f"{get(10):>8} {get(20):>8} {best_s:>8} {r['resume']:>8}")
+    if r['crash']:
+        print(f'      crash: {r["crash"]}')
+    if 'UNKNOWN' in r['resume']:
+        print(f'      warn: resume line unparsed — leg identity unverified')
+print('A-ref (v1, accum1/fresh): 0.0086 → 0.0092 → 0.0108 → 0.0121 → 0.0139 (ejects)')
 champ_v = 0.0081
-L = [f'# R11 basin-hold notes — {datetime.datetime.now(datetime.timezone.utc):%Y-%m-%d %H:%M UTC}',
-     f'- commit: `{commit}` | champion val 0.0081 | flat LR 2e-5, warmup 1, batch 1, 5 epochs/leg',
-     f'- A accum1/fresh: ep1 {verdict["A"][0]:.4f}, best {verdict["A"][1]:.4f}',
-     f'- B accum1/loaded: ep1 {verdict["B"][0]:.4f}, best {verdict["B"][1]:.4f}',
-     f'- C accum8/fresh: ep1 {verdict["C"][0]:.4f}, best {verdict["C"][1]:.4f}',
-     f'- D accum8/loaded: ep1 {verdict["D"][0]:.4f}, best {verdict["D"][1]:.4f}',
-     '- reading: B holds while A drifts → momentum was the ejector; '
-     'C/D hold while A/B drift → batch-1 noise was; all drift → D22 stands.']
+L = [f'# R11-repair notes — {datetime.datetime.now(datetime.timezone.utc):%Y-%m-%d %H:%M UTC}',
+     f'- commit: `{commit}` | champion val 0.0081 | flat LR 2e-5, warmup 1, batch 1',
+     f'- C2 accum8/fresh 20ep: ep1 {verdict["C2"][0]:.4f}, best {verdict["C2"][1]:.4f}, {verdict["C2"][2]}',
+     f'- E accum4/fresh 10ep: ep1 {verdict["E"][0]:.4f}, best {verdict["E"][1]:.4f}, {verdict["E"][2]}',
+     '- reading: C2 holds 20ep → durability proven, training continues (R13 unblocked); '
+     'C2 drifts after epN → report N, hold is transient; '
+     'E between A-ref and C2 → dose-response confirms noise mechanism.']
 open('/kaggle/working/run_notes.md', 'w').write('\n'.join(L) + '\n')
 print('\n'.join(L))
