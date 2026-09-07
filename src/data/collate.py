@@ -10,13 +10,18 @@ from src.preprocessing.transforms import runtime_transform
 from .dataset import MODALITIES
 
 
-def collate_fn(batch: list[dict], size: tuple[int, int, int] = (96, 96, 96)) -> dict:
+def collate_fn(batch: list[dict], size: tuple[int, int, int] = (96, 96, 96),
+               dtype: torch.dtype = torch.float32) -> dict:
     B = len(batch)
     T = max(s["n_visits"] for s in batch)
     C, D, H, W = 1, *size
     M = len(MODALITIES)
 
-    mri = torch.zeros(B, T, M, C, D, H, W)  # (B, visits, modality, C, D, H, W)
+    # NOTE: padded rows are storage only — encode_chunked skips unmasked rows,
+    # so padding never touches the backbone. dtype may be float16 to halve the
+    # input footprint (backbone casts to float on the chunk path); the default
+    # float32 preserves exact legacy numerics.
+    mri = torch.zeros(B, T, M, C, D, H, W, dtype=dtype)  # (B, visits, modality, C, D, H, W)
     mri_mask = torch.zeros(B, T, M, dtype=torch.bool)
     visit_mask = torch.zeros(B, T, dtype=torch.bool)
     actions = torch.zeros(B, T, dtype=torch.long)
@@ -41,7 +46,7 @@ def collate_fn(batch: list[dict], size: tuple[int, int, int] = (96, 96, 96)) -> 
                 except Exception:
                     continue  # leave zero-filled, mask False
 
-    return {
+    out = {
         "mri": mri,
         "mri_mask": mri_mask,
         "visit_mask": visit_mask,
@@ -51,8 +56,20 @@ def collate_fn(batch: list[dict], size: tuple[int, int, int] = (96, 96, 96)) -> 
         "n_visits": n_visits,
         "patient_id": patient_ids,
     }
+    # Treatment phase channel (SAILOR; absent for LUMIERE). Padded 3 =
+    # unknown phase, matching the adapter default. Dynamics prefers this
+    # over RANO actions when present (real treatment, not response proxy).
+    if any("treatment" in s for s in batch):
+        treatment = torch.full((B, T), 3, dtype=torch.long)
+        for b, s in enumerate(batch):
+            if "treatment" in s:
+                n = s["n_visits"]
+                treatment[b, :n] = s["treatment"][:n]
+        out["treatment"] = treatment
+    return out
 
 
-def make_collate(size: tuple[int, int, int] = (96, 96, 96)):
+def make_collate(size: tuple[int, int, int] = (96, 96, 96),
+                 dtype: torch.dtype = torch.float32):
     """Picklable collate factory (functools.partial survives num_workers>0)."""
-    return partial(collate_fn, size=size)
+    return partial(collate_fn, size=size, dtype=dtype)

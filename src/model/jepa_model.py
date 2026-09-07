@@ -125,6 +125,16 @@ class JEPAWorldModel(nn.Module):
             f"fusion out {self.fusion.out_dim} != temporal d_model")
         assert p.get("output_dim", 768) == m["target"].get("projection_dim", 768), (
             "predictor output != target projection dim")
+    def train(self, mode: bool = True):
+        super().train(mode)
+        # G2: the EMA target must never leave eval mode. model.train()
+        # recurses into all children (overriding TargetEncoder's init-time
+        # self.eval()), which would otherwise activate LoRA dropout (0.05)
+        # inside the targets. Parameters are requires_grad=False; this only
+        # pins dropout/norm behavior to eval.
+        self.target.eval()
+        return self
+
     def encode_visits(self, mri: torch.Tensor, mri_mask: torch.Tensor) -> torch.Tensor:
         """Per-visit vision latent: mean over available modalities. (B,T,768)."""
         B, T, M = mri.shape[:3]
@@ -176,9 +186,13 @@ class JEPAWorldModel(nn.Module):
         return b_idx, t_idx, u_idx, gaps
 
     def _dynamics_loss(self, states, z_all, visit_mask, has_img, time_deltas,
-                       actions, clinical, z_hat_1, z_tgt_1, valid_1):
+                       actions, clinical, z_hat_1, z_tgt_1, valid_1,
+                       treatment=None):
         """Velocity-field loss: integrate dz/dt across each pair's true gap.
 
+        Phase ids prefer the real treatment channel (SAILOR treatment.txt)
+        when the batch carries it, else fall back to RANO actions (response
+        proxy). Treatment ids (0-3) fit the 6-slot phase embedding.
         Returns (loss, z_hat_1, z_tgt_1, valid_1, horizon_info) with the same
         contract as _horizon_loss, plus mean velocity norm in the info dict
         (zero-velocity-collapse monitor: must stay >> 0).
@@ -192,10 +206,11 @@ class JEPAWorldModel(nn.Module):
         w = 1.0 / n.clamp_min(1).pow(self.dynamics_power)
         w = w / w.sum().clamp_min(1e-12)
         tempo = self.patient_tempo(clinical)[b_idx]  # (P,) per-pair tempo
+        phase_src = treatment if treatment is not None else actions
         pred = integrate(
             self.velocity_field, tempo, z_all[b_idx, t_idx],
             states[b_idx, t_idx],
-            actions[b_idx, t_idx] if actions is not None
+            phase_src[b_idx, t_idx] if phase_src is not None
             else torch.zeros_like(t_idx),
             clinical[b_idx], gaps, steps=self.dynamics_steps)
         tgt = z_all[b_idx, u_idx]
@@ -286,7 +301,8 @@ class JEPAWorldModel(nn.Module):
             loss, z_hat, z_tgt, valid, horizon = self._dynamics_loss(
                 states, z_all, visit_mask, has_img, batch["time_deltas"],
                 batch.get("actions"), c,
-                z_hat, z_tgt, valid)
+                z_hat, z_tgt, valid,
+                treatment=batch.get("treatment"))
         elif self.horizon_enabled:
             loss, z_hat, z_tgt, valid, horizon = self._horizon_loss(
                 states, batch["time_deltas"], visit_mask, has_img, mri, mri_mask,

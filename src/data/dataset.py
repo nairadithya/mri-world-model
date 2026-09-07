@@ -74,7 +74,9 @@ class LUMIEREDataset(Dataset):
         # (patient, date) -> rating string
         date_col = "Date" if "Date" in rano.columns else "Timepoint"
         rating_col = [c for c in rano.columns if "Rating" in c and "rationale" not in c.lower()][0]
-        self.rano = {(r["Patient"], r[date_col]): str(r[rating_col]) for _, r in rano.iterrows()}
+        # G3: strip rating strings on load ('Post-Op ' with a trailing space
+        # exists in the CSV and would otherwise fall through to the SD default).
+        self.rano = {(r["Patient"], r[date_col]): str(r[rating_col]).strip() for _, r in rano.iterrows()}
 
         # patient -> sorted visit list (from RANO rows + dirs on disk)
         visits: dict[str, set[str]] = {}

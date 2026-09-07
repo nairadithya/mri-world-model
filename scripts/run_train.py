@@ -33,6 +33,14 @@ def main() -> None:
     ap.add_argument("--config", default="config/default.yaml")
     ap.add_argument("--epochs", type=int, default=None)
     ap.add_argument("--batch-size", type=int, default=None)
+    ap.add_argument("--accum-steps", type=int, default=None,
+                      help="gradient accumulation micros per optimizer step "
+                           "(large-batch dynamics at batch-1 memory; "
+                           "pair-weighted by default, see training config).")
+    ap.add_argument("--no-bucket", action="store_true",
+                      help="disable length-bucketed train batching (legacy "
+                           "uniform shuffle; bucketing avoids OOM pairings "
+                           "and padding waste).")
     ap.add_argument("--lr", type=float, default=None,
                      help="peak LR (default from config; leg 2+ typically lower, e.g. 2e-5).")
     ap.add_argument("--warmup-epochs", type=int, default=None,
@@ -54,9 +62,18 @@ def main() -> None:
                      help="restrict to these patient IDs (pilot runs); "
                           "splits 80/20 train/val within the list.")
     ap.add_argument("--resume-from", default=None, metavar="CKPT",
-                     help="resume weights from a previous run's best.pt/last.pt "
-                          "(fresh optimizer + LR schedule; for splitting long runs "
-                          "across Kaggle sessions).")
+                      help="resume weights from a previous run's best.pt/last.pt "
+                           "(fresh optimizer + LR schedule; for splitting long runs "
+                           "across Kaggle sessions).")
+    ap.add_argument("--resume-opt", action="store_true",
+                      help="with --resume-from: also load the checkpoint's optimizer "
+                           "state (tests whether fresh momentum ejects narrow basins, "
+                           "D22/R11). Same model code required; mismatched groups "
+                           "fail LOUD (no silent fresh fallback).")
+    ap.add_argument("--checkpoint-dir", default=None, metavar="DIR",
+                      help="override training.checkpoint_dir (multi-leg sessions "
+                           "need distinct dirs per leg — a resume leg's best.pt "
+                           "overwrites the staged champion, D22).")
     args = ap.parse_args()
 
     with open(args.config) as f:
@@ -67,6 +84,12 @@ def main() -> None:
         cfg["training"]["max_epochs"] = args.epochs
     if args.batch_size is not None:
         cfg["training"]["batch_size"] = args.batch_size
+    if args.accum_steps is not None:
+        cfg["training"]["accumulation_steps"] = args.accum_steps
+    if args.no_bucket:
+        cfg["training"]["bucket_batches"] = False
+    if args.checkpoint_dir is not None:
+        cfg["training"]["checkpoint_dir"] = args.checkpoint_dir
     if args.lr is not None:
         cfg["training"]["lr"] = args.lr
     if args.warmup_epochs is not None:
@@ -103,6 +126,10 @@ def main() -> None:
     print({k: len(v) for k, v in splits.items()})
 
     size = tuple(cfg["preprocessing"].get("target_size", [96, 96, 96]))
+    store_half = bool(cfg["data"].get("store_half", False))
+    collate = make_collate(size, dtype=torch.float16 if store_half else torch.float32)
+    if store_half:
+        print("collate: storing fp16 inputs (backbone casts to float per chunk)")
     common = dict(
         meta_dir=meta_dir,
         processed_root=cfg["data"]["root"],
@@ -113,26 +140,50 @@ def main() -> None:
     train_ds = LUMIEREDataset(patients=splits["train"], **common)
     val_ds = LUMIEREDataset(patients=splits["val"], **common)
     bs = cfg["training"].get("batch_size", 4)
-    collate = make_collate(size)
-    train_loader = DataLoader(train_ds, batch_size=bs, shuffle=True,
-                              num_workers=2, collate_fn=collate)
+    if cfg["training"].get("bucket_batches", True):
+        from src.data.sampler import LengthBucketSampler
+        lengths = [len(train_ds.visits[p]) for p in train_ds.patients]
+        batch_sampler = LengthBucketSampler(
+            lengths, bs, shuffle=True, seed=cfg["data"].get("seed", 42))
+        train_loader = DataLoader(train_ds, batch_sampler=batch_sampler,
+                                  num_workers=2, collate_fn=collate)
+        print(f"train batching: length-bucketed (bs={bs}, "
+              f"maxlen={max(lengths, default=0)})")
+    else:
+        train_loader = DataLoader(train_ds, batch_size=bs, shuffle=True,
+                                  num_workers=2, collate_fn=collate)
+        print("train batching: legacy uniform shuffle")
     val_loader = DataLoader(val_ds, batch_size=bs, shuffle=False,
                             num_workers=2, collate_fn=collate)
     print(f"train/val patients: {len(train_ds)}/{len(val_ds)}")
 
     model = JEPAWorldModel(cfg)
+    resume_opt_state = None
     if args.resume_from:
         ckpt = torch.load(args.resume_from, map_location="cpu")
         missing, unexpected = model.load_state_dict(ckpt["model"], strict=False)
         print(f"resumed weights from {args.resume_from} "
-              f"(epoch {ckpt.get('epoch', '?')}, fresh optimizer/schedule)")
+              f"(epoch {ckpt.get('epoch', '?')}, "
+              f"{'loaded' if args.resume_opt else 'fresh'} optimizer/schedule)")
         if missing:
             print(f"  randomly initialized (absent in ckpt): {sorted(missing)}")
+        if args.resume_opt:
+            if "opt" not in ckpt or not ckpt["opt"]:
+                raise ValueError(
+                    f"--resume-opt given but {args.resume_from} holds no "
+                    f"optimizer state (failing LOUD: a silent fresh fallback "
+                    f"would corrupt the fresh-vs-loaded comparison).")
+            resume_opt_state = ckpt["opt"]
+            print(f"  + optimizer state WILL load "
+                  f"({len(resume_opt_state.get('state', {}))} tensors)")
+    elif args.resume_opt:
+        raise ValueError("--resume-opt needs --resume-from.")
     n_trainable = sum(p.numel() for p in model.trainable_parameters())
     n_total = sum(p.numel() for p in model.parameters())
     print(f"params: {n_trainable/1e6:.1f}M trainable / {n_total/1e6:.1f}M total")
 
-    stats = train(model, train_loader, val_loader, cfg, device)
+    stats = train(model, train_loader, val_loader, cfg, device,
+                  resume_opt_state=resume_opt_state)
     print(f"done. best val loss: {stats['best_val_loss']:.4f}")
 
     # Test scorecard (PROPOSAL §6/F): reload best checkpoint, evaluate once.

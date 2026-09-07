@@ -8,6 +8,9 @@ data:
   train_split: 0.7
   val_split: 0.15
   seed: 42
+  # Halve collate input memory (fp16 storage; backbone casts to float per
+  # chunk). Default false = exact legacy numerics for eval comparability.
+  store_half: false
 
 preprocessing:
   template: MNI152
@@ -65,6 +68,15 @@ actions:
 
 training:
   batch_size: 4
+  # Length-bucketed train batching (groups similar-length patients; avoids
+  # OOM long+short pairings and padding waste). --no-bucket for legacy shuffle.
+  bucket_batches: true
+  # Gradient accumulation: effective batch = batch_size * accumulation_steps
+  # at batch-1 peak memory. Pair-weighted by default (exact pooled-batch
+  # gradient); 1 = legacy single-batch path. CLI: --accum-steps.
+  accumulation_steps: 1
+  accumulate_pair_weighted: true
+  accumulate_pair_norm: 32.0
   lr: 1.0e-04
   weight_decay: 0.01
   warmup_epochs: 5
