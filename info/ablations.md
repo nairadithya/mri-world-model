@@ -20,11 +20,11 @@ Append-only. Each entry: setup → numbers → inference. IDs referenced from
   Dropbox; probe = real CT1 vs pure noise vs all-zeros, cosine drift.
 - Numbers:
 
-  | weights | real-vs-noise | CT1-vs-FLAIR | output norm |
-  |---|---|---|---|
-  | HF port | 0.0002 | 0.0000 | 30.02 (identical for all inputs) |
-  | official | 0.0709 | 0.0858 | 27.75 |
-  | random-init | 0.8707 | — | — |
+  | weights     | real-vs-noise | CT1-vs-FLAIR | output norm                      |
+  |-------------|---------------|--------------|----------------------------------|
+  | HF port     | 0.0002        | 0.0000       | 30.02 (identical for all inputs) |
+  | official    | 0.0709        | 0.0858       | 27.75                            |
+  | random-init | 0.8707        | —            | —                                |
 
   HF-port block activations explode 150× (std 2.6 → 385); tensors
   finite, shapes matching — silent corruption, invisible to key-count
@@ -86,14 +86,14 @@ Append-only. Each entry: setup → numbers → inference. IDs referenced from
   Per-patient JEPA vs persistence on `checkpoints/pilot/best.pt`:
 - Numbers:
 
-  | patient | JEPA | persistence | split |
-  |---|---|---|---|
-  | Patient-067 | 0.0100 | 0.0047 | train |
-  | Patient-031 | 0.0051 | 0.0043 | train |
-  | Patient-073 | 0.0042 | 0.0045 | train, JEPA wins |
-  | Patient-078 | 0.0093 | 0.0041 | train |
-  | Patient-029 | 0.0262 | 0.0040 | val (held-out) |
-  | mean | 0.0110 | 0.0043 | — |
+  | patient     | JEPA   | persistence | split            |
+  |-------------|--------|-------------|------------------|
+  | Patient-067 | 0.0100 | 0.0047      | train            |
+  | Patient-031 | 0.0051 | 0.0043      | train            |
+  | Patient-073 | 0.0042 | 0.0045      | train, JEPA wins |
+  | Patient-078 | 0.0093 | 0.0041      | train            |
+  | Patient-029 | 0.0262 | 0.0040      | val (held-out)   |
+  | mean        | 0.0110 | 0.0043      | —                |
 
 - Inference: gap narrowed 13× → ~2.5×, with the first patient-level win
   (073) and a near-tie (031). But the only held-out patient (029) is the
@@ -239,6 +239,188 @@ Append-only. Each entry: setup → numbers → inference. IDs referenced from
   interval-regime-dependent. Follow-ups: interval-stratified JEPA-vs-
   persistence (long-gap SAILOR pairs should favor JEPA), persistence-
   error baseline for both AUCs, SAILOR volume probes (ONCO masks).
+
+### A8 addendum — same-space correction: the 2.7× mixed spaces (2026-09-06)
+
+- Setup (G13/R3): the champion's 1-step predictor run over cached EMA states
+  (`scripts/split_gate.py`, CPU seconds, no backbone forward) vs persistence
+  computed on the identical cached EMA endpoints — both sides in the SAME
+  space. A8's headline instead compared JEPA error in EMA-target space
+  (`model(b)['loss']`) against `PersistenceBaseline(model.projector)` over
+  `model.encode_visits` (kaggle/hero_run.py eval cell) — i.e. persistence in
+  **online-projector space**. The online projector (trained) spreads
+  consecutive visits ~3× wider than the lagging EMA projector, so the 0.0218
+  half of the headline never measured the task the model was trained on.
+- Numbers (same EMA space; pooled pairs | patient-uniform):
+
+  | split      | pairs | JEPA              | persist | JEPA_pu                 | persist_pu |
+  |------------|-------|-------------------|---------|-------------------------|------------|
+  | train (65) | 407   | 0.0082 (loses)    | 0.0065  | 0.0083 (loses)          | 0.0071     |
+  | val (13)   | 69    | 0.0078 (loses)    | 0.0075  | 0.0081 (wins)           | 0.0083     |
+  | test (13)  | 71    | **0.0070** (wins) | 0.0088  | **0.0074** (wins ~2.2×) | 0.0160     |
+  | pool (91)  | 547   | 0.0080 (loses)    | 0.0069  | 0.0081 (wins narrow)    | 0.0086     |
+
+- Inference: headline margin REVISED DOWN, gate VERDICT STANDS where it
+  counts. The selection-metric-consistent comparison (patient-uniform, the
+  val metric best.pt was chosen on) is a narrow 0.0081-vs-0.0086 win, and
+  the uncontaminated test wins clearly under both aggregations (pooled
+  0.0070/0.0088; patient-uniform 0.0074/0.0160 — a few dynamic test
+  patients with high persistence error and few pairs). Pooled-all loses
+  because static pair-rich patients dominate pair counts. SAILOR transfer
+  failure is UNAFFECTED (interval-stratified eval was same-space both
+  sides); horizon probe tables likewise (cache endpoints both sides).
+  Open: how much of the online-vs-EMA spread gap is LoRA
+  change-amplification (D6 working) vs EMA smoothing — distinguishes what a
+  retrain (R13) should preserve.
+
+## A13 — Lead-time: surprise does not precede PD (2026-09-06, local CPU)
+
+- Setup (R1): frozen champion, per-pair JEPA + persistence errors; k-step
+  label = incident PD newly appearing at visit t+k (clean window, no earlier
+  PD). Script `scripts/leadtime.py`. Harness check first.
+- Numbers:
+
+  | k | pairs | PD-rate | JEPA-AUC                                   | pers-AUC   |
+  |---|-------|---------|--------------------------------------------|------------|
+  | 1 | 393   | 0.639   | **0.7677** (= A10 exactly — harness valid) | 0.7521     |
+  | 2 | 124   | 0.484   | 0.6990                                     | **0.8102** |
+  | 3 | 60    | 0.400   | 0.7396                                     | 0.7731     |
+
+- Inference: NO JEPA lead advantage. Contemporaneous surprise is
+  change-detection (as baselined); at k=2 raw visit-to-visit change predicts
+  incident PD clearly better than model surprise (gap ~0.11, SE ~0.06 —
+  suggestive, n=124), k=3 inconclusive (n=60). Volatile trajectories precede
+  progression, and the model's surprise is the worse volatility meter. RQ1
+  as stated ("deviations PRECEDE RANO calls") answers NO for JEPA error:
+  surprise is contemporaneous change-detection, nothing more. No further
+  surprise-as-early-warning work is justified.
+
+## A14 — Transition error atlas (2026-09-06, local CPU)
+
+- Setup (R2): same per-pair errors, broken by (RANO_t → RANO_{t+1});
+  `scripts/leadtime.py`. Designs R13 weights; quantifies G15.
+- Numbers (n, JEPA, persistence, median gap-days):
+
+  | trans                                                               | n   | jepa   | persist | gap |
+  |---------------------------------------------------------------------|-----|--------|---------|-----|
+  | PD>PD                                                               | 131 | 0.0074 | 0.0050  | 84  |
+  | X>X (surgery-involved)                                              | 106 | 0.0100 | 0.0111  | 7   |
+  | X>PD                                                                | 60  | 0.0078 | 0.0076  | 94  |
+  | X>SD                                                                | 55  | 0.0068 | 0.0102  | 98  |
+  | SD>PD (onset)                                                       | 43  | 0.0062 | 0.0036  | 91  |
+  | PD>X                                                                | 41  | 0.0080 | 0.0087  | 21  |
+  | SD>SD                                                               | 37  | 0.0053 | 0.0041  | 91  |
+  | CR>CR                                                               | 18  | 0.0138 | 0.0024  | 98  |
+  | (rare response cells, n ≤ 12: JEPA 0.007–0.010, elevated as in A10) |     |        |         |     |
+
+
+- Inference: (a) G15 CONFIRMED — X>X at ~7d gaps is the highest-error cell
+  for both sides; resections are intervention discontinuities, and JEPA is
+  the only regime that beats persistence there (0.0100 < 0.0111: predicting
+  change beats no-change only where change is certain). Model surgery as
+  intervention/reset (R7/R13), not as 1-day natural evolution. (b) Onset
+  (SD>PD, the clinically critical cell) loses ~2× to persistence — onset is
+  small in absolute terms; both predict fine, neither detects. (c) CR>CR has
+  the highest JEPA error (0.0138) against near-zero persistence (0.0024):
+  the over-predicts-change pathology behind the SAILOR failure, visible
+  in-domain. (d) R13 weighting: down-weight X>X (unlearnable discontinuity),
+  up-weight SD>PD (critical, persistence-dominated). (e) Gap reframe: cell
+  medians cluster 85–100d — LUMIERE pairs are NOT predominantly weekly
+  (dense only peri-operatively); SAILOR's 76d median is a similar regime.
+  The cross-site difference is phase composition (PD 64% vs SD 48%) + PLHM,
+  not sampling density — the regime exoneration stands, mechanism updated.
+
+## A15 — Treatment-conditioned velocity field on SAILOR, frozen champion (2026-09-07, local CPU)
+
+- Setup (option 2 / R14 core): champion encoder frozen; `treatment.txt` wired
+  into the adapter as a phase channel (CRT/TMZ/no/unknown; G4 gaps
+  index-aligned, provably identical while nothing is dropped);
+  `VelocityField`+`PatientTempo` (small: hidden 256, last layer x0.01-init so
+  training starts AT persistence) fit on cached all-(t,u) pairs, 1/n-weighted
+  Euler integration across true gaps — same math as `_dynamics_loss`.
+  5-fold subject CV; variant A = true treatment phase, variant B = constant
+  phase (same capacity/init/protocol — the RQ2 ablation). Held-out scoring
+  on 1-step pairs, same target space both sides. Script
+  `scripts/train_field.py` (encode once ~15 min, CV ~40 min, all CPU).
+- Numbers (held-out 1-step err; surprise-AUC PD):
+
+  | fold | held_n | cond              | uncond            | persist                                           |
+  |------|--------|-------------------|-------------------|---------------------------------------------------|
+  | 0    | 54     | 0.0038            | 0.0039            | 0.0047                                            |
+  | 1    | 54     | 0.0022            | 0.0022            | 0.0025                                            |
+  | 2    | 38     | 0.0037            | 0.0038            | 0.0042                                            |
+  | 3    | 56     | 0.0030            | 0.0030            | 0.0033                                            |
+  | 4    | 41     | 0.0054            | 0.0054            | 0.0055                                            |
+  | CV   | 243    | **0.0036±0.0011** | **0.0036±0.0011** | 0.0040±0.0011                                     |
+  | AUC  | —      | 0.8348            | 0.8397            | 0.8482 (persist highest — change-detection again) |
+
+  Velocity norms 6.5–10.3 (moving, not v≈0-collapsed).
+- Inference: (a) TREATMENT ADDS NOTHING — cond ≡ uncond to 4 decimals on
+  error and AUC, every fold. The shuffle control is moot (no gain exists to
+  be spurious). Reading: given the 1152-d history state (which already
+  encodes disease stage), the phase label is redundant — NOT proof treatment
+  is useless in principle, but no operational gain at N=27. (b) SITE REFIT
+  FLIPS THE TRANSFER GATE: a SAILOR-fit field (either variant) beats
+  persistence ~10% on held-out subjects where the LUMIERE head lost 5–14×.
+  The cross-site failure localizes finally to dynamics SCALE (fixable on-site
+  with N=27 + a small field — R16 realized), not representation, not regime,
+  not treatment-blindness.   (c) Caveats: fixed 400-epoch budget; N=27 power; treatment↔stage
+  confounding cuts both ways here (it should have made phase MORE
+  predictive, yet tie). Robustness: hidden-128 rerun (halved capacity)
+  reproduces everything — cond 0.0035±0.0011 / uncond 0.0036±0.0011 /
+  persist 0.0040±0.0011, AUCs 0.8431/0.8431/0.8482. The tie is not a
+  capacity artifact.
+
+## A16 — Freezing battery: is the frozen encoder the problem? (2026-09-07, CPU)
+
+- Setup: five zero/low-training diagnostics on existing caches, asking
+  whether transfer failure needs representation change. Script
+  `scripts/freeze_battery.py` (+ per-phase slice of A15's saved
+  `checkpoints/field_scores.pt`).
+- (1) Site separability: logistic probe frozen-latent → cohort. z-space:
+  acc 0.956, AUC 0.9998 (638+270 visits); states: acc 0.77, AUC 0.986.
+  SAILOR per-subject logits all strongly positive (3.7–15.7): a UNIFORM
+  site shift, not outliers. The "different neighborhood" is measured, not
+  gestured at.
+- (2) CORAL alignment (fold-wise honest: fit on train folds, apply to
+  held-out; z and states spaces separately; frozen LUMIERE head scored):
+
+  |                                    | head   | persist |
+  |------------------------------------|--------|---------|
+  | unaligned                          | 0.0290 | 0.0039  |
+  | CORAL-aligned                      | 0.0119 | 0.0042  |
+  | transductive (fit-all upper bound) | 0.0080 | —       |
+
+  Second-order matching alone cuts head error 2.4× with zero training and
+  zero unfreezing; persistence is preserved (geometry not distorted).
+  ~2/3 of the excess error is covariance shift. Fold 4 flat (0.0284) —
+  4/5 improve, reported honestly. Residual (0.012 vs 0.004) is
+  higher-order/conditional.
+- (5) Image-space damping: consecutive-visit mean|Δ| (96³, brain-masked):
+  SAILOR median 0.24 (p10 0.17 / p90 0.41, n=20) vs LUMIERE 0.76 (0.56 /
+  0.86, n=10, two earliest visits skipped against peri-op inflation) — NO
+  overlap even after the correction (LUMIERE min > SAILOR max), and SAILOR's
+  sample includes peri-operative pairs too. Damping is IN THE IMAGES,
+  pre-encoder: total-pipeline difference (PLHM prime suspect, uint8 +
+  registration contributors not excluded — raw comparison blocked on
+  unextracted tarballs).
+- (7) Within-phase scoring (A15 pairs sliced by pair-t phase): cond ≡
+  uncond inside every phase (CRT 0.0040/0.0041 n=102; TMZ 0.0026/0.0027
+  n=95; no/unknown ties; both beat persistence per phase). The A15 tie is
+  NOT confounding masking signal — treatment is redundant given history,
+  homogeneously. TMZ < CRT errors match clinical volatility ordering.
+- (8) Interval-matched gaps: SAILOR latent drift ~HALF LUMIERE's at matched
+  gaps every bin (e.g. 30-90d: 0.0040 vs 0.0056; 90-180d: 0.0030 vs 0.0058)
+  while the frozen head sits flat ~0.03 on SAILOR in all bins (LUMIERE head
+  0.007-0.012). Same gaps, different drift, uniform head failure:
+  scale/shift, not interval.
+- Inference: freezing EXONERATED three ways — (i) statistics matching
+  recovers 2/3 of head error with the encoder untouched; (ii) damping is
+  measurable pre-encoder in image space; (iii) site-refit heads already beat
+  persistence (A15). What remains is higher-order shift (CORAL residual) +
+  damped inputs (PLHM) — neither is fixed by unfreezing per se. Projector-
+  only tuning (the A8-correction site) and raw-vs-PLHM deltas are the two
+  still-open targeted tests; full LoRA unfreeze is NOT earned.
 
 ## Synthesis — what the RANO + cross-site results mean (2026-09-06)
 

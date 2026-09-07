@@ -21,19 +21,22 @@ small{color:#555}
 <body>
 <h1>JEPA World Model over Longitudinal Glioma MRI — Runs &amp; Experiments</h1>
 <p>Model: BRAINIAC ViT (LoRA) → clinical fusion → temporal transformer → predictor vs EMA
-target (JEPA). Data: LUMIERE, 91 glioblastoma patients, 65/13/13 split. Gate (proposal §6):
-<b>beat persistence</b> — a falling loss alone proves nothing.</p>
+target (JEPA). Data: LUMIERE, 91 glioblastoma patients, 65/13/13 split; held-out: SAILOR,
+27 patients. Gate (proposal §6): <b>beat persistence, same representation space both
+sides</b> — a falling loss alone proves nothing, and (learned 2026-09-07) mixed-space
+comparisons prove nothing either.</p>
 
 <h2>0. Theses</h2>
 <div class="why"><b>T1 — encoder/temporal latent holds tumour state</b> (RANO class, volume).
-Test = frozen probes, reading <b>from the temporal latent</b> (history summary), not snapshots:
+Test = frozen probes reading <b>from the temporal latent</b> (history summary), not snapshots:
 RANO is a trajectory statement. <b>T2 — temporal latent predicts the future.</b> Test =
-next-visit latent prediction vs persistence. T2's ceiling is T1's quality.</div>
+next-visit latent prediction vs persistence, same space. T2's ceiling is T1's quality.</div>
 
 <h2>1. Training runs</h2>
 <h3>Run 1 — INVALID (corrupt weights)</h3>
 <p>HF community BRAINIAC port. Loss fell (0.37→0.03) but target std 0.0024 / rank 1.1:
-constant-target collapse. Checkpoints deleted. Lesson (I2): <b>monitors over loss</b>.</p>
+constant-target collapse. Checkpoints deleted. Lesson (I2): <b>monitors over loss</b>;
+behavioral weight checks mandatory (A2).</p>
 
 <h3>Run 2 — pilot, official weights (CPU, 5 patients)</h3>
 <p>A6: JEPA 0.0576 vs persistence 0.0043. Learning signal proven, persistence unbeaten —
@@ -41,68 +44,107 @@ expected at this scale.</p>
 
 <h3>Run 3 — extended 25-epoch pilot (CPU)</h3>
 <p>Best val 0.0093 (plateau ~epoch 13). A7: gap 13×→2.5×, first patient win. Verdict:
-<b>patients, not epochs</b> — motivates the hero run.</p>
+<b>patients, not epochs</b>.</p>
 
 <h3>Run 4 — hero leg 1 (Kaggle T4, 91 patients, 30 epochs, LR 1e-4)</h3>
-<p>Val U-shape: 0.083 → <b>0.0081 (~ep7)</b> → 0.0704. Test 0.0074. A8: mean JEPA 0.0081 vs
-persistence 0.0218 (~2.7×, 82/91 wins, biggest on dynamic patients) — <b>gate cleared</b>.
-Engineering: batch 1/16 GB, chunked encoding, T4-only, gunzip ingestion, torchao removed.</p>
+<p>Val U-shape: 0.083 → <b>0.0081 (~ep7)</b> → 0.0704. Test 0.0074. A8 first reported
+0.0081 vs 0.0218 (~2.7×, 82/91) — <b>later corrected (A8 addendum)</b>: the 0.0218 was
+persistence in <i>online-projector</i> space while JEPA error lives in <i>EMA-target</i>
+space (3× wider consecutive drift). Same-space gate (<code>scripts/split_gate.py</code>):
+narrow patient-uniform win (0.0081 vs 0.0086), <b>clear test win both aggregations
+(0.0070/0.0088 pooled, 0.0074/0.0160 patient-uniform)</b>. Gate cleared where it counts,
+thinly. Engineering: batch 1/16 GB, chunked + checkpointed encoding, T4-only, gunzip
+ingestion.</p>
 
 <h3>Run 5 — hero leg 2 (resume best.pt, LR 2e-5, 30 epochs) — exploit FAILED</h3>
 <p>Val rose every epoch (0.0089 → 0.031 plateau). D22: the optimum is a narrow basin
-unholdable by continued training (leg-1 tail agreed). Suspect: fresh optimizer discards
-basin-holding momentum. Engineering: T4 OOMs → gradient checkpointing (D21, corrected:
-backbone chunks dominate), bit-identical math verified.</p>
+unholdable by continued training (leg-1 tail agreed). Suspects: fresh optimizer discards
+basin-holding momentum (untested — checkpoints save opt state, resume ignores it: G8);
+batch-1 gradient noise (now testable via pair-weighted accumulation, D27).</p>
 
 <h3>Run 6 — aux fine-tune (champion + RANO heads, 10 epochs, LR 5e-6, λ=1.0) — RE-GATE FAILED</h3>
-<p>D25 design: flat 4-class CE + prog (PD-vs-rest) + resp ((PR|CR)-vs-SD) heads on prefix
-states, forecast framing, joint loss. Heads learned (flat 3.08→0.37), no collapse, val
-total 1.89→1.69. But JEPA val 0.0081→<b>0.0205</b> (test 0.0074→0.0174): dynamics paid 2.5×.
-Frozen re-probe: hero-split F1 0.51 (up) but <b>CV 0.33±0.04 — unchanged</b>. Verdict: tilted
-the encoder without generalizable gain; champion stands; joint-from-scratch not earned.</p>
-<div class="verdict">Champion stands: <code>checkpoints/champion_0.0081.pt</code>,
-val <b>0.0081</b> / test <b>0.0074</b>. No more LUMIERE gradient steps.</div>
+<p>D25 design: flat/prog/resp heads, forecast framing, joint loss. Heads learned, no collapse,
+but JEPA val 0.0081→<b>0.0205</b>: dynamics paid 2.5×. Frozen re-probe: hero-split F1 0.51
+(up) but <b>CV 0.33±0.04 — unchanged</b>. Verdict: tilted the encoder without generalizable
+gain; champion stands; joint-from-scratch not earned.</p>
+<div class="verdict">Champion stands: <code>checkpoints/champion_0.0081.pt</code>
+(val 0.0081 / test 0.0074). No more LUMIERE gradient steps without passing R11 first.</div>
 
-<h2>2. Ablations &amp; probes</h2>
+<h2>2. Ablations &amp; probes (in-domain)</h2>
 <table>
 <tr><th>ID</th><th>Question</th><th>Result</th></tr>
-<tr><td>A6</td><td>Learning signal? (pilot)</td><td>JEPA 0.058 &lt; chance; persist 0.0043 unbeaten</td></tr>
-<tr><td>A7</td><td>Do epochs close it? (25-ep pilot)</td><td>Gap 13×→2.5×, first win; need patients</td></tr>
-<tr><td>A8</td><td>Merit at scale? (leg 1, 91 pts)</td><td><b>0.0081 vs 0.0218, 82/91</b> — gate cleared</td></tr>
-<tr><td>A9</td><td>RANO from frozen latents? (393 visits)</td><td>Snapshot F1 0.31 → <b>temporal-forecast MLP 0.45</b> → <b>CV-honest 0.33±0.06</b></td></tr>
-<tr><td>A10</td><td>Surprise → next PD? (393 pairs)</td><td><b>AUC 0.77</b>, zero training; PR/CR surprise most</td></tr>
+<tr><td>A6/A7</td><td>Learning signal? Do epochs close it?</td><td>Yes; then plateau — need patients</td></tr>
+<tr><td>A8</td><td>Merit at scale? (leg 1, 91 pts)</td><td>Same-space: test wins both ways; overall narrow (addendum!)</td></tr>
+<tr><td>A9</td><td>RANO from frozen latents? (393 visits)</td><td>Snapshot 0.31 → forecast-state MLP hero 0.45 → <b>CV-honest 0.33±0.06</b></td></tr>
+<tr><td>A10/A13</td><td>Surprise → PD? Lead-time? (393/124/60 pairs)</td><td><b>AUC 0.77 ≈ persist 0.75</b>; k=2 persist 0.81 &gt; JEPA 0.70 — change-detection, no early warning</td></tr>
 <tr><td>A11</td><td>Volume from latents? (599 auto-mask studies)</td><td>Readout R² 0.15 (CV-λ); forecast &lt; persistence</td></tr>
+<tr><td>A14</td><td>Where won/lost? (transition atlas, 547 pairs)</td><td>Surgery = discontinuity (only JEPA-win regime); onset SD→PD loses 2×; CR→CR over-predicts; LUMIERE gaps ~90d median, not weekly</td></tr>
 </table>
 <div class="why">Why probes, not lower loss: JEPA loss 0.008 ≈ cosine 0.992 — saturated.
 A9's arc is the template (0.31 → 0.45 → CV 0.33: hero splits are noise, only CV counts).
-History beats snapshot (states ≫ deltas ≫ snapshots); MLP beats linear only for forecast
-(futures stored folded). Regularization lesson: plain LSQ on 1152-d/450-row gives R²≈−100;
-ridge + CV-λ mandatory. Glossary: PD = Progressive Disease (majority, 253/397 ≈ 64% —
-hence macro-F1); SD/PR/CR = stable/partial/complete.</div>
+History beats snapshot (states ≫ deltas ≫ snapshots); MLP beats linear only for forecast.
+Regularization: plain LSQ on 1152-d/450-row gives R²≈−100; ridge + CV-λ mandatory.
+Glossary: PD = Progressive Disease (majority, 253/397 ≈ 64% — hence macro-F1).</div>
 <div class="warn">Field (D24, <code>info/frontier_lumiere.md</code>): RANO SOTA = Tikhonov 2025
 hybrid <b>F1 0.50</b>; TRACE concept-bottleneck 0.477 (binary 0.71); TaDiff-Net (TMI 2025)
-generates future MRI, never touches RANO. LUMIERE masks are auto-only (DeepBraTumIA/HD-GLIO).
-Correction to the survey: SAILOR <b>does</b> ship per-session RANO labels (numeric codes
-1/2/3/5 — codebook pending) plus intervals-days, age, survival, treatment.</div>
+generates future MRI, never touches RANO. LUMIERE masks are auto-only. BraTS 2025 Task 11
+made LUMIERE the progression benchmark (hidden test) — the external validation target.</div>
 
-<h2>3. Scoreboard</h2>
+<h2>3. Multi-horizon program (closed)</h2>
+<p>Frozen-probe gate passed (beats persistence at every horizon; n=1 0.0050 beats the
+champion's own 1-step head 0.0074) → hero leg with gap-conditioned head + 1/n weighting
+earned → <b>leg failed where it matters</b> (n=1 0.0137 vs frozen 0.0050; far-horizon wins
+only) → re-gate identical downstream (RANO CV 0.323 vs 0.334, volume identical) →
+head-only sweep: small joint head is the ceiling. Verdict: <b>frozen champion + small joint
+head is the production forecaster</b>; no more GPU legs. Same moral as aux: training the
+encoder tilts dynamics, heads preserve them.</p>
+
+<h2>4. Cross-site (SAILOR) — failure localized, then partially rescued</h2>
+<p>A12: readouts transfer (F1 0.37 ≈ in-domain CV; surprise-AUC 0.87) while mean-error
+dynamics lose ~5×. Interval stratification ruled out the gap excuse (persistence wins every
+bin; median gap 76d vs LUMIERE ~90d — similar regimes); disease-mismatch exonerated (same
+Stupp GBM, OS 16.7 vs 19 mo); gap-conditioned head helped 15–20% but still lost 5–8×.
+Diagnosis: champion over-predicts change (flat ~0.03 at all gaps); LUMIERE-calibrated
+scale on mostly-stable disease.</p>
+<div class="verdict">A15 — site refit flips the gate: frozen champion + small velocity field
+fit on SAILOR (subject-wise CV, treatment vs constant-phase ablation) → held-out
+<b>0.0036 vs persistence 0.0040 (~10%)</b>, treatment adds nothing (exact tie both
+capacities). Transfer failure = dynamics <i>scale</i>, fixable on-site with N=27.
+A16 battery: site shift is uniform (probe AUC 0.9998) and largely second-order
+(CORAL alone cuts head error 2.4×, no training); damping is pre-encoder in image space
+(SAILOR |Δ| 0.24 vs LUMIERE 0.76, no overlap — PLHM prime suspect); within-phase tie
+rules out confounding-masking. Freezing exonerated three ways; full unfreeze not earned.</div>
+
+<h2>5. Engineering sessions (no GPU spent)</h2>
+<p>D27 batch-size/OOM fixes (validated): pair-weighted accumulation (exact pooled-batch
+gradient at batch-1 peak — enables the R11 basin-hold matrix), length-bucketed batching,
+fp16 inputs (opt-in), G2 target-eval pin, G3 rating strip. D28 same-space gate rule.
+D30 treatment wiring (SAILOR phase channel; RANO fallback preserved).
+<code>scripts/</code> now: <code>split_gate.py</code> (same-space gate, seconds),
+<code>leadtime.py</code> (R1+R2), <code>train_field.py</code> (frozen-field CV),
+<code>freeze_battery.py</code> (tests 1,2,5,8).</p>
+
+<h2>6. Scoreboard (honest numbers only)</h2>
 <table>
 <tr><th>Claim</th><th>Number</th><th>Status</th></tr>
-<tr><td>Beat persistence (dynamics)</td><td>0.0074 test vs 0.0218 persist</td><td>Proven (A8)</td></tr>
-<tr><td>RANO from frozen temporal latent</td><td>CV F1 0.33±0.06 (SOTA 0.50)</td><td>Modest, real</td></tr>
-<tr><td>Surprise → next PD</td><td>AUC 0.77</td><td>New, needs persist-baseline</td></tr>
-<tr><td>Volume from latent</td><td>R² 0.15; forecast &lt; persistence</td><td>Weak</td></tr>
-<tr><td>Aux fine-tune improves encoder</td><td>CV flat, JEPA 2.5× worse</td><td>Failed (Run 6)</td></tr>
-<tr><td>Cross-site (SAILOR) generalization</td><td>data local (143 GB), RANO+intervals+masks found</td><td>In progress</td></tr>
+<tr><td>Beat persistence in-domain</td><td>test 0.0070/0.0088 pooled, 0.0074/0.0160 pat-uniform; overall 0.0081/0.0086</td><td>Cleared thinly (A8 corrected)</td></tr>
+<tr><td>RANO from frozen temporal latent</td><td>CV F1 0.33±0.06 (SOTA 0.50); transfers 0.37 cross-site</td><td>Modest, real, transferable</td></tr>
+<tr><td>Surprise → PD / lead-time</td><td>AUC 0.77 ≈ persist 0.75; k=2 persist wins; cross-site 0.87 ≈ 0.86</td><td>Change-detection, no warning</td></tr>
+<tr><td>Volume from latent</td><td>R² 0.15; forecast &lt; persistence</td><td>Weak (mask-pooling next: R5)</td></tr>
+<tr><td>Aux / horizon joint training</td><td>CV flat, dynamics 2–2.5× worse</td><td>Failed twice, pattern</td></tr>
+<tr><td>Cross-site dynamics</td><td>LUMIERE head loses 5–14×; site-refit field wins ~10%; treatment tie</td><td>Scale-localized, rescued</td></tr>
+<tr><td>Treatment conditioning (RQ2)</td><td>cond ≡ uncond, every fold/phase/capacity</td><td>No operational gain at N=27</td></tr>
 </table>
 
-<h2>4. What's next (D22/D24/D25)</h2>
+<h2>7. What's next</h2>
 <ol>
-<li>SAILOR adapter + eval: JEPA-vs-persistence, RANO + volume probes cross-site (codebook first).</li>
-<li>Persistence-error baseline for A10; enhancing-core/growth-rate volume framings.</li>
-<li>D19 fusion retrain stays gated on ~0.50 frozen F1. Writeup when SAILOR lands.</li>
+<li><b>R5 mask-guided pooling</b> (CPU): patch tokens inside auto-masks — biggest cheap shot at the volume half.</li>
+<li><b>R11 basin-hold</b> (Kaggle): {fresh, loaded-opt} × {accum 1, 8} from champion — needs G8 resume-opt-state (~10 lines). Decides all further training.</li>
+<li><b>R13 transition-weighted retrain</b>: down-weight surgery discontinuities, up-weight SD→PD onset (A14 designs the weights).</li>
+<li><b>R20 BraTS Task-11 submission</b>: hidden-test validation to end split-luck debates.</li>
+<li>Open targeted tests: projector-only tuning (the A8-correction site), raw-vs-PLHM deltas.</li>
 </ol>
-<p><small>Updated 2026-09-06 from <code>info/</code> (D0–D25, A6–A11, Runs 1–6).
-Sources: decisions.md, ablations.md, pilot.md, frontier_lumiere.md.</small></p>
+<p><small>Updated 2026-09-07 from <code>info/</code> (D0–D30, A1–A16, Runs 1–6 + frozen-field program).
+Sources: decisions.md, ablations.md, pilot.md, results.md, directions.md, frontier_lumiere.md.</small></p>
 </body>
 </html>

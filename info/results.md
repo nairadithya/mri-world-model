@@ -107,11 +107,16 @@ test split; "CV" means 5-fold patient-wise cross-validation. Only CV counts.
 
 | Question | Honest result | Detail and caveat |
 |---|---|---|
-| Does the dynamics model beat persistence in-domain? | **Yes: held-out test loss 0.0074; mean error 0.0081 vs persistence 0.0218 (~2.7×), wins on 82/91 patients** | Biggest wins on the most changing patients; the 9 losses sit where scans are near-static and "no change" is near-optimal. The 91-patient sweep includes 65 training patients, so memorization inflates the mean — the uncontaminated number is the held-out test 0.0074. |
+| Does the dynamics model beat persistence in-domain? | **Yes on held-out test (pooled 0.0070 vs 0.0088; patient-uniform 0.0074 vs 0.0160); narrowly patient-uniform overall (0.0081 vs 0.0086)** | CORRECTION (2026-09-06, A8 addendum): the earlier "~2.7× (0.0081 vs 0.0218)" mixed spaces — JEPA error in EMA-target space vs persistence in online-projector space, which spreads consecutive visits ~3× wider. Same-space numbers above (`scripts/split_gate.py`). The gate still passes where it counts (uncontaminated test, both aggregations) but the margin is honest-narrow, not 2.7×. Pooled-all loses (0.0080 vs 0.0069) on static pair-rich patients. |
 | Does the frozen representation encode progression status? | **Modestly: CV macro-F1 0.33** | Beats the always-guess-PD floor (~0.20) and a volumes-only probe (0.30); trails supervised end-to-end literature (0.50). The single-split 0.45 was the lucky end of the spread (folds: 0.25–0.42), not the centre. |
-| Does prediction surprise anticipate progression? | **Weakly and non-specifically: JEPA-error AUC 0.77 in-domain (393 pairs) vs 0.75 for trivial persistence error; 0.87 cross-site (240 pairs) vs 0.86** | Stable futures are predictable, change is not — but raw scan-to-scan change predicts progression nearly as well. Surprise is change-detection, not a JEPA-specific signal. One divergence: JEPA is most surprised by rare response transitions (PR/CR), persistence least by CR — task-blindness signal raw change misses, but on n=20–27 samples. |
+ | Does prediction surprise anticipate progression? | **Weakly and non-specifically, contemporaneous only: JEPA-error AUC 0.77 in-domain (393 pairs) vs 0.75 for trivial persistence error; 0.87 cross-site (240 pairs) vs 0.86. No lead advantage: at k=2 visits out, persistence error predicts incident PD better (0.81 vs 0.70, n=124); k=3 inconclusive (n=60)** | Stable futures are predictable, change is not — but raw scan-to-scan change predicts progression nearly as well, including ahead of time. Surprise is change-detection, not a JEPA-specific signal and not early warning. One divergence: JEPA is most surprised by rare response transitions (PR/CR), persistence least by CR — task-blindness signal raw change misses, but on n=20–27 samples. |
 | Does the latent encode tumour size? | **Weakly: readout R² ≈ 0.15 (mean error 1.26 vs 1.38 for predicting the mean, log-mm³); forecasting next-visit size loses to persistence (1.52 vs 1.07, forecast R² ≈ 0.04)** | Tumour volumes come from automated (not expert) masks. Size signal exists but is diffuse; volumes evolve slowly, so "same as last visit" wins. |
-| Do dynamics transfer across site/scanner/protocol? | **Split, decided against regime: mean-error dynamics do NOT transfer at any gap (persistence wins 0-21d through 180d+); discriminative readouts DO (F1 0.37 ≈ in-domain CV 0.33; surprise AUC 0.87)** | Interval stratification (`scripts/sailor_interval_eval.py`, 243 pairs, median gap 76d — not ~14d as earlier notes said) rules out the interval excuse: persistence wins 7–14× in every bin (e.g. 61-180d: 0.0035 vs 0.0283; 180d+: 0.0047 vs 0.0292). Mechanism: the champion systematically over-predicts change on SAILOR — its error sits flat ~0.03 at all gaps while SAILOR targets stay near-static even 76 days apart (LUMIERE-calibrated dynamics expecting weekly on-treatment volatility, applied to mostly-stable disease). Dynamics scale doesn't transfer; representation readouts do.
+| Do dynamics transfer across site/scanner/protocol? | **Split, decided against regime: mean-error dynamics do NOT transfer at any gap (persistence wins 0-21d through 180d+); discriminative readouts DO (F1 0.37 ≈ in-domain CV 0.33; surprise AUC 0.87)** | Interval stratification (`scripts/sailor_interval_eval.py`, 243 pairs, median gap 76d — not ~14d as earlier notes said) rules out the interval excuse: persistence wins 7–14× in every bin (e.g. 61-180d: 0.0035 vs 0.0283; 180d+: 0.0047 vs 0.0292). Mechanism: the champion systematically over-predicts change on SAILOR — its error sits flat ~0.03 at all gaps while SAILOR targets stay near-static even 76 days apart (LUMIERE-calibrated dynamics expecting weekly on-treatment volatility, applied to mostly-stable disease). Dynamics scale doesn't transfer; representation readouts do. Refinement
+(2026-09-07, A15): refitting only a small velocity field on SAILOR (frozen
+champion, subject-wise CV) beats persistence ~10% on held-out subjects
+(0.0036 vs 0.0040) — the failure is dynamics scale, fixable on-site with
+N=27, and treatment-phase conditioning adds nothing (exact tie with the
+unconditioned ablation).
 
 Disease-mismatch check (is SAILOR a different disease?): no, mostly. SAILOR
 is 23 glioblastomas + 4 grade-III gliomas (Hovden's own slides); LUMIERE is
@@ -349,16 +354,28 @@ instability) is not earned. The champion stands untouched.
   JEPA-specific. Partial exception: response transitions surprise JEPA most
   (PR 0.0088, CR 0.0115) while CR surprises persistence least (0.0031) —
   rare-transition signal raw change misses, on n=20–27 samples.
-- **Cross-site (SAILOR, frozen champion, zero training):** mean-error dynamics
-  lose ~5× (interval regime, see scorecard) while the progression readout
-  transfers exactly at the in-domain CV level and surprise improves. The
-  representation generalizes across site, scanner, and protocol; the mean-error
-  gate is visit-interval-dependent.
+- **Cross-site (SAILOR): failure localized, then rescued.** Zero-training
+  dynamics lose ~5× while readouts transfer (F1 0.37, surprise-AUC 0.87) —
+  but the cause is not the interval (stratified: persistence wins every gap
+  bin; both cohorts' median gaps sit ~80–90d) and not the disease (same
+  Stupp GBM both sides). Three follow-ups pin it down: (a) refitting only a
+  small velocity field on SAILOR beats persistence ~10% on held-out subjects
+  — the failure is dynamics *scale*, fixable on-site with 27 patients, and
+  treatment-phase labels add nothing (exact tie); (b) CORAL covariance
+  matching alone cuts the frozen head's error 2.4× with zero training — most
+  of the failure is second-order statistics, not representation; (c) the
+  damping is measurable before any network: consecutive-visit image change
+  is 0.24 on SAILOR vs 0.76 on LUMIERE with no overlap, implicating the
+  PLHM normalization step. Net: the representation was never the problem;
+  scale (refit), statistics (align), and inputs (damped) were.
 
 ## Conclusions
 
-1. Latent next-visit forecasting beats "no change" in-domain by ~2.7×, winning
-   exactly where change happens. The mandatory baseline is cleared at scale.
+1. Latent next-visit forecasting beats "no change" on held-out test patients
+   (pooled 0.0070 vs 0.0088; patient-uniform 0.0074 vs 0.0160) and narrowly
+   overall on the selection-consistent metric (0.0081 vs 0.0086) — not the
+   ~2.7× first reported (mixed-space baseline, corrected 2026-09-06). The
+   mandatory baseline is cleared where it counts, thinly.
 2. The frozen history representation carries real, modest, transferable
    progression signal (CV 0.33 in-domain, 0.37 cross-site with zero retraining;
    surprise AUC 0.77 → 0.87). History beats snapshots structurally.
@@ -368,6 +385,11 @@ instability) is not earned. The champion stands untouched.
    headline in this project so far has been the lucky end of a wide spread.
 5. Volume is the weak half: weakly readable, not forecastable beyond
    persistence. The thesis holds at trajectory level, not size level.
+6. The cross-site story is closed, not open: transfer failed on dynamics
+   scale (rescued by on-site refit), second-order statistics (two-thirds
+   recovered by alignment alone), and damped inputs (measured pre-encoder)
+   — never on the representation, which transfers at full strength
+   throughout. Nothing in the failure motivates unfreezing the encoder.
 
 ## Follow-up: multi-horizon forecasting (gate passed, full run open)
 
@@ -464,14 +486,16 @@ the counts to matter.
 
 ## Open work (not claimed)
 
-- Interval-stratified cross-site comparison: long-gap SAILOR pairs should favor
-  the forecaster — the decider between regime and representation explanations.
-- Persistence-error baselines for both surprise AUCs.
 - Cross-site volume probes from expert/automated masks; enhancing-core and
   growth-rate framings.
-- Acquisition-confound correction, uncertainty/calibration, treatment-as-action
-  modeling — untouched by design; this program stopped at dynamics plus
-  probing.
+- Acquisition-confound correction, uncertainty/calibration — untouched by
+  design; this program stopped at dynamics plus probing.
+- Closed since writing: interval-stratified cross-site comparison (regime
+  exonerated, representation indicted — then refined: dynamics SCALE, A15);
+  persistence-error baselines for both surprise AUCs (signal =
+  change-detection); treatment-as-action modeling (A15: wired, tested,
+  no gain — site refit, not treatment, flips the gate); lead-time surprise
+  (A13: no JEPA lead advantage); same-space dynamics gate (A8 addendum).
 
 ## Reproducing this
 

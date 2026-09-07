@@ -303,6 +303,52 @@ referenced, not repeated — only session decisions are recorded here in full.
   signal, in which case no JEPA-loss squeezing would ever have fixed
   it.
 
+## Recent sessions (post-writeup)
+
+- **D27 — Batch-size/OOM fix session (2026-09-06/07).** Problem: hero legs
+  ran batch-size 1 on 16 GB and OOMed above it, so batch-size effects
+  (D22's prime suspect) were untestable. Fixes, all validated: (a)
+  pair-weighted gradient accumulation (`trainer.py`,
+  `training.accumulation_steps`, default 1 = legacy path untouched) — micro
+  *i* contributes `loss_i·(P_i/P_NORM)`, grads divided once per optimizer
+  step: exactly the pooled-batch gradient (proven 2.6e-06 vs joint);
+  EMA/LR-schedule/clip moved to per-optimizer-step so accum-K matches
+  batch-K cadence; (b) length-bucketed train batching
+  (`src/data/sampler.py`, default on, `--no-bucket` for legacy) — kills the
+  long+short OOM pairing and ~1.1 GB padding worst case; val/test stay
+  sequential; (c) opt-in fp16 collate storage (`data.store_half`, default
+  off); (d) G2 target-eval pin (`JEPAWorldModel.train()` keeps the EMA twin
+  in eval — LoRA dropout was noising targets); (e) G3 rating strip
+  (`'Post-Op '` → Post-Op, 3 visits). Status: implemented, unit + smoke
+  validated. Enables the R11 basin-hold matrix at batch-1 memory.
+- **D28 — Same-space gate correction (2026-09-07).** A8's 2.7× compared
+  JEPA error (EMA-target space) against persistence in online-projector
+  space (3× wider consecutive drift) — mixed spaces. New rule: every
+  dynamics-vs-persistence comparison is same-space both sides
+  (`scripts/split_gate.py`, seconds on CPU from caches). Honest gate:
+  narrow patient-uniform win (0.0081/0.0086), clear test win both
+  aggregations, pooled-all loss. Scorecard + conclusions revised; transfer
+  and horizon results unaffected (already same-space).
+- **D29 — Lead-time + atlas protocol (2026-09-07).** `scripts/leadtime.py`
+  (frozen champion, CPU): R1 = incident-PD AUC at lead k=1..3 vs
+  persistence control (k=1 reproduces A10 0.7677 exactly — harness valid);
+  R2 = per-transition error atlas (designs R13 weights, quantifies G15).
+  Findings logged as A13/A14: no JEPA lead advantage (RQ1-as-stated: no),
+  surgery = intervention discontinuity, onset loses, CR>CR over-predicts,
+  gap reframe (LUMIERE pairs ~90d median, not weekly).
+- **D30 — Option-2 treatment dynamics, frozen-encoder design (2026-09-07).**
+  End-to-end `--dynamics` on Kaggle would train on LUMIERE (no treatment
+  labels) — cannot test treatment conditioning. Instead: wire SAILOR
+  `treatment.txt` into the adapter as a phase channel (CRT/TMZ/no/unknown;
+  G4 gaps index-aligned, proven identical), prefer it over RANO actions in
+  `_dynamics_loss` (LUMIERE path falls back, untouched), and train only
+  VelocityField+Tempo on cached SAILOR pairs under subject-wise CV —
+  treatment-conditioned vs constant-phase ablation (RQ2), persistence floor
+  (`scripts/train_field.py`, all CPU, champion frozen). Verdict logged as
+  A15:   treatment adds nothing (exact tie, both capacities); site refit flips
+  the transfer gate (localizes failure to dynamics scale — R16 realized).
+  Status: done, no GPU spent.
+
 ## Future work (after hero leg 2)
 
 - **D19 — Additive clinical conditioning (fusion upgrade).** Today fusion
