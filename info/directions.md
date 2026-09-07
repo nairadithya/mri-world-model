@@ -123,6 +123,21 @@ It lists interval-stratified eval + persistence baselines as open; both are sinc
 ### Tier 1 — one Kaggle session each (sequenced)
 
 - **R11. Basin-hold test (G8×G9).** {fresh opt, loaded opt} × {batch 1, accum 8} from the champion, 10 epochs. Decides whether LUMIERE training is truly exhausted (D22) or just badly resumed. Do before any other training.
+  - **R11-recreate proposal (2026-09-08, unrun).** The loaded-opt half is
+    untestable from any existing file (all ferried champions opt-stripped;
+    leg-1 Adam moments died with that session). Recreate instead of reusing:
+    re-run Run-4-like settings (batch 1, LR 1e-4, 5-ep warmup, `--no-bucket`
+    for legacy ordering, pinned commit) ~7–8 epochs, stop at the val
+    minimum, keep the checkpoint WITH optimizer state (~2 GB ferry, not
+    stripped). From that recreated point run 5-epoch cells of
+    {loaded-opt, fresh-opt} × {batch 1, accum 8}; compare drift slopes, not
+    endpoints. Replication, not reproduction (bucketing/G2/GPU drift mean
+    near-0.008, not 0.0081 — the comparison is within-run, so this is
+    fine). If loaded holds where fresh ejects, D22's momentum suspect is
+    confirmed and all future resumes must carry opt state. Value-gated:
+    the operational question (can training continue?) is already answered
+    YES via accum-8; this buys the mechanism only — run it iff further legs
+    depend on the answer.
 - **R12. Mandated baselines, trained.** GRU + last-visit-MLP to convergence (G14). The only result that can retire the transformer's justification question either way.
 - **R13. Transition-balanced JEPA.** Reweight/resample pairs by transition class (weights from R2) — the direct attack on the diagnosed transfer mechanism (over-predicts change). Re-gate: in-domain persistence margin + SAILOR gap table. If SAILOR error un-flattens, the mechanism is confirmed.
 - **R14. Real action conditioning (RQ2, finally).** Wire `treatment.txt` → phase embedding (G18); SAILOR-fit or LUMIERE→SAILOR transfer with treatment-phase as input. Control for time-confounding (treatment correlates with visit index — shuffle-phase control). The proposal's central conditioning question, untested for the whole program.

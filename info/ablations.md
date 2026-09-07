@@ -483,3 +483,43 @@ Logged inferences (evidence-backed; see A9/A10/A12 for numbers):
    discriminative readouts transfer (F1 0.37 ≈ LUMIERE-CV;
    surprise-AUC 0.87 > LUMIERE 0.77). Representation generalizes;
    the mean-loss gate is interval-regime-dependent.
+
+## A18 — Raw-vs-MNI deltas: the pipeline damps ~4× in image space (2026-09-08, local CPU)
+
+- Setup: every consecutive MNI pair with both sessions linked in
+  `raw-mni-link.tsv` (243 pairs = the cross-site eval set); mean|Δ| on
+  96³ for the two RAW sessions (`t1wc/t1w/t2w/t2wflair`, canonical
+  reorientation, crude foreground mask, z-score within mask) vs the two
+  MNI base sessions (`T1c/T1/T2/Flair`, `BrainExtractionMask`, z-score
+  within mask). Same pairs, same metric shape — only the pipeline
+  differs. Script `scripts/raw_mni_deltas.py`; raw inputs selectively
+  extracted from `rawdata.tar.bz2` (1311 files, 7.5 GB). Debugging notes:
+  canonical reorientation returns negative-stride views on t2w slabs
+  (512×512×28 needs axis flips) which torch rejects — `ascontiguousarray`
+  guard; numpy `None in (arrays…)` tuple-membership does elementwise ==
+  and raises — use `any(v is None …)`. T2 came back n=0 on the first full
+  run from the stride bug, not missing data.
+- Numbers (n=939 pair-slots, 33 dropped):
+
+  | slot  | n   | raw med (p10/p90)  | MNI med (p10/p90)  | ratio |
+  |-------|-----|--------------------|--------------------|-------|
+  | all   | 939 | 0.673 (0.50/0.82)  | 0.173 (0.10/0.50)  | ~3.9× |
+  | T1c   | 233 | 0.676 (0.52/0.80)  | 0.153 (0.10/0.33)  | ~4.4× |
+  | T1    | 242 | 0.737 (0.59/0.87)  | 0.120 (0.08/0.29)  | ~6.1× |
+  | T2    | 225 | 0.637 (0.44/0.77)  | 0.246 (0.15/1.03)  | ~2.6× |
+  | Flair | 239 | 0.649 (0.50/0.79)  | 0.195 (0.13/0.44)  | ~3.3× |
+
+- Inference: the MNI pipeline (denoise + intra-patient registration +
+  PLHM + affine + uint8) removes ~3/4 of visit-to-visit image change on
+  identical pairs — raw SAILOR change sits at LUMIERE scale (0.67 ≈
+  0.76), processed at ~0.17. The damping is IN THE PIPELINE, pre-encoder,
+  measured not suspected. Scope, honestly held: raw slabs are
+  unregistered/unmasked, so position/skull signal that registration
+  legitimately removes is inside the 3.9× — total pipeline effect (upper
+  bound on over-damping), NOT PLHM-alone (needs intermediates we don't
+  have). Two nuances: T2 damps least (2.6×) with a heavy MNI tail (p90
+  1.03) — T2 change survives processing best, consistent with T2-Progr.
+  rationale codes marking non-enhancing progression; and this metric is
+  z-scored, so its MNI median (0.17) is not directly comparable to A16's
+  unstandardized 0.24 — the within-script raw-vs-MNI ratio is the
+  apples-to-apples number.
