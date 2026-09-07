@@ -34,6 +34,12 @@ SAILOR_SLOTS = tuple(s for s, _ in SAILOR_MODALITIES)
 # numeric RANO code -> LUMIERE action id (PD3/SD2/PR5/CR4); 3-vs-5 tentative.
 SAILOR_RANO_TO_ACTION = {1: 3, 2: 2, 3: 5, 5: 4}
 
+# Per-session treatment status (treatment.txt) -> phase id for conditioned
+# dynamics. Distinct channel from RANO actions (response, not treatment).
+# Unknown/missing -> 3 (own id, not silently merged into another phase).
+SAILOR_TREATMENT_TO_PHASE = {"CRT": 0, "TMZ": 1, "no": 2, "unknown": 3}
+TREATMENT_NAMES = ["CRT", "TMZ", "no", "unknown"]
+
 
 def _ses_key(ses: str) -> int:
     try:
@@ -51,7 +57,9 @@ class SAILORDataset(Dataset):
             subs = [s for s in subs if s in set(subjects)]
         self.subjects = subs
         self.sessions: dict[str, list[str]] = {}
+        self.all_sessions: dict[str, list[str]] = {}  # unfiltered ordering
         self.sailor_rano: dict[tuple[str, str], int | None] = {}
+        self.treatment: dict[tuple[str, str], int] = {}
         self.intervals: dict[str, list[float]] = {}
         self.age: dict[str, float] = {}
         self.os_months: dict[str, float] = {}
@@ -60,6 +68,7 @@ class SAILORDataset(Dataset):
             ses = sorted([d for d in os.listdir(sdir)
                           if d.startswith("ses-") and os.path.isdir(os.path.join(sdir, d))],
                          key=_ses_key)
+            self.all_sessions[sub] = ses
             kept = [s for s in ses if self._has_any_image(sub, s)]
             self.sessions[sub] = kept
             for s in kept:
@@ -71,6 +80,14 @@ class SAILORDataset(Dataset):
                     except ValueError:
                         code = None
                 self.sailor_rano[(sub, s)] = code
+                tp = os.path.join(sdir, s, "treatment.txt")
+                phase = 3
+                if os.path.exists(tp):
+                    with open(tp) as f:
+                        tok = f.read().strip().split()
+                    phase = SAILOR_TREATMENT_TO_PHASE.get(
+                        tok[0] if tok else "unknown", 3)
+                self.treatment[(sub, s)] = phase
             ip = os.path.join(sdir, "intervals-days.txt")
             gaps: list[float] = []
             if os.path.exists(ip):
@@ -107,16 +124,33 @@ class SAILORDataset(Dataset):
     def __len__(self) -> int:
         return len(self.subjects)
 
+    def _aligned_deltas(self, sub: str, visits: list[str]) -> list[float]:
+        """Day gaps aligned to KEPT session positions (G4 fix).
+
+        intervals-days holds per-gap counts over the FULL session ordering;
+        a dropped middle session must span (sum) the gaps it covered, not
+        shift every later gap. Identical to first-k-gaps when nothing is
+        dropped (verified); correct when something is.
+        """
+        full = self.all_sessions[sub]
+        gaps = self.intervals.get(sub, [])
+        pos = {s: i for i, s in enumerate(full)}
+        deltas = [0.0]
+        for prev, cur in zip(visits[:-1], visits[1:]):
+            ia, ib = pos[prev], pos[cur]
+            deltas.append(sum(gaps[k] for k in range(ia, ib) if k < len(gaps)))
+        return deltas
+
     def __getitem__(self, idx: int) -> dict:
         sub = self.subjects[idx]
         visits = self.sessions[sub]
         paths = {s: [self._image_path(sub, v, s) for v in visits] for s in SAILOR_SLOTS}
-        gaps = self.intervals.get(sub, [])
-        deltas = [0.0] + [gaps[i] if i < len(gaps) else 0.0 for i in range(len(visits) - 1)]
+        deltas = self._aligned_deltas(sub, visits)
         actions = []
         for v in visits:
             code = self.sailor_rano.get((sub, v))
             actions.append(SAILOR_RANO_TO_ACTION.get(code, 2) if code else 2)
+        treat = [self.treatment.get((sub, v), 3) for v in visits]
         age = self.age.get(sub, 0.0) / 100.0
         surv = self.os_months.get(sub, 0.0) * 4.345 / 200.0
         clinical = torch.tensor([0, age, 3, 2, 0.0, surv], dtype=torch.float32)
@@ -126,6 +160,7 @@ class SAILORDataset(Dataset):
             "paths": paths,
             "clinical": clinical,
             "actions": torch.tensor(actions, dtype=torch.long),
+            "treatment": torch.tensor(treat, dtype=torch.long),
             "time_deltas": torch.tensor(deltas, dtype=torch.float32),
             "n_visits": len(visits),
         }
