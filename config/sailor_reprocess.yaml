@@ -1,0 +1,99 @@
+data:
+  root: data/sailor_reprocessed
+  raw_root: data/sailor_staging
+  meta_dir: data/lumiere_meta
+  modalities: [CT1, T1, T2, FLAIR]
+  max_visits: 14
+  min_visits: 2
+  train_split: 0.7
+  val_split: 0.15
+  seed: 42
+  # Halve collate input memory (fp16 storage; backbone casts to float per
+  # chunk). Default false = exact legacy numerics for eval comparability.
+  store_half: false
+
+preprocessing:
+  template: MNI152
+  voxel_size: [1.0, 1.0, 1.0]
+  target_size: [96, 96, 96]
+
+model:
+  brainiac:
+    checkpoint: checkpoints/BrainIAC.ckpt
+    lora_rank: 8
+    lora_alpha: 16
+    lora_dropout: 0.05
+    freeze_backbone: true
+  clinical:
+    hidden_dim: 128
+    dropout: 0.1
+  fusion:
+    vision_dim: 768
+    clinical_dim: 384
+  temporal:
+    d_model: 1152
+    nhead: 8
+    num_layers: 6
+    dim_feedforward: 2048
+    dropout: 0.1
+    max_time_delta_days: 3000
+  predictor:
+    hidden_dim: 1024
+    output_dim: 768
+    dropout: 0.1
+    # Multi-horizon forecasting: state_t predicts every future z_{t+n},
+    # conditioned on the day gap, loss weighted 1/n^weight_power.
+    # Disabled by default (all prior behavior preserved); the hero run
+    # enables it with --horizon. Frozen-probe gate: scripts/horizon_probe.py.
+    horizon:
+      enabled: false
+      weight_power: 1.0
+  target:
+    ema_momentum: 0.996
+    projection_dim: 768
+
+  # Time-continuous dynamics: velocity field integrated across true gaps.
+  # Replaces the 1-step and horizon losses when enabled (--dynamics).
+  # Disabled by default (all prior behavior preserved).
+  dynamics:
+    enabled: false
+    steps: 3
+    weight_power: 1.0
+    phase_dim: 32
+
+actions:
+  classes: [Pre-Op, Post-Op, SD, PD, CR, PR]
+  # Post-Op/PD and missing map to PD-like / unknown ids at dataset level;
+  # see src/data/dataset.py RANO_ACTION_MAP
+
+training:
+  batch_size: 4
+  # Length-bucketed train batching (groups similar-length patients; avoids
+  # OOM long+short pairings and padding waste). --no-bucket for legacy shuffle.
+  bucket_batches: true
+  # Gradient accumulation: effective batch = batch_size * accumulation_steps
+  # at batch-1 peak memory. Pair-weighted by default (exact pooled-batch
+  # gradient); 1 = legacy single-batch path. CLI: --accum-steps.
+  accumulation_steps: 1
+  accumulate_pair_weighted: true
+  accumulate_pair_norm: 32.0
+  lr: 1.0e-04
+  weight_decay: 0.01
+  warmup_epochs: 5
+  max_epochs: 100
+  grad_clip: 1.0
+  use_amp: true
+  checkpoint_dir: checkpoints/
+  log_wandb: false
+  project_name: world-model-jepa
+  log_every: 10
+  eval_every: 1
+
+# RANO aux fine-tune (D25): joint JEPA + readout heads. lambda 0 = JEPA only
+# (default; preserves all prior behavior). class_weights follow the global
+# response distribution PD/SD/PR/CR ≈ .64/.24/.05/.07 (inverse, normalized).
+aux:
+  lambda: 0.0
+  class_weights: [0.39, 1.04, 5.0, 3.57]
+  prog_pos_weight: 0.56
+  resp_pos_weight: 2.0

@@ -32,7 +32,10 @@ def hd_bet_skull_strip(
             capture_output=True,
         )
         return output_path
-    except (FileNotFoundError, subprocess.CalledProcessError):
+    except (FileNotFoundError, subprocess.CalledProcessError) as e:
+        import warnings
+
+        warnings.warn(f"hd-bet failed ({e}); using percentile fallback mask")
         return _threshold_fallback(input_path, output_path)
 
 

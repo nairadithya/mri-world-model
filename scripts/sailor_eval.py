@@ -39,8 +39,8 @@ SAILOR_ROOT = "data/sailor/sailor_ebrains_pseud/derivatives/mni2009c-n-s"
 SAILOR_PROBE_MAP = {1: 0, 2: 1, 3: 2, 5: 3}
 
 
-def encode_sailor(cfg, champion_path, cache_path):
-    ds = SAILORDataset(SAILOR_ROOT)
+def encode_sailor(cfg, champion_path, cache_path, root=SAILOR_ROOT):
+    ds = SAILORDataset(root)
     size = tuple(cfg["preprocessing"].get("target_size", [96, 96, 96]))
     loader = DataLoader(ds, batch_size=1, shuffle=False, num_workers=0,
                         collate_fn=make_collate(size))
@@ -77,9 +77,9 @@ def encode_sailor(cfg, champion_path, cache_path):
     torch.save(cache, cache_path)
 
 
-def eval_all(cfg, champion_path, cache_path, lum_cache_path):
+def eval_all(cfg, champion_path, cache_path, lum_cache_path, root=SAILOR_ROOT):
     device = torch.device("cpu")
-    ds = SAILORDataset(SAILOR_ROOT)
+    ds = SAILORDataset(root)
     size = tuple(cfg["preprocessing"].get("target_size", [96, 96, 96]))
     loader = DataLoader(ds, batch_size=1, shuffle=False, num_workers=0,
                         collate_fn=make_collate(size))
@@ -151,13 +151,14 @@ def main():
     ap.add_argument("--lum-cache", default="checkpoints/probe_cache.pt")
     ap.add_argument("--encode", action="store_true")
     ap.add_argument("--eval", action="store_true")
+    ap.add_argument("--root", default=SAILOR_ROOT)
     args = ap.parse_args()
     with open(args.config) as f:
         cfg = yaml.safe_load(f)
     if args.encode:
-        encode_sailor(cfg, args.champion, args.cache)
+        encode_sailor(cfg, args.champion, args.cache, args.root)
     if args.eval:
-        eval_all(cfg, args.champion, args.cache, args.lum_cache)
+        eval_all(cfg, args.champion, args.cache, args.lum_cache, args.root)
 
 
 if __name__ == "__main__":

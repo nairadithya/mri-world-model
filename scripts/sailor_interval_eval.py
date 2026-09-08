@@ -44,11 +44,12 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="config/default.yaml")
     ap.add_argument("--champion", default="checkpoints/champion_0.0081.pt")
+    ap.add_argument("--root", default=SAILOR_ROOT)
     args = ap.parse_args()
     with open(args.config) as f:
         cfg = yaml.safe_load(f)
 
-    ds = SAILORDataset(SAILOR_ROOT)
+    ds = SAILORDataset(args.root)
     size = tuple(cfg["preprocessing"].get("target_size", [96, 96, 96]))
     loader = DataLoader(ds, batch_size=1, shuffle=False, num_workers=0,
                         collate_fn=make_collate(size))

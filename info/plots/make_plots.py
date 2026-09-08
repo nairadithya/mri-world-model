@@ -340,6 +340,37 @@ def plot_site_shift_aligned(m, out):
     plt.close(fig)
 
 
+def plot_sailor_reprocessed(m, out):
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(9, 3.8))
+    x = [0, 1, 3, 4]
+    vals = [m["deriv_jepa"], m["deriv_persist"],
+            m["dynamics_jepa"], m["dynamics_persist"]]
+    cols = ["red", "gray", "red", "gray"]
+    ax1.bar(x, vals, color=cols, width=0.55)
+    ax1.set_xticks(x, ["deriv\nJEPA", "deriv\npersist", "reproc\nJEPA",
+                       "reproc\npersist"])
+    ax1.set_ylabel("mean error")
+    ax1.set_title("Gate does not flip: persistence wins both arms")
+    ax1.set_ylim(0, max(vals) * 1.3)
+    for xi, v in zip(x, vals):
+        ax1.text(xi, v + 0.0007, f"{v:.4f}", ha="center", fontsize=9)
+    f1 = [m["deriv_transfer_f1"], m["transfer_f1"]]
+    ax2.bar([0, 1], f1, color=["#2ca02c", "#d62728"], width=0.55)
+    ax2.set_xticks([0, 1], ["deriv\ntransfer", "reproc\ntransfer"])
+    ax2.set_ylabel("macro-F1")
+    ax2.set_title("Transfer readout drops (maj 0.48, AUC "
+                  f"{m['deriv_surprise_auc']:.2f}->{m['surprise_auc']:.2f})")
+    ax2.set_ylim(0, 0.5)
+    for i, v in enumerate(f1):
+        ax2.text(i, v + 0.015, f"{v:.2f}", ha="center", fontsize=10)
+    fig.suptitle("SAILOR reprocessed (LUMIERE-contract): dynamics still lose, "
+                 "readouts drop",
+                 fontsize=11)
+    fig.tight_layout()
+    fig.savefig(out, dpi=150)
+    plt.close(fig)
+
+
 def main():
     m = load_metrics()
     plot_hero_leg1(m["hero_leg1"], os.path.join(HERE, "hero_leg1_val.png"))
@@ -355,7 +386,9 @@ def main():
                             os.path.join(HERE, "site_shift_aligned.png"))
     plot_coral(m["coral"], os.path.join(HERE, "coral_alignment.png"))
     plot_raw_mni(m["raw_mni"], os.path.join(HERE, "raw_vs_mni.png"))
-    print("wrote 12 plots to", HERE)
+    plot_sailor_reprocessed(m["sailor_reprocessed"],
+                            os.path.join(HERE, "sailor_reprocessed.png"))
+    print("wrote 13 plots to", HERE)
 
 
 if __name__ == "__main__":
