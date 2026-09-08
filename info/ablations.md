@@ -453,6 +453,30 @@ Append-only. Each entry: setup → numbers → inference. IDs referenced from
   (d) Caveat: 5 epochs is short; C's durability beyond needs the repair leg
   (C-extended 20 epochs + accum-4 dose cell, proposed).
 
+### A17 addendum — R11-repair verdict: transient hold, dose-response, exploit protocol (2026-09-07, Kaggle T4)
+
+- Setup: v2 kernel (parser fixed + fixture-tested, `python -u`, no assert-fail
+  verdict cell). C2 = accum-8/fresh, 20 epochs; E = accum-4/fresh, 10 epochs;
+  B/D dropped (no opt state exists anywhere). Monitors healthy throughout
+  (std 0.091→0.112, rank 1.7–1.8 — drift, never collapse).
+- Numbers: C2 0.0078 (ep1–6 flat) → 0.0080 (ep7) → 0.0103 (ep20),
+  best 0.0077. E 0.0079 → 0.0084 (ep5) → 0.0102 (ep10), best 0.0077.
+  Dose at ep10: accum-8 0.0084 < accum-4 0.0102 < accum-1 ~0.012+
+  (A-ref) — monotonic in accumulation, i.e. in gradient-noise scale.
+- Inference: (a) NOISE MECHANISM CONFIRMED — ejection speed scales
+  monotonically with batch-1-ness; D22's suspect graduates to cause
+  (momentum's share stays untestable). (b) HOLD IS TRANSIENT — even
+  accum-8 ejects after ep6; v1's 5-epoch hold did not reproduce longer.
+  The basin is genuinely narrow; noise sets ejection speed, not fate.
+  Same U-shape as Run 4 on a compressed scale. (c) EXPLOIT PROTOCOL, new:
+  both legs found best 0.0077 BELOW champion 0.0081 within 5 epochs — short
+  accum-8 legs from the champion can IMPROVE, not just hold. D22's "no
+  exploit path" holds for batch-1 only. Rule: accum-8, ≤6 epochs,
+  best-tracking (trainer default), then stop. (d) R13 UNBLOCKED under that
+  protocol (transition-weighted short legs); long legs and batch-1 remain
+  banned. Artifacts: legC2/legE best.pt (val 0.0077) fetched to
+  `outputs/r11-basin-v2/` — new best 1-step models, re-gate probes pending.
+
 ## Synthesis — what the RANO + cross-site results mean (2026-09-06)
 
 Logged inferences (evidence-backed; see A9/A10/A12 for numbers):
@@ -523,3 +547,75 @@ Logged inferences (evidence-backed; see A9/A10/A12 for numbers):
   z-scored, so its MNI median (0.17) is not directly comparable to A16's
   unstandardized 0.24 — the within-script raw-vs-MNI ratio is the
   apples-to-apples number.
+
+## A19 — SAILOR reprocess through the executed LUMIERE contract: gate does not flip, readouts drop (2026-09-08, local CPU)
+
+- Setup: `src/preprocessing/reprocess_sailor.md` executed end to end.
+  270 linked sessions staged as symlinks (`data/sailor_staging/`, MNI
+  ids, `t1wc→CT1/t1w→T1/t2w→T2/t2wflair→FLAIR`); new
+  `config/sailor_reprocess.yaml` (only root/raw_root changed);
+  `scripts/preprocess.py --workers 2` → 1065/1066 vols (~2 h).
+  `--root` flag added to `scripts/sailor_eval.py` /
+  `scripts/sailor_interval_eval.py`; sidecar `.txt` (intervals/RANO/
+  treatment/age) ferried from derivatives (metadata, same sessions —
+  without them all gaps read 0 and labels vanish); `T1c/Flair` alias
+  links per session. Numbers → `info/plots/metrics.json`
+  (`sailor_reprocessed`) + `sailor_reprocessed.png`.
+- Numbers (frozen champion_0.0081, zero training; 27 subs / 270 ses /
+  243 pairs — identical pair/bin counts to derivatives: 88/20/129/6):
+
+  | arm | JEPA | persist | transfer acc/F1 | ceiling | surprise AUC |
+  |-----|------|---------|-----------------|---------|--------------|
+  | derivatives (A12) | 0.0290 | 0.0056 | 0.52 / 0.37 | 0.85 | 0.87 |
+  | reprocessed | 0.0245 | 0.0037 | 0.45 / 0.25 (< maj 0.48) | 0.77 | 0.80 |
+
+  Per-bin JEPA-vs-persist reprocessed: 0.0248/0.0023, 0.0260/0.0025,
+  0.0242/0.0022, 0.0231/0.0057 — persistence wins every bin.
+- Audit (§6 row 3: staging bug vs genuine shift): mapping vindicated —
+  pair/gap/label accounting exact both sides (gaps med 76 identical,
+  PD-rate 0.312 = A12's 0.31, T2 matched-session corr 0.58 > crossed
+  0.46, T1 center-box repro↔deriv 0.57). No id-shift bug. Two genuine
+  shifts found: (1) hd-bet 2.x is unrunnable in this venv (needs
+  torchvision, banned by policy; wrapper flags `-mode/-tta` exit 2) so
+  the EXECUTED contract used the percentile fallback on full-head
+  SAILOR raws — skull retained (finals nzfrac med 0.49 vs LUMIERE
+  0.17; LUMIERE inputs were source-stripped so the same fallback was
+  near-identity there — venv predates the LUMIERE run, same code
+  path). Same-code harmonization, asymmetric effect. (2) one casualty:
+  sub-07/ses-03 CT1 rigid-reg hard-failed (Mattes MI no-overlap) and
+  T1/FLAIR registered near-empty (nz 0.003/0.03 vs cohort p1 0.32) —
+  2 of 243 pairs affected, negligible pooled. Plus a correction: the
+  "SAILOR ~14-day regime" was p10, not typical — recorded gaps were
+  med 76 / mean 61 all along (metrics.json `sailor_gap_bins`), so
+  persistence winning the 61–180d bin (129 pairs) was never regime.
+- Inference: same-code reprocessing does NOT restore the gate (JEPA
+  0.0245 vs persist 0.0037, ~6.6×) — pipeline mismatch as far as we
+  could harmonize it is not the whole story. But transfer readouts
+  DROPPED (F1 0.37→0.25, below majority; ceiling 0.85→0.77) while
+  label-free accounting held exact and surprise-AUC stayed 0.80 — the
+  LUMIERE-calibrated readout does not survive skull-in inputs, even
+  though in-domain-decodable signal persists (ceiling 0.77). Residual
+  is therefore skull-confound + site (scanner/physiology), NOT proven
+  site alone. Decider proposed: re-strip with derivatives
+  `BrainExtractionMask` in our reg space (restores brain-only state,
+  no model-calibrated stage touched) and re-run; transfer-F1 recovery
+  with dynamics still lost would convict site physiology cleanly.
+
+## A20 — Post-preprocess QA gate: what automated checks catch (2026-09-08, local CPU)
+
+- Setup: new `scripts/preprocess_qa.py` (shape / finite / empty /
+  nzfrac<0.05 / foreground-bbox<5% FAIL; NCC-to-template WARN-only;
+  nzfrac drift vs `--ref` root reported). Run against both cohorts.
+- Numbers: SAILOR reprocessed → exit 1 with exactly the 2 known-bad
+  volumes (sub-07/ses-03 T1 nz 0.003, FLAIR nz 0.032), 13 partial
+  sessions listed, drift 2.80× SKULL-SUSPECT (med 0.49 vs LUMIERE
+  0.17). LUMIERE → exit 0.
+- Calibration lesson (recorded so the next run doesn't re-learn it):
+  NCC-to-raw-template was demoted from FAIL to WARN after it fired on
+  healthy volumes — two normal SAILOR T1s (nz 0.42/0.45) and a run of
+  in-domain LUMIERE T2s (contrast-driven). Against z-scored finals it
+  only separates total collapse (≈0) from everything else (0.03–0.53),
+  so it lists but never gates.
+- Inference: the audit findings of A19 are now one command to
+  reproduce. Any future reprocess (e.g. the mask-controlled decider)
+  should clear this gate — exit 0 + drift ≈1× — before evals run.
