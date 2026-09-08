@@ -373,7 +373,6 @@ def plot_sailor_reprocessed(m, out):
 
 def plot_reproc_vs_persist(m, out):
     r = m["sailor_reprocessed"]
-    g = m["sailor_gap_bins"]
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 3.8))
     x = [0, 1, 3, 4]
     vals = [r["deriv_jepa"], r["deriv_persist"],
@@ -382,23 +381,21 @@ def plot_reproc_vs_persist(m, out):
     ax1.set_xticks(x, ["deriv\nJEPA", "deriv\npersist", "reproc\nJEPA",
                        "reproc\npersist"])
     ax1.set_ylabel("mean error (pooled, n=243)")
-    ax1.set_title("JEPA error falls 0.0290->0.0245, gap widens ~5x->~6.6x")
+    ax1.set_title("JEPA error falls 0.0290->0.0245")
     ax1.set_ylim(0, max(vals) * 1.3)
     for xi, v in zip(x, vals):
         ax1.text(xi, v + 0.0007, f"{v:.4f}", ha="center", fontsize=9)
-    bins = g["bins"]
-    xi = list(range(len(bins)))
-    ax2.plot(xi, g["jepa"], "ro-", label="deriv JEPA", ms=5)
-    ax2.plot(xi, r["jepa"], "r^--", label="reproc JEPA", ms=5)
-    ax2.plot(xi, g["persist"], "ko-", label="deriv persist", ms=5)
-    ax2.plot(xi, r["persist"], "k^--", label="reproc persist", ms=5)
-    ax2.set_xticks(xi, [f"{b}\n(n={p})" for b, p in zip(bins, g["pairs"])])
-    ax2.set_ylabel("mean error (log)")
-    ax2.set_yscale("log")
-    ax2.set_title("Every bin: JEPA down a little, persistence down more")
-    ax2.legend(fontsize=8)
-    fig.suptitle("Reprocess vs derivatives, same 243 pairs: representation "
-                 "error improves, gate does not",
+    dj, dp = r["deriv_jepa"] / r["deriv_persist"], \
+        r["dynamics_jepa"] / r["dynamics_persist"]
+    ax2.bar([0, 1], [dj, dp], color=["#1f77b4", "#ff7f0e"], width=0.55)
+    ax2.set_xticks([0, 1], ["derivatives", "reprocessed"])
+    ax2.set_ylabel("JEPA / persistence error ratio")
+    ax2.set_title("persistence wins bigger after reprocess")
+    ax2.set_ylim(0, max(dj, dp) * 1.3)
+    for i, v in enumerate([dj, dp]):
+        ax2.text(i, v + 0.12, f"{v:.1f}x", ha="center", fontsize=10)
+    fig.suptitle("Reprocess vs derivatives: representation error improves, "
+                 "gate does not",
                  fontsize=11)
     fig.tight_layout()
     fig.savefig(out, dpi=150)
