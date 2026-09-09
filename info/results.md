@@ -379,8 +379,13 @@ instability) is not earned. The champion stands untouched.
 2. The frozen history representation carries real, modest, transferable
    progression signal (CV 0.33 in-domain, 0.37 cross-site with zero retraining;
    surprise AUC 0.77 → 0.87). History beats snapshots structurally.
-3. Further LUMIERE gradient steps are exhausted: resumed training cannot hold
-   the optimum, and task-tuning damages dynamics without generalizable gain.
+3. Further LUMIERE gradient steps are exhausted *at batch 1*: resumed
+   training cannot hold the optimum, and task-tuning damages dynamics
+   without generalizable gain. But accumulation changes the verdict:
+   pair-weighted accum-8 holds the basin ~6 epochs and exploits below the
+   champion (0.0077 vs 0.0081) before ejecting on the same U-shape — so
+   short accum-8 legs with best-tracking are legitimate; long legs and
+   batch-1 are not.
 4. The honest numbers are the cross-validated ones. Every single-split
    headline in this project so far has been the lucky end of a wide spread.
 5. Volume is the weak half: weakly readable, not forecastable beyond

@@ -366,6 +366,14 @@ referenced, not repeated — only session decisions are recorded here in full.
   cells record UNKNOWN instead of assert-failing the session; `python -u`
   on train commands as cheap hygiene.
 
+- **D32 — R11-repair + exploit protocol (2026-09-07).** v2 kernel (notebook
+  bugs fixed, B/D dropped, C2 20ep + E 10ep) ran clean to COMPLETE; monitor
+  subagent returned table + verdict. Outcome: noise mechanism confirmed by
+  dose-response; hold transient (ejects after ep6 even at accum-8); exploit
+  protocol established (accum-8 short legs, best-tracking, stop by ep6 —
+  found 0.0077 < champion). R13 unblocked ONLY under that protocol. D22
+  stands for batch-1/long legs; lifted for accum-8 short legs.
+
 ## Future work (after hero leg 2)
 
 - **D19 — Additive clinical conditioning (fusion upgrade).** Today fusion

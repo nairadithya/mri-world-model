@@ -1,6 +1,13 @@
 # Research directions + codebase audit
 
-**Status (2026-09-07):** DONE since writing — R1 (A13: no JEPA lead), R2 (A14: atlas + R13 design + gap reframe), R3 (split_gate + A8 same-space correction), R14-core (A15: treatment tie, site-refit flips gate), batch fixes (D27: accumulation/bucketing/fp16/G2/G3). IN PROGRESS: freezing battery (tests 1, 2, 5, 7, 8 below). NEXT: R5 mask pooling, R11 basin-hold (needs G8 resume-opt-state, ~10 lines), R13 transition-weighted retrain.
+**Status (2026-09-07):** DONE since writing — R1 (A13: no JEPA lead),
+R2 (A14: atlas + R13 design + gap reframe), R3 (split_gate + A8 same-space
+correction), R14-core (A15: treatment tie, site-refit flips gate), batch
+fixes (D27: accumulation/bucketing/fp16/G2/G3), freezing battery (A16:
+statistics + damping + within-phase tie), R11 partial (A17: accum-8 holds,
+batch-1 ejects, momentum half dead by opt-strip). NEXT: R11-repair
+(C-extended durability + accum-4 dose), R5 mask pooling, R13
+transition-weighted retrain (gated on R11-repair).
 
 The full record is `info/results.md` — this file does not repeat it. It contains (1) a code-and-data audit against the actual source (every claim has a `file:line`), and (2) research directions ranked by cost, each with hypothesis → protocol → success bar.
 
@@ -165,6 +172,13 @@ R3 + R4 (honest baseline, days) → R1 + R2 (lead-time + atlas; designs R13)
 (quantify acquisition + modality evidence for R17/R18) → R11 (basin-hold;
 decides all further training) → R14 (real actions; the program's open
 thesis question) → R20 in parallel (external validation while GPUs run).
+
+UPDATE (2026-09-07): R1/R2/R3/R14-core/A16-battery DONE (see Status).
+R11-repair OUTCOME (A17/D32): noise confirmed by dose-response; hold
+transient (ejects ep6+); EXPLOIT PROTOCOL = accum-8 short legs (≤6 ep),
+best-tracking, stop — found 0.0077 < champion. R13 UNBLOCKED under that
+protocol only; batch-1/long legs stay banned. NEXT: R13 short legs, R5
+mask pooling, legC2-best re-gate probes.
 
 ---
 

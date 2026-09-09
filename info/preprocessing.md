@@ -87,3 +87,67 @@ pre-aligned arrays, not world-coordinate images). Final:
   either. Symptom of a miss: hundreds of "imageless visits" dropped and an
   empty train split (`num_samples=0`). Do NOT "fix" by re-uploading —
   verify with `find <root> -name '*.nii*'` first.
+
+## SAILOR MNI pipeline (from `info/sailor_data_descriptor.pdf`, pp. 3–4)
+
+Our training inputs above are LUMIERE-only. SAILOR arrives as derivatives
+(`mni2009c-n-s`, Fuster-Garcia et al. 2022) through a different 11-step
+pipeline — this section exists to scope the cross-site damping question
+(SAILOR visit-to-visit change ~0.24 vs LUMIERE ~0.76, no overlap, measured
+pre-encoder in image space).
+
+SAILOR steps (descriptor order): dcm2niix conversion → N4 bias correction
+(ANTsX defaults) → **Rician denoising** (ANTsX defaults — no LUMIERE
+equivalent) → orientation/field-of-view fixes (as needed) → 1 mm isotropic
+resampling (as needed) → **rigid intra-patient registration** (ANTsX; visits
+aligned *to each other* via a chosen reference timepoint, not independently
+to a template) → brain extraction (FSL BET or HD-BET) + mask multiplication
+→ **PLHM longitudinal intensity normalization** → **rigid+affine
+registration to MNI** (ICBM 2009c nonlinear symmetric — *affine*, so
+scaling/shear allowed, unlike our rigid-only) → intensity scaling to 0–255
+(uint8 container, decimals kept).
+
+Shared with our contract: N4, 1 mm, skull-strip, MNI-2009c family.
+SAILOR-only smoothers (four damping candidates, not one): Rician denoise,
+PLHM, double resampling (iso + MNI), uint8 rounding. Opposite-direction
+difference: intra-patient registration should carry *less* positional jitter
+than our per-visit-independent MNI — so SAILOR's tiny persistence floor is
+likely cleaner signal, not sloppier measurement. Per-subject variation is
+admitted in the descriptor (BET driver sequence, step order, and reference
+timepoint changed with data quality — per-subject truth in `history.txt`;
+MNI↔raw session mapping in `raw-mni-link.tsv`, counts differ between
+versions). Stated caveat: MNI-version intervals were manually extracted and
+"may be inaccurate"; source/raw intervals come from exam dates and are
+accurate.
+
+## Verification: raw-vs-MNI deltas on identical pairs (2026-09-07/08, COMPLETE)
+
+Design (`scripts/raw_mni_deltas.py`): for every consecutive MNI pair with
+both sessions linked in `raw-mni-link.tsv` (243 pairs — exactly the
+cross-site eval set), compute mean|Δ| on 96³ for (a) the two RAW sessions
+(`t1wc/t1w/t2w/t2wflair`, canonical reorientation, crude foreground mask =
+nonzero & >10th pct, per-pair mask intersection, z-score within mask) and
+(b) the two MNI base sessions (`T1c/T1/T2/Flair`, `BrainExtractionMask`,
+z-score within mask). Same pairs, same metric shape — only the pipeline
+differs. Raw inputs verified finite, RAS, loadable before launch.
+
+Scope, stated upfront: raw slabs are unregistered and unmasked, so raw
+deltas include position/skull signal that registration legitimately
+removes. This measures TOTAL pipeline effect, not PLHM alone — isolating
+PLHM needs intermediate outputs we don't have. Raw inputs for the test
+(`rawdata.tar.bz2`, 21 GB) were on local disk unextracted; structural
+sequences selectively extracted (1311 files, 7.5 GB).
+
+Preliminary (2 subjects, sub-01/sub-02, n=57 pair-slots): raw median 0.69
+(p10 0.54 / p90 0.82) vs MNI median 0.20 (p10 0.11 / p90 0.32) — ~3.5× total
+pipeline damping in image space. Full 27-subject run COMPLETE
+(`checkpoints/raw_mni_deltas.pt`, n=939): raw median 0.673 vs MNI 0.173
+(~3.9×); per-slot T1c 0.676/0.153, T1 0.737/0.120, T2 0.637/0.246 (damps
+least, heavy MNI tail p90 1.03), Flair 0.649/0.195. Full numbers +
+inference: `info/ablations.md` A18. Standing scope: total pipeline effect
+(upper bound — raw carries position/skull signal registration legitimately
+removes), not PLHM-alone. Follow-through: A19 (same-contract reprocess —
+gate unflipped, readouts dropped on skull-retained inputs), A21 (real
+HD-BET redo in isolated venv — readouts recovered 0.25 → 0.32, dynamics
+still lost; uint8 exonerated). Preprocessing loop closed — see A21
+addendum.
