@@ -217,7 +217,7 @@ number. The 0.0080→0.004 remainder is what no covariance fix can reach.</div>
 no linear fix touches. That's the residual, visualized. (Visualization fits
 on all visits; the scored number stays fold-wise honest.)</p>
 
-<h2>5. Preprocessing: the quieting is in the pipeline <span class="id">D3–D5 · A4 · D26 (recon) · A18</span></h2>
+<h2>5. Preprocessing: the quieting is in the pipeline <span class="id">D3–D5 · A4 · D26 (recon) · A18 · A19 · A21</span></h2>
 <p>SAILOR's 11-step path (Rician denoise → intra-patient registration → PLHM
 longitudinal normalization → affine MNI → uint8) vs our contract (N4 → 1mm →
 per-visit rigid MNI → skull-strip → 96³+z-score). Shared: N4, 1mm, MNI-2009c
@@ -236,6 +236,37 @@ T2 change survives processing best). Raw SAILOR sits at LUMIERE scale; the
 removes), not PLHM-alone. Full protocol: <code>src/preprocessing/</code>;
 verification: <code>scripts/raw_mni_deltas.py</code>.</p>
 
+<h3>The decider: skull restored, gate still lost <span class="id">A19 · A21</span></h3>
+<p>Reprocessing SAILOR raw through our contract first <i>failed to flip the
+gate and broke the readouts</i> (F1 0.37 → 0.25) — the signature of a new
+confound, not a verdict. Audit found it: the skull-stripper can't run in our
+environment, so a dumb fallback left whole skulls in (half of every image
+vs one-sixth). Redoing only the skull-strip with the real tool in an
+isolated environment (<code>scripts/bet_repair.py</code>, QA drift 1.03×)
+decided it:</p>
+<img src="plots/betfix_decider.png" alt="Skull restored, gate still lost every bin">
+<table>
+<tr><th>arm</th><th>JEPA</th><th>persist</th><th>transfer F1</th><th>surprise AUC</th></tr>
+<tr><td>derivatives</td><td>0.0290</td><td>0.0056</td><td>0.37</td><td>0.87</td></tr>
+<tr><td>reprocessed, skull-in</td><td>0.0245</td><td>0.0037</td><td>0.25</td><td>0.80</td></tr>
+<tr><td>reprocessed, skull-out</td><td>0.0339</td><td>0.0059</td><td><b>0.32</b></td><td><b>0.89</b></td></tr>
+</table>
+<p>Persistence wins every bin (~5–12×) with the champion flat as ever —
+<b>site, not skull</b>. Readouts recovered 0.25 → 0.32 with best-yet AUC:
+the residual is site physiology plus the still-unharmonized stages
+(denoise/PLHM/affine/uint8), and uint8 is separately exonerated (absent in
+this tree, failure identical — ruled out as necessary). Flagged anomaly:
+the SAILOR-fit ceiling (0.30) sits <i>below</i> transfer (0.32) — memorization
+failing smells like the fit path, not the features.</p>
+<img src="plots/four_clouds.png" alt="Skull-out rejoins derivatives; LUMIERE stays distant">
+<p>Four clouds, one glance: skull-out rejoins the derivatives neighborhood
+without approaching LUMIERE — stripping restored derivatives-like features
+(hence the F1 recovery) while the training site stays distant (hence the
+dynamics). No fundamental preprocessing lever remains for transfer
+(harmonizing further means degrading their better steps); the open
+preprocessing item is orthogonal — visit-consistent registration for
+LUMIERE's own noise floor.</p>
+
 <h2>6. What it all means (for the team)</h2>
 <div class="verdict"><b>Representation travels; dynamics need local
 calibration.</b> Nothing in the failure motivates unfreezing the encoder —
@@ -243,18 +274,20 @@ every encoder change tried (task fine-tune, horizon leg) left honest metrics
 flat while costing dynamics. The three independent exonerations (on-site
 refit wins, statistics-matching recovers two-thirds, damping measured
 pre-encoder) converge: fix the frame and the stride, not the features.</div>
-<div class="warn">Numbers to quote <span class="id">A8 corr · A9 · D24 · A10 · A13 · A11 · A12 · A15 · A18</span>: dynamics test wins (0.0070/0.0088 pooled,
+<div class="warn">Numbers to quote <span class="id">A8 corr · A9 · D24 · A10 · A13 · A11 · A12 · A15 · A18 · A21</span>: dynamics test wins (0.0070/0.0088 pooled,
 0.0074/0.0160 uniform; overall 0.0081/0.0086 — thin); RANO CV 0.33
 (SOTA 0.50 = price of task-blindness); surprise = change-detection, no lead;
 volume R² 0.15, forecast loses; cross-site readouts transfer, dynamics need
-the site; pipeline damps ~3.9×. Only cross-validated numbers are headlines — every single-split
+the site; pipeline damps ~3.9×; skull-out decider: F1 0.32, AUC 0.89, gate still lost.
+Only cross-validated numbers are headlines — every single-split
 number in this program was the lucky tail.</div>
 
 <h2>7. What's next</h2>
 <ol>
-<li><b>Reprocess SAILOR raw through our contract</b>
-(<code>src/preprocessing/reprocess_sailor.md</code> runbook, ~4–5 h CPU) —
-convicts pipeline mismatch outright if the transfer gate flips back.</li>
+<li><b>Reprocess done — closed (A19/A21).</b> Skull-restored tree keeps the
+gate lost and recovers readouts partway: residual is site + unharmonized
+stages. No further harmonization (wrong sign); open item is LUMIERE
+visit-consistent registration (in-domain noise floor only).</li>
 <li><b>Mask-guided pooling (R5)</b> — patch tokens inside auto-masks; biggest
 cheap shot at the volume half (global averaging likely dilutes focal
 change).</li>

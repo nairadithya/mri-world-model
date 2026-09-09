@@ -619,3 +619,71 @@ Logged inferences (evidence-backed; see A9/A10/A12 for numbers):
 - Inference: the audit findings of A19 are now one command to
   reproduce. Any future reprocess (e.g. the mask-controlled decider)
   should clear this gate — exit 0 + drift ≈1× — before evals run.
+
+## A21 — Skull-restored decider: readouts recover, dynamics still lost (2026-09-09, local CPU)
+
+- Setup: the A19 decider via real HD-BET instead of mask transport
+  (`scripts/bet_repair.py`): hd-bet 2.x in an isolated venv (torchvision
+  rebuilt from the torch CPU index — PyPI's build repeats the D16 `nms`
+  failure; 2.x dropped the v1 `-mode/-tta` flags), applied per-session
+  (one model load per session via folder mode) to the existing
+  `_reg.nii.gz` intermediates, finalized 96³ + nonzero z-score into new
+  root `data/sailor_reprocessed_bet/` (old tree untouched). Toolchain
+  lessons: canonical reorientation returns negative-stride views on
+  flipped slabs (torch rejects — `ascontiguousarray`); never symlink with
+  relative targets into a foreign dir (dangling links scanned empty and
+  failed all 268 sessions identically — absolute paths only);
+  cross-device `os.replace` raises EXDEV (`shutil.move`). QA gate on the
+  new tree: drift 1.03× (0.179 vs LUMIERE 0.175), zero warnings; only the
+  2 known sub-07/ses-03 registration casualties fail (pre-existing).
+  Validation: finished strips nzfrac med 0.175, band 0.14–0.20, zero
+  outliers. Evals: frozen champion, zero training, `--root` override;
+  fresh `sailor_betfix_cache.pt` (derivatives cache untouched). Sidecar
+  bug caught mid-run: subject-level `intervals-days.txt` was never ferried
+  (all gaps read 0, all pairs one bin) — copied for all subjects,
+  interval eval relaunched; pooled errors were unaffected.
+- Numbers (27 subs / 270 ses / 243 pairs, 88/20/129/6 bins):
+
+  | arm | JEPA | persist | transfer acc/F1 | surprise AUC |
+  |-----|------|---------|-----------------|--------------|
+  | derivatives (A12) | 0.0290 | 0.0056 | 0.52 / 0.37 | 0.87 |
+  | repro skull-in (A19) | 0.0245 | 0.0037 | 0.45 / 0.25 | 0.80 |
+  | repro skull-out (this) | 0.0339 | 0.0059 | 0.44 / 0.32 | 0.89 |
+
+  Per-bin skull-out JEPA/persist: 0.0353/0.0032, 0.0372/0.0030,
+  0.0317/0.0039, 0.0352/0.0066 — persistence wins every bin (~5–12×),
+  champion flat ~0.032–0.037 (same over-prediction signature).
+  Four-cloud PCA: skull-out rejoins the derivatives neighborhood (not
+  LUMIERE) — stripping restored derivatives-like features without
+  approaching the training site.
+- Inference (A19's pre-registered rule fires): readouts recovered
+  0.25 → 0.32 with AUC best-yet 0.89 while dynamics still lose
+  everywhere — the residual is site (scanner/physiology + the
+  un-harmonized denoise/PLHM/affine/uint8 stages), NOT skull and NOT the
+  encoder. Recovery is partial (0.32 vs 0.37), consistent with those
+  remaining stages rather than a broken representation. Anomaly flagged,
+  not concluded: SAILOR-fit ceiling 0.30 sits BELOW transfer 0.32
+  (derivatives: 0.85) — memorization failing on this cache smells like
+  the fit path, not the features; needs a look before anyone cites it.
+  The transfer story is closed: representation transfers, scale needs a
+  site, statistics need alignment, inputs need their skull (and ideally
+  their pipeline).
+
+  Addendum (2026-09-09) — uint8 exonerated; preprocessing loop closed.
+  The skull-out tree was built from full-precision raw (int16 via dcm2niix,
+  float32 throughout our contract) and never touched uint8, yet the
+  dynamics failure persists at the same magnitude with the same flat
+  signature. Whatever uint8 shaves in the derivatives arm, it is not
+  load-bearing — ruled out as necessary, not proven zero-effect. Same
+  elimination pattern as skull-on-dynamics (restored, failure identical)
+  versus skull-on-readouts (restored, F1 came home). Standing assessment:
+  no fundamental preprocessing lever remains for the transfer question.
+  Further harmonization (undoing denoise/PLHM/affine) has the wrong sign —
+  it degrades their pipeline toward ours, discarding their one better
+  step (intra-patient registration), for less than the skull bought
+  (which bought zero dynamics). The open preprocessing item is orthogonal:
+  visit-consistent registration for LUMIERE (in-domain noise floor,
+  proposal stage A, never tried) — sharpens future runs, cannot fix
+  transfer. Preprocessing preserved and aligned what was acquired; the
+  residual (phase, scanner physics, sampling regime) is a calibration
+  problem, and the field refit already priced that calibration as cheap.

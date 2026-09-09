@@ -402,6 +402,76 @@ def plot_reproc_vs_persist(m, out):
     plt.close(fig)
 
 
+def plot_three_way(m, out):
+    import numpy as np
+    lum = np.array(m["lumiere_xy"])
+    der = np.array(m["deriv_xy"])
+    rep = np.array(m["reproc_xy"])
+    e1, e2 = m["explained_pct"]
+    fig, ax = plt.subplots(figsize=(7, 5.2))
+    ax.scatter(lum[:, 0], lum[:, 1], s=10, alpha=0.45, color="#1f77b4",
+               label=f"LUMIERE (n={m['n_lumiere']})")
+    ax.scatter(der[:, 0], der[:, 1], s=14, alpha=0.6, color="#D55E00",
+               label=f"SAILOR derivatives (n={m['n_deriv']})")
+    ax.scatter(rep[:, 0], rep[:, 1], s=14, alpha=0.6, color="#009E73",
+               label=f"SAILOR reprocessed, skull-in (n={m['n_reproc']})")
+    ax.set_xlabel(f"PC1 ({e1}%)")
+    ax.set_ylabel(f"PC2 ({e2}%)")
+    ax.set_title("Three clouds: reprocessing moved SAILOR somewhere new")
+    ax.legend(fontsize=9, loc="best")
+    fig.tight_layout()
+    fig.savefig(out, dpi=150)
+    plt.close(fig)
+
+
+def plot_betfix_decider(m, out):
+    d = m
+    x = list(range(len(d["bins"])))
+    w = 0.3
+    fig, ax = plt.subplots(figsize=(8, 4.2))
+    ax.bar([i - w for i in x], d["jepa"], w, label="champion head", color="#D55E00")
+    mid = [i - w / 2 for i in x]
+    ax.plot(mid, d["persist"], "D-", color="black", ms=6, lw=1.2, label="persistence")
+    ax.set_xticks(x, [f"{b}\n(n={p})" for b, p in zip(d["bins"], d["pairs"])])
+    ax.set_ylabel("mean error")
+    ax.set_title("Skull restored, gate still lost in every bin (site, not skull)")
+    for i in x:
+        ax.text(i - w, d["jepa"][i] + 0.0009, f"{d['jepa'][i]:.4f}",
+                ha="center", fontsize=9)
+        ax.text(i - w / 2, d["persist"][i] - 0.0018, f"{d['persist'][i]:.4f}",
+                ha="center", fontsize=8, color="black")
+    ax.set_ylim(0, max(d["jepa"]) * 1.3)
+    ax.legend(fontsize=9)
+    fig.tight_layout()
+    fig.savefig(out, dpi=150)
+    plt.close(fig)
+
+
+def plot_fourth_cloud(m, t, out):
+    import numpy as np
+    lum = np.array(t["lumiere_xy"])
+    bet = np.array(t["betfix_xy"])
+    der = np.array(t["deriv_xy"])
+    rep = np.array(t["repro_xy"])
+    e1, e2 = t["explained_pct"]
+    fig, ax = plt.subplots(figsize=(7, 5.2))
+    ax.scatter(lum[:, 0], lum[:, 1], s=10, alpha=0.45, color="#1f77b4",
+               label=f"LUMIERE (n={t['n_lumiere']})")
+    ax.scatter(der[:, 0], der[:, 1], s=12, alpha=0.5, color="#D55E00",
+               label=f"SAILOR derivatives (n={t['n_deriv']})")
+    ax.scatter(rep[:, 0], rep[:, 1], s=12, alpha=0.5, color="#CC79C2",
+               label=f"reprocessed skull-in (n={t['n_repro']})")
+    ax.scatter(bet[:, 0], bet[:, 1], s=14, alpha=0.65, color="#009E73",
+               label=f"reprocessed skull-out (n={t['n_betfix']})")
+    ax.set_xlabel(f"PC1 ({e1}%)")
+    ax.set_ylabel(f"PC2 ({e2}%)")
+    ax.set_title("Skull-out rejoins derivatives; LUMIERE stays distant")
+    ax.legend(fontsize=8, loc="best")
+    fig.tight_layout()
+    fig.savefig(out, dpi=150)
+    plt.close(fig)
+
+
 def main():
     m = load_metrics()
     plot_hero_leg1(m["hero_leg1"], os.path.join(HERE, "hero_leg1_val.png"))
@@ -420,7 +490,11 @@ def main():
     plot_sailor_reprocessed(m["sailor_reprocessed"],
                             os.path.join(HERE, "sailor_reprocessed.png"))
     plot_reproc_vs_persist(m, os.path.join(HERE, "sailor_reproc_vs_persist.png"))
-    print("wrote 14 plots to", HERE)
+    plot_three_way(m["three_way_shift"], os.path.join(HERE, "three_way_shift.png"))
+    plot_betfix_decider(m["betfix_decider"], os.path.join(HERE, "betfix_decider.png"))
+    plot_fourth_cloud(m["three_way_shift"], m["fourth_cloud"],
+                      os.path.join(HERE, "four_clouds.png"))
+    print("wrote 17 plots to", HERE)
 
 
 if __name__ == "__main__":
