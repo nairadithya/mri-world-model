@@ -115,5 +115,10 @@ class BrainiacEncoder(nn.Module):
     def encode(self, x: torch.Tensor) -> torch.Tensor:
         return self.forward(x)
 
+    def encode_tokens(self, x: torch.Tensor) -> torch.Tensor:
+        """Raw ViT hidden states (B, tokens, 768) for ROI/global pooling."""
+        out = self.vit(x)
+        return out[0] if isinstance(out, (tuple, list)) else out
+
     def trainable_parameters(self):
         return [p for p in self.parameters() if p.requires_grad]

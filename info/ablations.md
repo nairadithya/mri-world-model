@@ -943,3 +943,50 @@ Logged inferences (evidence-backed; see A9/A10/A12 for numbers):
 - Caveats: `dev` (val) was encoder-early-stopping-seen, so only `final` is
   fully clean; a pristine holdout for a *newly trained* encoder must be carved
   before Step 3. CIs reflect patient sampling, not readout training-seed noise.
+
+## A26 — Representation-interface probes: ROI pooling, per-modality, volumetry all fail to move the locked metric (2026-09-11, local CPU)
+
+- Step 2 of the SOTA plan, judged on the A25 locked protocol. New
+  `scripts/encode_interface.py` reruns the frozen champion once, keeping the
+  representations `probe_cache` discards: per-modality first-token latents
+  (R9), DeepBraTumIA-atlas ROI-pooled patch latents (R5), and frozen-temporal
+  states recomputed from ROI vision; plus DeepBraTumIA region volumes. 91
+  patients / 599 ROI visits, 9 min CPU; provenance recorded in the cache
+  (champion, config sha1, git sha `a0ee3db`, date) per the new convention.
+- ROI alignment (the approximation risk) validated before use: the atlas mask
+  is MNI152 1mm resized nearest to 96³ (registration transform not saved,
+  K3-5). FLAIR z-score is +0.10…+0.38 inside ROI vs ≈0.00 in the rest of the
+  brain, on 7/7 sampled studies, ROI = 0.4–6% of brain — consistent with
+  edema, i.e. the mask lands on the tumour.
+- Numbers (within-unseen CV and transfer, states_forecast-mlp baseline,
+  macro-F1, 95% patient-cluster bootstrap, paired diff):
+
+  | feature | within-unseen CV | vs state | transfer 65→26 | vs state |
+  |---|---|---|---|---|
+  | states_forecast (mean vision) | **0.309** | — | **0.408** | — |
+  | states_roi (ROI vision) | 0.283 | +0.027 [−0.021,+0.078] n.s. | 0.357 | +0.052 [−0.024,+0.143] n.s. |
+  | roi (snapshot) | 0.277 | — | — | — |
+  | vision (snapshot, ref) | 0.267 | — | — | — |
+  | roi_concat | 0.261 | — | — | — |
+  | mod_concat (per-modality) | 0.239 | — | — | — |
+  | volumes (DeepBraTumIA) | 0.236 | +0.073 [−0.002,+0.147] n.s. | 0.248 | +0.160 [+0.038,+0.266] SIG |
+  | volumes_roi | 0.252 | +0.058 [−0.014,+0.130] n.s. | — | — |
+  | volumes_clinical | 0.235 | +0.075 [+0.020,+0.127] SIG | — | — |
+
+  Snapshot paired tests (vs `vision` 0.267): `roi` −0.010, `roi_concat` +0.007,
+  `mod_concat` +0.028 — all n.s.
+- Inference: **no interface lever moves the locked metric.** (a) ROI/mask
+  pooling does not beat the whole-brain first-token mean, on the snapshot or
+  the state, so the "global mean dilutes the focal lesion" hypothesis is not
+  the binding constraint at this readout (the frozen state already encodes
+  enough). (b) Per-modality concat (D9's modality mean being lossy) does not
+  help either. (c) The decisive one: **explicit DeepBraTumIA volumetry — the
+  feature SOTA leans on — is significantly WORSE than the learned trajectory
+  state** (0.236/0.248 vs 0.309/0.408). The representation already carries more
+  progression signal than the auto-mask volumes. Redirect effort to the
+  objective/representation training (Step 3), not the interface.
+- Caveats: ROI alignment is approximate (validated but not exact);
+  22 patients / 95 rows give wide CIs, so this is "no detectable improvement",
+  not "proven none"; the fixed 500-step MLP readout may underfit the 3072-d
+  concat features; `states_roi` zero-fills the 17 visits without a mask; a
+  ROI+global concat and precise mask registration remain untested refinements.

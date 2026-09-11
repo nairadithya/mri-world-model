@@ -182,12 +182,15 @@ def scores(net, x, y):
 def patient_rows(patients, pid, feat):
     """Feature rows + clean RANO labels for one patient (None if no rows)."""
     p = patients[pid]
-    if feat in ("states_current", "states_forecast"):
+    if feat in ("states_current", "states_forecast", "states_roi"):
+        src = "states" if feat != "states_roi" else "states_roi"
+        if src not in p:
+            return None
         off = 0 if feat == "states_current" else 1
-        idx = [t for t in range(len(p["states"])) if p["labels"][t + off] >= 0]
+        idx = [t for t in range(len(p[src])) if p["labels"][t + off] >= 0]
         if not idx:
             return None
-        return p["states"][idx], p["labels"][[t + off for t in idx]]
+        return p[src][idx], p["labels"][[t + off for t in idx]]
     keep = p["labels"] >= 0
     if int(keep.sum()) == 0:
         return None
@@ -197,6 +200,19 @@ def patient_rows(patients, pid, feat):
         x = p["vision"][keep]
     elif feat == "clinical":
         x = p["clinical"].unsqueeze(0).expand(int(keep.sum()), -1)
+    elif feat == "roi":
+        x = p["vision_roi"][keep]
+    elif feat == "roi_concat":
+        x = p["vision_roi_mod"][keep].reshape(int(keep.sum()), -1)
+    elif feat == "mod_concat":
+        x = p["vision_mod"][keep].reshape(int(keep.sum()), -1)
+    elif feat == "volumes":
+        x = p["volumes"][keep]
+    elif feat == "volumes_roi":
+        x = torch.cat([p["vision_roi"][keep], p["volumes"][keep]], dim=-1)
+    elif feat == "volumes_clinical":
+        x = torch.cat([p["volumes"][keep],
+                       p["clinical"].unsqueeze(0).expand(int(keep.sum()), -1)], dim=-1)
     else:
         raise ValueError(f"unknown feat {feat}")
     return x, p["labels"][keep]
