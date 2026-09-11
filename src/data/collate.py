@@ -10,8 +10,25 @@ from src.preprocessing.transforms import runtime_transform
 from .dataset import MODALITIES
 
 
+def _augment_volume(v: torch.Tensor) -> torch.Tensor:
+    """Training-only augmentation on a z-scored (1, D, H, W) volume.
+
+    Random axis flips + intensity scale/shift + small Gaussian noise. Cheap
+    and label-preserving; the missing regularizer for the 65-patient LoRA
+    finetune (Step 3).
+    """
+    for ax in (1, 2, 3):
+        if torch.rand(1).item() < 0.5:
+            v = torch.flip(v, [ax])
+    a = 1.0 + (torch.rand(1).item() * 2 - 1) * 0.1
+    b = (torch.rand(1).item() * 2 - 1) * 0.1
+    v = v * a + b
+    return v + torch.randn(v.shape) * 0.02
+
+
 def collate_fn(batch: list[dict], size: tuple[int, int, int] = (96, 96, 96),
-               dtype: torch.dtype = torch.float32) -> dict:
+               dtype: torch.dtype = torch.float32,
+               augment: bool = False) -> dict:
     B = len(batch)
     T = max(s["n_visits"] for s in batch)
     C, D, H, W = 1, *size
@@ -41,7 +58,10 @@ def collate_fn(batch: list[dict], size: tuple[int, int, int] = (96, 96, 96),
                 if path is None:
                     continue
                 try:
-                    mri[b, t, mi] = runtime_transform(path, size)
+                    vol = runtime_transform(path, size)
+                    if augment:
+                        vol = _augment_volume(vol)
+                    mri[b, t, mi] = vol
                     mri_mask[b, t, mi] = True
                 except Exception:
                     continue  # leave zero-filled, mask False
@@ -70,6 +90,7 @@ def collate_fn(batch: list[dict], size: tuple[int, int, int] = (96, 96, 96),
 
 
 def make_collate(size: tuple[int, int, int] = (96, 96, 96),
-                 dtype: torch.dtype = torch.float32):
+                 dtype: torch.dtype = torch.float32,
+                 augment: bool = False):
     """Picklable collate factory (functools.partial survives num_workers>0)."""
-    return partial(collate_fn, size=size, dtype=dtype)
+    return partial(collate_fn, size=size, dtype=dtype, augment=augment)
