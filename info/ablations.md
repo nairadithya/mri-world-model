@@ -906,3 +906,40 @@ Logged inferences (evidence-backed; see A9/A10/A12 for numbers):
   - Still pre-rebuild (need a refit, not a re-encode): `gauntlet_probe`
     (A22 field_models) and `sailor_gap_bins.field_cond/field_uncond`
     (A15 field_scores) — flagged in `metrics.json._revision`.
+
+## A25 — Locked evaluation protocol for the SOTA push (2026-09-11, local CPU)
+
+- Step 1 of the SOTA plan: a frozen, pre-registered harness for downstream
+  RANO classification, because every single-split headline so far (0.45→0.33,
+  0.509→0.328) was the lucky tail and `probe_rano --cv` reshuffled all 91
+  patients (K3-16: encoder saw 65 of them).
+- Artifacts: `info/eval_protocol.md` (rules), `info/eval_folds.json` (frozen
+  patient-wise fold assignment over the 26 encoder-unseen patients, fold seed
+  2026, encoder-train list carried for the disjointness assert),
+  `src/data/eval_protocol.py` (build/load/assert), `scripts/lock_eval.py`
+  (materialize/verify), and `probe_rano.py --cv-unseen` (locked CV + transfer
+  + paired patient-cluster bootstrap). Cohort: 26 unseen = 13 val (dev) +
+  13 test (final); 22 contribute usable forecast-state rows, 95 labelled visits.
+- Numbers (frozen champion `probe_cache.pt`; primary macro-F1; 95% patient-
+  cluster bootstrap; `--compare` paired diff vs states_forecast-mlp):
+
+  | config | within-unseen CV | vs states_forecast | transfer 65→26 |
+  |--------|------------------|--------------------|----------------|
+  | states_forecast-mlp | **0.309** [0.255,0.358] | — | **0.408** [0.299,0.473] |
+  | vision | 0.257 | +0.052 [−0.036,+0.142] n.s. | — |
+  | states_current | 0.243 | +0.066 [+0.021,+0.133] SIG | — |
+  | fused (snapshot) | 0.241 | +0.069 [+0.014,+0.139] SIG | 0.234 |
+  | clinical-only | 0.213 | +0.097 [+0.041,+0.158] SIG | — |
+
+- Inference: (a) the locked, leak-free CV (0.309) is very close to the old
+  leaky CV (0.33) — the K3-16 contamination was small, as suspected. (b) The
+  **forecast state beats every snapshot with a CI excluding 0**, and the
+  current-state readout too — the label signal lives in the trajectory, not
+  the single-visit latent; clinical-only is weak, so it is not demographics.
+  Transfer (readout on 65) reaches **0.408** on the 26 unseen — the honest
+  headline for the frozen representation, above the old 0.33 CV. (c) These
+  are the numbers Step 2 (ROI/mask pooling) must move; success = paired CI
+  excluding 0 on this locked metric.
+- Caveats: `dev` (val) was encoder-early-stopping-seen, so only `final` is
+  fully clean; a pristine holdout for a *newly trained* encoder must be carved
+  before Step 3. CIs reflect patient sampling, not readout training-seed noise.

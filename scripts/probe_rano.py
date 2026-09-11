@@ -179,6 +179,150 @@ def scores(net, x, y):
     return acc, sum(f1s) / 4, dict(zip(RANO_PROBE_NAMES, recs)), cm
 
 
+def patient_rows(patients, pid, feat):
+    """Feature rows + clean RANO labels for one patient (None if no rows)."""
+    p = patients[pid]
+    if feat in ("states_current", "states_forecast"):
+        off = 0 if feat == "states_current" else 1
+        idx = [t for t in range(len(p["states"])) if p["labels"][t + off] >= 0]
+        if not idx:
+            return None
+        return p["states"][idx], p["labels"][[t + off for t in idx]]
+    keep = p["labels"] >= 0
+    if int(keep.sum()) == 0:
+        return None
+    if feat == "fused":
+        x = p["fused"][keep]
+    elif feat == "vision":
+        x = p["vision"][keep]
+    elif feat == "clinical":
+        x = p["clinical"].unsqueeze(0).expand(int(keep.sum()), -1)
+    else:
+        raise ValueError(f"unknown feat {feat}")
+    return x, p["labels"][keep]
+
+
+def macro_f1(pred, y, n_cls=4):
+    f1s = []
+    for k in range(n_cls):
+        tp = int(((pred == k) & (y == k)).sum())
+        fp = int(((pred == k) & (y != k)).sum())
+        fn = int(((pred != k) & (y == k)).sum())
+        prec = tp / max(1, tp + fp)
+        rec = tp / max(1, tp + fn)
+        f1s.append(2 * prec * rec / max(1e-9, prec + rec))
+    return sum(f1s) / n_cls
+
+
+def _train_readout(patients, pids, feat, hidden):
+    xs, ys = [], []
+    for pid in pids:
+        r = patient_rows(patients, pid, feat)
+        if r is not None:
+            xs.append(r[0])
+            ys.append(r[1])
+    if not xs:
+        return None
+    return fit_linear(torch.cat(xs), torch.cat(ys), hidden=hidden)
+
+
+def _predict(net, patients, pids, feat):
+    out = {}
+    for pid in pids:
+        r = patient_rows(patients, pid, feat)
+        if r is None or net is None:
+            continue
+        with torch.no_grad():
+            out[pid] = (net(r[0]).argmax(1), r[1])
+    return out
+
+
+def _pooled(oof, pids):
+    pred = torch.cat([oof[p][0] for p in pids])
+    y = torch.cat([oof[p][1] for p in pids])
+    return macro_f1(pred, y), pred, y
+
+
+def _ci(samples, lo=2.5, hi=97.5):
+    s = sorted(samples)
+    n = len(s)
+    return s[int(lo / 100 * n)], s[min(n - 1, int(hi / 100 * n))]
+
+
+def _bootstrap(oof_a, oof_b=None, boot=10000, seed=42):
+    """Patient-cluster bootstrap of macro-F1 (and the paired difference).
+
+    Returns (a_vals, diff_vals) where diff = a - b on the same resampled
+    patients (None if oof_b is None).
+    """
+    import random
+    pids = sorted(set(oof_a) & (set(oof_b) if oof_b else set(oof_a)))
+    rng = random.Random(seed)
+    a_vals, d_vals = [], []
+    for _ in range(boot):
+        samp = [rng.choice(pids) for _ in pids]
+        fa, _, _ = _pooled(oof_a, samp)
+        a_vals.append(fa)
+        if oof_b is not None:
+            fb, _, _ = _pooled(oof_b, samp)
+            d_vals.append(fa - fb)
+    return a_vals, (d_vals if oof_b is not None else None)
+
+
+def run_locked(cache_path, protocol_path, feat="states_forecast", hidden=256,
+               compare=None, train_pool="unseen", boot=10000, seed=42):
+    """Locked-protocol evaluation over the encoder-unseen cohort (Step 1).
+
+    ``train_pool='unseen'``: 5-fold patient-wise CV within the 26 (readout
+    trained only on encoder-unseen patients). ``'train'``: readout trained on
+    the 65 encoder-train patients and scored on the unseen cohort (transfer).
+    ``compare`` runs a second feature config with a paired bootstrap.
+    """
+    from src.data.eval_protocol import assert_disjoint, fold_patients, load_protocol
+
+    cache = torch.load(cache_path, map_location="cpu", weights_only=False)
+    patients = cache["patients"]
+    proto = load_protocol(protocol_path)
+    assert_disjoint(proto)
+    unseen = sorted(proto["folds"])
+    k = proto["k"]
+    n_lab = sum(int((patients[p]["labels"] >= 0).sum()) for p in unseen)
+    print(f"locked protocol v{proto['version']} ({protocol_path}): "
+          f"{len(unseen)} unseen patients, {n_lab} labelled visits; "
+          f"train_pool={train_pool}, feat={feat}-{'mlp' if hidden else 'linear'}")
+
+    def oof_for(cfg_feat):
+        oof = {}
+        if train_pool == "unseen":
+            for i in range(k):
+                te = fold_patients(proto, i)
+                tr = [p for p in unseen if p not in set(te)]
+                net = _train_readout(patients, tr, cfg_feat, hidden)
+                oof.update(_predict(net, patients, te, cfg_feat))
+        else:
+            net = _train_readout(patients, proto["encoder_train"], cfg_feat, hidden)
+            oof = _predict(net, patients, unseen, cfg_feat)
+        return oof
+
+    oof_a = oof_for(feat)
+    f1_a, pred_a, y_a = _pooled(oof_a, sorted(oof_a))
+    a_vals, d_vals = _bootstrap(oof_a, None, boot=boot, seed=seed)
+    lo, hi = _ci(a_vals)
+    print(f"  pooled macro-F1 {f1_a:.4f} [{lo:.4f},{hi:.4f}]  "
+          f"(n_pat={len(oof_a)}, n_rows={len(y_a)})")
+    maj = int(torch.bincount(y_a, minlength=4).argmax())
+    print(f"  majority ({RANO_PROBE_NAMES[maj]}) acc={(y_a == maj).float().mean():.4f}")
+
+    if compare and compare != feat:
+        oof_b = oof_for(compare)
+        f1_b, _, _ = _pooled(oof_b, sorted(oof_b))
+        _, d_vals = _bootstrap(oof_a, oof_b, boot=boot, seed=seed)
+        dlo, dhi = _ci(d_vals)
+        sig = "SIG" if dhi < 0 or dlo > 0 else "n.s."
+        print(f"  compare {compare}: pooled {f1_b:.4f}  "
+              f"paired diff {f1_a - f1_b:+.4f} [{dlo:+.4f},{dhi:+.4f}] {sig}")
+
+
 def run_probe(cache_path):
     cache = torch.load(cache_path, map_location="cpu", weights_only=False)
     patients = cache["patients"]
@@ -240,12 +384,26 @@ def main():
     ap.add_argument("--encode", action="store_true")
     ap.add_argument("--probe", action="store_true")
     ap.add_argument("--cv", action="store_true",
-                    help="5-fold patient-wise CV of states_forecast-mlp")
+                    help="legacy 5-fold CV over all 91 patients (K3-16 leaky)")
+    ap.add_argument("--cv-unseen", action="store_true",
+                    help="locked-protocol CV over the encoder-unseen cohort")
+    ap.add_argument("--protocol", default="info/eval_folds.json")
+    ap.add_argument("--feat", default="states_forecast")
+    ap.add_argument("--hidden", type=int, default=256)
+    ap.add_argument("--compare", default=None,
+                    help="second feature config for a paired bootstrap")
+    ap.add_argument("--train-pool", choices=["unseen", "train"], default="unseen")
+    ap.add_argument("--boot", type=int, default=10000)
     args = ap.parse_args()
     with open(args.config) as f:
         cfg = yaml.safe_load(f)
     if args.encode:
         encode_all(cfg, args.champion, args.cache)
+    if args.cv_unseen:
+        run_locked(args.cache, args.protocol, feat=args.feat, hidden=args.hidden,
+                   compare=args.compare, train_pool=args.train_pool,
+                   boot=args.boot)
+        return
     if args.probe or (not args.encode and not args.cv):
         run_probe(args.cache)
     if args.cv:
