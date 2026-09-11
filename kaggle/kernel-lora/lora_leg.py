@@ -55,7 +55,7 @@ assert transformers.__version__.startswith('4'), 'need transformers<5 for peft'
 # augmentation collate. RECORD the printed hash with the results.
 !rm -rf world-model && git clone https://github.com/nairadithya/mri-world-model.git world-model
 %cd world-model
-!git checkout 6945227
+!git checkout e4a1b5d
 !git rev-parse --short HEAD
 
 # %%
