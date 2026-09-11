@@ -265,7 +265,9 @@ def main():
                 scaler.step(opt)
                 scaler.update()
                 opt.zero_grad(set_to_none=True)
-                model.update_target()
+                # NB: the EMA target is deliberately NOT updated — it stays the
+                # frozen champion so the JEPA regularizer anchors the vision
+                # tower to the self-supervised representation (not BYOL drift).
                 pending = 0
                 gstep += 1
         dev_f1, per = eval_dev(model, val_loader, device)
