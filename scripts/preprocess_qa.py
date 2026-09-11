@@ -11,9 +11,18 @@ reprocess med ~0.49 vs LUMIERE ~0.17) even when every volume passes
 integrity. Sessions with <4 modalities are listed (expected: raw-missing
 + registration casualties), not failed.
 
+SAILOR content gate (--sailor-root): the derivatives tree holds
+present-but-empty modality files (existence ≠ presence, K3-1) that the
+96³-named walk above cannot see because those files are native-resolution
+and use T1c/Flair aliases. This mode delegates to the adapter's own
+`scan_empty_modalities` so the QA gate and the loader agree (exit 1 if any).
+
 Usage:
     python scripts/preprocess_qa.py --root data/sailor_reprocessed \\
         --template data/templates/MNI152_T1_1mm.nii.gz --ref data/lumiere_preprocessed
+    python scripts/preprocess_qa.py --sailor-root \\
+        data/sailor/sailor_ebrains_pseud/derivatives/mni2009c-n-s \\
+        data/sailor_reprocessed data/sailor_reprocessed_bet
 """
 
 from __future__ import annotations
@@ -78,13 +87,34 @@ def scan_root(root: str, size: tuple[int, int, int]) -> dict:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--root", required=True)
+    ap.add_argument("--root", default=None)
     ap.add_argument("--template", default=None)
     ap.add_argument("--ref", default=None,
                     help="reference preprocessed root for drift report")
     ap.add_argument("--size", type=int, nargs=3, default=[96, 96, 96])
+    ap.add_argument("--sailor-root", nargs="*", default=None,
+                    help="SAILOR tree(s): flag present-but-empty modality "
+                         "files via the adapter's content metric")
     args = ap.parse_args()
     size = tuple(args.size)
+
+    if args.sailor_root is not None:
+        if not args.sailor_root:
+            ap.error("--sailor-root given with no roots")
+        from src.data.sailor import scan_empty_modalities
+
+        rc = 0
+        for sr in args.sailor_root:
+            rows = scan_empty_modalities(sr)
+            print(f"{sr}: {len(rows)} present-but-empty modality files")
+            for r in rows[:60]:
+                print(f"  {r['subject']}/{r['session']}/{r['slot']}: "
+                      f"nz={r['nz']:.4f} ({r['path']})")
+            if rows:
+                rc = 1
+        return rc
+    if not args.root:
+        ap.error("--root is required (or use --sailor-root)")
 
     tpl = None
     if args.template:

@@ -18,6 +18,10 @@ and `info/` for why things are the way they are.
   (auto-mask volumetry), `sailor_eval.py` (cross-site eval),
   `horizon_probe.py` (`--encode`/`--curve`/`--train`: multi-horizon gate),
   `horizon_eval.py` (per-horizon JEPA-vs-persistence for a trained leg),
+  `pred_latent_probe.py` (predicted-vs-EMA latent probes; `--refit` field
+  models + held-out preds, `--probe` classifier tables),
+  `view_scans.py` (local browser NIfTI explorer),
+  `shot_viewer.py` (headless screenshot validator for it; dev-only),
   fetch/auth scripts.
 - `config/` — `default.yaml` (full run; `aux:` section, lambda 0 = JEPA
   only), `pilot.yaml` (5-patient CPU pilot).
@@ -29,6 +33,9 @@ and `info/` for why things are the way they are.
   as-is, so never `py_compile` it, only `jupytext --to ipynb`).
 - `info/` — decision log (`decisions.md`, IDs D0–), ablations (`ablations.md`,
   IDs A–/I–), pilot notes (`pilot.md`). Append-only; reference IDs.
+  Plot numbers live in `info/plots/metrics.json` (single source of truth);
+  `info/plots/make_plots.py` regenerates every plot from it — never
+  hardcode numbers in a plot script.
 - `data/`, `checkpoints/`, `.venv/`, `.env` — NEVER commit (gitignored).
 
 ## Setup
@@ -57,7 +64,56 @@ python scripts/run_train.py --config config/pilot.yaml \
   --patients Patient-067 Patient-031 Patient-073 Patient-078 Patient-029 --no-wandb
 # Smoke test (no weights needed)
 python scripts/run_train.py --epochs 1 --batch-size 1 --no-wandb --random-init
+# Local scan explorer (client-side NiiVue; binds 127.0.0.1 only)
+python scripts/view_scans.py                                   # SAILOR derivatives
+python scripts/view_scans.py --root data/lumiere_preprocessed  # LUMIERE 96³
+#   deep-link: /?p=<rel>&ov=<rel>&ov=<rel>  (repeat ov for overlaid masks)
+# Headless render check (viewer running with --no-browser):
+python scripts/shot_viewer.py \
+  "http://127.0.0.1:8765/?p=sub-01/ses-05/T1c.nii.gz&ov=sub-01/ses-05/EdemaMask-ONCO.nii.gz" \
+  /tmp/opencode/shot.png
 ```
+
+## Local scan explorer (`view_scans.py`)
+
+Browser UI over a scan tree. NiiVue renders NIfTI entirely client-side, so the
+bytes only travel disk → localhost → your own browser; nothing is uploaded.
+Auto-detects the SAILOR derivatives layout (`sub-XX/ses-YY/*.nii.gz`) and the
+LUMIERE preprocessed layout (`Patient-XXX/week-*/*.nii.gz`). Base modalities
+(T1c/T1/T2/Flair/CT1/FLAIR) load as the background; masks, segmentations and
+`-icor`/`-zscore` variants load as overlays. Deep-link for scripting/screenshots:
+`/?p=<rel>&ov=<rel>&ov=<rel>` (repeat `ov`, comma-separate also works).
+
+Per-patient/session **metadata** is read from the tree sidecars and shown in a
+bottom panel (and age/OS inline in the patient list):
+- SAILOR: subject `age-years.txt` / `overall-survival-months.txt` /
+  `intervals-days.txt`; session `treatment.txt` / `RANO.txt` (codes decoded
+  PD/SD/PR/CR).
+- LUMIERE: `--meta-dir` (default `data/lumiere_meta`) joins demographics,
+  RANO rating/rationale, and per-timepoint modality completeness onto the
+  `Patient-XXX/week-*` tree.
+
+- SAILOR is controlled-access: keep it on `127.0.0.1`. Do not port-forward
+  beyond an SSH tunnel, and never upload the files to a cloud viewer.
+- The NiiVue bundle is fetched once from jsDelivr into
+  `~/.cache/world-model-viewer/` (pinned `0.69.0`); after that it runs offline.
+- Validate viewer changes with `scripts/shot_viewer.py` (headless
+  Chromium/WebGL via SwiftShader). It is a dev-only tool: `pip install
+  playwright && playwright install chromium` (NOT in `requirements.txt`). Start
+  the viewer with `--no-browser`, point the harness at a deep link; it polls
+  until volumes load (software-WebGL shader compile is slow) and exits nonzero
+  if nothing rendered — screenshot the result before trusting a change.
+
+NiiVue 0.69 API gotchas (each cost a blank canvas, found via `shot_viewer.py`):
+
+- `attachTo(id)` wants the id of a `<canvas>`, not a `<div>`.
+- `attachTo` is async and resets volumes when it resolves — load volumes only
+  after awaiting it, or they get wiped (looks like "0 volumes").
+- `loadVolumes` APPENDS and 0.69 has no `removeAllVolumes`; clear via
+  `removeVolume` first. The explorer serializes refreshes through a promise
+  queue so concurrent deep-link loads cannot stack.
+- Passing option objects with a `name` breaks `getFileExt(name||url)`; load by
+  `{url}` only, then set `name`/`colormap`/`opacity` on `nv.volumes[i]`.
 
 ## Conventions (from README, enforced)
 
@@ -66,6 +122,15 @@ python scripts/run_train.py --epochs 1 --batch-size 1 --no-wandb --random-init
 3. Code over notes; docs live in `info/` with D/A/I IDs.
 4. Reproducibility: pin deps, record seeds/configs, tie results to commits.
 5. Branch per experiment (`exp/...`), PRs not direct-to-main.
+6. Artifacts carry provenance: every encoded cache records {champion path,
+   config hash, git sha, date} at creation; loaders assert it. Pre-2026-09-10
+   caches are filename-only (same bug class as the D22 champion overwrite).
+7. Persist trained weights, not just scores, whenever a follow-up might need
+   predictions (`train_field.py` saved scores only; recovering field
+   predictions cost a full refit — now `checkpoints/field_models.pt`).
+8. Update the record with the result: every experiment lands in `info/` (new
+   D/A/R ID, append-only) and, when plots or conclusions change,
+   `info/explainer.html` too. An unlogged result might as well not have happened.
 
 ## Gotchas (earned the hard way — see info/ablations.md)
 

@@ -10,6 +10,8 @@ there, not in this script) and writes:
     run6_tradeoff.png   Aux fine-tune: dynamics cost vs honest-F1 flat
     sailor_transfer.png Cross-site summary: dynamics fail, readouts transfer
     sailor_gap_bins.png Gap-stratified cross-site: persistence wins every bin
+    gauntlet_probe.png  Predicted vs actual latents as RANO features
+                        (error ratio vs preserved signal dissociate)
 """
 
 import json
@@ -447,6 +449,95 @@ def plot_betfix_decider(m, out):
     plt.close(fig)
 
 
+def plot_gauntlet(g, out):
+    import numpy as np
+    methods = g["methods"]
+    labels = g["method_labels"]
+    colors = {"true": "#7f7f7f", "champ": "#1f77b4",
+              "gap": "#2ca02c", "field": "#d62728"}
+    fig, (axA, axB) = plt.subplots(1, 2, figsize=(13, 5.2))
+    fig.suptitle("Dynamics gauntlet: predicted vs actual latents as RANO features",
+                 fontsize=12, fontweight="bold")
+
+    # A. honest-number bars (CV with spread; transfer single-split)
+    groups = [("LUMIERE\npatient CV", g["lum_cv_f1"], g["lum_cv_sd"]),
+              ("SAILOR\nsubject CV", g["sai_cv_f1"], g["sai_cv_sd"]),
+              ("SAILOR\ntransfer", g["sai_transfer_f1"], [0.0] * 4)]
+    x = np.arange(len(groups))
+    w = 0.19
+    for i, m in enumerate(methods):
+        means = [grp[1][i] for grp in groups]
+        errs = [grp[2][i] for grp in groups]
+        axA.bar(x + (i - 1.5) * w, means, w, yerr=errs,
+                label=labels[i], color=colors[m], edgecolor="black",
+                linewidth=0.6, capsize=3, error_kw={"elinewidth": 1})
+    axA.set_xticks(x)
+    axA.set_xticklabels([grp[0] for grp in groups])
+    axA.set_ylabel("macro-F1 (RANO t+1, MLP probe)")
+    axA.set_title("A. Preserved RANO signal by feature", fontsize=11)
+    axA.set_ylim(0, 0.52)
+    axA.hlines(g["a9_states_cv"], -0.4, 0.4, colors="k", ls="--", lw=1)
+    axA.text(0.0, g["a9_states_cv"] + 0.011, "A9 states CV 0.33",
+             ha="center", fontsize=8)
+    axA.hlines(g["a12b_states_transfer"], 1.6, 2.4, colors="k", ls="--", lw=1)
+    axA.text(2.0, g["a12b_states_transfer"] + 0.011,
+             "A12-b states transfer 0.37", ha="center", fontsize=8)
+    axA.legend(frameon=True, fontsize=9, loc="upper left")
+
+    # B. dissociation scatter: error ratio (log) vs signal.
+    # "true" has no JEPA error (it is the endpoint) -> parity ratio 1.0.
+    EVALS = [("LUM-CV", "o", g["lum_cv_f1"], g["lum_cv_sd"], g["lum_err"]),
+             ("SAI-CV", "s", g["sai_cv_f1"], g["sai_cv_sd"], g["sai_err"]),
+             ("SAI-transfer", "^", g["sai_transfer_f1"], [None] * 4,
+              g["sai_err"])]
+    for tag, mk, f1s, sds, errs in EVALS:
+        for j, m in enumerate(methods):
+            e = errs[m]
+            r = 1.0 if e is None else e / errs["persist"]
+            sd = sds[j]
+            axB.errorbar(r, f1s[j], yerr=sd if sd else 0.0, fmt=mk,
+                         color=colors[m], ecolor=colors[m],
+                         markersize=8, capsize=3, elinewidth=1,
+                         label=f"{labels[j]} · {tag}" if tag == "LUM-CV"
+                         else None)
+    import matplotlib.lines as mlines
+    meth = [mlines.Line2D([], [], color=colors[m], marker="o",
+                           linestyle="None", markersize=7, label=labels[j])
+            for j, m in enumerate(methods)]
+    ev = [mlines.Line2D([], [], color="k", marker=mk, linestyle="None",
+                         markersize=7, label=tag)
+          for tag, mk, _, _, _ in EVALS]
+    axB.legend(handles=meth + ev, frameon=True, fontsize=8, loc="upper left",
+               ncol=2)
+    axB.set_xscale("log")
+    axB.axvline(1.0, color="k", linestyle=":", linewidth=1)
+    axB.text(1.0, 0.075, "persistence parity", ha="center", fontsize=8,
+             transform=axB.get_xaxis_transform())
+    axB.set_xlabel("cosine-error ratio JEPA / persistence (log)")
+    axB.set_ylabel("macro-F1 (RANO t+1, MLP probe)")
+    axB.set_title("B. Error ratio vs preserved signal", fontsize=11)
+    axB.annotate("SAI field:\nbest error,\nmiddling signal",
+                 xy=(0.9, 0.32), xytext=(3.0, 0.445),
+                 arrowprops=dict(arrowstyle="->", color="dimgray"),
+                 fontsize=8, ha="center",
+                 bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray"))
+    axB.annotate("LUM field:\nworst error,\ngap-level signal",
+                 xy=(3.11, 0.272), xytext=(8.0, 0.155),
+                 arrowprops=dict(arrowstyle="->", color="dimgray"),
+                 fontsize=8, ha="center",
+                 bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray"))
+    axB.set_ylim(0.05, 0.48)
+
+    fig.tight_layout(rect=[0, 0, 1, 0.93])
+    fig.text(0.5, 0.01,
+             "Probes train-stat standardized (A9 protocol otherwise); "
+             "transfer = train on LUMIERE-train rows; field = SAILOR-fit "
+             "uncond (cond ties). Errors on the same labelled pairs.",
+             ha="center", fontsize=8, style="italic")
+    fig.savefig(out, dpi=150)
+    plt.close(fig)
+
+
 def plot_fourth_cloud(m, t, out):
     import numpy as np
     lum = np.array(t["lumiere_xy"])
@@ -494,7 +585,8 @@ def main():
     plot_betfix_decider(m["betfix_decider"], os.path.join(HERE, "betfix_decider.png"))
     plot_fourth_cloud(m["three_way_shift"], m["fourth_cloud"],
                       os.path.join(HERE, "four_clouds.png"))
-    print("wrote 17 plots to", HERE)
+    plot_gauntlet(m["gauntlet_probe"], os.path.join(HERE, "gauntlet_probe.png"))
+    print("wrote 18 plots to", HERE)
 
 
 if __name__ == "__main__":

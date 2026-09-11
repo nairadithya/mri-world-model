@@ -3,14 +3,18 @@
 Phase --encode: SAILOR visits -> per-patient cache (vision/fused/states +
 raw RANO codes mapped to probe labels {1:0,2:1,3:2,5:3}).
 Phase --eval:
-  (a) JEPA-vs-persistence over all SAILOR pairs (A8-style, label-free);
+  (a) JEPA-vs-persistence over all SAILOR pairs, SAME EMA-target space both
+      sides (K3-2/D28; the old row used the online projector over
+      encode_visits and was mixed-space);
   (b) LUMIERE-trained forecast probes applied to SAILOR rows (transfer)
       + SAILOR-fit probe (ceiling);
   (d) surprise-AUC with SAILOR RANO.
 (c) volume probes: follow-up (ONCO masks).
+--pairs: only the (a) row (no transfer/surprise passes).
 
 Usage:
     python scripts/sailor_eval.py --champion checkpoints/champion_0.0081.pt --encode
+    python scripts/sailor_eval.py --pairs
     python scripts/sailor_eval.py --eval --lum-cache checkpoints/probe_cache.pt
 """
 from __future__ import annotations
@@ -30,7 +34,6 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from src.data.collate import make_collate
 from src.data.sailor import SAILORDataset
 from src.model.jepa_model import JEPAWorldModel
-from src.train.baselines import PersistenceBaseline
 
 from probe_rano import RANO_PROBE_NAMES, fit_linear, rows_for, scores  # noqa: E402
 
@@ -77,6 +80,48 @@ def encode_sailor(cfg, champion_path, cache_path, root=SAILOR_ROOT):
     torch.save(cache, cache_path)
 
 
+def _pairs_same_space(model, loader):
+    """(a) JEPA vs persistence, SAME EMA-target space on both sides (K3-2).
+
+    JEPA = 1 - cos(predictor(state_t), EMA_target_{t+1}); persistence =
+    1 - cos(EMA_target_t, EMA_target_{t+1}). The old row compared the EMA
+    JEPA error against `PersistenceBaseline(online projector)` over
+    `encode_visits` (online backbone) — mixed space, the original-A8 error.
+    """
+    je, pe, n = 0.0, 0.0, 0
+    with torch.no_grad():
+        for batch in loader:
+            out = model(batch)
+            valid = out["valid"][0]
+            if not bool(valid.any()):
+                continue
+            z = model.encode_target_visit(batch["mri"], batch["mri_mask"])[0]
+            je_t = 1 - F.cosine_similarity(out["z_hat"][0], out["z_target"][0],
+                                           dim=-1)
+            pe_t = 1 - F.cosine_similarity(z[:-1], z[1:], dim=-1)
+            nv = int(valid.sum())
+            je += float(je_t[valid].sum())
+            pe += float(pe_t[valid].sum())
+            n += nv
+    return je / n, pe / n, n
+
+
+def eval_pairs(cfg, champion_path, root=SAILOR_ROOT):
+    """Quick mode: only the same-space (a) row (no transfer/surprise passes)."""
+    ds = SAILORDataset(root)
+    size = tuple(cfg["preprocessing"].get("target_size", [96, 96, 96]))
+    loader = DataLoader(ds, batch_size=1, shuffle=False, num_workers=0,
+                        collate_fn=make_collate(size))
+    model = JEPAWorldModel(cfg)
+    model.load_state_dict(torch.load(champion_path, map_location="cpu")["model"],
+                          strict=False)
+    model.eval()
+    je, pe, n = _pairs_same_space(model, loader)
+    print(f"(a) SAILOR pairs (same-space): n={n} "
+          f"JEPA={je:.4f} persist={pe:.4f}")
+    return je, pe, n
+
+
 def eval_all(cfg, champion_path, cache_path, lum_cache_path, root=SAILOR_ROOT):
     device = torch.device("cpu")
     ds = SAILORDataset(root)
@@ -87,20 +132,10 @@ def eval_all(cfg, champion_path, cache_path, lum_cache_path, root=SAILOR_ROOT):
     model.load_state_dict(torch.load(champion_path, map_location="cpu")["model"],
                           strict=False)
     model.eval()
-    pers = PersistenceBaseline(model.projector)
 
-    je, pe, n = 0.0, 0.0, 0
-    with torch.no_grad():
-        for batch in loader:
-            out = model(batch)
-            nv = int(out["valid"].sum())
-            if not nv:
-                continue
-            pl = pers(batch, model.encode_visits)["loss"].item()
-            je += out["loss"].item() * nv
-            pe += pl * nv
-            n += nv
-    print(f"(a) SAILOR pairs: n={n} JEPA={je / n:.4f} persist={pe / n:.4f}")
+    je, pe, n = _pairs_same_space(model, loader)
+    print(f"(a) SAILOR pairs (same-space): n={n} "
+          f"JEPA={je:.4f} persist={pe:.4f}")
 
     cache = torch.load(cache_path, map_location="cpu", weights_only=False)["patients"]
     lum = torch.load(lum_cache_path, map_location="cpu", weights_only=False)["patients"]
@@ -151,12 +186,16 @@ def main():
     ap.add_argument("--lum-cache", default="checkpoints/probe_cache.pt")
     ap.add_argument("--encode", action="store_true")
     ap.add_argument("--eval", action="store_true")
+    ap.add_argument("--pairs", action="store_true",
+                    help="only the same-space (a) JEPA/persist row")
     ap.add_argument("--root", default=SAILOR_ROOT)
     args = ap.parse_args()
     with open(args.config) as f:
         cfg = yaml.safe_load(f)
     if args.encode:
         encode_sailor(cfg, args.champion, args.cache, args.root)
+    if args.pairs:
+        eval_pairs(cfg, args.champion, args.root)
     if args.eval:
         eval_all(cfg, args.champion, args.cache, args.lum_cache, args.root)
 

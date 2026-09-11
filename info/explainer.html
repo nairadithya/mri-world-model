@@ -182,6 +182,33 @@ label is redundant. Not proof treatment is useless in principle; no
 operational gain at N=27. (LUMIERE couldn't even run this test — it has no
 treatment column.)</p>
 
+<h3>What the predictions still know <span class="id">A22</span></h3>
+<img src="plots/gauntlet_probe.png" alt="Predicted vs actual latents as RANO features">
+<div class="concept"><b class="t">Concept: probing predictions instead of
+errors.</b> Cosine error mixes up <i>how far</i> a prediction lands with
+<i>what it still says</i>. Instead, feed each method's <i>predicted</i>
+next-visit latent — and the <i>actual</i> next-visit latent — pair by pair
+into the same tiny RANO classifier, and compare what survives. One hygiene
+note that bit mid-run: cosine-trained heads emit arbitrary scales (gap-head
+vectors run ~5× larger than EMA vectors), and the unstandardized probe fit
+collapses on them — features are standardized with training statistics
+first, A9 protocol otherwise.</div>
+<p>In-domain, <b>predictions beat the thing predicted</b> (CV 0.30/0.28/0.27
+vs actual 0.25): the predictor carries the history summary, which knows more
+than the noisy snapshot — dynamics <i>add</i> signal, not just preserve it.
+The gap head matches targets far better (0.0039 vs 0.0075, beating
+persistence pooled) yet carries <i>no more</i> RANO signal than the champion
+head: matching the vector is not keeping its meaning.</p>
+<p>Cross-site, the mirror image: the field has the <i>best</i> cosine error
+(0.0035, beats persistence) yet preserves <i>less</i> signal than the
+champion (0.32 vs 0.39 — it wins by shrinking toward persistence). Snapshot
+latents don't transfer at all (0.12–0.16); only history states do (0.37) —
+the transfer claim now has an address. And the SAILOR-fit field run backward
+onto LUMIERE fails symmetrically (0.0177 vs 0.0057) while still carrying
+gap-level signal (0.27): each site's dynamics die on the other's stride, in
+both directions. Error ratio and preserved signal dissociate both ways — a
+low JEPA error is not a representation-quality certificate.</p>
+
 <h2>4. The encoder is innocent (three independent exonerations) <span class="id">A16</span></h2>
 <img src="plots/site_shift.png" alt="Site shift: two cohorts, two neighborhoods">
 <div class="concept"><b class="t">Concept: site shift, PCA, PC1/PC2.</b> Each
@@ -194,7 +221,7 @@ survive while step sizes don't. Note SAILOR's tightness — the damping story,
 visible before any model runs. (Plotted: per-visit fused latents, the space
 probes read; the dynamics' own target space separates even more strongly.)</div>
 
-<img src="plots/coral_alignment.png" alt="CORAL cuts head error 2.4x">
+<img src="plots/coral_alignment.png" alt="CORAL cuts head error 2.1x">
 <div class="concept"><b class="t">Concept: CORAL.</b> Correlation Alignment —
 closed-form linear fix: subtract the source mean, un-stretch the cloud to a
 ball along its own axes (whiten), re-stretch along the <i>target's</i> axes
@@ -202,14 +229,15 @@ ball along its own axes (whiten), re-stretch along the <i>target's</i> axes
 shrinkage term keeps dead directions from blowing up. It sits <i>around</i>
 the frozen predictor (aligning its inputs and targets into LUMIERE's frame),
 not after it — prediction still happens last.</div>
-<p>Statistics-matching alone cuts head error 2.4× (0.029 → 0.012) with the
-encoder untouched, while persistence is preserved (geometry not distorted).
-Two-thirds of the failure was frame, not content.</p>
+<p>Statistics-matching alone cuts head error 2.1× (0.0294 → 0.0140, A23-rebuilt
+field cache) with the encoder untouched, while persistence is preserved
+(geometry not distorted). About three-fifths of the failure was frame, not
+content.</p>
 <div class="concept"><b class="t">Concept: transductive bound.</b> Fit the map
-on <i>all</i> points including scored ones and you get 0.0080 — the floor for
+on <i>all</i> points including scored ones and you get 0.0081 — the floor for
 <i>second-order matching</i>, since it peeked at test statistics. Diagnostic
-only (no streaming deployment); the honest fold-wise 0.0119 is the claimable
-number. The 0.0080→0.004 remainder is what no covariance fix can reach.</div>
+only (no streaming deployment); the honest fold-wise 0.0140 is the claimable
+number. The 0.0081→0.004 remainder is what no covariance fix can reach.</div>
 
 <img src="plots/site_shift_aligned.png" alt="After CORAL: shared frame, residual structure">
 <p>The before/after pair is the story in one glance: shared frame afterward
@@ -236,28 +264,32 @@ T2 change survives processing best). Raw SAILOR sits at LUMIERE scale; the
 removes), not PLHM-alone. Full protocol: <code>src/preprocessing/</code>;
 verification: <code>scripts/raw_mni_deltas.py</code>.</p>
 
-<h3>The decider: skull restored, gate still lost <span class="id">A19 · A21</span></h3>
+<h3>The decider: skull restored, gate still lost <span class="id">A19 · A21 · A23</span></h3>
 <p>Reprocessing SAILOR raw through our contract first <i>failed to flip the
 gate and broke the readouts</i> (F1 0.37 → 0.25) — the signature of a new
 confound, not a verdict. Audit found it: the skull-stripper can't run in our
 environment, so a dumb fallback left whole skulls in (half of every image
 vs one-sixth). Redoing only the skull-strip with the real tool in an
 isolated environment (<code>scripts/bet_repair.py</code>, QA drift 1.03×)
-decided it:</p>
+decided it (numbers below are the A23 clean rebuild; see note):</p>
 <img src="plots/betfix_decider.png" alt="Skull restored, gate still lost every bin">
 <table>
 <tr><th>arm</th><th>JEPA</th><th>persist</th><th>transfer F1</th><th>surprise AUC</th></tr>
-<tr><td>derivatives</td><td>0.0290</td><td>0.0056</td><td>0.37</td><td>0.87</td></tr>
-<tr><td>reprocessed, skull-in</td><td>0.0245</td><td>0.0037</td><td>0.25</td><td>0.80</td></tr>
-<tr><td>reprocessed, skull-out</td><td>0.0339</td><td>0.0059</td><td><b>0.32</b></td><td><b>0.89</b></td></tr>
+<tr><td>derivatives</td><td>0.0294</td><td>0.0060</td><td>0.357</td><td>0.844</td></tr>
+<tr><td>reprocessed, skull-in</td><td>0.0244</td><td>0.0036</td><td>0.251</td><td>0.798</td></tr>
+<tr><td>reprocessed, skull-out</td><td>0.0335</td><td>0.0060</td><td><b>0.234</b></td><td><b>0.883</b></td></tr>
 </table>
-<p>Persistence wins every bin (~5–12×) with the champion flat as ever —
-<b>site, not skull</b>. Readouts recovered 0.25 → 0.32 with best-yet AUC:
-the residual is site physiology plus the still-unharmonized stages
-(denoise/PLHM/affine/uint8), and uint8 is separately exonerated (absent in
-this tree, failure identical — ruled out as necessary). Flagged anomaly:
-the SAILOR-fit ceiling (0.30) sits <i>below</i> transfer (0.32) — memorization
-failing smells like the fit path, not the features.</p>
+<p>Persistence wins every bin with the champion flat as ever —
+<b>site, not skull</b>. A23 (K3-1 content guard + cache rebuild) corrects
+A21: the earlier "readouts recovered 0.25 → 0.32" <i>was computed but is
+not reproducible</i> — rebuilding the betfix cache from the tree on disk
+gives a different result, and the old cache was overwritten and carried no
+provenance (K3-31). Rebuilt from the tree, skull-out transfer is 0.234,
+<i>below</i> the 0.479 majority and the weakest of the three arms, while the
+flagged ceiling&lt;transfer anomaly resolves (ceiling 0.77 now above
+transfer): the fit path was never broken, the cache was. So skull
+restoration did not recover the readouts; it only restored derivatives-like
+features (four clouds) while the gate stays lost.</p>
 <img src="plots/four_clouds.png" alt="Skull-out rejoins derivatives; LUMIERE stays distant">
 <p>Four clouds, one glance: skull-out rejoins the derivatives neighborhood
 without approaching LUMIERE — stripping restored derivatives-like features
@@ -272,22 +304,31 @@ LUMIERE's own noise floor.</p>
 calibration.</b> Nothing in the failure motivates unfreezing the encoder —
 every encoder change tried (task fine-tune, horizon leg) left honest metrics
 flat while costing dynamics. The three independent exonerations (on-site
-refit wins, statistics-matching recovers two-thirds, damping measured
+refit wins, statistics-matching recovers ~three-fifths, damping measured
 pre-encoder) converge: fix the frame and the stride, not the features.</div>
-<div class="warn">Numbers to quote <span class="id">A8 corr · A9 · D24 · A10 · A13 · A11 · A12 · A15 · A18 · A21</span>: dynamics test wins (0.0070/0.0088 pooled,
-0.0074/0.0160 uniform; overall 0.0081/0.0086 — thin); RANO CV 0.33
+<div class="warn">Numbers to quote <span class="id">A8 corr · A9 · D24 · A10 · A13 · A11 · A12 · A15 · A18 · A21 · A22 · A23</span>: dynamics gate (A24/K3-11): paired patient bootstrap — train pooled +0.0017
+[0.0005,0.0031] = significantly WORSE than copying; test pooled −0.0017
+[−0.0072,0.0012] not significant; only test patient-uniform −0.0086
+[−0.0182,−0.0009] wins, on the selected aggregation, inflated by few-pair
+patients; wins 41/91 (45%) — so "beats persistence" is not established;
+RANO CV 0.33
 (SOTA 0.50 = price of task-blindness); surprise = change-detection, no lead;
 volume R² 0.15, forecast loses; cross-site readouts transfer, dynamics need
-the site; pipeline damps ~3.9×; skull-out decider: F1 0.32, AUC 0.89, gate still lost.
+the site; pipeline damps ~3.9×; skull-out decider: gate still lost and (A23
+rebuild) readouts did NOT recover — transfer F1 0.234, below majority; A21's
+0.32 is not reproducible from the tree (cache provenance gap, K3-31).
+Gauntlet: predicted latents classify ≥ actual (LUM CV 0.30 vs 0.25; SAI CV
+0.39 vs 0.33); error ratio and signal dissociate both ways.
 Only cross-validated numbers are headlines — every single-split
 number in this program was the lucky tail.</div>
 
 <h2>7. What's next</h2>
 <ol>
-<li><b>Reprocess done — closed (A19/A21).</b> Skull-restored tree keeps the
-gate lost and recovers readouts partway: residual is site + unharmonized
-stages. No further harmonization (wrong sign); open item is LUMIERE
-visit-consistent registration (in-domain noise floor only).</li>
+<li><b>Reprocess done — closed (A19/A21/A23).</b> Skull-restored tree keeps
+the gate lost and, on a clean rebuild, does not recover readouts (A21's 0.32
+is not reproducible; its cache was inconsistent with the tree, K3-31). No further harmonization (wrong sign); open item
+is LUMIERE visit-consistent registration (in-domain noise floor only), plus
+cache provenance so a stale cache can never again masquerade as a result.</li>
 <li><b>Mask-guided pooling (R5)</b> — patch tokens inside auto-masks; biggest
 cheap shot at the volume half (global averaging likely dilutes focal
 change).</li>
@@ -301,9 +342,10 @@ persistence re-gate, monitors).</li>
 debates permanently.</li>
 </ol>
 <p><small>Rewritten 2026-09-08 from the full session record (IDs: decisions
-D0–D31, ablations A1–A18, directions R/G). Plots regenerate via
+D0–D31, ablations A1–A18, directions R/G); gauntlet section (A22) added
+2026-09-10. Plots regenerate via
 <code>python3 info/plots/make_plots.py</code> from
-<code>info/plots/metrics.json</code> (12 plots). Underlying evidence:
+<code>info/plots/metrics.json</code> (18 plots). Underlying evidence:
 <code>info/decisions.md</code>, <code>info/ablations.md</code>,
 <code>info/results.md</code>, <code>info/pilot.md</code>,
 <code>info/directions.md</code>, <code>info/preprocessing.md</code>.</small></p>

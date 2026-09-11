@@ -687,3 +687,222 @@ Logged inferences (evidence-backed; see A9/A10/A12 for numbers):
   transfer. Preprocessing preserved and aligned what was acquired; the
   residual (phase, scanner physics, sampling regime) is a calibration
   problem, and the field refit already priced that calibration as cheap.
+
+## A22 — Predicted-vs-actual latent probes across the dynamics gauntlet (2026-09-09/10, local CPU)
+
+- Setup: `scripts/pred_latent_probe.py`. `--refit` reruns the A15 5-fold
+  field protocol (hidden 256, 400 epochs, cond + uncond, same seeds) but
+  persists models + held-out 1-step prediction vectors
+  (`checkpoints/field_models.pt`, 37 MB — `train_field.py` saved scores
+  only, so predictions were unrecoverable without a refit). `--probe`
+  builds, per valid 1-step pair with clean RANO_{t+1} (393 LUMIERE / 240
+  SAILOR), the ACTUAL EMA latent plus the PREDICTED latent per method
+  (champion 1-step head; LUMIERE-trained gap head; SAILOR-fit field —
+  held-out fold models on SAILOR, 5-model uncond ensemble on LUMIERE, since
+  cond phase ids are SAILOR-treatment semantics). 4-class linear/MLP probes
+  (probe_rano protocol) with one deviation: train-stat standardization (see
+  debugging note). LUMIERE hero-split + 5-fold patient CV; SAILOR transfer
+  (train on LUMIERE-train rows) + SAILOR-fit ceiling + 5-fold subject CV.
+  Plot: `info/plots/gauntlet_probe.png` (via make_plots.py from
+  metrics.json `gauntlet_probe`).
+- Numbers (macro-F1, MLP; CV rows are the honest numbers):
+  error context, cosine err on the same labelled pairs — LUM: champ 0.0075
+  / gap 0.0039 / field 0.0177 / persist 0.0057; SAI: champ 0.0290 / gap
+  0.0236 / field 0.0035–0.0036 / persist 0.0040. (LUMIERE gap head beats
+  persistence pooled — never previously reported; SAILOR-fit field on
+  LUMIERE fails symmetrically to the champion on SAILOR.)
+  LUM CV: true 0.25±0.03 / champ 0.30±0.04 / gap 0.28±0.06 /
+  field 0.27±0.04. SAI transfer: true 0.12–0.14 / champ 0.18–0.20 /
+  gap 0.25–0.27 / field 0.19–0.20. SAI subject-CV: true 0.33±0.02 /
+  champ 0.39±0.08 / gap 0.35±0.05 / field 0.31–0.32±0.06. Ceiling
+  (train=test, linear): true 0.99 / champ 0.91 / field 0.92 / gap 0.72
+  (MLP all 1.00).
+  Debugging note: feature norms differ wildly (EMA ~28, champ ~33, gap
+  ~134 — cosine training is scale-blind), and the unstandardized
+  fixed-lr probe fit degenerates on large-norm spaces (gap ceiling F1
+  read 0.05 before standardizing, 0.72 after). Train-stat standardization
+  is mandatory for cross-space probe comparison; A9 is unaffected (it
+  compared similarly-scaled LayerNorm'd spaces).
+- Inference: (a) predicted ≥ actual everywhere — the predictor is a
+  history-conditioned denoiser, and dynamics ADD discriminative value on
+  top of the snapshot (history-enrichment, cf. Synthesis-1). (b) Cosine
+  error dissociates from signal in BOTH directions: the LUMIERE-applied
+  field has the worst error (0.0177, 3× persistence) yet gap-level signal
+  (0.27); the SAILOR field has the best error (0.0035) yet less signal
+  than the champion (0.32 vs 0.39 — it wins cosine by shrinking toward
+  persistence). JEPA error is not a representation-quality metric —
+  measured, not asserted. (c) Transfer lives in states, not snapshots:
+  snapshot-latent transfer is dead (0.12–0.16) against states at 0.37
+  (A12-b); gap-head predictions transfer best of the predicted latents
+  (0.27). (d) cond ≈ uncond on signal too (0.31 vs 0.32) — the phase
+  channel is invisible in error AND in preserved signal (the dead-channel
+  vs redundancy question stays open). (e) The refit replicates A15 to the
+  decimal (fold errors 0.0038/0.0039 … 0.0054/0.0054, tie intact) —
+  independent replication of the headline tie, now with saved models.
+  Caveats: CV spreads ±0.03–0.08; tentative SAILOR codebook; ~10% of
+  SAILOR pairs touch empty-T2/T1 inputs counted as present (unaudited —
+  content-check + cache rebuild still open). Rankings within noise should
+  not be over-read; the predicted≥actual pattern and the two
+  dissociations are the robust findings.
+
+## A23 — K3-1 phantom-modality guard + SAILOR cache rebuild (2026-09-10, local CPU)
+
+- Setup (K3-1 closed): `src/data/sailor.py::_central_nzfrac` scores the
+  central 42–58% box of each volume and a modality file counts as present
+  only if ≥5% of that box is FINITE nonzero (NaN counts as absent, so
+  NaN-background `-icor` files no longer pass). It reproduces the K3
+  probe's central-slab flags on the derivatives tree exactly (21/21, zero
+  mismatches). `_image_path` applies it to every candidate; results
+  persist in `<root>/_volume_content.json` (size+mtime+metric-version
+  keyed, so repeated loads are free and a metric bump invalidates).
+  `scripts/preprocess_qa.py --sailor-root <trees>` exposes the same check
+  as a gate (delegates to the new `scan_empty_modalities`). Rebuilt all
+  five SAILOR caches (`sailor_cache`, `sailor_z_cache`, `field_cache`,
+  `sailor_reprocessed_cache`, `sailor_betfix_cache`) and re-ran the three
+  arm tables (`sailor_interval_eval.py`, `sailor_eval.py --eval`,
+  `sailor_gap_probe.py`). Logs `logs_rebuild_*`.
+- Detection: derivatives = 21 present-but-empty modalities (19 T2 + 2 T1)
+  across sub-01/02/20/23/24/27 (K3-1 said 19 T2 + 2 T1); repro skull-in
+  and skull-out = only the known sub-07/ses-03 T1+FLAIR registration
+  casualties. 27/243 derivatives pairs touched a phantom visit (K3:
+  25/243), same 6 subjects. `-icor` audit: 3 empty-base T2s had `-icor`
+  variants, but all are ~90% NaN background and are correctly rejected
+  (K3-1's "NaN-filled or also empty" confirmed).
+- Numbers (same-space pooled from the per-bin EMA table in parentheses;
+  (a) mixed-space; transfer = LUMIERE→SAILOR states_forecast MLP):
+
+  | arm | JEPA/persist same-space (ratio) | (a) mixed | transfer F1 | ceiling F1 | surprise AUC |
+  |-----|--------------------------------|-----------|-------------|------------|--------------|
+  | derivatives | 0.0294/0.0041 (7.11×) | 0.0294/0.0060 | 0.357 | 0.843 | 0.844 |
+  | repro skull-in | 0.0244/0.0023 (10.5×) | 0.0244/0.0036 | 0.251 | 0.776 | 0.798 |
+  | repro skull-out | 0.0335/0.0037 (8.95×) | 0.0335/0.0060 | 0.234 | 0.767 | 0.883 |
+
+  derivatives per-bin JEPA/persist: 0.0283/0.0052, 0.0362/0.0027,
+  0.0290/0.0036, 0.0314/0.0047 (243 pairs, 88/20/129/6). Pre-rebuild
+  same-space ratio was 7.32×; (a) mixed ~5× before and after.
+- Guard impact: small and arm-specific. Derivatives (the only arm with
+  phantoms) moved 0.0290/0.0040→0.0294/0.0041, transfer F1 0.37→0.357,
+  surprise 0.87→0.844; both reprocessed arms are essentially unchanged
+  (only sub-07/ses-03's two modalities). The absolute magnitudes are far
+  inside the CV noise K3 flagged, so no arm verdict flips — the K3-1
+  artifact inflated persistence errors only slightly, and the "~5×" head-
+  line is a mixed-space number (K3-2) whether or not the guard is applied.
+- New finding — the pre-rebuild betfix cache is INCONSISTENT with the tree
+  (K3-31 made concrete). Rebuilding from `data/sailor_reprocessed_bet` gives
+  transfer 0.4417/0.3177 → 0.2917/0.2343 and ceiling 0.3042/0.3118 →
+  0.7875/0.7670: the A21 ceiling<transfer anomaly (K3-18) is RESOLVED, but
+  skull-out transfer falls BELOW the 0.479 majority, so A21's "readouts
+  recovered 0.25→0.32" does not survive a clean rebuild. The other two arms
+  reproduce their A19/A12 readouts to ~0.01 F1, so the code path, champion,
+  and LUMIERE probe net are all fine; only the skull-out cache disagrees.
+  Ruled out the K3-1 guard as cause: re-inserting sub-07's pre-guard states
+  changes nothing (0.2917/0.2343 either way).
+  Cause is UNDETERMINED: the old cache was overwritten mid-session and
+  carried no provenance (K3-31). Leading clue: `scripts/bet_repair.py` was
+  edited 2026-09-09 11:19, AFTER the cache (10:33), and A21 records several
+  toolchain fixes to that script (stride handling, absolute symlinks, EXDEV
+  move), so the cache may come from an earlier/intermediate betfix tree
+  whose replacement preserved `_reg` mtimes. Not proven.
+  **Correction (same day):** an earlier draft of this note called the cache
+  "stale" because it "predated the final tree (root mtime 15:05)". That is
+  withdrawn — the root mtime was 2026-09-08 15:05, i.e. BEFORE the cache,
+  so the mtime argument does not hold. The reproducible facts are only:
+  A21's skull-out readouts were produced by a real run (logged in
+  `betfix_decider`, committed 7a01e9e, not invented), and they are not
+  reproducible from the current tree. Treat the rebuilt numbers as
+  authoritative; do not cite A21's transfer/ceiling columns.
+  The dynamics verdict (JEPA ~9× persistence, same-space) is unchanged.
+  Recommendation: add `{root, champion, git sha, date}` provenance to the
+  SAILOR caches and assert on load (K3-31) before any further cross-site
+  readout is cited.
+- Not refreshed here (needs a refit, not just a re-encode): `train_field
+  --train` (field_scores.pt) and the A22 `pred_latent_probe --refit`
+  field models, both of which now have a rebuilt `field_cache.pt` input.
+  The A15/A22 field numbers are therefore pre-rebuild until that rerun.
+
+## A24 — K3-2 same-space arm rows + K3-11 in-domain gate with bootstrap CIs (2026-09-10, local CPU)
+
+- Setup. K3-2: `scripts/sailor_eval.py::_pairs_same_space` now scores the
+  (a) row with EMA-target latents on BOTH sides — JEPA = 1 − cos(predictor
+  (state_t), EMA_{t+1}), persistence = 1 − cos(EMA_t, EMA_{t+1}); the old
+  row paired the EMA JEPA error against `PersistenceBaseline(online
+  projector)` over `encode_visits` (mixed space, the original-A8 error).
+  New `--pairs` mode runs only that row. K3-11: `scripts/split_gate.py`
+  now reports pooled means, patient-uniform means, patient win counts, and
+  95% CIs from a 10k patient-level cluster bootstrap (`--boot`, seed 42);
+  no new measurement, the instrument K3-11 asked for. Logs
+  `logs_ss_pairs_*.log`; numbers → `metrics.json` (`sailor_transfer`,
+  `sailor_reprocessed`, new `split_gate`).
+
+- K3-2 numbers (same EMA space, 243 pairs each; mixed-space (a) in
+  parentheses):
+
+  | arm | JEPA | persist | ratio | old mixed ratio |
+  |-----|------|---------|-------|-----------------|
+  | derivatives | 0.0294 | 0.0041 | 7.11× | 4.90× (0.0294/0.0060) |
+  | repro skull-in | 0.0244 | 0.0023 | 10.5× | 6.78× (0.0244/0.0036) |
+  | repro skull-out | 0.0335 | 0.0037 | 8.95× | 5.58× (0.0335/0.0060) |
+
+  The published "~5×" was the mixed-space online-persistence denominator;
+  same-space the gap is 7–10.5×. Direction and verdict unchanged, but the
+  D28 rule the repo imposes on itself is now honored in the headline rows,
+  and the A16 EMA-persistence row (0.0039) is no longer silently a different
+  space from A12's online row.
+
+- K3-11 numbers (champion predictor over `horizon_cache.pt`, 547 pairs /
+  91 patients; 95% patient-cluster CIs):
+
+  | split | pooled JEPA | pooled persist | patient-u JEPA | patient-u persist | wins |
+  |-------|-------------|----------------|----------------|-------------------|------|
+  | train | 0.0082 [0.0069,0.0097] | 0.0065 [0.0057,0.0075] | 0.0083 [0.0071,0.0095] | 0.0071 [0.0059,0.0085] | 26/65 (40%) [28,52%] |
+  | val | 0.0078 [0.0064,0.0095] | 0.0075 [0.0052,0.0107] | 0.0081 [0.0066,0.0098] | 0.0083 [0.0059,0.0112] | 7/13 (54%) [23,77%] |
+  | test | 0.0070 [0.0059,0.0088] | 0.0088 [0.0056,0.0153] | 0.0074 [0.0050,0.0109] | 0.0160 [0.0075,0.0278] | 8/13 (62%) [38,85%] |
+  | overall | 0.0080 [0.0070,0.0091] | 0.0069 [0.0060,0.0080] | 0.0081 [0.0072,0.0091] | 0.0086 [0.0069,0.0107] | 41/91 (45%) [35,55%] |
+
+  Point estimates reproduce K3-11 to 4 decimals (train pooled 0.0082/0.0065,
+  test 0.0070/0.0088; overall 41/91). Marginal CIs overlap everywhere, but
+  the correct test is the PAIRED patient-resample difference (JEPA −
+  persist; negative = JEPA better):
+  - train pooled **+0.0017 [+0.0005,+0.0031] SIG** — JEPA is significantly
+    WORSE than copying on its own training pairs (the regression-to-mean
+    tax, cf. G7); train patient-u +0.0012 [−0.0000,+0.0023] n.s.
+  - val: +0.0003 [−0.0015,+0.0017] n.s.; patient-u −0.0002 n.s.
+  - test pooled −0.0017 [−0.0072,+0.0012] n.s. — the quoted "gate win" is
+    NOT significant on the natural pair-pooled mean; only test
+    patient-uniform is **−0.0086 [−0.0182,−0.0009] SIG**, and that is the
+    aggregation val selection optimizes (G7), inflated by few-pair dynamic
+    patients (persist 0.0160 [0.0075,0.0278]).
+  - overall: pooled +0.0010 [−0.0000,+0.0022] n.s.; patient-u −0.0004
+    [−0.0023,+0.0011] n.s.; wins 41/91 (45%) [35,55%].
+- Inference: the in-domain gate is NOT a general win. The only significant
+  cells are train-pooled (where the model is significantly WORSE than
+  persistence) and test-patient-uniform (where it wins on the metric it was
+  selected on, with a fragile margin). The pair-pooled test mean — the
+  natural deployment average — does not separate. So "JEPA beats
+  persistence" is unsupported as a general claim: it is a mean estimate on
+  one aggregation, not a result, and the "82/91 wins" originally advertised
+  is 41/91 (45%). Every gate ratio cited must carry its aggregation and a
+  paired CI. Taken with K3-2, the honest program-level statement is: cross-
+  site the learned dynamics are 7–10.5× WORSE than copying (same-space,
+  unambiguous); in-domain they are indistinguishable from copying pooled
+  and only win under the selected patient-uniform test metric.
+- Caveat: `horizon_cache.pt` is LUMIERE and was not part of the A23 rebuild;
+  these gate numbers are independent of the K3-1 guard.
+
+### A23 addendum (2026-09-10) — downstream metric refresh from the rebuilt caches
+
+- Refreshed the metrics that read the rebuilt SAILOR artifacts, so
+  `metrics.json` no longer mixes pre/post-rebuild numbers.
+  - CORAL (`freeze_battery.py --coral`, rebuilt `field_cache`): head
+    unaligned 0.0294 → aligned 0.0140 vs persist 0.0041/0.0040; transductive
+    0.0081. Recovery (0.0294−0.0140)/(0.0294−0.0041) ≈ 61% of the gap, down
+    from ~59% at the old 0.0119/0.0039 — the "covariance explains ~2/3"
+    reading (K3-4) survives but is now "~three-fifths".
+  - PCA clouds recomputed from rebuilt caches (same SVD protocol):
+    `site_shift` explained [33.7, 22.0] (was [34.2, 21.4]),
+    `site_shift_aligned` [32.9, 24.5] (unchanged — exact replication),
+    `three_way_shift` [39.3, 20.4] (was [39.8, 19.8]), `fourth_cloud`
+    [40.5, 20.9] (was [40.1, 19.8]). Qualitative separation unchanged.
+  - Still pre-rebuild (need a refit, not a re-encode): `gauntlet_probe`
+    (A22 field_models) and `sailor_gap_bins.field_cond/field_uncond`
+    (A15 field_scores) — flagged in `metrics.json._revision`.

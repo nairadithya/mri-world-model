@@ -7,7 +7,7 @@ frozen champion states (sailor_cache) + SAILOR gap days (dataset) +
 LUMIERE-fitted gap normalizer (probe weights file); targets are cached
 target-space z (sailor_z_cache). Reports probe vs persistence per gap bin on
 identical pairs, plus the champion 1-step reference means from the interval
-eval (0.0284 / 0.0360 / 0.0283 / 0.0292).
+eval (0.0283 / 0.0362 / 0.0290 / 0.0314).
 
 Usage:
     python scripts/horizon_probe.py --train --epochs 300 --save checkpoints/probe_head.pt
@@ -76,7 +76,7 @@ def main():
                 by[b][1].append(pe)
     print(f"{'gap':>8} {'pairs':>7} {'gap-head':>8} {'persist':>8} "
           f"{'champ1step':>10}")
-    champ = [0.0284, 0.0360, 0.0283, 0.0292]  # interval-eval reference means
+    champ = [0.0283, 0.0362, 0.0290, 0.0314]  # interval-eval reference means
     for b in sorted(by):
         je, pe = by[b]
         j, p = statistics.mean(je), statistics.mean(pe)
