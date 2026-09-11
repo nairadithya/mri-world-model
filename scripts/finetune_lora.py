@@ -95,7 +95,10 @@ def configure_trainable(model, train_fusion=True, train_head=True):
     frozen = [p for p in model.parameters() if not p.requires_grad]
     print(f"trainable {sum(p.numel() for p in trainable)/1e6:.3f}M "
           f"(LoRA {n_lora/1e6:.3f}M) / frozen {sum(p.numel() for p in frozen)/1e6:.1f}M")
-    return trainable
+    head_ids = {id(p) for p in model.rano_heads.flat.parameters()}
+    rep = [p for p in trainable if id(p) not in head_ids]
+    head = [p for p in trainable if id(p) in head_ids]
+    return rep, head
 
 
 def forward_states(model, batch):
@@ -156,7 +159,10 @@ def main():
     ap.add_argument("--protocol", default="info/eval_folds.json")
     ap.add_argument("--checkpoint-dir", default="checkpoints/lora")
     ap.add_argument("--epochs", type=int, default=20)
-    ap.add_argument("--lr", type=float, default=2e-5)
+    ap.add_argument("--lr", type=float, default=2e-4,
+                    help="representation LR (LoRA + projector + fusion)")
+    ap.add_argument("--head-lr", type=float, default=1e-2,
+                    help="RANO head LR (random init; needs the fit_linear rate)")
     ap.add_argument("--wd", type=float, default=0.01)
     ap.add_argument("--warmup-epochs", type=int, default=2)
     ap.add_argument("--accum-steps", type=int, default=8)
@@ -164,7 +170,9 @@ def main():
                     help="weight of the JEPA distillation regularizer (0 = pure CE)")
     ap.add_argument("--augment", action="store_true",
                     help="training-only flips/intensity/noise augmentation")
-    ap.add_argument("--patience", type=int, default=5)
+    ap.add_argument("--patience", type=int, default=10)
+    ap.add_argument("--min-epochs", type=int, default=3,
+                    help="never early-stop before this many epochs")
     ap.add_argument("--max-patients", type=int, default=0, help="smoke subset (train+dev)")
     ap.add_argument("--random-init", action="store_true", help="skip champion (structural smoke)")
     ap.add_argument("--eval-final", action="store_true",
@@ -203,7 +211,8 @@ def main():
         ckpt = torch.load(args.champion, map_location="cpu", weights_only=False)
         model.load_state_dict(ckpt["model"], strict=False)
         print(f"champion {args.champion} (epoch {ckpt.get('epoch')}, val {ckpt.get('val_loss')})")
-    params = configure_trainable(model)
+    rep_params, head_params = configure_trainable(model)
+    all_params = rep_params + head_params
 
     # class weights from the train label distribution (forecast framing)
     counts = torch.zeros(4)
@@ -218,7 +227,10 @@ def main():
     print(f"train class counts {counts.tolist()} weights {[round(x,2) for x in cw.tolist()]}")
 
     model.to(device)
-    opt = torch.optim.AdamW(params, lr=args.lr, weight_decay=args.wd)
+    opt = torch.optim.AdamW([
+        {"params": rep_params, "base_lr": args.lr},
+        {"params": head_params, "base_lr": args.head_lr},
+    ], lr=args.lr, weight_decay=args.wd)
     use_amp = device.type == "cuda"
     scaler = torch.amp.GradScaler("cuda", enabled=use_amp)
     steps_per_epoch = max(1, (len(train_loader) + args.accum_steps - 1) // args.accum_steps)
@@ -255,13 +267,15 @@ def main():
             run_loss += float(loss.detach())
             run_ce += float(ce.detach()) if ce is not None else 0.0
             if pending >= args.accum_steps:
-                lr = args.lr * (gstep + 1) / max(warmup, 1) if gstep < warmup else \
-                    args.lr * 0.5 * (1 + math.cos(math.pi * min(
+                if gstep < warmup:
+                    factor = (gstep + 1) / max(warmup, 1)
+                else:
+                    factor = 0.5 * (1 + math.cos(math.pi * min(
                         (gstep - warmup) / max(total_steps - warmup, 1), 1.0)))
                 for pg in opt.param_groups:
-                    pg["lr"] = lr
+                    pg["lr"] = pg["base_lr"] * factor
                 scaler.unscale_(opt)
-                torch.nn.utils.clip_grad_norm_(params, 1.0)
+                torch.nn.utils.clip_grad_norm_(all_params, 1.0)
                 scaler.step(opt)
                 scaler.update()
                 opt.zero_grad(set_to_none=True)
@@ -282,7 +296,7 @@ def main():
                        os.path.join(args.checkpoint_dir, "best.pt"))
         else:
             bad += 1
-            if bad >= args.patience:
+            if bad >= args.patience and ep >= args.min_epochs:
                 print(f"early stop at epoch {ep} (no dev gain in {args.patience})")
                 break
 
