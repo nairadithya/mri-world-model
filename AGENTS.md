@@ -28,9 +28,10 @@ and `info/` for why things are the way they are.
 - `kaggle/` — hero-run notebook. `hero_run.py` is the source of truth;
   never edit the `.ipynb` directly (JSON churn breaks diffs). Regenerate
   with `jupytext --to ipynb kaggle/hero_run.py` after editing.
-  `kernel-horizon/` is the pushable-run variant (own `.py` source +
+  `kaggle/kernel-*/` are pushable-run variants (own `.py` source +
   `kernel-metadata.json`; shell commands LIVE — push executes the notebook
-  as-is, so never `py_compile` it, only `jupytext --to ipynb`).
+  as-is, so never `py_compile` them, only `jupytext --to ipynb`).
+  `kernel-lora/` is the supervised vision-finetune leg (`finetune_lora.py`).
 - `info/` — decision log (`decisions.md`, IDs D0–), ablations (`ablations.md`,
   IDs A–/I–), pilot notes (`pilot.md`). Append-only; reference IDs.
   Plot numbers live in `info/plots/metrics.json` (single source of truth);
