@@ -55,7 +55,7 @@ assert transformers.__version__.startswith('4'), 'need transformers<5 for peft'
 # augmentation collate. RECORD the printed hash with the results.
 !rm -rf world-model && git clone https://github.com/nairadithya/mri-world-model.git world-model
 %cd world-model
-!git checkout e4a1b5d
+!git checkout efe2ebb
 !git rev-parse --short HEAD
 
 # %%
@@ -95,10 +95,12 @@ yaml.safe_dump(cfg, open('kaggle.yaml', 'w'))
 print('wrote kaggle.yaml')
 
 # %%
-# LORA leg. 20 epochs, LR 2e-5, accumulation 8 (batch-1 memory), augmentation,
-# JEPA distillation lambda 0.1 to keep dynamics from collapsing. Early stop on
-# dev macro-F1; final is touched only by the locked eval below.
-!python -u scripts/finetune_lora.py --config kaggle.yaml --champion /kaggle/working/checkpoints/best.pt --epochs 20 --lr 0.00002 --accum-steps 8 --jepa-lambda 0.1 --augment --patience 5 --checkpoint-dir /kaggle/working/lora 2>&1 | tee /kaggle/working/train_lora.log
+# LORA leg. Two LRs: the random RANO head needs the fit_linear rate (~1e-2);
+# the representation (LoRA + projector + fusion) adapts at 2e-4. 15 epochs,
+# accumulation 8 (batch-1 memory), augmentation, JEPA distillation lambda 0.1
+# to keep dynamics from collapsing. Early stop on dev macro-F1 (min 3 epochs);
+# final is touched only by the locked eval below.
+!python -u scripts/finetune_lora.py --config kaggle.yaml --champion /kaggle/working/checkpoints/best.pt --epochs 15 --lr 0.0002 --head-lr 0.01 --accum-steps 8 --jepa-lambda 0.1 --augment --patience 10 --min-epochs 3 --checkpoint-dir /kaggle/working/lora 2>&1 | tee /kaggle/working/train_lora.log
 
 # %%
 # Locked-protocol eval. Encode the finetuned champion's states into a fresh
@@ -121,7 +123,7 @@ best = re.findall(r'^best dev macro-F1 ([0-9.]+) @ epoch (\d+)', txt, re.M)
 unseen = open('/kaggle/working/eval_lora_unseen.log').read().strip().splitlines()
 final = open('/kaggle/working/eval_lora_final.log').read().strip().splitlines()
 L = [f'# LoRA-leg notes — {datetime.datetime.now(datetime.timezone.utc):%Y-%m-%d %H:%M UTC}',
-     f'- commit: `{commit}` | finetune_lora.py --epochs 20 --lr 2e-5 --accum-steps 8 --jepa-lambda 0.1 --augment',
+     f'- commit: `{commit}` | finetune_lora.py --epochs 15 --lr 2e-4 --head-lr 1e-2 --accum-steps 8 --jepa-lambda 0.1 --augment',
      f'- best dev macro-F1: {best[-1] if best else "n/a"}']
 L += [f'- epoch {e}: loss={l} ce={c} jepa={j} dev_f1={f}' for e, l, c, j, f in eps]
 L += ['\n## Locked eval (within-unseen CV, 26)', '```'] + unseen + ['```']
