@@ -990,3 +990,45 @@ Logged inferences (evidence-backed; see A9/A10/A12 for numbers):
   not "proven none"; the fixed 500-step MLP readout may underfit the 3072-d
   concat features; `states_roi` zero-fills the 17 visits without a mask; a
   ROI+global concat and precise mask registration remain untested refinements.
+
+## A27 — Supervised task-training of the temporal stack fails; the frozen-readout headline is seed-sensitive (2026-09-11, local CPU)
+
+- Step 3 of the SOTA plan. `scripts/task_train.py` trains on the cached fused
+  tokens (no image forwards): vision backbone frozen, only the temporal
+  transformer + a 4-class RANO head, class-weighted CE, on the 65 encoder-train
+  patients, early stopping on the 13 `dev`, report-only on the 13 `final`.
+  `--mode head` is the frozen-state reference under the same harness.
+- Numbers (macro-F1):
+
+  | config | dev 13 | final 13 |
+  |---|---|---|
+  | frozen-state head (frozen temporal) | 0.354 | 0.343 |
+  | temporal + head task-trained | 0.345 | 0.311 |
+
+  Task-training's best dev was epoch 1 (0.3647) then it degraded — immediate
+  overfit, the D22/Run-6 signature again. The train loss fell ~3.5 → 0.8 while
+  final dropped below the frozen head: a **fourth** instance of "gradient on
+  the representation tilts it; the frozen readout wins" (Run 6, horizon leg,
+  A22, now this).
+- Readout-sensitivity audit (`probe_rano --readout-seed`, `--hidden`, final
+  13): the same frozen `states_forecast`, same train pool, same features:
+
+  | readout | final-13 macro-F1 |
+  |---|---|
+  | seed 0 / 1 / 7 / 42 / 123 (hidden 256) | 0.392 / 0.435 / 0.402 / **0.448** / 0.382 |
+  | hidden 0 / 64 / 512 (seed 42) | 0.378 / 0.335 / 0.386 |
+
+  A 0.11 range from readout optimizer noise alone — **the A25/A26 headline
+  final 0.448 (and 0.408 transfer) is the lucky top of that range.** The honest
+  frozen-representation final is ≈0.38–0.40; the readout seed and width must be
+  pre-registered or ensembled (K3-14's winner's-curse, now measured).
+- Inference: (a) supervised task-training of the temporal does not beat the
+  frozen readout. (b) The frozen representation is ≈0.40 final, not ≈0.45, so
+  the SOTA gap (0.50) is wider than the 0.448 point estimate implied. (c) The
+  remaining levers are a genuinely better representation — vision-encoder
+  task training (all three prior attempts damaged it) or external longitudinal
+  data — not head/temporal tuning. Recommend pre-registering an ensembled
+  readout in the protocol before any further claim.
+- Caveats: one split, 10–12 patients/side, single seed set; "no improvement"
+  means not detectable, and the task-train harness uses a weaker optimizer than
+  `fit_linear`, so the temporal comparison is within-harness, not absolute.

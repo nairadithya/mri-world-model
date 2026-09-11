@@ -230,7 +230,7 @@ def macro_f1(pred, y, n_cls=4):
     return sum(f1s) / n_cls
 
 
-def _train_readout(patients, pids, feat, hidden):
+def _train_readout(patients, pids, feat, hidden, seed=42):
     xs, ys = [], []
     for pid in pids:
         r = patient_rows(patients, pid, feat)
@@ -239,7 +239,7 @@ def _train_readout(patients, pids, feat, hidden):
             ys.append(r[1])
     if not xs:
         return None
-    return fit_linear(torch.cat(xs), torch.cat(ys), hidden=hidden)
+    return fit_linear(torch.cat(xs), torch.cat(ys), hidden=hidden, seed=seed)
 
 
 def _predict(net, patients, pids, feat):
@@ -286,13 +286,16 @@ def _bootstrap(oof_a, oof_b=None, boot=10000, seed=42):
 
 
 def run_locked(cache_path, protocol_path, feat="states_forecast", hidden=256,
-               compare=None, train_pool="unseen", boot=10000, seed=42):
+               compare=None, train_pool="unseen", boot=10000, seed=42,
+               cohort="unseen", readout_seed=42):
     """Locked-protocol evaluation over the encoder-unseen cohort (Step 1).
 
     ``train_pool='unseen'``: 5-fold patient-wise CV within the 26 (readout
     trained only on encoder-unseen patients). ``'train'``: readout trained on
     the 65 encoder-train patients and scored on the unseen cohort (transfer).
-    ``compare`` runs a second feature config with a paired bootstrap.
+    ``cohort`` restricts the scored patients to ``unseen`` (all 26), ``dev``
+    (13 val) or ``final`` (13 test). ``compare`` runs a second feature config
+    with a paired bootstrap.
     """
     from src.data.eval_protocol import assert_disjoint, fold_patients, load_protocol
 
@@ -302,9 +305,19 @@ def run_locked(cache_path, protocol_path, feat="states_forecast", hidden=256,
     assert_disjoint(proto)
     unseen = sorted(proto["folds"])
     k = proto["k"]
-    n_lab = sum(int((patients[p]["labels"] >= 0).sum()) for p in unseen)
-    print(f"locked protocol v{proto['version']} ({protocol_path}): "
-          f"{len(unseen)} unseen patients, {n_lab} labelled visits; "
+    if cohort != "unseen":
+        eval_pool = sorted(proto[cohort])
+    else:
+        eval_pool = unseen
+    n_lab = sum(int((patients[p]["labels"] >= 0).sum()) for p in eval_pool)
+    prov = cache.get("provenance")
+    if prov:
+        print(f"cache provenance: champion={os.path.basename(prov['champion'])} "
+              f"git={str(prov.get('git_sha'))[:10]} date={prov.get('date')}")
+    else:
+        print("WARNING: cache has no provenance block (pre-2026-09-10 legacy)")
+    print(f"locked protocol v{proto['version']} ({protocol_path}): cohort={cohort} "
+          f"{len(eval_pool)} patients, {n_lab} labelled visits; "
           f"train_pool={train_pool}, feat={feat}-{'mlp' if hidden else 'linear'}")
 
     def oof_for(cfg_feat):
@@ -313,12 +326,12 @@ def run_locked(cache_path, protocol_path, feat="states_forecast", hidden=256,
             for i in range(k):
                 te = fold_patients(proto, i)
                 tr = [p for p in unseen if p not in set(te)]
-                net = _train_readout(patients, tr, cfg_feat, hidden)
+                net = _train_readout(patients, tr, cfg_feat, hidden, seed=readout_seed)
                 oof.update(_predict(net, patients, te, cfg_feat))
         else:
-            net = _train_readout(patients, proto["encoder_train"], cfg_feat, hidden)
+            net = _train_readout(patients, proto["encoder_train"], cfg_feat, hidden, seed=readout_seed)
             oof = _predict(net, patients, unseen, cfg_feat)
-        return oof
+        return {p: v for p, v in oof.items() if p in set(eval_pool)}
 
     oof_a = oof_for(feat)
     f1_a, pred_a, y_a = _pooled(oof_a, sorted(oof_a))
@@ -409,7 +422,9 @@ def main():
     ap.add_argument("--compare", default=None,
                     help="second feature config for a paired bootstrap")
     ap.add_argument("--train-pool", choices=["unseen", "train"], default="unseen")
+    ap.add_argument("--cohort", choices=["unseen", "dev", "final"], default="unseen")
     ap.add_argument("--boot", type=int, default=10000)
+    ap.add_argument("--readout-seed", type=int, default=42)
     args = ap.parse_args()
     with open(args.config) as f:
         cfg = yaml.safe_load(f)
@@ -418,7 +433,7 @@ def main():
     if args.cv_unseen:
         run_locked(args.cache, args.protocol, feat=args.feat, hidden=args.hidden,
                    compare=args.compare, train_pool=args.train_pool,
-                   boot=args.boot)
+                   boot=args.boot, cohort=args.cohort, readout_seed=args.readout_seed)
         return
     if args.probe or (not args.encode and not args.cv):
         run_probe(args.cache)

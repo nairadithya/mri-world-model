@@ -84,3 +84,8 @@ numbers Step 2 (ROI/mask pooling) must move.
   forecast state; the other 4 have no clean label at a forecastable step.
 - Frozen-encoder bootstrap CIs reflect patient sampling, not training-seed
   variance of the readout.
+- **Readout seed/width is not yet pre-registered and it matters** (A27):
+  final-13 macro-F1 swings 0.34–0.45 across readout seeds/widths on identical
+  features. Until v2 fixes a seed or an ensemble, no single frozen-readout
+  final number (including 0.448) is citable as a headline. The within-unseen
+  CV over 26 is the more stable instrument.
