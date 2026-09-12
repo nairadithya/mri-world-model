@@ -11,7 +11,9 @@ and `info/` for why things are the way they are.
   fusion, temporal transformer, predictor, gap-conditioned horizon head,
   velocity-field dynamics `dynamics_field.py`, EMA target, JEPA loss, RANO aux
   `heads.py`), `train/` (trainer, baselines), `preprocessing/` (BRAINIAC
-  contract pipeline).
+  contract pipeline), `harness/` (modular train/eval harness: registries for
+  metrics/tasks/protocols/methods/views, `ReadoutEvaluator`, frozen `paths`,
+  provenance, unified `cli`).
 - `scripts/` — runnable entry points. `run_train.py` (+`--aux-lambda`,
   `--resume-from`, `--horizon`, `--dynamics`), `preprocess.py`, `probe_rano.py`
   (frozen RANO probes; `--cv-unseen` locked protocol + `--cohort`/`--readout-seed`;
@@ -74,6 +76,16 @@ python scripts/run_train.py --config config/pilot.yaml \
   --patients Patient-067 Patient-031 Patient-073 Patient-078 Patient-029 --no-wandb
 # Smoke test (no weights needed)
 python scripts/run_train.py --epochs 1 --batch-size 1 --no-wandb --random-init
+# Modular harness (D33): list registries; encode/eval with pluggable metrics.
+python scripts/harness.py list
+python scripts/harness.py eval --cache checkpoints/probe_cache.pt \
+  --task rano4_forecast --view states_forecast --metrics macro_f1,accuracy \
+  --compare fused --out results/eval.json
+# Representation error (per-horizon, vs persistence): champ 1-step + gap head
+python scripts/harness.py eval --task latent_horizon \
+  --cache checkpoints/horizon_cache.pt --protocol hero_split --cohort unseen \
+  --prediction persistence champ gap_head --boot 1000
+python scripts/harness.py train jepa --config config/pilot.yaml --epochs 1  # native
 # Local scan explorer (client-side NiiVue; binds 127.0.0.1 only)
 python scripts/view_scans.py                                   # SAILOR derivatives
 python scripts/view_scans.py --root data/lumiere_preprocessed  # LUMIERE 96³

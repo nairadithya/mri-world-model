@@ -389,3 +389,58 @@ referenced, not repeated — only session decisions are recorded here in full.
   with/without the additive path, confirm `C_i` isn't near-constant
   (clinical-only baseline must stay weak). Status: parked until leg 2
   lands — no architecture churn mid-hero-run.
+
+- **D33 — Modular train/eval harness, Phases 1–2 (2026-09-13).** `scripts/`
+  had grown 32 files with 5 copies of `macro_f1`, 3 CIs, 3 bootstraps, 6+
+  encode loops, 6+ probe variants, and script-to-script imports. New
+  `src/harness/` library + `scripts/harness.py` CLI make evaluation as
+  pluggable as training: registries for **metrics** (macro_f1, accuracy,
+  per-class recall, AUC, cosine/persistence error, R²/MAE), **tasks**
+  (RANO4 current/forecast, PD/response binary, latent horizon), **protocols**
+  (locked unseen, hero split), **methods** and **views**; a `ReadoutEvaluator`
+  composes task × protocol × readout × metrics × aggregator with shared
+  patient-cluster bootstrap/paired diff. `paths.py` freezes every artifact
+  path and `provenance.py` centralizes {champion, config sha1, git, date}.
+  Phase 1 rewired `probe_rano.py` (the import hub) and the supervised
+  scripts onto the shared libs; outputs verified **byte-identical** for
+  `probe_rano --probe/--cv`, `volume_probe`, `radiomics_probe`, and the
+  Importer set (radiomics/concept/sailor/surprise/leadtime/horizon).
+  Phase 2 adds the CLI (`list|encode|eval|train`) with optional `--out`
+  JSON run records; legacy training scripts are still dispatched
+  pass-through (migration is Phase 3+). `tests/test_harness.py` (9 checks)
+  passes. Nothing renamed or deleted yet; all Kaggle/hero call sites and
+  log-regex contracts untouched.
+
+- **D34 — Harness Phases 3–4: native JEPA training + latent representation
+  error (2026-09-13).** (a) `scripts/run_train.py` is now a shim over
+  `src.harness.train.jepa` (registered `jepa` method, CLI-native); CPU smoke
+  (`--random-init`, 1 patient) ran end-to-end and emitted the contract lines
+  `val epoch 1: loss=0.6198 std=0.0911 rank=3.5` / `done. best val loss`.
+  (b) New `eval/latent.py` + `train/latent.py`: `LatentPairEvaluator` scores
+  prediction methods (`persistence`, `champ` 1-step MLP, `gap_head` from
+  `probe_head.pt`) on all cached `(t, t+n)` pairs with pluggable metrics and a
+  patient-cluster paired bootstrap; overall + per-horizon tables. CLI:
+  `harness.py eval --task latent_horizon --cache … --prediction …`.
+  On `horizon_cache.pt` (unseen, 589 pairs) it reproduces the known gate:
+  persistence 0.0111, champ 0.0075, gap_head 0.0067, both SIG vs persistence;
+  n=1 persistence 0.0082 matches the A8/split_gate reference. (c) Rewired
+  probes onto shared libs (`split_gate` predictor+CI, `horizon_probe` gap-head
+  class, `volume_probe` ridge, `radiomics_probe` bootstrap); outputs verified
+  **byte-identical** (probe/cv/volume/radiomics) and split_gate reproduces the
+  A8 addendum exactly (test pooled 0.0070/0.0088, overall win 41/91).
+  `tests/test_harness.py` now 11 checks. Still no renames/deletions or Kaggle
+  edits (cutover is Phase 5).
+
+- **D35 — Kaggle call sites moved to the harness CLI (2026-09-13).** All
+  pushable kernels now invoke `scripts/harness.py` (`train jepa`, `train
+  lora|cnn3d|cnn2d` for the not-yet-native methods, `encode`, `eval`) instead
+  of the legacy entry points; retired scripts are kept in place per request.
+  Log-regex contracts are unaffected (eval logs are captured as raw lines;
+  `train <legacy>` prepends one informational delegation line but the
+  `^epoch`/`^val epoch` regexes use `re.M`). Because every kernel pinned a
+  pre-harness SHA, the checkout pins are set to the loud placeholder
+  `HARNESS_COMMIT` (`# TODO(harness): pin the commit containing
+  scripts/harness.py`) — they must be replaced with the harness commit before
+  push, or the clone will not contain `scripts/harness.py`. Notebooks were
+  regenerated from the `.py` sources with jupytext, but only the `.py` call
+  sites are committed for now; regenerate the `.ipynb` before pushing.
