@@ -41,7 +41,7 @@ assert transformers.__version__.startswith('4')
 # %%
 !rm -rf world-model && git clone https://github.com/nairadithya/mri-world-model.git world-model
 %cd world-model
-!git checkout 7320184
+!git checkout HARNESS_COMMIT  # TODO(harness): pin the commit containing scripts/harness.py (was 7320184)
 !git rev-parse --short HEAD
 
 # %%
@@ -79,15 +79,16 @@ print('wrote kaggle.yaml (augment + surgery_window + transition_weighting)')
 # %%
 # Short accum-8 leg from the champion. Val prints the JEPA loss; the gate is
 # the separate eval cells below.
-!python -u scripts/run_train.py --config kaggle.yaml --epochs 6 --batch-size 1 --accum-steps 8 --lr 0.00002 --augment --surgery-window --transition-weighting --no-wandb --resume-from /kaggle/working/checkpoints/best.pt --checkpoint-dir /kaggle/working/a32 2>&1 | tee /kaggle/working/train_a32.log
+!python -u scripts/harness.py train jepa --config kaggle.yaml --epochs 6 --batch-size 1 --accum-steps 8 --lr 0.00002 --augment --surgery-window --transition-weighting --no-wandb --resume-from /kaggle/working/checkpoints/best.pt --checkpoint-dir /kaggle/working/a32 2>&1 | tee /kaggle/working/train_a32.log
 
 # %%
 # Locked-protocol RANO probe on the new representation (within-unseen CV).
-!python -u scripts/probe_rano.py --config kaggle.yaml --champion /kaggle/working/a32/best.pt --cache /kaggle/working/a32_cache.pt --encode --cv-unseen --feat states_forecast --hidden 256 --train-pool unseen --cohort unseen --boot 10000 2>&1 | tee /kaggle/working/eval_a32_unseen.log
+!python -u scripts/harness.py encode --config kaggle.yaml --champion /kaggle/working/a32/best.pt --cache /kaggle/working/a32_cache.pt --views vision fused states clinical 2>&1 | tee /kaggle/working/encode_a32.log
+!python -u scripts/harness.py eval --cache /kaggle/working/a32_cache.pt --task rano4_forecast --view states_forecast --readout mlp --hidden 256 --train-pool unseen --cohort unseen --boot 10000 2>&1 | tee /kaggle/working/eval_a32_unseen.log
 
 # %%
 # Reserved final 13 (transfer framing), reusing the cache above.
-!python -u scripts/probe_rano.py --cache /kaggle/working/a32_cache.pt --cv-unseen --feat states_forecast --hidden 256 --train-pool train --cohort final --boot 10000 2>&1 | tee /kaggle/working/eval_a32_final.log
+!python -u scripts/harness.py eval --cache /kaggle/working/a32_cache.pt --task rano4_forecast --view states_forecast --readout mlp --hidden 256 --train-pool train --cohort final --boot 10000 2>&1 | tee /kaggle/working/eval_a32_final.log
 
 # %%
 import datetime, re, subprocess

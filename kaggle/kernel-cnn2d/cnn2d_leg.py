@@ -39,7 +39,7 @@ assert transformers.__version__.startswith('4')
 # %%
 !rm -rf world-model && git clone https://github.com/nairadithya/mri-world-model.git world-model
 %cd world-model
-!git checkout f403516
+!git checkout HARNESS_COMMIT  # TODO(harness): pin the commit containing scripts/harness.py (was f403516)
 !git rev-parse --short HEAD
 
 # %%
@@ -83,7 +83,7 @@ print('wrote kaggle.yaml')
 # 2D ROI-crop training (tumor-centred 64^3 crops, tumor-bearing slices),
 # reserved-final eval, LUMIERE
 # feature encode (SAILOR not mounted).
-!python -u scripts/train_supervised_cnn2d.py --config kaggle.yaml --train --eval-final --encode --encode-scope lum --augment --roi --crop 64 --epochs 30 --lr 0.0003 --slice-batch 32 --patience 8 --min-epochs 5 --checkpoint-dir /kaggle/working/cnn2d --ckpt /kaggle/working/cnn2d/best.pt --feature-cache /kaggle/working/cnn2d_features.pt 2>&1 | tee /kaggle/working/train_cnn2d.log
+!python -u scripts/harness.py train cnn2d --config kaggle.yaml --train --eval-final --encode --encode-scope lum --augment --roi --crop 64 --epochs 30 --lr 0.0003 --slice-batch 32 --patience 8 --min-epochs 5 --checkpoint-dir /kaggle/working/cnn2d --ckpt /kaggle/working/cnn2d/best.pt --feature-cache /kaggle/working/cnn2d_features.pt 2>&1 | tee /kaggle/working/train_cnn2d.log
 
 # %%
 import datetime, re, subprocess

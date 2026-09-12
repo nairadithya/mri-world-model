@@ -57,7 +57,7 @@ assert transformers.__version__.startswith('4'), 'need transformers<5 for peft'
 # this tree; repair changes notebook only).
 !rm -rf world-model && git clone https://github.com/nairadithya/mri-world-model.git world-model
 %cd world-model
-!git checkout acf7503
+!git checkout HARNESS_COMMIT  # TODO(harness): pin the commit containing scripts/harness.py (was acf7503)
 !git rev-parse --short HEAD  # RECORD this hash with your results
 
 # %%
@@ -109,11 +109,11 @@ print('wrote kaggle.yaml (plain 1-step JEPA; per-leg flags live in the train cel
 # %%
 # Leg C2: accum-8 fresh, 20 epochs from champion (durability).
 # -u: unbuffered stdout so the tee'd log is complete by construction.
-!python -u scripts/run_train.py --config kaggle.yaml --epochs 20 --batch-size 1 --lr 0.00002 --warmup-epochs 1 --no-wandb --accum-steps 8 --resume-from $(cat /kaggle/working/CHAMPION) --checkpoint-dir /kaggle/working/checkpoints/legC2 2>&1 | tee /kaggle/working/train_C2.log
+!python -u scripts/harness.py train jepa --config kaggle.yaml --epochs 20 --batch-size 1 --lr 0.00002 --warmup-epochs 1 --no-wandb --accum-steps 8 --resume-from $(cat /kaggle/working/CHAMPION) --checkpoint-dir /kaggle/working/checkpoints/legC2 2>&1 | tee /kaggle/working/train_C2.log
 
 # %%
 # Leg E: accum-4 fresh, 10 epochs from champion (dose-response midpoint).
-!python -u scripts/run_train.py --config kaggle.yaml --epochs 10 --batch-size 1 --lr 0.00002 --warmup-epochs 1 --no-wandb --accum-steps 4 --resume-from $(cat /kaggle/working/CHAMPION) --checkpoint-dir /kaggle/working/checkpoints/legE 2>&1 | tee /kaggle/working/train_E.log
+!python -u scripts/harness.py train jepa --config kaggle.yaml --epochs 10 --batch-size 1 --lr 0.00002 --warmup-epochs 1 --no-wandb --accum-steps 4 --resume-from $(cat /kaggle/working/CHAMPION) --checkpoint-dir /kaggle/working/checkpoints/legE 2>&1 | tee /kaggle/working/train_E.log
 
 # %%
 # Verdict table. NEVER assert-fails the session: every leg reports a status

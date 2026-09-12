@@ -48,7 +48,7 @@ assert transformers.__version__.startswith('4'), 'need transformers<5 for peft'
 # Pin the exact code the hero run was gated on.
 !rm -rf world-model && git clone https://github.com/nairadithya/mri-world-model.git world-model
 %cd world-model
-!git checkout e0bd393
+!git checkout HARNESS_COMMIT  # TODO(harness): pin the commit containing scripts/harness.py (was e0bd393)
 !git rev-parse --short HEAD  # RECORD this hash with your results
 
 # %%
@@ -88,7 +88,7 @@ print('wrote kaggle.yaml (horizon enabled)')
 # HORIZON leg. Resume line must list the 14 horizon_* keys as randomly
 # initialized (champion predates the head) — anything else missing means the
 # wrong checkpoint got staged. Checkpoint every epoch; ~9h session cap.
-!python scripts/run_train.py --config kaggle.yaml --epochs 30 --batch-size 1 --lr 0.00002 --horizon --no-wandb --resume-from /kaggle/working/checkpoints/best.pt 2>&1 | tee /kaggle/working/train_hz.log
+!python scripts/harness.py train jepa --config kaggle.yaml --epochs 30 --batch-size 1 --lr 0.00002 --horizon --no-wandb --resume-from /kaggle/working/checkpoints/best.pt 2>&1 | tee /kaggle/working/train_hz.log
 
 # %%
 # Per-horizon JEPA vs persistence on the new best.pt (same-pair comparison).

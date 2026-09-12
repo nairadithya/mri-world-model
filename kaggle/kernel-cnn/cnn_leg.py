@@ -41,7 +41,7 @@ assert transformers.__version__.startswith('4')
 # Pin the commit that contains the CNN comparator + adaptation harness.
 !rm -rf world-model && git clone https://github.com/nairadithya/mri-world-model.git world-model
 %cd world-model
-!git checkout bdd64c7
+!git checkout HARNESS_COMMIT  # TODO(harness): pin the commit containing scripts/harness.py (was bdd64c7)
 !git rev-parse --short HEAD
 
 # %%
@@ -67,7 +67,7 @@ print('wrote kaggle.yaml')
 # %%
 # Train the pure CNN (pair framing), report the reserved final, then encode
 # LUMIERE pair features (SAILOR is skipped — not mounted on Kaggle).
-!python -u scripts/train_supervised_cnn.py --config kaggle.yaml --train --eval-final --encode --encode-scope lum --augment --epochs 20 --lr 0.0001 --pair-batch 4 --patience 8 --min-epochs 5 --checkpoint-dir /kaggle/working/cnn --ckpt /kaggle/working/cnn/best.pt --feature-cache /kaggle/working/cnn_features.pt 2>&1 | tee /kaggle/working/train_cnn.log
+!python -u scripts/harness.py train cnn3d --config kaggle.yaml --train --eval-final --encode --encode-scope lum --augment --epochs 20 --lr 0.0001 --pair-batch 4 --patience 8 --min-epochs 5 --checkpoint-dir /kaggle/working/cnn --ckpt /kaggle/working/cnn/best.pt --feature-cache /kaggle/working/cnn_features.pt 2>&1 | tee /kaggle/working/train_cnn.log
 
 # %%
 import datetime, re, subprocess

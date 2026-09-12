@@ -22,7 +22,8 @@
 # comments) — `kaggle kernels push` executes the notebook as-is. Do not
 # py_compile this file; it is notebook source, not a script._
 #
-# Plan: `scripts/finetune_lora.py`, the one untried SOTA recipe — optimize the
+# Plan: `scripts/harness.py train lora` (legacy `scripts/finetune_lora.py`
+# kept as a shim), the one untried SOTA recipe — optimize the
 # image representation for RANO. Trainable = LoRA + projector + fusion + head,
 # temporal frozen; class-weighted CE on state_t -> RANO_{t+1}, JEPA
 # distillation regularizer, augmentation, early stop on the 13 `dev`.
@@ -51,11 +52,11 @@ print('transformers', transformers.__version__, '| peft', peft.__version__, '| m
 assert transformers.__version__.startswith('4'), 'need transformers<5 for peft'
 
 # %%
-# Pin the exact commit that contains scripts/finetune_lora.py + the
+# Pin the exact commit that contains scripts/harness.py + the
 # augmentation collate. RECORD the printed hash with the results.
 !rm -rf world-model && git clone https://github.com/nairadithya/mri-world-model.git world-model
 %cd world-model
-!git checkout efe2ebb
+!git checkout HARNESS_COMMIT  # TODO(harness): pin the commit containing scripts/harness.py (was efe2ebb)
 !git rev-parse --short HEAD
 
 # %%
@@ -100,16 +101,17 @@ print('wrote kaggle.yaml')
 # accumulation 8 (batch-1 memory), augmentation, JEPA distillation lambda 0.1
 # to keep dynamics from collapsing. Early stop on dev macro-F1 (min 3 epochs);
 # final is touched only by the locked eval below.
-!python -u scripts/finetune_lora.py --config kaggle.yaml --champion /kaggle/working/checkpoints/best.pt --epochs 15 --lr 0.0002 --head-lr 0.01 --accum-steps 8 --jepa-lambda 0.1 --augment --patience 10 --min-epochs 3 --checkpoint-dir /kaggle/working/lora 2>&1 | tee /kaggle/working/train_lora.log
+!python -u scripts/harness.py train lora --config kaggle.yaml --champion /kaggle/working/checkpoints/best.pt --epochs 15 --lr 0.0002 --head-lr 0.01 --accum-steps 8 --jepa-lambda 0.1 --augment --patience 10 --min-epochs 3 --checkpoint-dir /kaggle/working/lora 2>&1 | tee /kaggle/working/train_lora.log
 
 # %%
 # Locked-protocol eval. Encode the finetuned champion's states into a fresh
 # cache, then score with the frozen readout on the same folds as A25/A26.
-!python -u scripts/probe_rano.py --config kaggle.yaml --champion /kaggle/working/lora/best.pt --cache /kaggle/working/lora_cache.pt --encode --cv-unseen --feat states_forecast --hidden 256 --train-pool unseen --cohort unseen --boot 10000 2>&1 | tee /kaggle/working/eval_lora_unseen.log
+!python -u scripts/harness.py encode --config kaggle.yaml --champion /kaggle/working/lora/best.pt --cache /kaggle/working/lora_cache.pt --views vision fused states clinical 2>&1 | tee /kaggle/working/encode_lora.log
+!python -u scripts/harness.py eval --cache /kaggle/working/lora_cache.pt --task rano4_forecast --view states_forecast --readout mlp --hidden 256 --train-pool unseen --cohort unseen --boot 10000 2>&1 | tee /kaggle/working/eval_lora_unseen.log
 
 # %%
 # Reserved final 13 (transfer framing), reusing the cache from the cell above.
-!python -u scripts/probe_rano.py --cache /kaggle/working/lora_cache.pt --cv-unseen --feat states_forecast --hidden 256 --train-pool train --cohort final --boot 10000 2>&1 | tee /kaggle/working/eval_lora_final.log
+!python -u scripts/harness.py eval --cache /kaggle/working/lora_cache.pt --task rano4_forecast --view states_forecast --readout mlp --hidden 256 --train-pool train --cohort final --boot 10000 2>&1 | tee /kaggle/working/eval_lora_final.log
 
 # %%
 # Collect the notes file for the repo record.

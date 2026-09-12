@@ -109,11 +109,11 @@ print('wrote kaggle.yaml; checkpoint_dir -> /kaggle/working/checkpoints')
 # Batch 1 fits 16 GB (chunked encoding, repo D15); batch 2+ needs 24 GB VRAM.
 # %env EPOCHS=30
 # %env BATCH=1
-!(echo "CLI: --epochs $EPOCHS --batch-size $BATCH"; python scripts/run_train.py --config kaggle.yaml --epochs $EPOCHS --batch-size $BATCH --no-wandb) 2>&1 | tee /kaggle/working/train_ep$EPOCHS.log
+!(echo "CLI: --epochs $EPOCHS --batch-size $BATCH"; python scripts/harness.py train jepa --config kaggle.yaml --epochs $EPOCHS --batch-size $BATCH --no-wandb) 2>&1 | tee /kaggle/working/train_ep$EPOCHS.log
 
 # If $EPOCHS ever expands empty (argparse: 'expected one argument'),
 # the variable handoff broke. Fallback: hardcode the number, e.g.
-# # !python scripts/run_train.py --config kaggle.yaml --epochs 30 --batch-size 1 --no-wandb 2>&1 | tee /kaggle/working/train_ep30.log
+# # !python scripts/harness.py train jepa --config kaggle.yaml --epochs 30 --batch-size 1 --no-wandb 2>&1 | tee /kaggle/working/train_ep30.log
 
 # %%
 # FOLLOW-UP sessions: attach the previous session's output as input dataset
@@ -140,7 +140,7 @@ for p in prev:
 # %env LR=0.00002
 # (leg 2+: 5x below the 1e-4 that found the ep-8 optimum. Exploit with small
 # steps; omit --lr for config default.)
-!(echo "CLI: --epochs $EPOCHS --batch-size $BATCH --lr $LR --resume-from best.pt"; python scripts/run_train.py --config kaggle.yaml --epochs $EPOCHS --batch-size $BATCH --lr $LR --no-wandb --resume-from /kaggle/working/checkpoints/best.pt) 2>&1 | tee /kaggle/working/train_ep$EPOCHS.log
+!(echo "CLI: --epochs $EPOCHS --batch-size $BATCH --lr $LR --resume-from best.pt"; python scripts/harness.py train jepa --config kaggle.yaml --epochs $EPOCHS --batch-size $BATCH --lr $LR --no-wandb --resume-from /kaggle/working/checkpoints/best.pt) 2>&1 | tee /kaggle/working/train_ep$EPOCHS.log
 
 # %% [markdown]
 # ## AUX fine-tune (path B, D25) — 10 epochs, NOT 30
@@ -155,7 +155,7 @@ for p in prev:
 # %env AUXLR=0.000005
 # %env AUXLAM=1.0
 # %env AUXWARMUP=1
-# !(echo "CLI(aux): --epochs $AUXEPOCHS --batch-size $AUXBATCH --lr $AUXLR --aux-lambda $AUXLAM --warmup-epochs $AUXWARMUP --resume-from champion"; python scripts/run_train.py --config kaggle.yaml --epochs $AUXEPOCHS --batch-size $AUXBATCH --lr $AUXLR --aux-lambda $AUXLAM --warmup-epochs $AUXWARMUP --no-wandb --resume-from /kaggle/working/checkpoints/best.pt) 2>&1 | tee /kaggle/working/train_aux.log
+# !(echo "CLI(aux): --epochs $AUXEPOCHS --batch-size $AUXBATCH --lr $AUXLR --aux-lambda $AUXLAM --warmup-epochs $AUXWARMUP --resume-from champion"; python scripts/harness.py train jepa --config kaggle.yaml --epochs $AUXEPOCHS --batch-size $AUXBATCH --lr $AUXLR --aux-lambda $AUXLAM --warmup-epochs $AUXWARMUP --no-wandb --resume-from /kaggle/working/checkpoints/best.pt) 2>&1 | tee /kaggle/working/train_aux.log
 
 # %% [markdown]
 # ## HORIZON leg — multi-horizon JEPA (probe-gated, 30 epochs)
@@ -173,7 +173,7 @@ for p in prev:
 # %env HZEPOCHS=30
 # %env HZBATCH=1
 # %env HZLR=0.00002
-# !(echo "CLI(horizon): --epochs $HZEPOCHS --batch-size $HZBATCH --lr $HZLR --horizon --resume-from champion"; python scripts/run_train.py --config kaggle.yaml --epochs $HZEPOCHS --batch-size $HZBATCH --lr $HZLR --horizon --no-wandb --resume-from /kaggle/working/checkpoints/best.pt) 2>&1 | tee /kaggle/working/train_hz.log
+# !(echo "CLI(horizon): --epochs $HZEPOCHS --batch-size $HZBATCH --lr $HZLR --horizon --resume-from champion"; python scripts/harness.py train jepa --config kaggle.yaml --epochs $HZEPOCHS --batch-size $HZBATCH --lr $HZLR --horizon --no-wandb --resume-from /kaggle/working/checkpoints/best.pt) 2>&1 | tee /kaggle/working/train_hz.log
 
 # %% [markdown]
 # ## Per-horizon eval (JEPA vs persistence, same pairs)
