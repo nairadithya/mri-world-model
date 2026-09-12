@@ -1137,3 +1137,40 @@ Logged inferences (evidence-backed; see A9/A10/A12 for numbers):
   pretrained before any "SSL adapts better than supervised" claim is citable.
 - Harness (`cross_site_adapt.py`) and both CNN variants committed; Kaggle legs
   ~0.5 T4-h total.
+
+## A31 — ROI-cropped 2D CNN still collapses: from-scratch supervised is not viable on 91 patients (2026-09-12, Kaggle T4 + local CPU)
+
+- Third and most faithful supervised comparator: `train_supervised_cnn2d.py
+  --roi`, tumor-centred 64³ crops from the DeepBraTumIA-atlas masks (LUMIERE)
+  / `Segmentation-ONCO` (SAILOR), only tumor-bearing slices. Required a new
+  private Kaggle dataset (`nairadithya/lumiere-autoseg-masks`, 599 masks,
+  47 MB); the earlier ROI attempt had silently produced zero examples because
+  the masks were never mounted (and Kaggle gunzips `.nii.gz`→`.nii`).
+- In-domain: dev macro-F1 **pinned at 0.1790 for 13/14 epochs** (always-PD),
+  best dev 0.2139 @ ep6, reserved final **0.2221** — statistically the same as
+  the whole-brain 2D (0.182) and 3D pair (0.222) variants. ROI cropping did not
+  rescue learning.
+- Cross-site (SAILOR subject-wise):
+
+  | encoder | zero-shot | K=3 | K=5 | K=10 | K=15 | K=20 |
+  |---|---|---|---|---|---|---|
+  | JEPA | **0.355** | 0.269 | 0.283 | 0.326 | 0.333 | 0.313 |
+  | CNN-3D | 0.261 | 0.228 | 0.225 | 0.261 | 0.264 | 0.227 |
+  | CNN-2D (whole-brain) | 0.275 | 0.204 | 0.224 | 0.252 | 0.246 | 0.253 |
+  | CNN-2D (ROI) | 0.179 | 0.215 | 0.233 | 0.245 | 0.249 | 0.237 |
+
+- Definitive across three variants: a from-scratch supervised CNN on 91
+  patients collapses to the majority class regardless of 3D-pair / 2D-slice /
+  ROI-crop. The field's ResNet numbers are **pretrained** (torchvision is
+  banned by D16, MONAI ships no weights, so we cannot construct that comparator
+  in-repo), and the 0.50 SOTA is carried by >4,800 radiomic/growth features,
+  not the CNN (Tikhonov: ResNet-alone AUC 0.74, volumes-only F1 0.30, hybrid
+  0.50).
+- **What is established and citable:** on this cohort the frozen
+  BRAINIAC-JEPA trajectory representation beats every from-scratch supervised
+  CNN (3D and 2D, whole-brain and ROI) both in-domain and cross-site. That is
+  the representation-transfer result, and it is the same conclusion A26–A30
+  kept reaching: the value is in the pretrained representation, not in training.
+- Recommendation: stop the supervised-CNN chase. A faithful SOTA-family
+  comparator would need hand-engineered radiomics/growth features (the hybrid's
+  actual edge) or pretrained 2D weights (dependency-blocked).

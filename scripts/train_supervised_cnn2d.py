@@ -278,7 +278,8 @@ def encode_features(args, cfg, device, chunk=64):
             mask_fn = lum_mask if key == "lum" else sailor_mask
         for batch in DataLoader(ds, batch_size=1, collate_fn=collate):
             pid = batch["patient_id"][0]
-            ex = patient_examples(batch, mask_fn, ds.visits[pid], args.crop)
+            visits = ds.visits[pid] if hasattr(ds, "visits") else ds.sessions[pid]
+            ex = patient_examples(batch, mask_fn, visits, args.crop)
             if not ex:
                 continue
             feats, labs = [], []
