@@ -39,20 +39,24 @@ assert transformers.__version__.startswith('4')
 # %%
 !rm -rf world-model && git clone https://github.com/nairadithya/mri-world-model.git world-model
 %cd world-model
-!git checkout a61538a
+!git checkout f403516
 !git rev-parse --short HEAD
 
 # %%
 # Stage the DeepBraTumIA atlas seg masks (ROI cropping) from the private
-# lumiere-autoseg-masks dataset; the zip holds an Imaging/ tree.
-import glob, os, subprocess
-zips = glob.glob('/kaggle/input/**/lumiere_autoseg_masks.zip', recursive=True)
-assert zips, 'lumiere-autoseg-masks dataset not mounted'
+# lumiere-autoseg-masks dataset. Kaggle auto-extracts the upload and gunzips
+# .nii.gz -> .nii in place, so we link the Imaging tree (absolute links only).
+import glob, os
+imgs = [p for p in glob.glob('/kaggle/input/**/Imaging', recursive=True)
+        if os.path.isdir(p) and glob.glob(os.path.join(p, 'Patient-*'))]
+assert imgs, 'lumiere-autoseg-masks dataset not mounted'
 os.makedirs('data/autoseg/extracted', exist_ok=True)
-subprocess.run(['unzip', '-oq', zips[0], '-d', 'data/autoseg/extracted'], check=True)
+link = os.path.abspath('data/autoseg/extracted/Imaging')
+if not os.path.exists(link):
+    os.symlink(imgs[0], link)
 n = len(glob.glob('data/autoseg/extracted/Imaging/*/week-*/DeepBraTumIA-segmentation/'
-                  'atlas/segmentation/seg_mask.nii.gz'))
-print('staged seg masks:', n)
+                  'atlas/segmentation/seg_mask.nii*'))
+print('staged seg masks:', n, 'from', imgs[0])
 assert n > 500, 'too few seg masks staged'
 
 # %%
