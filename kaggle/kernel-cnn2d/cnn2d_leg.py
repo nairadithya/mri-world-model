@@ -43,6 +43,19 @@ assert transformers.__version__.startswith('4')
 !git rev-parse --short HEAD
 
 # %%
+# Stage the DeepBraTumIA atlas seg masks (ROI cropping) from the private
+# lumiere-autoseg-masks dataset; the zip holds an Imaging/ tree.
+import glob, os, subprocess
+zips = glob.glob('/kaggle/input/**/lumiere_autoseg_masks.zip', recursive=True)
+assert zips, 'lumiere-autoseg-masks dataset not mounted'
+os.makedirs('data/autoseg/extracted', exist_ok=True)
+subprocess.run(['unzip', '-oq', zips[0], '-d', 'data/autoseg/extracted'], check=True)
+n = len(glob.glob('data/autoseg/extracted/Imaging/*/week-*/DeepBraTumIA-segmentation/'
+                  'atlas/segmentation/seg_mask.nii.gz'))
+print('staged seg masks:', n)
+assert n > 500, 'too few seg masks staged'
+
+# %%
 import glob, os, yaml
 
 found = [d for d in glob.glob('/kaggle/input/**/lumiere_preprocessed', recursive=True)

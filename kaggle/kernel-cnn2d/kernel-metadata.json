@@ -1,1 +1,18 @@
-{"code_file": "cnn2d_leg.ipynb", "competition_sources": [], "dataset_sources": ["nairadithya/preprocessed-mri-data"], "enable_gpu": true, "enable_internet": true, "id": "nairadithya/cnn2d-leg", "is_private": true, "kernel_sources": [], "kernel_type": "notebook", "language": "python", "machine_shape": "NvidiaTeslaT4", "model_sources": [], "title": "cnn2d-leg"}
+{
+  "code_file": "cnn2d_leg.ipynb",
+  "competition_sources": [],
+  "dataset_sources": [
+    "nairadithya/preprocessed-mri-data",
+    "nairadithya/lumiere-autoseg-masks"
+  ],
+  "enable_gpu": true,
+  "enable_internet": true,
+  "id": "nairadithya/cnn2d-leg",
+  "is_private": true,
+  "kernel_sources": [],
+  "kernel_type": "notebook",
+  "language": "python",
+  "machine_shape": "NvidiaTeslaT4",
+  "model_sources": [],
+  "title": "cnn2d-leg"
+}
