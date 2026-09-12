@@ -78,16 +78,9 @@ def sailor_mask(pid: str, visit: str):
     return _MASK_CACHE[key]
 
 
-def macro_f1(pred, y, n_cls=4):
-    f1s = []
-    for k in range(n_cls):
-        tp = int(((pred == k) & (y == k)).sum())
-        fp = int(((pred == k) & (y != k)).sum())
-        fn = int(((pred != k) & (y == k)).sum())
-        p = tp / max(1, tp + fp)
-        r = tp / max(1, tp + fn)
-        f1s.append(2 * p * r / max(1e-9, p + r))
-    return sum(f1s) / n_cls
+def macro_f1(pred, y, n_cls=4):  # re-exported shared metric
+    from src.harness.eval.metrics import macro_f1 as _macro_f1
+    return _macro_f1(pred, y, n_cls)
 
 
 def _build(cfg, patients):

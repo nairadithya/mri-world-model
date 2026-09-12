@@ -43,34 +43,13 @@ from src.data.eval_protocol import load_protocol
 from src.model.heads import ACTION_TO_FLAT, CLEAN_ACTIONS
 from src.model.jepa import jepa_loss
 from src.model.jepa_model import JEPAWorldModel
-
-
-def macro_f1(pred, y, n_cls=4):
-    f1s = []
-    for k in range(n_cls):
-        tp = int(((pred == k) & (y == k)).sum())
-        fp = int(((pred == k) & (y != k)).sum())
-        fn = int(((pred != k) & (y == k)).sum())
-        p = tp / max(1, tp + fp)
-        r = tp / max(1, tp + fn)
-        f1s.append(2 * p * r / max(1e-9, p + r))
-    return sum(f1s) / n_cls
-
-
-def _ci(samples, lo=2.5, hi=97.5):
-    s = sorted(samples)
-    n = len(s)
-    return s[int(lo / 100 * n)], s[min(n - 1, int(hi / 100 * n))]
+from src.harness.eval.aggregate import percentile_ci as _ci
+from src.harness.eval.aggregate import patient_bootstrap
+from src.harness.eval.metrics import macro_f1  # noqa: F401
 
 
 def bootstrap(per, boot=10000, seed=42):
-    pids = sorted(per)
-    rng = random.Random(seed)
-    vals = []
-    for _ in range(boot):
-        samp = [rng.choice(pids) for _ in pids]
-        vals.append(macro_f1(torch.cat([per[p][0] for p in samp]),
-                             torch.cat([per[p][1] for p in samp])))
+    vals, _ = patient_bootstrap(per, None, boot=boot, seed=seed)
     return _ci(vals)
 
 

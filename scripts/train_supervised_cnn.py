@@ -31,23 +31,12 @@ from src.data.collate import make_collate
 from src.data.dataset import LUMIEREDataset
 from src.data.eval_protocol import load_protocol
 from src.model.cnn import SupervisedCNN, pair_channels, pair_present
+from src.harness.eval.metrics import macro_f1  # noqa: F401
 
 RANO_ACTION_TO_FLAT = {3: 0, 2: 1, 5: 2, 4: 3}
 CLEAN_ACTIONS = (2, 3, 4, 5)
 SAILOR_ROOT = "data/sailor/sailor_ebrains_pseud/derivatives/mni2009c-n-s"
 SAILOR_PROBE_MAP = {1: 0, 2: 1, 3: 2, 5: 3}
-
-
-def macro_f1(pred, y, n_cls=4):
-    f1s = []
-    for k in range(n_cls):
-        tp = int(((pred == k) & (y == k)).sum())
-        fp = int(((pred == k) & (y != k)).sum())
-        fn = int(((pred != k) & (y == k)).sum())
-        p = tp / max(1, tp + fp)
-        r = tp / max(1, tp + fn)
-        f1s.append(2 * p * r / max(1e-9, p + r))
-    return sum(f1s) / n_cls
 
 
 def flat_label(action: int):

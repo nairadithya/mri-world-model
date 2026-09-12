@@ -29,31 +29,8 @@ import torch.nn.functional as F
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.data.eval_protocol import load_protocol
-
-
-def macro_f1(pred, y, n_cls=4):
-    f1s = []
-    for k in range(n_cls):
-        tp = int(((pred == k) & (y == k)).sum())
-        fp = int(((pred == k) & (y != k)).sum())
-        fn = int(((pred != k) & (y == k)).sum())
-        p = tp / max(1, tp + fp)
-        r = tp / max(1, tp + fn)
-        f1s.append(2 * p * r / max(1e-9, p + r))
-    return sum(f1s) / n_cls
-
-
-def fit_clf(X, y, seed=0, steps=400, lr=1e-2):
-    torch.manual_seed(seed)
-    net = nn.Linear(X.shape[1], 4)
-    counts = torch.bincount(y, minlength=4).float().clamp_min(1)
-    w = counts.sum() / (4 * counts)
-    opt = torch.optim.Adam(net.parameters(), lr=lr)
-    for _ in range(steps):
-        opt.zero_grad()
-        F.cross_entropy(net(X), y, weight=w).backward()
-        opt.step()
-    return net
+from src.harness.eval.metrics import macro_f1  # noqa: F401
+from src.harness.train.readout import fit_clf  # noqa: F401
 
 
 def standardize(Xtr, Xte):

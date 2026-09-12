@@ -29,24 +29,8 @@ import torch.nn.functional as F
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from src.model.jepa import Predictor
-
-
-def load_predictor(champion_path):
-    """The champion's own 1-step Predictor MLP."""
-    ckpt = torch.load(champion_path, map_location="cpu", weights_only=False)
-    sd = ckpt["model"]
-    net = Predictor()
-    net.load_state_dict({k.replace("predictor.", ""): v for k, v in sd.items()
-                         if k.startswith("predictor.")})
-    net.eval()
-    return net
-
-
-def _ci(samples, lo=2.5, hi=97.5):
-    s = sorted(samples)
-    n = len(s)
-    return s[int(lo / 100 * n)], s[min(n - 1, int(hi / 100 * n))]
+from src.harness.eval.aggregate import percentile_ci as _ci  # noqa: E402
+from src.harness.train.latent import load_1step_predictor as load_predictor  # noqa: E402,F401
 
 
 def main():

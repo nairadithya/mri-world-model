@@ -6,6 +6,10 @@ Phase 2 --probe: train linear/MLP probes on train-split patients, score
 macro-F1/accuracy/confusion on test-split patients, with majority and
 clinical-only baselines.
 
+Shared eval primitives now live in ``src.harness`` and are re-exported here so
+the existing importers (radiomics_probe, concept_probe, sailor_eval,
+surprise_signal, leadtime, horizon_probe) keep working unchanged.
+
 Usage:
     python scripts/probe_rano.py --champion <best.pt> --cache probe_cache.pt --encode
     python scripts/probe_rano.py --cache probe_cache.pt --probe
@@ -18,38 +22,28 @@ import sys
 import time
 
 import torch
-import torch.nn as nn
 import yaml
 from torch.utils.data import DataLoader
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.data.collate import make_collate
-from src.data.dataset import LUMIEREDataset
-from src.data.splits import patient_splits
 from src.model.jepa_model import JEPAWorldModel
 
-# Clean RANO response classes only (operative states + missing excluded).
-RANO_PROBE_MAP = {"PD": 0, "SD": 1, "PR": 2, "CR": 3}
-RANO_PROBE_NAMES = ["PD", "SD", "PR", "CR"]
-
-
-def build_datasets(cfg):
-    meta_dir = cfg["data"]["meta_dir"]
-    demo_csv = next(os.path.join(meta_dir, f) for f in os.listdir(meta_dir)
-                    if f.startswith("demographics"))
-    splits = patient_splits(demo_csv,
-                            train_frac=cfg["data"].get("train_split", 0.7),
-                            val_frac=cfg["data"].get("val_split", 0.15),
-                            seed=cfg["data"].get("seed", 42))
-    common = dict(
-        meta_dir=meta_dir,
-        processed_root=cfg["data"]["root"],
-        raw_root=cfg["data"].get("raw_root"),
-        modalities=tuple(cfg["data"].get("modalities", ["CT1", "T1", "T2", "FLAIR"])),
-        min_visits=cfg["data"].get("min_visits", 2),
-    )
-    datasets = {k: LUMIEREDataset(patients=v, **common) for k, v in splits.items()}
-    return datasets, splits
+# --- shared harness primitives (single source of truth) -------------------
+from src.harness.data.builder import build_datasets  # noqa: E402,F401
+from src.harness.data.tasks import (  # noqa: E402,F401
+    RANO_PROBE_MAP,
+    RANO_PROBE_NAMES,
+    patient_rows,
+    rows_for,
+)
+from src.harness.eval.aggregate import (  # noqa: E402
+    patient_bootstrap as _bootstrap,
+    percentile_ci as _ci,
+    pooled as _pooled,
+)
+from src.harness.eval.metrics import macro_f1  # noqa: E402,F401
+from src.harness.train.readout import fit_linear, scores  # noqa: E402,F401
 
 
 def encode_all(cfg, champion_path, cache_path):
@@ -111,125 +105,6 @@ def encode_all(cfg, champion_path, cache_path):
     torch.save(cache, cache_path)
 
 
-def rows_for(patients, splits, split_names, feat):
-    """Feature rows + clean RANO labels for a probe config.
-
-    Snapshot feats (fused/vision/clinical): one row per labelled visit.
-    states_current: row s_t (history<=t) with label RANO_t.
-    states_forecast: row s_t with label RANO_{t+1} (future status).
-    """
-    xs, ys = [], []
-    wanted = [split_names] if isinstance(split_names, str) else split_names
-    for pid in [p for s in wanted for p in splits[s]]:
-        p = patients[pid]
-        if feat in ("states_current", "states_forecast"):
-            off = 0 if feat == "states_current" else 1
-            idx = [t for t in range(len(p["states"])) if p["labels"][t + off] >= 0]
-            if not idx:
-                continue
-            xs.append(p["states"][idx])
-            ys.append(p["labels"][[t + off for t in idx]])
-        else:
-            keep = p["labels"] >= 0
-            if feat == "fused":
-                xs.append(p["fused"][keep])
-            elif feat == "vision":
-                xs.append(p["vision"][keep])
-            else:  # clinical: broadcast static vector per labelled visit
-                xs.append(p["clinical"].unsqueeze(0).expand(int(keep.sum()), -1))
-            ys.append(p["labels"][keep])
-    return torch.cat(xs), torch.cat(ys)
-
-
-def fit_linear(x_tr, y_tr, n_cls=4, hidden=0, steps=500, lr=1e-2, seed=42):
-    torch.manual_seed(seed)
-    g = torch.Generator().manual_seed(seed)
-    if hidden:
-        net = nn.Sequential(nn.Linear(x_tr.shape[1], hidden), nn.GELU(),
-                            nn.Linear(hidden, n_cls))
-    else:
-        net = nn.Linear(x_tr.shape[1], n_cls)
-    counts = torch.bincount(y_tr, minlength=n_cls).float().clamp_min(1)
-    weight = counts.sum() / (n_cls * counts)
-    opt = torch.optim.Adam(net.parameters(), lr=lr)
-    for _ in range(steps):
-        idx = torch.randperm(len(x_tr), generator=g)
-        opt.zero_grad()
-        loss = nn.functional.cross_entropy(net(x_tr[idx]), y_tr[idx], weight=weight)
-        loss.backward()
-        opt.step()
-    return net
-
-
-def scores(net, x, y):
-    with torch.no_grad():
-        pred = net(x).argmax(1)
-    acc = (pred == y).float().mean().item()
-    f1s, recs, cm = [], [], torch.zeros(4, 4, dtype=torch.long)
-    for k in range(4):
-        tp = int(((pred == k) & (y == k)).sum())
-        fp = int(((pred == k) & (y != k)).sum())
-        fn = int(((pred != k) & (y == k)).sum())
-        prec = tp / max(1, tp + fp)
-        rec = tp / max(1, tp + fn)
-        f1s.append(2 * prec * rec / max(1e-9, prec + rec))
-        recs.append(rec)
-        for j in range(4):
-            cm[k, j] = int(((y == k) & (pred == j)).sum())
-    return acc, sum(f1s) / 4, dict(zip(RANO_PROBE_NAMES, recs)), cm
-
-
-def patient_rows(patients, pid, feat):
-    """Feature rows + clean RANO labels for one patient (None if no rows)."""
-    p = patients[pid]
-    if feat in ("states_current", "states_forecast", "states_roi"):
-        src = "states" if feat != "states_roi" else "states_roi"
-        if src not in p:
-            return None
-        off = 0 if feat == "states_current" else 1
-        idx = [t for t in range(len(p[src])) if p["labels"][t + off] >= 0]
-        if not idx:
-            return None
-        return p[src][idx], p["labels"][[t + off for t in idx]]
-    keep = p["labels"] >= 0
-    if int(keep.sum()) == 0:
-        return None
-    if feat == "fused":
-        x = p["fused"][keep]
-    elif feat == "vision":
-        x = p["vision"][keep]
-    elif feat == "clinical":
-        x = p["clinical"].unsqueeze(0).expand(int(keep.sum()), -1)
-    elif feat == "roi":
-        x = p["vision_roi"][keep]
-    elif feat == "roi_concat":
-        x = p["vision_roi_mod"][keep].reshape(int(keep.sum()), -1)
-    elif feat == "mod_concat":
-        x = p["vision_mod"][keep].reshape(int(keep.sum()), -1)
-    elif feat == "volumes":
-        x = p["volumes"][keep]
-    elif feat == "volumes_roi":
-        x = torch.cat([p["vision_roi"][keep], p["volumes"][keep]], dim=-1)
-    elif feat == "volumes_clinical":
-        x = torch.cat([p["volumes"][keep],
-                       p["clinical"].unsqueeze(0).expand(int(keep.sum()), -1)], dim=-1)
-    else:
-        raise ValueError(f"unknown feat {feat}")
-    return x, p["labels"][keep]
-
-
-def macro_f1(pred, y, n_cls=4):
-    f1s = []
-    for k in range(n_cls):
-        tp = int(((pred == k) & (y == k)).sum())
-        fp = int(((pred == k) & (y != k)).sum())
-        fn = int(((pred != k) & (y == k)).sum())
-        prec = tp / max(1, tp + fp)
-        rec = tp / max(1, tp + fn)
-        f1s.append(2 * prec * rec / max(1e-9, prec + rec))
-    return sum(f1s) / n_cls
-
-
 def _train_readout(patients, pids, feat, hidden, seed=42):
     xs, ys = [], []
     for pid in pids:
@@ -251,38 +126,6 @@ def _predict(net, patients, pids, feat):
         with torch.no_grad():
             out[pid] = (net(r[0]).argmax(1), r[1])
     return out
-
-
-def _pooled(oof, pids):
-    pred = torch.cat([oof[p][0] for p in pids])
-    y = torch.cat([oof[p][1] for p in pids])
-    return macro_f1(pred, y), pred, y
-
-
-def _ci(samples, lo=2.5, hi=97.5):
-    s = sorted(samples)
-    n = len(s)
-    return s[int(lo / 100 * n)], s[min(n - 1, int(hi / 100 * n))]
-
-
-def _bootstrap(oof_a, oof_b=None, boot=10000, seed=42):
-    """Patient-cluster bootstrap of macro-F1 (and the paired difference).
-
-    Returns (a_vals, diff_vals) where diff = a - b on the same resampled
-    patients (None if oof_b is None).
-    """
-    import random
-    pids = sorted(set(oof_a) & (set(oof_b) if oof_b else set(oof_a)))
-    rng = random.Random(seed)
-    a_vals, d_vals = [], []
-    for _ in range(boot):
-        samp = [rng.choice(pids) for _ in pids]
-        fa, _, _ = _pooled(oof_a, samp)
-        a_vals.append(fa)
-        if oof_b is not None:
-            fb, _, _ = _pooled(oof_b, samp)
-            d_vals.append(fa - fb)
-    return a_vals, (d_vals if oof_b is not None else None)
 
 
 def run_locked(cache_path, protocol_path, feat="states_forecast", hidden=256,

@@ -24,17 +24,7 @@ from src.data.dataset import LUMIEREDataset
 from src.model.jepa_model import JEPAWorldModel
 
 from probe_rano import RANO_PROBE_MAP  # noqa: E402  (scripts/ on path via cwd)
-
-
-def auc_mann_whitney(scores: torch.Tensor, labels: torch.Tensor) -> float:
-    """P(score_pos > score_neg) via rank sum. labels binary {0,1}."""
-    pos = scores[labels == 1].sort().values
-    neg = scores[labels == 0].sort().values
-    # rank all, sum ranks of positives (average ties)
-    order = torch.argsort(torch.cat([neg, pos]), stable=True).float() + 1
-    n0, n1 = len(neg), len(pos)
-    r1 = order[n0:].sum().item()
-    return (r1 - n1 * (n1 + 1) / 2) / (n0 * n1)
+from src.harness.eval.metrics import auc_mann_whitney  # noqa: E402,F401
 
 
 def main():

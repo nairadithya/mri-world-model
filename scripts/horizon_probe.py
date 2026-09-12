@@ -39,6 +39,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from scripts.probe_rano import build_datasets
 from src.data.collate import make_collate
 from src.model.jepa_model import JEPAWorldModel
+from src.harness.train.latent import GapHeadPredictor as HorizonPredictor  # noqa: E402,F401
 
 
 def encode_all(cfg, champion_path, cache_path):
@@ -141,24 +142,6 @@ def persistence_curve(patients):
         e = torch.tensor(cos_err(a, b))
         sd = e.std().item() if len(e) > 1 else 0.0
         print(f"{n:>4} {s:>6} {len(e):>7} {e.mean():>11.4f} (+/-{sd:.4f})")
-
-
-class HorizonPredictor(nn.Module):
-    """[state_t (1152), standardized log-gap (1)] -> z_{t+n} (768)."""
-
-    def __init__(self, hidden=1024, layers=2, dropout=0.1):
-        super().__init__()
-        blocks = []
-        in_dim = 1152 + 1
-        for _ in range(layers):
-            blocks += [nn.Linear(in_dim, hidden), nn.LayerNorm(hidden),
-                       nn.GELU(), nn.Dropout(dropout)]
-            in_dim = hidden
-        blocks.append(nn.Linear(hidden, 768))
-        self.net = nn.Sequential(*blocks)
-
-    def forward(self, s, g):
-        return self.net(torch.cat([s, g.unsqueeze(-1)], dim=-1))
 
 
 def train_predictor(patients, epochs=300, lr=1e-3, seed=42, weight="inv_n",

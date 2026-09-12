@@ -23,6 +23,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from probe_rano import _ci, fit_linear, macro_f1  # noqa: E402
 from src.data.eval_protocol import fold_patients, load_protocol  # noqa: E402
+from src.harness.eval.aggregate import patient_bootstrap  # noqa: E402
 
 
 def _rows(cache, pids):
@@ -58,13 +59,7 @@ def _eval(net, mu, sd, cache, pids):
 
 
 def _bootstrap(per, boot=10000, seed=42):
-    pids = sorted(per)
-    rng = random.Random(seed)
-    vals = []
-    for _ in range(boot):
-        samp = [rng.choice(pids) for _ in pids]
-        vals.append(macro_f1(torch.cat([per[p][0] for p in samp]),
-                             torch.cat([per[p][1] for p in samp])))
+    vals, _ = patient_bootstrap(per, None, boot=boot, seed=seed)
     return _ci(vals)
 
 

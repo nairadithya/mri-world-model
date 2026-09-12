@@ -20,6 +20,7 @@ import yaml
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.data.dataset import LUMIEREDataset
+from src.harness.train.readout import fit_ridge_cv  # noqa: E402,F401
 
 
 def load_volumes(root="data/autoseg/vols/Imaging"):
@@ -36,31 +37,6 @@ def load_volumes(root="data/autoseg/vols/Imaging"):
                 tot = sum(float(x) for x in d.values())
                 vols[(p, v)] = {"total": tot, "enhancing": float(d.get("Enhancing_Core", 0.0))}
     return vols
-
-
-def fit_ridge_cv(x_tr, y_tr, lams=(0.1, 1.0, 10.0, 100.0, 1000.0), seed=42):
-    """Ridge with standardized features; λ picked by 5-fold CV on train rows."""
-    g = torch.Generator().manual_seed(seed)
-    idx = torch.randperm(len(x_tr), generator=g)
-    folds = [idx[i::5] for i in range(5)]
-    mu, sd = x_tr.mean(0), x_tr.std(0).clamp_min(1e-6)
-    z = (x_tr - mu) / sd
-    d = z.shape[1]
-    I = torch.eye(d)
-    best, best_mse = lams[0], float("inf")
-    for lam in lams:
-        mses = []
-        for i in range(5):
-            te, tr = folds[i], torch.cat([folds[j] for j in range(5) if j != i])
-            w = torch.linalg.solve(z[tr].T @ z[tr] + lam * I, z[tr].T @ y_tr[tr].unsqueeze(1))
-            pred = (z[te] @ w).squeeze(1)
-            mses.append(((y_tr[te] - pred) ** 2).mean().item())
-        m = sum(mses) / 5
-        if m < best_mse:
-            best, best_mse = lam, m
-    w = torch.linalg.solve(z.T @ z + best * I, z.T @ y_tr.unsqueeze(1)).squeeze(1)
-    b = y_tr.mean() - (mu / sd * w).sum()
-    return w / sd, b, best
 
 
 def report(name, y_te, pred, base):
