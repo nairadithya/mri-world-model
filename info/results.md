@@ -7,6 +7,15 @@ epoch ~7–8, held-out test loss 0.0074). Throughout, a run must (a) lower loss,
 follow-up training attempts failed that contract, so no further gradient steps
 are planned. Remaining work is evaluation and writeup.
 
+**Update (2026-09-12):** the evaluation was re-based on a locked, leak-free
+protocol (`info/eval_protocol.md`; A25) and the downstream push was run through
+the SOTA plan. Every representation-side lever came back negative — interface
+variants (A26), temporal task-training (A27), LoRA finetuning (A28), and three
+from-scratch supervised CNN comparators (A29–A31) — while the frozen JEPA
+trajectory representation beats them all in-domain and cross-site. The 0.33 CV
+and 0.45 single-split numbers in this document are superseded by the locked
+numbers; see "Locked protocol and the SOTA push" below.
+
 This document is the plain-language record of what was trained, what worked,
 what failed, and what each check taught us. The working notes with internal
 reference IDs live in `info/`; this file stands alone and does not use those IDs.
@@ -135,10 +144,14 @@ change signal. |
 | Did task-specific fine-tuning help? | **No: CV F1 unchanged (0.328 vs 0.334) while dynamics error grew ~2.5× (0.0081 → 0.0191)** | The joint RANO fine-tune tilted the encoder toward the classifier without adding generalizable signal. Champion weights stand untouched. |
 
 Reference numbers for the field: published 4-class RANO prediction on similar
-data peaks at macro-F1 0.50 (hybrid network + volumetry + gradient boosting,
-patient-wise CV); our frozen-encoder readout at 0.33 uses no task training and
+data peaks at macro-F1 0.50 (Tikhonov, hybrid network + volumetry + gradient
+boosting, patient-wise CV; TRACE 0.477). Matoso's "0.51" is *balanced
+accuracy*, not macro-F1 (median F1 0.13), so it is not comparable — see
+`frontier_lumiere.md`. On the locked protocol our frozen-encoder readout is
+0.309 within-unseen CV and 0.408 transfer to the 26 (A25) — no task training,
 no volumetry — a real but modest signal, best read as the price of
-task-blindness rather than a failure.
+task-blindness rather than a failure; the readout seed alone spans 0.34–0.45
+(A27).
 
 Fix attempt (gap-conditioned head applied cross-site, zero training,
 `scripts/sailor_gap_probe.py`): the LUMIERE-trained gap head beats the
@@ -488,6 +501,40 @@ stands as the production n=1 number. No capacity, time, or specialization
 variant opens headroom a GPU leg could exploit — the multi-horizon story is
 closed: frozen champion + small joint head, best at every horizon that has
 the counts to matter.
+
+## Locked protocol and the SOTA push (2026-09-11/12)
+
+Every single-split claim above was re-based on a locked, pre-registered protocol
+(`info/eval_protocol.md`): fixed patient-wise folds over the 26 encoder-unseen
+patients, paired patient-cluster bootstrap CIs, and a reserved `final` slice
+touched once. Honest frozen-champion numbers: **0.309 within-unseen CV**
+[0.255, 0.358]; **0.408 transfer** to the 26; readout seed alone spans
+0.34–0.45 (A25/A27), so the old single-split 0.45 was the lucky tail.
+
+The SOTA plan was then run, each step judged on that protocol:
+
+- **Interface (A26).** ROI/mask pooling, per-modality fusion, and explicit
+  DeepBraTumIA volumetry — none beat the whole-brain mean state; volumetry was
+  *significantly worse* than the learned state (0.236/0.248 vs 0.309/0.408).
+  The interface is not the binding constraint.
+- **Objective (A27/A28).** Supervised task-training of the temporal stack
+  overfits (best dev at epoch 1; final 0.311 vs 0.343 frozen); a properly
+  trained LoRA vision finetune (split head/rep LRs, augmentation, JEPA
+  regularizer) does not improve the representation (within-unseen 0.289 vs
+  0.309; final 0.400 vs 0.448/0.39). The frozen representation is at its
+  data-limited ceiling.
+- **Supervised comparator (A29–A31).** Three from-scratch CNN comparators
+  (3D visit-pair, 2D whole-brain slices, 2D tumor-ROI) all collapse to the
+  majority class (final 0.182–0.222) and lose to JEPA at every SAILOR K-shot
+  point. A32: these were not faithful reproductions of Matoso's recipe
+  (under-trained, different preprocessing, no weighted sampler), but Matoso's
+  own faithful best is weak (balanced accuracy 0.51, F1 0.13), so the macro-F1
+  gap is radiomics/data, not training length.
+
+Net: the value is the pretrained representation, not further training on 91
+patients. The remaining levers are external longitudinal data (Step 5) or
+hand-engineered radiomics — not more LUMIERE gradient steps. Plot:
+`info/plots/cross_site_adapt.png`.
 
 ## Open work (not claimed)
 

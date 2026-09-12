@@ -563,6 +563,32 @@ def plot_fourth_cloud(m, t, out):
     plt.close(fig)
 
 
+def plot_cross_site_adapt(g, out):
+    ks = [0] + list(g["ks"])
+    fig, ax = plt.subplots(figsize=(7.5, 4.6))
+    style = {"JEPA": ("#1f77b4", "o", 2.4), "CNN-3D": ("#D55E00", "s", 1.4),
+             "CNN-2D": ("#009E73", "^", 1.4), "CNN-2D-ROI": ("#CC79C2", "D", 1.4)}
+    for name, enc in g["encoders"].items():
+        ys = [enc["zero_shot"]] + list(enc["ks"])
+        col, mk, lw = style.get(name, ("#777777", "x", 1.2))
+        ax.plot(ks, ys, mk + "-", color=col, lw=lw, ms=6, label=name)
+    ax.axhline(g["majority_f1"], color="gray", ls="--", lw=1.2,
+               label=f"SAILOR majority ~{g['majority_f1']:.2f}")
+    ax.set_xlabel("K support subjects (0 = zero-shot from LUMIERE)")
+    ax.set_ylabel("SAILOR macro-F1 (subject-wise)")
+    ax.set_title("Cross-site adaptability: frozen JEPA vs from-scratch supervised CNNs")
+    ax.set_xticks(ks)
+    ax.set_ylim(0.10, 0.42)
+    ax.legend(fontsize=9, loc="upper left", ncol=2)
+    ax.text(0.02, 0.03,
+            "CNNs collapse in-domain (0.18-0.22) and never adapt; JEPA leads every K. "
+            "Not a faithful Matoso reproduction (A32).",
+            transform=ax.transAxes, fontsize=8, style="italic", color="dimgray")
+    fig.tight_layout()
+    fig.savefig(out, dpi=150)
+    plt.close(fig)
+
+
 def main():
     m = load_metrics()
     plot_hero_leg1(m["hero_leg1"], os.path.join(HERE, "hero_leg1_val.png"))
@@ -586,7 +612,8 @@ def main():
     plot_fourth_cloud(m["three_way_shift"], m["fourth_cloud"],
                       os.path.join(HERE, "four_clouds.png"))
     plot_gauntlet(m["gauntlet_probe"], os.path.join(HERE, "gauntlet_probe.png"))
-    print("wrote 18 plots to", HERE)
+    plot_cross_site_adapt(m["cross_site_adapt"], os.path.join(HERE, "cross_site_adapt.png"))
+    print("wrote 19 plots to", HERE)
 
 
 if __name__ == "__main__":

@@ -1,8 +1,8 @@
 {
  "_readme": "Single source of truth for every number plotted by make_plots.py in this folder. Edit values here, rerun:  python3 info/plots/make_plots.py",
- "_revision": "2026-09-10: A23 (K3-1 phantom-modality guard, all five SAILOR caches rebuilt) and A24 (K3-2 same-space arm rows; K3-11 split_gate with paired bootstrap CIs). Updated: sailor_transfer, sailor_gap_bins, sailor_reprocessed, betfix_decider, coral, site_shift, site_shift_aligned, three_way_shift, fourth_cloud; added split_gate. STILL PRE-REBUILD (needs refit, not re-encode): gauntlet_probe (field_models.pt) and sailor_gap_bins.field_cond/field_uncond (field_scores.pt).",
+ "_revision": "2026-09-12: A25-A32. Added cross_site_adapt (JEPA vs 3 from-scratch CNN comparators). Earlier: A23 phantom guard + cache rebuilds, A24 same-space rows + split_gate CIs.",
  "hero_leg1": {
-  "source": "info/pilot.md Run 4 \u2014 hero leg 1, full cohort on Kaggle T4 (reported epochs only; no full per-epoch log was kept)",
+  "source": "info/pilot.md Run 4 — hero leg 1, full cohort on Kaggle T4 (reported epochs only; no full per-epoch log was kept)",
   "epochs": [
    1,
    5,
@@ -28,7 +28,7 @@
   "test_val": 0.0074
  },
  "hero_leg2": {
-  "source": "info/pilot.md Run 5 \u2014 resume best.pt at LR 2e-5, 30 epochs (reported epochs)",
+  "source": "info/pilot.md Run 5 — resume best.pt at LR 2e-5, 30 epochs (reported epochs)",
   "epochs": [
    1,
    5,
@@ -66,7 +66,7 @@
   "sota_source": "Tikhonov et al. arXiv:2509.06511 (ResNet-18 + radiomics -> CatBoost, patient-wise 5-fold CV)"
  },
  "sailor_transfer": {
-  "source": "A23 rebuild + A24 K3-2 same-space fix of A12 \u2014 frozen champion, zero SAILOR training; 243 valid pairs / 240 RANO-labelled. (a)-row is EMA-target space on both sides (scripts/sailor_eval.py --pairs).",
+  "source": "A23 rebuild + A24 K3-2 same-space fix of A12 — frozen champion, zero SAILOR training; 243 valid pairs / 240 RANO-labelled. (a)-row is EMA-target space on both sides (scripts/sailor_eval.py --pairs).",
   "dynamics_jepa": 0.0294,
   "dynamics_persist": 0.0041,
   "f1_lumiere_cv": 0.33,
@@ -18351,5 +18351,64 @@
    "n.s."
   ],
   "paired_diff_note": "JEPA minus persist (positive = JEPA worse). Only significant cells: train pooled +0.0017 (JEPA significantly WORSE, regression-to-mean tax) and test patient-uniform -0.0086 (JEPA better, but fragile: 13 patients, inflated persist from few-pair dynamic patients). Test pooled mean and overall are n.s."
+ },
+ "cross_site_adapt": {
+  "source": "A29-A31: scripts/cross_site_adapt.py, SAILOR subject-wise K-shot CV (macro-F1, 20 repeats, seed 0); zero-shot = classifier trained on LUMIERE rows -> SAILOR; from-scratch supervised CNN comparators from the Kaggle legs.",
+  "ks": [
+   3,
+   5,
+   10,
+   15,
+   20
+  ],
+  "encoders": {
+   "JEPA": {
+    "zero_shot": 0.355,
+    "ks": [
+     0.269,
+     0.283,
+     0.326,
+     0.333,
+     0.313
+    ],
+    "in_domain_final": 0.448,
+    "in_domain_note": "reserved final, seed-42 readout; honest readout-seed range ~0.39"
+   },
+   "CNN-3D": {
+    "zero_shot": 0.261,
+    "ks": [
+     0.228,
+     0.225,
+     0.261,
+     0.264,
+     0.227
+    ],
+    "in_domain_final": 0.222
+   },
+   "CNN-2D": {
+    "zero_shot": 0.275,
+    "ks": [
+     0.204,
+     0.224,
+     0.252,
+     0.246,
+     0.253
+    ],
+    "in_domain_final": 0.182
+   },
+   "CNN-2D-ROI": {
+    "zero_shot": 0.179,
+    "ks": [
+     0.215,
+     0.233,
+     0.245,
+     0.249,
+     0.237
+    ],
+    "in_domain_final": 0.222
+   }
+  },
+  "majority_f1": 0.479,
+  "note": "JEPA leads at every K; all three from-scratch CNNs collapse to majority in-domain (0.18-0.22). Not a faithful Matoso reproduction (A32)."
  }
 }

@@ -111,7 +111,10 @@ accuracy while learning nothing. Per-class F1 balances precision ("when I say
 progression, am I right?") and recall ("what fraction do I catch?"); macro-F1
 averages it equally across all four classes. The always-guess baseline sits
 ~0.20 — every plot shows it so 0.33/0.37 reads as real signal, not imbalance.
-Field best: 0.50 (supervised end-to-end + volumetry) <span class="id">D24</span>.</div>
+Field best macro-F1: 0.50 (Tikhonov, supervised end-to-end + volumetry;
+TRACE 0.477); Matoso's 0.51 is balanced accuracy (median F1 0.13), a different
+metric <span class="id">D24</span>. On the locked protocol ours is 0.309 CV /
+0.408 transfer (A25).</div>
 
 <p>Freeze the champion, train only a tiny readout. Single-visit features (F1
 0.31) → history summaries (0.33) → <b>forecast states</b> predicting next
@@ -299,7 +302,43 @@ dynamics). No fundamental preprocessing lever remains for transfer
 preprocessing item is orthogonal — visit-consistent registration for
 LUMIERE's own noise floor.</p>
 
-<h2>6. What it all means (for the team)</h2>
+<h2>6. The SOTA push: locked protocol, and every lever came back negative <span class="id">A25–A32</span></h2>
+<p>Before pushing for the field's number we fixed the yardstick. <b>Locked
+protocol</b> (<code>info/eval_protocol.md</code>): fixed patient-wise folds over
+the 26 encoder-unseen patients, a reserved 13-patient <code>final</code> slice
+touched once, and paired patient-cluster bootstrap CIs. Frozen champion:
+<b>0.309 within-unseen CV</b> and <b>0.408 transfer</b>; the readout seed alone
+spans 0.34–0.45, so the old single-split 0.45 was the lucky tail.</p>
+<p>Then, each judged on that protocol:</p>
+<ul>
+<li><b>Interface (A26).</b> ROI/mask pooling (DeepBraTumIA), per-modality
+fusion, and explicit volumetry — <i>none</i> beat the whole-brain mean state;
+volumetry was significantly <i>worse</i> than the learned state. Spatial
+dilution is not the binding constraint.</li>
+<li><b>Objective (A27/A28).</b> Training the temporal stack on RANO overfits
+immediately (best dev at epoch 1); a properly tuned LoRA vision finetune
+(split head/rep LRs, augmentation, JEPA regularizer) did not improve the
+representation. Fourth and fifth confirmations that gradient on the
+representation tilts it.</li>
+<li><b>Supervised comparator (A29–A31).</b> Three from-scratch CNNs (3D
+visit-pair, 2D whole-brain slices, 2D tumor-ROI) all collapse to
+always-predict-PD in-domain (final 0.18–0.22) and lose to JEPA at every SAILOR
+K-shot point.</li>
+</ul>
+<img src="plots/cross_site_adapt.png" alt="Cross-site adaptability: frozen JEPA vs from-scratch supervised CNNs">
+<p>The picture: the value is the <b>pretrained representation</b>, not further
+training on 91 patients. A32 (reading Matoso 2025) sharpens it — our comparators
+were not faithful reproductions (under-trained, different preprocessing, no
+weighted sampler), but Matoso's own faithful best is weak (balanced accuracy
+0.51, <b>F1 0.13</b>) and pretraining + clinical data hurt them too. The macro-F1
+SOTA of 0.50 is carried by radiomics, not the CNN.</p>
+<div class="verdict"><b>Bottom line.</b> Frozen JEPA reaches ≈0.40 single-site
+RANO macro-F1 with zero task training and beats every from-scratch supervised
+model we could build, both in-domain and cross-site. Closing the remaining
+~0.10 needs external longitudinal data or hand-engineered radiomics — not more
+LUMIERE gradient steps.</div>
+
+<h2>7. What it all means (for the team)</h2>
 <div class="verdict"><b>Representation travels; dynamics need local
 calibration.</b> Nothing in the failure motivates unfreezing the encoder —
 every encoder change tried (task fine-tune, horizon leg) left honest metrics
@@ -320,32 +359,31 @@ rebuild) readouts did NOT recover — transfer F1 0.234, below majority; A21's
 Gauntlet: predicted latents classify ≥ actual (LUM CV 0.30 vs 0.25; SAI CV
 0.39 vs 0.33); error ratio and signal dissociate both ways.
 Only cross-validated numbers are headlines — every single-split
-number in this program was the lucky tail.</div>
+number in this program was the lucky tail. Locked protocol (A25–A31): frozen
+0.309 CV / 0.408 transfer; interface, temporal task-training, LoRA finetune, and
+three from-scratch CNN comparators all came back negative, and JEPA leads every
+cross-site K-shot point (<code>cross_site_adapt.png</code>).</div>
 
-<h2>7. What's next</h2>
+<h2>8. What's next</h2>
 <ol>
-<li><b>Reprocess done — closed (A19/A21/A23).</b> Skull-restored tree keeps
-the gate lost and, on a clean rebuild, does not recover readouts (A21's 0.32
-is not reproducible; its cache was inconsistent with the tree, K3-31). No further harmonization (wrong sign); open item
-is LUMIERE visit-consistent registration (in-domain noise floor only), plus
-cache provenance so a stale cache can never again masquerade as a result.</li>
-<li><b>Mask-guided pooling (R5)</b> — patch tokens inside auto-masks; biggest
-cheap shot at the volume half (global averaging likely dilutes focal
-change).</li>
-<li><b>Training continuation (R11)</b> — accumulation holds the basin where batch-1
-ejects; short accum-8 legs with best-tracking, plus the recreate-then-ablate
-design for the momentum question (needs optimizer-bearing checkpoints).</li>
-<li><b>Projector-only tuning + full re-gate (A16 open test)</b> — the one earned,
-minimal representation change (frozen-probe F1, JEPA tension check,
-persistence re-gate, monitors).</li>
+<li><b>External longitudinal data (Step 5)</b> — the only lever that adds
+information rather than re-weighting 91 patients: continue-pretrain on SAILOR
+plus other public cohorts, and make cross-site generalization the headline.</li>
+<li><b>Radiomics comparator</b> — hand-engineered growth/shrinkage + nadir
+volumetry (the SOTA hybrid's real edge) as the fair comparator; our simple
+snapshot volumetry was weak (A26), but growth features were never tested.</li>
+<li><b>Matoso portables (A32)</b> — surgery-window pair exclusion (R7),
+augmentation inside SSL with an unaugmented EMA-target view, transition-balanced
+sampling (R13), a CT1-drop modality probe, and saliency-mask overlap.</li>
 <li><b>BraTS Task-11 submission (R20)</b> — hidden-test numbers end split-luck
 debates permanently.</li>
 </ol>
 <p><small>Rewritten 2026-09-08 from the full session record (IDs: decisions
 D0–D31, ablations A1–A18, directions R/G); gauntlet section (A22) added
-2026-09-10. Plots regenerate via
+2026-09-10; locked-protocol / SOTA-push section (A25–A32) added 2026-09-12.
+Plots regenerate via
 <code>python3 info/plots/make_plots.py</code> from
-<code>info/plots/metrics.json</code> (18 plots). Underlying evidence:
+<code>info/plots/metrics.json</code> (19 plots). Underlying evidence:
 <code>info/decisions.md</code>, <code>info/ablations.md</code>,
 <code>info/results.md</code>, <code>info/pilot.md</code>,
 <code>info/directions.md</code>, <code>info/preprocessing.md</code>.</small></p>
