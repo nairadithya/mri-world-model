@@ -1332,3 +1332,55 @@ Logged inferences (evidence-backed; see A9/A10/A12 for numbers):
   SAILOR mask-derived volumes use a different segmentation lineage than
   LUMIERE's DeepBraTumIA (both automated). Plot updated:
   `info/plots/cross_site_adapt.png`.
+
+## A36 — Concept probe: the measurement/growth vocabulary is not in the frozen latent, and a concept concat does not clear the locked gate (2026-09-13, local CPU)
+
+- Question (follows A32/A35): before committing to a concept-bottleneck
+  architecture, test whether the frozen champion already holds the SOTA's
+  measurement/growth signal, and whether concatenating the *true* concepts to
+  the latent moves the RANO readout. Script `scripts/concept_probe.py`; rows are
+  the A35 cache (`radiomics_features.pt`, now carrying `visit_idx`) so the
+  concept vector, labels, and pair index are byte-identical to the radiomics
+  comparator; latents are indexed by `visit_idx` into `interface_cache.pt`
+  (champion 0.0081, git a0ee3db, 2026-09-11). 399 rows / 80 patients
+  (unseen 96 / encoder_train 303), concept dim 22. Locked protocol, patient-
+  cluster bootstrap.
+- **(1) Recoverability — latent -> 22-d concept, ridge + CV-lambda.** The
+  concept vector is essentially *not* linearly recoverable from the latent.
+  Transfer (train 65 -> unseen): mean R2 `vision` +0.030, `fused` +0.032,
+  `states` +0.052, **oracle `fused_next` (sees visit t+1) only +0.022**; growth
+  targets (`dlog`/`ratio`) R2 <= +0.058 and total log-growth R2 +0.020–0.117;
+  total next-visit volume readout R2 <= 0.214 even for the oracle. Within-unseen
+  CV is negative for every source (n=96 vs d=1152; persistence floor -0.017).
+  Even the same-visit oracle does not expose growth — the latent encodes weak
+  size, not the measurement vocabulary.
+- **(2) Bottleneck — RANO readout, locked within-unseen CV (primary) and
+  transfer -> reserved final (10 patients, 96 rows):**
+
+  | features | CV macro-F1 | transfer final |
+  |---|---|---|
+  | states (h=0 / h=256) | 0.2858 / 0.2764 | 0.3833 / 0.3716 |
+  | concept = 22-d (A35) | 0.2167 / 0.2518 | 0.4100 / 0.2182 |
+  | states + concept | 0.2512 / 0.2582 | 0.4529 / 0.2885 |
+  | vision + concept | 0.2601 / 0.2219 | 0.2730 / **0.4965** |
+
+  Paired patient-cluster bootstrap: on the **locked CV** the concat is a
+  **null-to-slightly-negative** — `states+concept` vs `states` -0.0346
+  [-0.0748,+0.0102] n.s. (h=0) and -0.0181 [-0.0633,+0.0269] n.s. (h=256);
+  vs `concept` also n.s. On the **10-patient transfer slice** `states+concept`
+  beats `states` +0.0696 [+0.0133,+0.1398] SIG at h=0 but is *negative* (n.s.)
+  at h=256, while `vision+concept` swings from 0.273 (h=0) to 0.4965
+  [+0.2815,+0.6241] at h=256 — the sign flips with probe capacity on n=10, i.e.
+  single-split noise (G12), not a citable win.
+- **Verdict.** A post-hoc concept head does not recover the SOTA edge. The
+  frozen latent is not measurement-explicit (recoverability R2 ~ 0, growth
+  unrecoverable even with the future latent), and the 22-d measurement
+  vocabulary is itself *weaker* than the latent on the locked CV (0.217 vs
+  0.286). Concatenation is n.s.-negative on the pre-registered metric. The 0.50
+  gap is therefore either the full >4,800-feature texture/shape radiomics +
+  CatBoost (A35) or a representation trained *from the start* with the
+  measurement/growth vocabulary as supervised bottlenecks (TRACE-style, which
+  itself reached only 0.477) — plus external data (A34: 91 patients is the
+  ceiling). Retires "bolt a concept probe onto the frozen champion" as a step-5
+  lever. No plot; numbers here are the record.
+

@@ -112,7 +112,11 @@ def _pair_feature(a, b, nadir):
 
 
 def build_series(vols, patient, visits, labels_next):
-    """Rows of (features, label) for consecutive pairs with volumes on both."""
+    """Rows of (features, label) for consecutive pairs with volumes on both.
+
+    Also returns the pair's starting visit index ``t`` (the pair is t -> t+1),
+    so downstream probes can align these rows to per-visit latents.
+    """
     series = [vols.get((patient, v)) for v in visits]
     nadir = [float("inf")] * 3
     nadir_at = []
@@ -120,7 +124,7 @@ def build_series(vols, patient, visits, labels_next):
         if s is not None:
             nadir = [min(nadir[r], s[r]) for r in range(3)]
         nadir_at.append(list(nadir))
-    feats, labs = [], []
+    feats, labs, idxs = [], [], []
     for t in range(len(visits) - 1):
         a, b = series[t], series[t + 1]
         lab = labels_next[t]
@@ -128,7 +132,8 @@ def build_series(vols, patient, visits, labels_next):
             continue
         feats.append(_pair_feature(a, b, nadir_at[t + 1]))
         labs.append(lab)
-    return feats, labs
+        idxs.append(t)
+    return feats, labs, idxs
 
 
 def _label(action_id: int):
@@ -160,10 +165,11 @@ def main():
             s = ds[i]
             pid = s["patient_id"]
             labs = [_label(a) for a in s["actions"].tolist()[1:]] + [None]
-            feats, labs = build_series(lv, pid, s["visits"], labs)
+            feats, labs, idxs = build_series(lv, pid, s["visits"], labs)
             if feats:
                 out["lum"][pid] = {"features": torch.tensor(feats, dtype=torch.float32),
                                    "labels": torch.tensor(labs, dtype=torch.long),
+                                   "visit_idx": torch.tensor(idxs, dtype=torch.long),
                                    "split": key}
 
     sv = sailor_volumes()
@@ -174,10 +180,11 @@ def main():
         s = sds[i]
         sub = s["patient_id"]
         labs = [_label(a) for a in s["actions"].tolist()[1:]] + [None]
-        feats, labs = build_series(sv, sub, s["visits"], labs)
+        feats, labs, idxs = build_series(sv, sub, s["visits"], labs)
         if feats:
             out["sailor"][sub] = {"features": torch.tensor(feats, dtype=torch.float32),
-                                  "labels": torch.tensor(labs, dtype=torch.long)}
+                                  "labels": torch.tensor(labs, dtype=torch.long),
+                                  "visit_idx": torch.tensor(idxs, dtype=torch.long)}
 
     torch.save(out, args.out)
     print(f"wrote {args.out}: lum {len(out['lum'])} / sailor {len(out['sailor'])} "
