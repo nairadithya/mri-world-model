@@ -1246,3 +1246,46 @@ Logged inferences (evidence-backed; see A9/A10/A12 for numbers):
   collapse.
 - Status: code committed and default-off (no existing path changed); the
   from-scratch evaluation is the open step.
+
+## A34 — From-scratch A32 leg: objective changes do not help; dynamics gate is worse (2026-09-13, Kaggle T4)
+
+- The proper A32 test (A33 left it open): `kaggle/kernel-a32s` repeats the
+  **champion's own schedule** (from scratch, 30 epochs, batch 1, lr 1e-4,
+  warmup 5) with the three flags (`--augment --surgery-window
+  --transition-weighting`). 4.0 T4-h. Apples-to-apples by construction.
+- Val trajectory: 0.093 → **0.0071 (epoch 6)** → 0.045 plateau; health
+  monitors std 0.056 → 0.16 (drifting, not collapse). But effective rank stays
+  **1.1–1.4** (champion leg 1.7–2.5) — the target space is flatter than the
+  champion's. Val-loss level is not comparable to 0.0081 (surgery-window
+  removed the hard pairs and the loss is reweighted).
+- Same-space persistence gate (`split_gate`, paired patient-cluster CIs):
+
+  | split | JEPA / persist | paired diff | wins |
+  |---|---|---|---|
+  | train (65) | 0.0108 / 0.0068 | **+0.0040 [+0.0022,+0.0062] SIG worse** | 19/65 (29%) |
+  | val (13) | 0.0096 / 0.0078 | +0.0018 [−0.0003,+0.0036] n.s. | 5/13 |
+  | test (13) | 0.0086 / 0.0094 | −0.0008 [−0.0071,+0.0025] n.s. | 6/13 |
+  | overall | 0.0103 / 0.0072 | **+0.0031 [+0.0016,+0.0048] SIG worse** | 30/91 (33%) |
+
+  The frozen champion's gate (A24): overall +0.0010 [−0.0000,+0.0022] n.s.,
+  wins 41/91. So the A32 model is **worse on the dynamics gate** than the
+  champion, not better.
+- Locked RANO probe: within-unseen **0.3138** [0.2506,0.3715] vs champion
+  0.3093; transfer → final **0.4043** [0.2470,0.4561] vs 0.4483 (seed 42) /
+  ~0.39 honest. Tied within noise — no representation gain.
+- Inference: the three A32 changes, tested properly from scratch against the
+  champion's schedule, **do not help** — the RANO representation ties and the
+  dynamics gate regresses (overall significantly worse, 30/91 vs 41/91 wins).
+  Combined with A26–A33, the frozen champion remains the best model. The
+  representation and dynamics are **data-limited**: objective regularizers
+  (surgery-window, augmentation, transition balancing) regularize the fit but
+  cannot manufacture signal that 91 patients do not contain.
+- Watch item / possible cause of the rank drop: the transition-weight pre-pass
+  counts pairs without the surgery-window mask, so the `other` class
+  (166 train pairs, largely operative transitions that the window then drops)
+  draws weight 0.61; and gamma/contrast augmentation on z-scored inputs may be
+  too aggressive. Neither was swept — but even fixing them, the ceiling is the
+  frozen champion.
+- Recommendation: stop objective-side LUMIERE runs. The only information-adding
+  lever left is external longitudinal data (Step 5) or hand-engineered
+  radiomics (A32).
