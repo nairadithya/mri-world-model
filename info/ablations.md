@@ -1032,3 +1032,41 @@ Logged inferences (evidence-backed; see A9/A10/A12 for numbers):
 - Caveats: one split, 10–12 patients/side, single seed set; "no improvement"
   means not detectable, and the task-train harness uses a weaker optimizer than
   `fit_linear`, so the temporal comparison is within-harness, not absolute.
+
+## A28 — Supervised LoRA finetune of the vision tower: no locked-protocol gain (2026-09-11, Kaggle T4)
+
+- Step 3's SOTA recipe: `scripts/finetune_lora.py` + `kaggle/kernel-lora`.
+  Trainable = LoRA (1.18M) + projector + fusion + RANO head, temporal frozen;
+  class-weighted CE on state_t -> RANO_{t+1}; JEPA distillation to the frozen
+  champion (teacher fixed); augmentation; early stop on the 13 `dev`;
+  locked-protocol eval with a retrained readout on the 26 unseen / final 13.
+- **v1 (inconclusive):** head and LoRA shared lr 2e-5. The random head never
+  learned (dev macro-F1 flat 0.1438 for 6 epochs), early stop fired at epoch 1,
+  and the encoder barely moved (within-unseen 0.301 / final 0.420). Diagnosed
+  as a mis-specified optimization, not evidence.
+- **v2 (properly trained):** split LR — head 1e-2 (the `fit_linear` rate),
+  representation 2e-4 — 14 epochs, patience 10, min-epochs 3. Dev learned but
+  was very unstable (0.148 → 0.263 → 0.362(ep4) → 0.121 → … → 0.326), i.e.
+  overfitting 65 patients; best-dev epoch 4. Locked-protocol:
+
+  | model | within-unseen CV (26) | transfer -> final 13 |
+  |---|---|---|
+  | frozen champion | **0.3093** [0.2546,0.3575] | **0.4483** [0.2999,0.4987] (seed 42) |
+  | LoRA v1 (untrained head) | 0.3014 [0.2431,0.3537] | 0.4199 [0.2750,0.4882] |
+  | LoRA v2 (trained) | 0.2893 [0.2331,0.3457] | 0.4000 [0.2515,0.4661] |
+
+- Inference: **supervised finetuning of the vision tower does not improve the
+  locked representation** — within-unseen slightly *worse* (0.289 vs 0.309),
+  final at the frozen readout's own seed-noise floor (0.400 vs 0.448 seed-42 /
+  ~0.39 honest mean). This is the genuinely-tested version of the SOTA recipe,
+  and it joins Run 6, the horizon leg, the temporal task-train (A27) and the
+  interface probes (A26) as the fifth "training on 65 patients does not help"
+  result. The JEPA regularizer held (jepa ≈ 0.015 throughout, no collapse), so
+  the failure is overfitting the supervised signal, not representation
+  destruction. Standing conclusion: the frozen BRAINIAC+LoRA trajectory
+  representation is at its **data-limited ceiling** (~0.40 final); only adding
+  information (external longitudinal data, Step 5) remains, not more training.
+- Caveats: 65 train / 13 dev / 13 final, one seed, dev selection on an
+  oscillating metric, and the readout seed alone spans 0.335–0.448 (A27), so
+  the v2 deficit is within noise — the claim is "no detectable gain", and the
+  honest direction is flat-to-slightly-negative. v1/v2 each cost ~0.5 T4-h.
