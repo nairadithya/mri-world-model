@@ -53,17 +53,28 @@ def _load_mask96(path: str):
 def lum_mask(pid: str, visit: str):
     key = ("lum", pid, visit)
     if key not in _MASK_CACHE:
-        _MASK_CACHE[key] = _load_mask96(os.path.join(
-            LUM_MASK_ROOT, pid, visit,
-            "DeepBraTumIA-segmentation/atlas/segmentation/seg_mask.nii.gz"))
+        base = os.path.join(LUM_MASK_ROOT, pid, visit,
+                            "DeepBraTumIA-segmentation/atlas/segmentation/seg_mask")
+        # Kaggle gunzips .nii.gz -> .nii in place (see AGENTS).
+        m = None
+        for ext in (".nii.gz", ".nii"):
+            m = _load_mask96(base + ext)
+            if m is not None:
+                break
+        _MASK_CACHE[key] = m
     return _MASK_CACHE[key]
 
 
 def sailor_mask(pid: str, visit: str):
     key = ("sailor", pid, visit)
     if key not in _MASK_CACHE:
-        _MASK_CACHE[key] = _load_mask96(os.path.join(
-            SAILOR_ROOT, pid, visit, "Segmentation-ONCO.nii.gz"))
+        base = os.path.join(SAILOR_ROOT, pid, visit, "Segmentation-ONCO")
+        m = None
+        for ext in (".nii.gz", ".nii"):
+            m = _load_mask96(base + ext)
+            if m is not None:
+                break
+        _MASK_CACHE[key] = m
     return _MASK_CACHE[key]
 
 
