@@ -210,8 +210,9 @@ def encode_features(args, cfg, device):
             out[id_key][pid] = {"features": f,
                                 "labels": torch.tensor([p[1] for p in pairs])}
 
-    for split in ("encoder_train", "dev", "final"):
-        _run(_build(cfg, proto[split]), "lum")
+    if args.encode_scope in ("lum", "all"):
+        for split in ("encoder_train", "dev", "final"):
+            _run(_build(cfg, proto[split]), "lum")
     if args.encode_scope in ("sailor", "all"):
         if os.path.isdir(SAILOR_ROOT):
             from src.data.sailor import SAILORDataset

@@ -1070,3 +1070,34 @@ Logged inferences (evidence-backed; see A9/A10/A12 for numbers):
   oscillating metric, and the readout seed alone spans 0.335–0.448 (A27), so
   the v2 deficit is within noise — the claim is "no detectable gain", and the
   honest direction is flat-to-slightly-negative. v1/v2 each cost ~0.5 T4-h.
+
+## A29 — Cross-site adaptability: JEPA vs a from-scratch 3D CNN (2026-09-12, local CPU + Kaggle T4)
+
+- Purpose: the frontier gap (LUMIERE→SAILOR generalization) as a *comparison*
+  of task-specific vs task-agnostic pretraining. Supervised comparator =
+  `scripts/train_supervised_cnn.py` (MONAI 3D ResNet-18, 8-channel visit-pair
+  input, class-weighted CE, augmentation, from scratch) trained on the locked
+  65/13 splits; features (512-d avgpool) → `scripts/cross_site_adapt.py`
+  zero-shot + K-shot subject-wise CV on SAILOR, against the JEPA states.
+- In-domain (locked protocol): CNN best dev 0.294 (ep13), **reserved final
+  macro-F1 0.222** — well below the frozen JEPA final (0.448 seed-42 / ~0.39
+  honest). The CNN train loss barely moved (0.42→0.36 over 20 epochs ≈ 1,300
+  optimizer steps): it is **under-trained**, not converged.
+- Cross-site (SAILOR subject-wise):
+
+  | encoder | zero-shot | K=3 | K=5 | K=10 | K=15 | K=20 |
+  |---|---|---|---|---|---|---|
+  | JEPA | **0.355** | 0.269 | 0.283 | 0.326 | 0.333 | 0.313 |
+  | CNN | 0.261 | 0.228 | 0.225 | 0.261 | 0.264 | 0.227 |
+
+  JEPA is ahead at every point (zero-shot +0.09, K-shot +0.04…+0.08).
+- **Confound (do not over-read):** the CNN is not a competitive supervised
+  baseline — it loses in-domain to the frozen JEPA readout (0.22 vs 0.39). The
+  comparison therefore shows only that "a from-scratch 3D CNN on 65 patients
+  is worse in-domain and transfers worse than the frozen JEPA representation",
+  which is expected and not the SOTA-family test. To make the adaptability
+  claim, the supervised comparator must first be made competitive (2D
+  axial-slice ResNet/DenseNet — the Matoso setup, ~20k slice samples/epoch —
+  or many more epochs/LR schedule), then re-run the same harness.
+- Harness + caches committed; CNN weights/features in `checkpoints/`
+  (gitignored). Cost ~0.5 T4-h.
