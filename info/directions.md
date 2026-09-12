@@ -180,6 +180,15 @@ best-tracking, stop — found 0.0077 < champion. R13 UNBLOCKED under that
 protocol only; batch-1/long legs stay banned. NEXT: R13 short legs, R5
 mask pooling, legC2-best re-gate probes.
 
+UPDATE (2026-09-12): the representation/objective/comparator passes are all
+negative — interface (A26, no lever), temporal task-training (A27) and LoRA
+finetuning (A28) overfit, and three from-scratch supervised CNN comparators
+(3D / 2D / ROI, A29–A31) collapse while the frozen JEPA leads in-domain and
+cross-site. Reading Matoso (A32) yields JEPA-side portables, independent of
+the SOTA comparison: (a) surgery-window pair exclusion (R7), (b) augmentation
+inside SSL with gamma + an unaugmented EMA-target view, (c) transition-balanced
+sampling (R13), (d) CT1-drop modality probe (R9), (e) saliency-mask overlap.
+
 ---
 
 ## Fixes applied (2026-09-06, batch-size/OOM thread)

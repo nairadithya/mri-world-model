@@ -1174,3 +1174,44 @@ Logged inferences (evidence-backed; see A9/A10/A12 for numbers):
 - Recommendation: stop the supervised-CNN chase. A faithful SOTA-family
   comparator would need hand-engineered radiomics/growth features (the hybrid's
   actual edge) or pretrained 2D weights (dependency-blocked).
+
+## A32 — Matoso et al. read: our CNN comparators were not faithful reproductions; what to port to JEPA (2026-09-12)
+
+- Read the closest published from-scratch RANO-DL paper end to end (Matoso,
+  arXiv:2504.18268; full method now in `frontier_lumiere.md §2`). It corrects
+  and contextualizes A29–A31:
+  1. **Our supervised comparators were not faithful.** We trained 9–14 epochs
+     (paper: early-stop patience 10, max 100); used the BRAINIAC preprocessing
+     (MNI152 → skull-strip → 96³) not theirs (RAS → N4 → Gaussian denoise →
+     SRI24 → z-score, no skull-strip); used class-weighted loss but no weighted
+     *sampler*; and batched differently. So "from-scratch CNN collapses" is
+     established for *our* under-trained variants, not for the paper's recipe.
+  2. **But the paper's own faithful best is weak:** median balanced accuracy
+     50.96% (max 58%), **median F1 0.1335**. Its 0.51 is balanced accuracy, not
+     Tikhonov's macro-F1 0.50 — a metric mix-up fixed in `frontier_lumiere.md`.
+     Even faithful from-scratch DL does not reach the macro-F1 SOTA; that gap is
+     radiomics (Tikhonov) or data/architecture, not just training length.
+  3. The paper independently reports what we found: pretraining (3 unrelated
+     tasks) and clinical data both *hurt*; subtraction (delta) did not help.
+- Portables to the JEPA pipeline (their design → our stack):
+  (a) **Surgery-window exclusion** — train pairs only when the later visit is
+      ≥3 months post-surgery and neither endpoint is pre-/post-op. Directly
+      targets G15/R7 (the 0–8d surgery-transition bin we currently train on).
+  (b) **Augmentation inside the SSL objective** — flips, intensity scale,
+      gamma contrast, Gaussian noise; add gamma (we lack it), and keep the EMA
+      target on an unaugmented/independently-augmented view (our finetune
+      currently augments both branches off the same batch).
+  (c) **Transition-balanced sampling** — their `W(s)=1−P(s)` sampler is the
+      sampling-side analogue of our R2/R13 transition reweighting.
+  (d) **Modality selection** — their "CT1 did not help" motivates a cheap
+      locked-probe test dropping/reweighting CT1 on the cached per-modality
+      latents (A26 `vision_mod`).
+  (e) **Saliency-mask overlap** — their saliency-vs-Grad-CAM analysis is a
+      cheap representation diagnostic we can run against the tumor masks.
+- Not portable: their SRI24 geometry and no-skull-strip would break the
+  BRAINIAC input contract on the frozen encoder; their greedy selection by test
+  metric is the split-luck trap locked down in `info/eval_protocol.md`.
+- Status: another independent data point that 91 patients is not enough for
+  from-scratch supervised RANO. It does not rescue the comparator, does not
+  change the A29–A31 "JEPA ahead" conclusion, and motivates the portables above
+  as JEPA-side improvements independent of the SOTA comparison.

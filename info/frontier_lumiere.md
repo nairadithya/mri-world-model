@@ -37,9 +37,24 @@ MRI Generation and Diffuse Glioma Growth Prediction," *IEEE TMI* 44(6):2449–24
 
 - **Matoso et al., arXiv:2504.18268 (2025)** — https://arxiv.org/abs/2504.18268 ;
   code https://github.com/anamatoso/RANO-classification ; ISMRM 2025 abstract.
-  Self-described first DL 4-class RANO pipeline. 5-fold CV stratified 80/20.
-  Best: **DenseNet264 on T1w+T2w+FLAIR pairs (no pretraining), median balanced
-  accuracy 51%** (>55% in 2 folds). Pretraining + clinical data *hurt*.
+  Self-described first DL 4-class RANO pipeline. Drops pre-/post-op, unlabeled,
+  and any timepoint **<3 months post-surgery** (RANO guideline; 366 left), then
+  requires the **same modality combination on both visits** of a pair.
+  Preprocessing (differs from ours): RAS reorientation (nipype) → N4 (ANTsPy) →
+  Gaussian denoise (ANTsPy) → registration to **SRI24** (DIPY) → z-score; **no
+  HD-BET, no 96³**. Input = 4 modalities × 2 consecutive timepoints = 8 channels.
+  Greedy 5-fold 80/20 search; best = **DenseNet264 on T1w+T2w+FLAIR, no
+  pretraining, no clinical data** (all four modalities and CT1 alone did not
+  help; subtraction did not help). Training: weighted sampler `W(s)=1−P(s)`
+  **plus** inverse-prevalence CE, MONAI augmentation (axis flips p=0.5;
+  intensity scale p=0.9; gamma contrast p=0.9; Gaussian noise sd 0.1 p=0.9),
+  Adam wd 0.01, lr 1e-4, batch 4, lr×0.1 on train-loss plateau, early stop
+  patience 10 / max 100 epochs, best by lowest test loss.
+  Best: **median balanced accuracy 50.96%** (max 58% in one fold), **median
+  F1 0.1335** — a *different metric* from the macro-F1 headlines below. Their
+  three pretraining tasks (rotation / MedMNIST / MedicalNet) and clinical data
+  both *hurt*. Saliency maps usually located tumor; Grad-CAM often did not;
+  they propose upstream segmentation (ROI) as the fix.
 - **Tikhonov et al. (MBZUAI), arXiv:2509.06511 (2025), BraTS-Lighthouse entry** —
   https://arxiv.org/abs/2509.06511. LUMIERE as BraTS Task-11 training data,
   patient-wise stratified 5-fold CV. Fine-tuned ResNet-18 (2D ROI, 4 mods) +
@@ -76,6 +91,11 @@ MRI Generation and Diffuse Glioma Growth Prediction," *IEEE TMI* 44(6):2449–24
 Uniform framing: consecutive-visit-pair → 4 classes, patient-wise splits
 (BraTS Task 11 labels 0=CR,1=PR,2=SD,3=PD). Nobody reports per-class AUCs or a
 held-out multi-centre test yet (BraTS hidden test pending).
+
+**Metric caveat:** Tikhonov and TRACE report **macro-F1**; Matoso reports
+**balanced accuracy** (their median macro-F1 is only 0.13). The "Same" rows are
+not on one metric — our ~0.40 macro-F1 is comparable to Tikhonov/TRACE, not to
+Matoso's 0.51.
 
 ## 4. Volumetry / masks / growth forecasting
 
