@@ -13,13 +13,20 @@ and `info/` for why things are the way they are.
   `heads.py`), `train/` (trainer, baselines), `preprocessing/` (BRAINIAC
   contract pipeline).
 - `scripts/` — runnable entry points. `run_train.py` (+`--aux-lambda`,
-  `--resume-from`, `--horizon`, `--dynamics`), `preprocess.py`, `probe_rano.py` (frozen
-  RANO probes + `--cv`), `surprise_signal.py` (error→PD AUC), `volume_probe.py`
-  (auto-mask volumetry), `sailor_eval.py` (cross-site eval),
+  `--resume-from`, `--horizon`, `--dynamics`), `preprocess.py`, `probe_rano.py`
+  (frozen RANO probes; `--cv-unseen` locked protocol + `--cohort`/`--readout-seed`;
+  legacy `--cv` is leaky, K3-16), `lock_eval.py` (materialize/verify the locked
+  folds), `surprise_signal.py` (error→PD AUC), `volume_probe.py` (auto-mask
+  volumetry), `sailor_eval.py` (cross-site eval),
   `horizon_probe.py` (`--encode`/`--curve`/`--train`: multi-horizon gate),
   `horizon_eval.py` (per-horizon JEPA-vs-persistence for a trained leg),
   `pred_latent_probe.py` (predicted-vs-EMA latent probes; `--refit` field
   models + held-out preds, `--probe` classifier tables),
+  `encode_interface.py` (per-modality/ROI/volumetry feature cache),
+  `task_train.py` (frozen-backbone temporal+head task training),
+  `finetune_lora.py` (supervised LoRA vision finetune),
+  `train_supervised_cnn.py` (MONAI 3D ResNet-18 comparator),
+  `cross_site_adapt.py` (zero-shot + K-shot CNN-vs-JEPA on SAILOR),
   `view_scans.py` (local browser NIfTI explorer),
   `shot_viewer.py` (headless screenshot validator for it; dev-only),
   fetch/auth scripts.
@@ -31,7 +38,9 @@ and `info/` for why things are the way they are.
   `kaggle/kernel-*/` are pushable-run variants (own `.py` source +
   `kernel-metadata.json`; shell commands LIVE — push executes the notebook
   as-is, so never `py_compile` them, only `jupytext --to ipynb`).
-  `kernel-lora/` is the supervised vision-finetune leg (`finetune_lora.py`).
+  `kernel-lora/` (supervised vision finetune, `finetune_lora.py`) and
+  `kernel-cnn/` (supervised ResNet-18 comparator, `train_supervised_cnn.py`)
+  are the current pushable legs.
 - `info/` — decision log (`decisions.md`, IDs D0–), ablations (`ablations.md`,
   IDs A–/I–), pilot notes (`pilot.md`). Append-only; reference IDs.
   Plot numbers live in `info/plots/metrics.json` (single source of truth);
@@ -143,13 +152,16 @@ NiiVue 0.69 API gotchas (each cost a blank canvas, found via `shot_viewer.py`):
 - **Data**: pandas NaN is truthy — coerce clinical numerics via explicit
   `isna` guards. Drop imageless visits; require pixels on both sides of
   every loss pair.
-- **Probes**: hero-split probe numbers are noise (0.45→0.51 across encoders
-  while CV sits at 0.33) — only 5-fold CV counts. Ridge + CV-λ mandatory
-  above ~100-d features (plain LSQ on 1152-d/450-row gives R²≈−100).
+- **Probes**: single-split probe numbers are noise, and the legacy all-91
+  `--cv` leaks encoder-train patients into probe folds (K3-16) — use the locked
+  protocol (`info/eval_protocol.md`, `--cv-unseen`); even the readout seed
+  alone spans 0.34–0.45 (A27). Ridge + CV-λ mandatory above ~100-d features
+  (plain LSQ on 1152-d/450-row gives R²≈−100).
 - **SAILOR**: `-icor` files carry background NaNs (~200 sessions, up to 79%
   of voxels) — prefer base variants; finite-check any new site before first
   encode. RANO codes {1:PD, 2:SD, 3:PR, 5:CR} are empirical (volume deltas);
-  3-vs-5 tentative. Intervals ~14 days → persistence regime (A12).
+  3-vs-5 tentative. Median inter-visit gap ~76 days (A14; earlier "~14 days"
+  was wrong) → persistence regime (A12).
 - **Gitignore**: anchor data-dir rules (`/data/`, not `data/`) — an
   unanchored pattern silently unmatched `src/data/` and the whole data
   layer went uncommitted until the first fresh clone (Kaggle) failed.
@@ -228,6 +240,6 @@ Rules, all earned:
 - Smoke test above must pass; forward + backward + EMA + baselines finite.
 - Clinical vectors swept NaN-free over all 91 patients after data changes.
 - Success criteria for training changes: loss drops, monitors healthy
-  (target std ≫ 0, rank > 1), JEPA beats persistence (A8: 0.0081 vs 0.0218
-  in-domain; A12: SAILOR short-interval regime favors persistence) —
-  a falling loss alone proves nothing.
+  (target std ≫ 0, rank > 1), and the same-space persistence gate is
+  re-passed (A24: in-domain test pooled is a tie, train pooled loses;
+  cross-site loses 7–10.5×) — a falling loss alone proves nothing.
