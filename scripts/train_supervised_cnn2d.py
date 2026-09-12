@@ -29,10 +29,42 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.data.collate import make_collate
 from src.data.dataset import LUMIEREDataset
 from src.data.eval_protocol import load_protocol
-from src.model.cnn import SupervisedCNN2D, pair_present, pair_slices
+from src.model.cnn import (SupervisedCNN2D, pair_present, pair_slices,
+                           roi_pair_slices)
 
 RANO_ACTION_TO_FLAT = {3: 0, 2: 1, 5: 2, 4: 3}
 SAILOR_ROOT = "data/sailor/sailor_ebrains_pseud/derivatives/mni2009c-n-s"
+LUM_MASK_ROOT = "data/autoseg/extracted/Imaging"
+_MASK_CACHE: dict = {}
+
+
+def _load_mask96(path: str):
+    import numpy as np
+    import nibabel as nib
+
+    if not os.path.exists(path):
+        return None
+    d = np.asanyarray(nib.load(path).dataobj).astype("float32")
+    t = torch.from_numpy(d)[None, None]
+    t96 = F.interpolate(t, size=(96, 96, 96), mode="nearest")[0, 0]
+    return t96 > 0
+
+
+def lum_mask(pid: str, visit: str):
+    key = ("lum", pid, visit)
+    if key not in _MASK_CACHE:
+        _MASK_CACHE[key] = _load_mask96(os.path.join(
+            LUM_MASK_ROOT, pid, visit,
+            "DeepBraTumIA-segmentation/atlas/segmentation/seg_mask.nii.gz"))
+    return _MASK_CACHE[key]
+
+
+def sailor_mask(pid: str, visit: str):
+    key = ("sailor", pid, visit)
+    if key not in _MASK_CACHE:
+        _MASK_CACHE[key] = _load_mask96(os.path.join(
+            SAILOR_ROOT, pid, visit, "Segmentation-ONCO.nii.gz"))
+    return _MASK_CACHE[key]
 
 
 def macro_f1(pred, y, n_cls=4):
@@ -56,8 +88,12 @@ def _build(cfg, patients):
                           min_visits=cfg["data"].get("min_visits", 2))
 
 
-def patient_examples(batch, min_fg=64):
-    """List of ((S, 2M, H, W) slices, label) for valid labelled pairs."""
+def patient_examples(batch, mask_fn=None, visits=None, crop=64, min_fg=64):
+    """List of ((S, 2M, H, W) slices, label) for valid labelled pairs.
+
+    With ``mask_fn`` the pair is cropped to a tumor-centred ROI (ROI slices);
+    otherwise whole-brain axial slices are returned.
+    """
     mri, mri_mask, actions = batch["mri"], batch["mri_mask"], batch["actions"]
     T = mri.shape[1]
     ex = []
@@ -67,7 +103,15 @@ def patient_examples(batch, min_fg=64):
         lab = RANO_ACTION_TO_FLAT.get(int(actions[0, t + 1]))
         if lab is None:
             continue
-        sl = pair_slices(mri, t, min_fg=min_fg)
+        if mask_fn is not None and visits is not None:
+            m0 = mask_fn(batch["patient_id"][0], visits[t])
+            m1 = mask_fn(batch["patient_id"][0], visits[t + 1])
+            if m0 is None and m1 is None:
+                continue
+            m = m0 if m1 is None else (m1 if m0 is None else (m0 | m1))
+            sl = roi_pair_slices(mri[0, t, :, 0], mri[0, t + 1, :, 0], m, crop=crop)
+        else:
+            sl = pair_slices(mri, t, min_fg=min_fg)
         if sl.numel():
             ex.append((sl, lab))
     return ex
@@ -79,7 +123,8 @@ def _chunks(x, n):
 
 
 @torch.no_grad()
-def eval_pairs(model, pids, cfg, device, collate, chunk=64):
+def eval_pairs(model, pids, cfg, device, collate, mask_fn=None, crop=64,
+               chunk=64):
     model.eval()
     per = {}
     for pid in pids:
@@ -87,7 +132,7 @@ def eval_pairs(model, pids, cfg, device, collate, chunk=64):
         if len(ds) == 0:
             continue
         for batch in DataLoader(ds, batch_size=1, collate_fn=collate):
-            ex = patient_examples(batch)
+            ex = patient_examples(batch, mask_fn, ds.visits[pid], crop)
             if not ex:
                 continue
             pl, yl = [], []
@@ -127,6 +172,7 @@ def train(args, cfg, device):
     cw = (counts.sum() / (4 * counts)).to(device)
     print(f"train class counts {counts.tolist()} weights {[round(x,2) for x in cw.tolist()]}")
 
+    train_mask_fn = lum_mask if args.roi else None
     model = SupervisedCNN2D(n_input_channels=8, num_classes=4).to(device)
     print(f"params {sum(p.numel() for p in model.parameters())/1e6:.1f}M (2D)")
     opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=args.wd)
@@ -162,7 +208,9 @@ def train(args, cfg, device):
             buf = []
 
         for batch in train_loader:
-            for sl, lab in patient_examples(batch):
+            ex = patient_examples(batch, train_mask_fn,
+                                  train_ds.visits[batch["patient_id"][0]], args.crop)
+            for sl, lab in ex:
                 for z in range(sl.shape[0]):
                     buf.append((sl[z], lab))
                     if len(buf) >= args.slice_batch:
@@ -170,7 +218,8 @@ def train(args, cfg, device):
         if buf:
             step()
         sched.step()
-        dev_f1, _ = eval_pairs(model, dev_pids, cfg, device, val_collate)
+        dev_f1, _ = eval_pairs(model, dev_pids, cfg, device, val_collate,
+                                mask_fn=train_mask_fn, crop=args.crop)
         print(f"epoch {ep}: loss={tot/max(nb,1):.4f} steps={nb} dev_macroF1={dev_f1:.4f}",
               flush=True)
         if dev_f1 > best_dev:
@@ -189,7 +238,8 @@ def train(args, cfg, device):
         best = torch.load(os.path.join(args.checkpoint_dir, "best.pt"),
                           map_location=device, weights_only=False)
         model.load_state_dict(best["model"])
-        f1, per = eval_pairs(model, proto["final"], cfg, device, val_collate)
+        f1, per = eval_pairs(model, proto["final"], cfg, device, val_collate,
+                              mask_fn=train_mask_fn, crop=args.crop)
         print(f"FINAL (reserved): {len(per)} patients macro-F1 {f1:.4f}")
     prov = {"config_sha1": hashlib.sha1(open(args.config, "rb").read()).hexdigest(),
             "git_sha": subprocess.check_output(["git", "rev-parse", "HEAD"],
@@ -212,9 +262,12 @@ def encode_features(args, cfg, device, chunk=64):
     out = {"lum": {}, "sailor": {}, "provenance": {"ckpt": os.path.abspath(args.ckpt)}}
 
     def _run(ds, key):
+        mask_fn = None
+        if args.roi:
+            mask_fn = lum_mask if key == "lum" else sailor_mask
         for batch in DataLoader(ds, batch_size=1, collate_fn=collate):
             pid = batch["patient_id"][0]
-            ex = patient_examples(batch)
+            ex = patient_examples(batch, mask_fn, ds.visits[pid], args.crop)
             if not ex:
                 continue
             feats, labs = [], []
@@ -251,6 +304,9 @@ def main():
     ap.add_argument("--patience", type=int, default=8)
     ap.add_argument("--min-epochs", type=int, default=5)
     ap.add_argument("--augment", action="store_true")
+    ap.add_argument("--roi", action="store_true",
+                    help="tumor-centred ROI crops (mask-guided)")
+    ap.add_argument("--crop", type=int, default=64)
     ap.add_argument("--max-patients", type=int, default=0)
     ap.add_argument("--train", action="store_true")
     ap.add_argument("--eval-final", action="store_true")

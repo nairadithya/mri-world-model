@@ -102,3 +102,33 @@ def pair_slices(mri: torch.Tensor, t: int, min_fg: int = 64) -> torch.Tensor:
     if not keep:
         return torch.empty(0, 2 * v0.shape[0], *v0.shape[-2:])
     return torch.stack(keep)
+
+
+def roi_pair_slices(v0: torch.Tensor, v1: torch.Tensor, mask: torch.Tensor,
+                    crop: int = 64) -> torch.Tensor:
+    """Tumor-centred ROI slices for a visit pair -> (S, 2*M, crop, crop).
+
+    v0/v1: (M, D, H, W) volumes; mask: (D, H, W) bool union of the two visits'
+    tumor masks. A fixed `crop`-cube is centred on the mask centroid; only
+    slices containing tumor are returned. Removes the whole-brain label noise
+    (every background slice carrying the visit's label) that collapsed A30.
+    """
+    idx = torch.nonzero(mask, as_tuple=False)
+    if idx.numel() == 0:
+        return torch.empty(0)
+    c = idx.float().mean(0)
+    D, H, W = mask.shape
+    boxes = []
+    for s in range(3):
+        dim = (D, H, W)[s]
+        half = crop // 2
+        lo = int(round(float(c[s]))) - half
+        lo = max(0, min(lo, max(0, dim - crop)))
+        boxes.append((lo, min(dim, lo + crop)))
+    (z0, z1), (y0, y1), (x0, x1) = boxes
+    mv = mask[z0:z1, y0:y1, x0:x1]
+    a = v0[:, z0:z1, y0:y1, x0:x1]
+    b = v1[:, z0:z1, y0:y1, x0:x1]
+    sl = [torch.cat([a[:, z], b[:, z]], dim=0)
+          for z in range(mv.shape[0]) if bool(mv[z].any())]
+    return torch.stack(sl) if sl else torch.empty(0)
