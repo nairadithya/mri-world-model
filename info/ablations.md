@@ -1101,3 +1101,39 @@ Logged inferences (evidence-backed; see A9/A10/A12 for numbers):
   or many more epochs/LR schedule), then re-run the same harness.
 - Harness + caches committed; CNN weights/features in `checkpoints/`
   (gitignored). Cost ~0.5 T4-h.
+
+## A30 — 2D-slice supervised CNN also collapses; the SOTA-family comparison needs ROI crops (2026-09-12, Kaggle T4 + local CPU)
+
+- Fix attempt for A29's under-trained 3D comparator: `train_supervised_cnn2d.py`,
+  a MONAI 2D axial-slice ResNet-18 (~20k slice samples/epoch vs ~200 pairs),
+  trained 9 epochs (early stop) on the locked 65, augmentation, class weights.
+- In-domain: **dev macro-F1 pinned at 0.1790 for all 9 epochs** (the
+  always-predict-PD collapse; 0.179 ≈ F1(PD)/4) while train loss fell
+  1.79→1.42 — memorizing train, majority-predicting dev. Reserved final
+  **0.182** (vs 3D CNN 0.222, JEPA ~0.39–0.45).
+- Cross-site (SAILOR subject-wise):
+
+  | encoder | zero-shot | K=3 | K=5 | K=10 | K=15 | K=20 |
+  |---|---|---|---|---|---|---|
+  | JEPA | **0.355** | 0.269 | 0.283 | 0.326 | 0.333 | 0.313 |
+  | CNN-2D | 0.275 | 0.204 | 0.224 | 0.252 | 0.246 | 0.253 |
+  | (CNN-3D, A29) | 0.261 | 0.228 | 0.225 | 0.261 | 0.264 | 0.227 |
+
+  JEPA leads at every point; the two from-scratch CNNs are roughly tied with
+  each other and both well below JEPA.
+- Diagnosis: a from-scratch supervised CNN is not trainable to competitiveness
+  on 91 patients. Two compounding causes: (i) no pretrained weights
+  (torchvision is banned by D16, MONAI ships none — the field's ResNets are
+  ImageNet/medical-initialised); (ii) whole-brain slices assign the visit's
+  single RANO label to *every* slice, most of which contain no tumor — heavy
+  label noise that drives the majority collapse. Tikhonov's ResNet is
+  **ROI-cropped** and only reaches AUC 0.74 alone; its 0.50 hybrid is carried
+  by >4,800 radiomic/growth features, not the CNN.
+- Conclusion: **this is not yet the intended SOTA-family adaptability
+  comparison.** What is established: on this cohort the frozen BRAINIAC-JEPA
+  trajectory representation beats from-scratch supervised CNNs (3D and 2D) both
+  in-domain and cross-site, and the supervised comparator must be ROI-cropped
+  (using the DeepBraTumIA-atlas / SAILOR ONCO masks already on disk) and/or
+  pretrained before any "SSL adapts better than supervised" claim is citable.
+- Harness (`cross_site_adapt.py`) and both CNN variants committed; Kaggle legs
+  ~0.5 T4-h total.
