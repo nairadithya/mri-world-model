@@ -1215,3 +1215,34 @@ Logged inferences (evidence-backed; see A9/A10/A12 for numbers):
   from-scratch supervised RANO. It does not rescue the comparator, does not
   change the A29–A31 "JEPA ahead" conclusion, and motivates the portables above
   as JEPA-side improvements independent of the SOTA comparison.
+
+## A33 — A32 JEPA-side changes implemented; short-resume test is null (2026-09-12, Kaggle T4)
+
+- Implemented the three portables behind default-off flags (commit `7320184`):
+  `--surgery-window` (dataset emits `visit_window`; the model drops pairs
+  touching pre-/post-op or <3-months-post-surgery visits), `--augment`
+  (flips/intensity/gamma/noise with an **asymmetric view**: online branch sees
+  the augmented input, EMA target the clean one), `--transition-weighting`
+  (inverse-prevalence 1-step JEPA loss over coarse transition classes).
+  Smoke-tested on both the default and flagged paths (forward/backward/EMA
+  finite; `src/data/transitions.py`, dataset, collate, jepa/jepa_model).
+- Test leg `kaggle/kernel-a32`: resume the champion, 6 epochs, batch 1,
+  accum 8, lr 2e-5, all three flags. Train transition counts
+  {stable 47, ->PD 156, ->response 38, other 166} -> weights [2.16, 0.65, 2.68,
+  0.61]. Val JEPA loss 0.0058 -> 0.0063 (best at epoch 1), std 0.055,
+  **rank 1.1** (low). Locked probe: within-unseen **0.3071** [0.2496,0.3604]
+  vs frozen 0.3093; transfer -> final **0.3846** [0.2351,0.4467] vs 0.4483
+  (seed 42) / ~0.39 honest.
+- Inference: **null on the locked metric** — but this is a weak test, not
+  evidence the changes are useless. Two confounds: (i) resuming the champion
+  with a fresh optimizer is the D22 ejection regime, and best-val selected
+  **epoch 1**, so the model barely moved from the champion; (ii) the val loss
+  scale changed (surgery-window removed the hard 0–8d pairs and weighting
+  changed the objective), so 0.0058 is not comparable to the champion's 0.0081
+  and lower loss says nothing. A proper test is a **from-scratch leg with the
+  A32 flags vs the champion's own from-scratch leg**, not a resume.
+- Watch item for that run: the target effective rank came in at 1.1 (champion
+  1.7–2.5); confirm it is the small masked val pool, not augmentation-induced
+  collapse.
+- Status: code committed and default-off (no existing path changed); the
+  from-scratch evaluation is the open step.
