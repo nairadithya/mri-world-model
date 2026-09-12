@@ -19,6 +19,10 @@ wandb/
 *.onnx
 *.bin
 
+# Generated plots: keep the script + metrics.json, regenerate the PNGs
+# (info/plots/make_plots.py reads info/plots/metrics.json)
+info/plots/*.png
+
 # Environments
 .venv/
 venv/
