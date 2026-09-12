@@ -55,6 +55,15 @@ def main() -> None:
                       help="time-continuous dynamics: velocity field integrated "
                            "across true gaps (replaces 1-step and horizon "
                            "losses; mutually exclusive with --horizon).")
+    ap.add_argument("--augment", action="store_true",
+                      help="training-only augmentation; JEPA target sees the "
+                           "clean view (A32).")
+    ap.add_argument("--surgery-window", action="store_true",
+                      help="drop JEPA pairs touching pre-/post-op or <3-months "
+                           "post-surgery visits (A32/R7).")
+    ap.add_argument("--transition-weighting", action="store_true",
+                      help="inverse-prevalence weighting of 1-step JEPA pairs "
+                           "by transition class (A32/R13).")
     ap.add_argument("--no-wandb", action="store_true")
     ap.add_argument("--random-init", action="store_true",
                     help="Skip BRAINIAC checkpoint; random init (dev/smoke-test only).")
@@ -103,6 +112,12 @@ def main() -> None:
             raise ValueError("--dynamics replaces the horizon loss; "
                              "pass only one of --dynamics/--horizon.")
         cfg["model"].setdefault("dynamics", {})["enabled"] = True
+    if args.augment:
+        cfg["data"]["augment_train"] = True
+    if args.surgery_window:
+        cfg["training"]["surgery_window"] = True
+    if args.transition_weighting:
+        cfg["training"]["transition_weighting"] = True
     if args.no_wandb:
         cfg["training"]["log_wandb"] = False
 
@@ -128,6 +143,9 @@ def main() -> None:
     size = tuple(cfg["preprocessing"].get("target_size", [96, 96, 96]))
     store_half = bool(cfg["data"].get("store_half", False))
     collate = make_collate(size, dtype=torch.float16 if store_half else torch.float32)
+    train_collate = make_collate(
+        size, dtype=torch.float16 if store_half else torch.float32,
+        augment=bool(cfg["data"].get("augment_train", False)))
     if store_half:
         print("collate: storing fp16 inputs (backbone casts to float per chunk)")
     common = dict(
@@ -146,16 +164,28 @@ def main() -> None:
         batch_sampler = LengthBucketSampler(
             lengths, bs, shuffle=True, seed=cfg["data"].get("seed", 42))
         train_loader = DataLoader(train_ds, batch_sampler=batch_sampler,
-                                  num_workers=2, collate_fn=collate)
+                                  num_workers=2, collate_fn=train_collate)
         print(f"train batching: length-bucketed (bs={bs}, "
               f"maxlen={max(lengths, default=0)})")
     else:
         train_loader = DataLoader(train_ds, batch_size=bs, shuffle=True,
-                                  num_workers=2, collate_fn=collate)
+                                  num_workers=2, collate_fn=train_collate)
         print("train batching: legacy uniform shuffle")
     val_loader = DataLoader(val_ds, batch_size=bs, shuffle=False,
                             num_workers=2, collate_fn=collate)
     print(f"train/val patients: {len(train_ds)}/{len(val_ds)}")
+    if cfg["training"].get("transition_weighting"):
+        from src.data.transitions import (CLASS_NAMES, inverse_prevalence_weights,
+                                          transition_class)
+        counts = [0] * 4
+        for i in range(len(train_ds)):
+            a = train_ds[i]["actions"].tolist()
+            for x, y in zip(a[:-1], a[1:]):
+                counts[transition_class(x, y)] += 1
+        w = inverse_prevalence_weights(counts)
+        cfg["training"]["transition_weights"] = w
+        print("transition counts", dict(zip(CLASS_NAMES, counts)),
+              "weights", [round(v, 2) for v in w])
 
     model = JEPAWorldModel(cfg)
     resume_opt_state = None

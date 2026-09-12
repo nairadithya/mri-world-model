@@ -137,6 +137,34 @@ def jepa_loss(z_hat: torch.Tensor, z_target: torch.Tensor) -> torch.Tensor:
     return (1 - (z_hat * z_target).sum(dim=-1)).mean()
 
 
+def weighted_jepa_loss(z_hat: torch.Tensor, z_target: torch.Tensor,
+                       valid: torch.Tensor, actions: torch.Tensor,
+                       weights) -> torch.Tensor:
+    """Transition-balanced 1-step JEPA loss (R13/A32).
+
+    Each valid pair's cosine error is weighted by the inverse-prevalence
+    weight of its coarse transition class (stable / ->PD / ->response / other),
+    so the hundreds of near-static pairs no longer drown the informative
+    transitions. z_hat/z_target: (B, T-1, D); valid: (B, T-1); actions: (B, T).
+    """
+    from src.data.transitions import transition_class
+
+    err = 1 - (F.normalize(z_hat, dim=-1) * F.normalize(z_target, dim=-1)).sum(-1)
+    B, Tm1 = valid.shape
+    w = torch.ones_like(err)
+    a0, a1 = actions[:, :-1], actions[:, 1:]
+    for b in range(B):
+        for t in range(Tm1):
+            if bool(valid[b, t]):
+                w[b, t] = weights[transition_class(int(a0[b, t]), int(a1[b, t]))]
+    v = valid.reshape(-1)
+    if not bool(v.any()):
+        return z_hat.sum() * 0.0
+    ee = err.reshape(-1)[v]
+    ww = w.reshape(-1)[v]
+    return (ww * ee).sum() / ww.sum().clamp_min(1e-9)
+
+
 @torch.no_grad()
 def collapse_metrics(z: torch.Tensor) -> dict[str, float]:
     """Training-health monitors: per-dim std and effective rank of targets."""

@@ -13,9 +13,9 @@ from .dataset import MODALITIES
 def _augment_volume(v: torch.Tensor) -> torch.Tensor:
     """Training-only augmentation on a z-scored (1, D, H, W) volume.
 
-    Random axis flips + intensity scale/shift + small Gaussian noise. Cheap
-    and label-preserving; the missing regularizer for the 65-patient LoRA
-    finetune (Step 3).
+    Random axis flips + intensity scale/shift + gamma contrast + small
+    Gaussian noise (Matoso recipe, A32). Cheap and label-preserving; the
+    missing regularizer for the 65-patient JEPA training.
     """
     for ax in (1, 2, 3):
         if torch.rand(1).item() < 0.5:
@@ -23,6 +23,9 @@ def _augment_volume(v: torch.Tensor) -> torch.Tensor:
     a = 1.0 + (torch.rand(1).item() * 2 - 1) * 0.1
     b = (torch.rand(1).item() * 2 - 1) * 0.1
     v = v * a + b
+    if torch.rand(1).item() < 0.9:  # gamma contrast (sign-preserving on z-scores)
+        g = 0.7 + torch.rand(1).item() * 0.6
+        v = v.sign() * v.abs().pow(g)
     return v + torch.randn(v.shape) * 0.02
 
 
@@ -39,8 +42,10 @@ def collate_fn(batch: list[dict], size: tuple[int, int, int] = (96, 96, 96),
     # input footprint (backbone casts to float on the chunk path); the default
     # float32 preserves exact legacy numerics.
     mri = torch.zeros(B, T, M, C, D, H, W, dtype=dtype)  # (B, visits, modality, C, D, H, W)
+    mri_clean = torch.zeros_like(mri) if augment else None
     mri_mask = torch.zeros(B, T, M, dtype=torch.bool)
     visit_mask = torch.zeros(B, T, dtype=torch.bool)
+    visit_valid = torch.zeros(B, T, dtype=torch.bool)
     actions = torch.zeros(B, T, dtype=torch.long)
     deltas = torch.zeros(B, T, dtype=torch.float32)
 
@@ -51,6 +56,10 @@ def collate_fn(batch: list[dict], size: tuple[int, int, int] = (96, 96, 96),
     for b, s in enumerate(batch):
         n = s["n_visits"]
         visit_mask[b, :n] = True
+        if "visit_window" in s:
+            visit_valid[b, :n] = s["visit_window"]
+        else:
+            visit_valid[b, :n] = True
         actions[b, :n] = s["actions"]
         deltas[b, :n] = s["time_deltas"]
         for mi, mod in enumerate(MODALITIES):
@@ -58,10 +67,12 @@ def collate_fn(batch: list[dict], size: tuple[int, int, int] = (96, 96, 96),
                 if path is None:
                     continue
                 try:
-                    vol = runtime_transform(path, size)
+                    clean = runtime_transform(path, size)
                     if augment:
-                        vol = _augment_volume(vol)
-                    mri[b, t, mi] = vol
+                        mri[b, t, mi] = _augment_volume(clean)
+                        mri_clean[b, t, mi] = clean
+                    else:
+                        mri[b, t, mi] = clean
                     mri_mask[b, t, mi] = True
                 except Exception:
                     continue  # leave zero-filled, mask False
@@ -70,12 +81,15 @@ def collate_fn(batch: list[dict], size: tuple[int, int, int] = (96, 96, 96),
         "mri": mri,
         "mri_mask": mri_mask,
         "visit_mask": visit_mask,
+        "visit_valid": visit_valid,
         "clinical": clinical,
         "actions": actions,
         "time_deltas": deltas,
         "n_visits": n_visits,
         "patient_id": patient_ids,
     }
+    if mri_clean is not None:
+        out["mri_clean"] = mri_clean
     # Treatment phase channel (SAILOR; absent for LUMIERE). Padded 3 =
     # unknown phase, matching the adapter default. Dynamics prefers this
     # over RANO actions when present (real treatment, not response proxy).

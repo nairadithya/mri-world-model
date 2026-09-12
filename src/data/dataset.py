@@ -168,6 +168,21 @@ class LUMIEREDataset(Dataset):
         days = [parse_week_to_days(v) for v in visits]
         deltas = [0] + [b - a for a, b in zip(days, days[1:])]
 
+        # Surgery-window mask (A32 / Matoso): drop pre-/post-op timepoints and
+        # any timepoint <3 months after surgery (RANO guideline). Used as a
+        # pair-level mask so the JEPA predictor is not asked to model a
+        # resection; the RANO probe already excludes operative labels.
+        surg = [d for v, d in zip(visits, days)
+                if self.rano.get((patient, v), "") in ("Post-Op", "Post-Op/PD")]
+        surg_day = min(surg) if surg else None
+        window = []
+        for v, d in zip(visits, days):
+            r = self.rano.get((patient, v), "")
+            ok = r not in ("Pre-Op", "Post-Op", "Post-Op/PD")
+            if ok and surg_day is not None and (d - surg_day) < 91:
+                ok = False
+            window.append(ok)
+
         actions = []
         for v in visits:
             rating = self.rano.get((patient, v), "")
@@ -182,5 +197,6 @@ class LUMIEREDataset(Dataset):
             "clinical": clinical,
             "actions": torch.tensor(actions, dtype=torch.long),
             "time_deltas": torch.tensor(deltas, dtype=torch.float32),
+            "visit_window": torch.tensor(window, dtype=torch.bool),
             "n_visits": len(visits),
         }

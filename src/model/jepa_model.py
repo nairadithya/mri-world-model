@@ -26,6 +26,7 @@ from .jepa import (
     collapse_metrics,
     encode_chunked,
     jepa_loss,
+    weighted_jepa_loss,
 )
 from .temporal import Fusion, TemporalTransformer, TimeDeltaEncoding
 
@@ -269,6 +270,11 @@ class JEPAWorldModel(nn.Module):
 
     def forward(self, batch: dict) -> dict:
         mri, mri_mask = batch["mri"], batch["mri_mask"]
+        # A32: asymmetric views for JEPA — the EMA target should not match a
+        # noised/contrast-jittered context, so the online branch sees the
+        # augmented `mri` and the target branch the clean `mri_clean` when the
+        # collate produced it (training augmentation on).
+        mri_tgt = batch.get("mri_clean", mri)
         visit_mask = batch["visit_mask"]
         B, T = visit_mask.shape
 
@@ -279,25 +285,34 @@ class JEPAWorldModel(nn.Module):
         states, valid = self.temporal.forward_prefixes(
             tokens, batch["time_deltas"], visit_mask
         )                                                        # (B,T-1,d)
-        # Belt-and-braces: both sides of a (t -> t+1) pair need real pixels.
-        # (Dataset drops imageless visits; this covers load-time failures.)
+        # Belt-and-braces: both sides of a pair need real pixels. Surgery-
+        # window exclusion (A32/R7) additionally drops any pair touching a
+        # pre-/post-op or <3-months-post-surgery visit.
         has_img = mri_mask.any(dim=2)                            # (B,T)
+        win = batch.get("visit_valid") \
+            if (self.cfg.get("training") or {}).get("surgery_window") else None
+        if win is not None:
+            has_img = has_img & win
         valid = valid & has_img[:, :-1] & has_img[:, 1:]
         z_hat = self.predictor(states)                           # (B,T-1,proj)
         with torch.no_grad():
-            z_tgt = self.encode_target_visit(mri, mri_mask)[:, 1:]  # (B,T-1,proj)
+            z_tgt = self.encode_target_visit(mri_tgt, mri_mask)[:, 1:]  # (B,T-1,proj)
 
         flat_valid = valid.reshape(-1)
-        loss = (
-            jepa_loss(z_hat.reshape(-1, z_hat.shape[-1])[flat_valid],
-                      z_tgt.reshape(-1, z_tgt.shape[-1])[flat_valid])
-            if flat_valid.any()
-            else z_hat.sum() * 0.0  # degenerate batch guard
-        )
+        tw = (self.cfg.get("training") or {}).get("transition_weights")
+        if tw is not None and not (self.dynamics_enabled or self.horizon_enabled):
+            loss = weighted_jepa_loss(z_hat, z_tgt, valid, batch["actions"], tw)
+        else:
+            loss = (
+                jepa_loss(z_hat.reshape(-1, z_hat.shape[-1])[flat_valid],
+                          z_tgt.reshape(-1, z_tgt.shape[-1])[flat_valid])
+                if flat_valid.any()
+                else z_hat.sum() * 0.0  # degenerate batch guard
+            )
         horizon = None
         if self.dynamics_enabled:
             with torch.no_grad():
-                z_all = self.encode_target_visit(mri, mri_mask)
+                z_all = self.encode_target_visit(mri_tgt, mri_mask)
             loss, z_hat, z_tgt, valid, horizon = self._dynamics_loss(
                 states, z_all, visit_mask, has_img, batch["time_deltas"],
                 batch.get("actions"), c,
@@ -305,7 +320,7 @@ class JEPAWorldModel(nn.Module):
                 treatment=batch.get("treatment"))
         elif self.horizon_enabled:
             loss, z_hat, z_tgt, valid, horizon = self._horizon_loss(
-                states, batch["time_deltas"], visit_mask, has_img, mri, mri_mask,
+                states, batch["time_deltas"], visit_mask, has_img, mri_tgt, mri_mask,
                 z_hat, z_tgt, valid, loss)
         # RANO aux (D25): forecast framing on clean-labelled valid pairs.
         # best-val tracks the TOTAL so best.pt follows the joint objective.
