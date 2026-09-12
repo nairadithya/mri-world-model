@@ -1,6 +1,6 @@
 {
  "_readme": "Single source of truth for every number plotted by make_plots.py in this folder. Edit values here, rerun:  python3 info/plots/make_plots.py",
- "_revision": "2026-09-12: A25-A32. Added cross_site_adapt (JEPA vs 3 from-scratch CNN comparators). Earlier: A23 phantom guard + cache rebuilds, A24 same-space rows + split_gate CIs.",
+ "_revision": "2026-09-13: A33-A35. cross_site_adapt gains the radiomics/growth comparator (RAD). Earlier: A25-A32 locked protocol + SOTA push.",
  "hero_leg1": {
   "source": "info/pilot.md Run 4 — hero leg 1, full cohort on Kaggle T4 (reported epochs only; no full per-epoch log was kept)",
   "epochs": [
@@ -18406,9 +18406,22 @@
      0.237
     ],
     "in_domain_final": 0.222
+   },
+   "RAD": {
+    "zero_shot": 0.207,
+    "ks": [
+     0.243,
+     0.254,
+     0.277,
+     0.303,
+     0.247
+    ],
+    "in_domain_cv": 0.217,
+    "in_domain_final": 0.41,
+    "note": "reduced volumetry+growth (22-d), not the full >4800 radiomics hybrid; matches Tikhonov's volumes+growth ablation level"
    }
   },
   "majority_f1": 0.479,
-  "note": "JEPA leads at every K; all three from-scratch CNNs collapse to majority in-domain (0.18-0.22). Not a faithful Matoso reproduction (A32)."
+  "note": "JEPA leads at every K; from-scratch CNNs collapse in-domain (0.18-0.22); the reduced volumetry+growth comparator (RAD) also trails JEPA everywhere. Not faithful reproductions of Matoso/Tikhonov (A32/A35)."
  }
 }

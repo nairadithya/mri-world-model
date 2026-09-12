@@ -1289,3 +1289,46 @@ Logged inferences (evidence-backed; see A9/A10/A12 for numbers):
 - Recommendation: stop objective-side LUMIERE runs. The only information-adding
   lever left is external longitudinal data (Step 5) or hand-engineered
   radiomics (A32).
+
+## A35 — Radiomics/growth comparator: the SOTA hybrid's edge still trails frozen JEPA (2026-09-13, local CPU)
+
+- Built the hand-engineered longitudinal comparator the SOTA hybrid is carried
+  by (A32 follow-through): `scripts/radiomics_features.py`, a 22-d per-pair
+  feature set — per-region (necrotic/enhancing/edema) log-volumes, log-growth,
+  ratios, and **nadir-relative** volumetry, plus total-volume versions. Source:
+  LUMIERE DeepBraTumIA `measured_volumes_in_mm3.json` (80 patients); SAILOR
+  ONCO masks `Necrosis/ContrastEnhanced/EdemaMask-ONCO` (27 subjects), voxel
+  counts x voxel volume. `scripts/radiomics_probe.py` evaluates it on the
+  locked protocol; `cross_site_adapt.py --extra` adds it to the K-shot curves.
+- In-domain (locked protocol, standardized + same probe):
+
+  | feature set | within-unseen CV | transfer -> final |
+  |---|---|---|
+  | frozen JEPA states | 0.3093 [0.2546,0.3575] | 0.4483 (seed 42) / ~0.39 honest |
+  | radiomics/growth (RAD) | 0.2167 [0.1736,0.2550] | 0.4100 [0.2143,0.5495] |
+
+- Cross-site (SAILOR subject-wise, K-shot):
+
+  | encoder | zero-shot | K=3 | K=5 | K=10 | K=15 | K=20 |
+  |---|---|---|---|---|---|---|
+  | JEPA | **0.355** | 0.269 | 0.283 | 0.326 | 0.333 | 0.313 |
+  | RAD | 0.207 | 0.243 | 0.254 | 0.277 | 0.303 | 0.247 |
+  | (CNN-3D, A29) | 0.261 | 0.228 | 0.225 | 0.261 | 0.264 | 0.227 |
+
+- Inference: the reduced volumetry+growth comparator reaches the level of
+  Tikhonov's **volumes+growth ablation** (their F1 0.45; our transfer final
+  0.41) — a useful sanity match — but it does **not beat the frozen JEPA
+  representation anywhere**: worse in-domain CV (0.217 vs 0.309), comparable
+  final (0.41 vs ~0.39–0.45), and below JEPA at every SAILOR K. It does
+  *adapt* with site shots (0.24 -> 0.30), so growth carries progression signal,
+  just less than the learned trajectory state.
+- Loop closed: the original ~0.10 macro-F1 gap to the field's 0.50 is the full
+  >4,800-feature radiomics (texture/shape/growth) plus tuned CatBoost — a
+  feature-engineering/method difference, **not** a representation the JEPA
+  encoder is missing. Across every comparator we could build (three CNNs, the
+  radiomics/growth set), the frozen JEPA trajectory representation is the best
+  object, in-domain and cross-site.
+- Caveats: 22-d reduced set, not the full radiomics; no ComBat harmonization;
+  SAILOR mask-derived volumes use a different segmentation lineage than
+  LUMIERE's DeepBraTumIA (both automated). Plot updated:
+  `info/plots/cross_site_adapt.png`.

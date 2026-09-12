@@ -150,6 +150,10 @@ def main():
                     help="LUMIERE CNN features (from the Kaggle leg)")
     ap.add_argument("--cnn-sailor", default="checkpoints/cnn_sailor.pt",
                     help="SAILOR CNN features (encoded locally)")
+    ap.add_argument("--extra-cache", default=None,
+                    help="extra LUMIERE feature cache (e.g. radiomics), same format")
+    ap.add_argument("--extra-sailor", default=None)
+    ap.add_argument("--extra-name", default="RAD")
     ap.add_argument("--ks", type=int, nargs="*", default=[3, 5, 10, 15, 20])
     ap.add_argument("--repeats", type=int, default=20)
     ap.add_argument("--seed", type=int, default=0)
@@ -178,6 +182,23 @@ def main():
         encoders["CNN"] = (cnn_lum, cnn_sa)
     else:
         print("(CNN features incomplete — JEPA only)")
+
+    if args.extra_cache and os.path.exists(args.extra_cache):
+        ex_lum = cnn_rows(torch.load(args.extra_cache, map_location="cpu", weights_only=False),
+                          "lum", proto["encoder_train"] + proto["dev"] + proto["final"])
+        ex_sa = {}
+        if args.extra_sailor and os.path.exists(args.extra_sailor):
+            ex_sa = cnn_rows(torch.load(args.extra_sailor, map_location="cpu", weights_only=False),
+                             "sailor", list(jepa_sa))
+        elif "sailor" in (torch.load(args.extra_cache, map_location="cpu",
+                                     weights_only=False) or {}):
+            ex_sa = cnn_rows(torch.load(args.extra_cache, map_location="cpu", weights_only=False),
+                             "sailor", list(jepa_sa))
+        if ex_lum and ex_sa:
+            print(f"{args.extra_name}: LUMIERE {len(ex_lum)} / SAILOR {len(ex_sa)} subjects")
+            encoders[args.extra_name] = (ex_lum, ex_sa)
+        else:
+            print(f"({args.extra_name} features incomplete)")
 
     print(f"\n{'encoder':>7} {'zero-shot':>10} {'K=3':>7} {'K=5':>7} {'K=10':>7} {'K=15':>7} {'K=20':>7}")
     for name, (lum, sa) in encoders.items():

@@ -567,7 +567,8 @@ def plot_cross_site_adapt(g, out):
     ks = [0] + list(g["ks"])
     fig, ax = plt.subplots(figsize=(7.5, 4.6))
     style = {"JEPA": ("#1f77b4", "o", 2.4), "CNN-3D": ("#D55E00", "s", 1.4),
-             "CNN-2D": ("#009E73", "^", 1.4), "CNN-2D-ROI": ("#CC79C2", "D", 1.4)}
+             "CNN-2D": ("#009E73", "^", 1.4), "CNN-2D-ROI": ("#CC79C2", "D", 1.4),
+             "RAD": ("#7f7f7f", "v", 1.6)}
     for name, enc in g["encoders"].items():
         ys = [enc["zero_shot"]] + list(enc["ks"])
         col, mk, lw = style.get(name, ("#777777", "x", 1.2))
@@ -581,8 +582,8 @@ def plot_cross_site_adapt(g, out):
     ax.set_ylim(0.10, 0.42)
     ax.legend(fontsize=9, loc="upper left", ncol=2)
     ax.text(0.02, 0.03,
-            "CNNs collapse in-domain (0.18-0.22) and never adapt; JEPA leads every K. "
-            "Not a faithful Matoso reproduction (A32).",
+            "CNNs collapse in-domain (0.18-0.22); the radiomics/growth comparator (RAD) "
+            "trails too. JEPA leads every K (A29-A35).",
             transform=ax.transAxes, fontsize=8, style="italic", color="dimgray")
     fig.tight_layout()
     fig.savefig(out, dpi=150)
