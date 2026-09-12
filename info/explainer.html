@@ -369,9 +369,12 @@ cross-site K-shot point (<code>cross_site_adapt.png</code>).</div>
 <li><b>External longitudinal data (Step 5)</b> — the only lever that adds
 information rather than re-weighting 91 patients: continue-pretrain on SAILOR
 plus other public cohorts, and make cross-site generalization the headline.</li>
-<li><b>Radiomics comparator</b> — hand-engineered growth/shrinkage + nadir
-volumetry (the SOTA hybrid's real edge) as the fair comparator; our simple
-snapshot volumetry was weak (A26), but growth features were never tested.</li>
+<li><b>Radiomics/growth comparator — done (A35).</b> A 22-d volumetry+growth
+feature set (region log-volumes, log-growth, ratios, nadir-relative; DeepBraTumIA
+for LUMIERE, ONCO masks for SAILOR) reaches Tikhonov's <i>volumes+growth</i>
+ablation level (transfer final 0.41 vs their 0.45) but trails frozen JEPA
+everywhere (CV 0.217 vs 0.309; every SAILOR K). The remaining 0.50 gap is the
+full &gt;4,800-feature radiomics + CatBoost, not a missing representation.</li>
 <li><b>Matoso portables (A32)</b> — surgery-window pair exclusion (R7),
 augmentation inside SSL with an unaugmented EMA-target view, transition-balanced
 sampling (R13), a CT1-drop modality probe, and saliency-mask overlap.</li>
@@ -380,7 +383,8 @@ debates permanently.</li>
 </ol>
 <p><small>Rewritten 2026-09-08 from the full session record (IDs: decisions
 D0–D31, ablations A1–A18, directions R/G); gauntlet section (A22) added
-2026-09-10; locked-protocol / SOTA-push section (A25–A32) added 2026-09-12.
+2026-09-10; locked-protocol / SOTA-push section (A25–A32) added 2026-09-12;
+radiomics/growth comparator (A33–A35) added 2026-09-13.
 Plots regenerate via
 <code>python3 info/plots/make_plots.py</code> from
 <code>info/plots/metrics.json</code> (19 plots). Underlying evidence:

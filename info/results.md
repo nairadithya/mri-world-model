@@ -530,6 +530,12 @@ The SOTA plan was then run, each step judged on that protocol:
   (under-trained, different preprocessing, no weighted sampler), but Matoso's
   own faithful best is weak (balanced accuracy 0.51, F1 0.13), so the macro-F1
   gap is radiomics/data, not training length.
+- **Radiomics/growth comparator (A35).** A 22-d volumetry+growth feature set
+  (region log-volumes, log-growth, ratios, nadir-relative; DeepBraTumIA /
+  ONCO masks) reaches Tikhonov's volumes+growth ablation level (transfer final
+  0.41 vs their 0.45) but trails frozen JEPA everywhere (CV 0.217 vs 0.309;
+  every SAILOR K). The remaining 0.50 gap is the full >4,800-feature radiomics
+  + CatBoost — not a representation the JEPA encoder is missing.
 
 Net: the value is the pretrained representation, not further training on 91
 patients. The remaining levers are external longitudinal data (Step 5) or
