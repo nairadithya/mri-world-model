@@ -444,3 +444,12 @@ referenced, not repeated — only session decisions are recorded here in full.
   push, or the clone will not contain `scripts/harness.py`. Notebooks were
   regenerated from the `.py` sources with jupytext, but only the `.py` call
   sites are committed for now; regenerate the `.ipynb` before pushing.
+
+- **D36 — Kaggle pins resolved; notebooks committed (2026-09-13).** The
+  `HARNESS_COMMIT` placeholders in all seven pinned kernels are now the real
+  harness SHA `3241596` (D33/D34 merged to `main`), and the regenerated
+  `.ipynb` are committed alongside the `.py` sources so the pushable notebooks
+  match. `git-filter-repo` purged `info/plots/*.png` from history (`.gitignore`
+  keeps only `make_plots.py` + `metrics.json`); the merged `exp/r11-basin` /
+  `exp/sailor-reprocess` branches were deleted locally and on the remote, and
+  the rewritten `main` + `exp/harness-refactor` were force-pushed.

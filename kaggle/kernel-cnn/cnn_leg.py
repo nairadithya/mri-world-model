@@ -41,7 +41,7 @@ assert transformers.__version__.startswith('4')
 # Pin the commit that contains the CNN comparator + adaptation harness.
 !rm -rf world-model && git clone https://github.com/nairadithya/mri-world-model.git world-model
 %cd world-model
-!git checkout HARNESS_COMMIT  # TODO(harness): pin the commit containing scripts/harness.py (was bdd64c7)
+!git checkout 3241596  # pinned: includes scripts/harness.py (D33-D35)
 !git rev-parse --short HEAD
 
 # %%

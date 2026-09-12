@@ -57,7 +57,7 @@ assert transformers.__version__.startswith('4'), 'need transformers<5 for peft'
 # this tree; repair changes notebook only).
 !rm -rf world-model && git clone https://github.com/nairadithya/mri-world-model.git world-model
 %cd world-model
-!git checkout HARNESS_COMMIT  # TODO(harness): pin the commit containing scripts/harness.py (was acf7503)
+!git checkout 3241596  # pinned: includes scripts/harness.py (D33-D35)
 !git rev-parse --short HEAD  # RECORD this hash with your results
 
 # %%
