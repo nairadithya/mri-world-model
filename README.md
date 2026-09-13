@@ -32,13 +32,16 @@ and pilot notes.
 ## Setup
 
 ```bash
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+uv sync              # create .venv from uv.lock (uv >= 0.9.8)
+uv sync --extra viewer   # + playwright for the shot_viewer screenshot check
 ```
 
-Notes: requires `transformers<5`; never install `torchvision` (a skewed build
-breaks the `peft` import with a misleading error). You additionally need the
-artifacts below — all gitignored, documented not committed.
+`pyproject.toml` is the source of truth; `uv.lock` pins the full environment.
+Activate the venv (`source .venv/bin/activate`) or prefix commands with
+`uv run`. Notes: uv resolves CPU-only `torch` from the PyTorch index and
+mechanically excludes `torchvision` (a skewed build breaks the `peft` import
+with a misleading error; see D16/D37 in `info/decisions.md`). You additionally
+need the artifacts below — all gitignored, documented not committed.
 
 ## Downloading data (`scripts/`)
 

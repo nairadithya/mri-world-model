@@ -7,9 +7,9 @@ prints the loaded volume list + status, which is how the NiiVue API gotchas in
 AGENTS.md were found.
 
 This is a DEV tool, not a runtime dependency: it needs playwright, which is
-NOT in requirements.txt. Install once:
+an optional extra. Install once (the browser is a separate download):
 
-    pip install playwright && playwright install chromium
+    uv sync --extra viewer && uv run playwright install chromium
 
 Usage (viewer running in another shell):
     python scripts/view_scans.py --no-browser &          # serve on :8765
@@ -40,7 +40,7 @@ def main() -> int:
         from playwright.sync_api import sync_playwright
     except ImportError:
         print("playwright not installed — run:\n"
-              "  pip install playwright && playwright install chromium")
+              "  uv sync --extra viewer && uv run playwright install chromium")
         return 2
 
     args_list = ["--no-sandbox", "--enable-unsafe-swiftshader",

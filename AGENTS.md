@@ -53,11 +53,16 @@ and `info/` for why things are the way they are.
 ## Setup
 
 ```bash
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+uv sync              # create .venv from uv.lock (uv >= 0.9.8)
+uv sync --extra viewer   # + playwright for the shot_viewer screenshot check
 ```
 
-You additionally need (all gitignored, documented not committed):
+`pyproject.toml` is the source of truth; `uv.lock` pins the full environment.
+Activate the venv (`source .venv/bin/activate`) or prefix commands with
+`uv run`. Notes: uv resolves CPU-only `torch` from the PyTorch index and
+mechanically excludes `torchvision` (a skewed build breaks the `peft` import
+with a misleading error; see D16/D37 in `info/decisions.md`). You additionally
+need the artifacts below — all gitignored, documented not committed.
 
 - `checkpoints/BrainIAC.ckpt` — official weights ONLY (see gotchas).
 - `data/lumiere_sample/Imaging/` — LUMIERE NIfTIs (`lumiere_fetch.py`).
@@ -120,8 +125,8 @@ bottom panel (and age/OS inline in the patient list):
 - The NiiVue bundle is fetched once from jsDelivr into
   `~/.cache/world-model-viewer/` (pinned `0.69.0`); after that it runs offline.
 - Validate viewer changes with `scripts/shot_viewer.py` (headless
-  Chromium/WebGL via SwiftShader). It is a dev-only tool: `pip install
-  playwright && playwright install chromium` (NOT in `requirements.txt`). Start
+  Chromium/WebGL via SwiftShader). It is a dev-only tool: `uv sync --extra
+  viewer` then `uv run playwright install chromium`. Start
   the viewer with `--no-browser`, point the harness at a deep link; it polls
   until volumes load (software-WebGL shader compile is slow) and exits nonzero
   if nothing rendered — screenshot the result before trusting a change.
@@ -136,6 +141,38 @@ NiiVue 0.69 API gotchas (each cost a blank canvas, found via `shot_viewer.py`):
   queue so concurrent deep-link loads cannot stack.
 - Passing option objects with a `name` breaks `getFileExt(name||url)`; load by
   `{url}` only, then set `name`/`colormap`/`opacity` on `nv.volumes[i]`.
+
+## Figure review (plots + `explainer.html`)
+
+Plots are generated from `metrics.json` and `explainer.html` embeds them, so a
+plot change is only verified by rendering it and **looking at the pixels** (the
+image-aware read tool). The playwright *module* is not installed — use the
+Chromium binary the view_scans dev tooling cached:
+
+```bash
+python info/plots/make_plots.py          # regenerate png + pdf
+CHROME=$(ls ~/.cache/ms-playwright/chromium-*/chrome-linux64/chrome | head -1)
+"$CHROME" --headless --no-sandbox --disable-gpu --hide-scrollbars \
+  --virtual-time-budget=8000 --window-size=1000,16000 \
+  --screenshot=/tmp/explainer.png "file://$PWD/info/explainer.html"
+python3 -c "from PIL import Image; Image.open('/tmp/explainer.png').crop((0,400,1000,1200)).save('/tmp/crop.png')"  # then read the crop
+```
+
+Rules, all earned:
+
+- **Do not automate text-fit checks through the plotting API.** A
+  `get_window_extent` sweep reported a 232x152px box for a string whose real
+  layout is 85x15pt: it invented overlaps and missed the actual clipping.
+  Render, crop, read the image; fix only what you can see.
+- Titles/tick labels do not wrap or shrink: 15pt titles overflow narrow
+  figures, and log-axis minor ticks collide inside one decade — wrap titles
+  with `\n`, set explicit ticks and `minorticks_off()`.
+- A busy panel needs headroom, not clever placement: raise `ylim` (or widen
+  `figsize`) so legends and value labels clear the bars; give scatter legends a
+  white frame (`LEGEND_BOX`) and reference-line labels a white box.
+- `explainer.html` sizes each `<img>` from its figure width (0.9x96 px/in) so
+  every plot renders at one text scale; update the `width` attribute when a
+  figure's `figsize` changes.
 
 ## Conventions (from README, enforced)
 
@@ -255,3 +292,6 @@ Rules, all earned:
   (target std ≫ 0, rank > 1), and the same-space persistence gate is
   re-passed (A24: in-domain test pooled is a tie, train pooled loses;
   cross-site loses 7–10.5×) — a falling loss alone proves nothing.
+- Plot/HTML changes: regenerate (`make_plots.py`) and review the rendered png
+  or page with an image-aware read (see Figure review) — code review alone is
+  not evidence that a figure fits.

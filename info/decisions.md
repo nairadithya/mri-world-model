@@ -453,3 +453,28 @@ referenced, not repeated — only session decisions are recorded here in full.
   keeps only `make_plots.py` + `metrics.json`); the merged `exp/r11-basin` /
   `exp/sailor-reprocess` branches were deleted locally and on the remote, and
   the rewritten `main` + `exp/harness-refactor` were force-pushed.
+
+- **D37 — Dependency management migrated to uv (2026-09-13).** `requirements.txt`
+  is replaced by `pyproject.toml` + `uv.lock`; `uv sync` is the supported
+  setup (`uv >= 0.4.27`). Three things surfaced while resolving the lock:
+  (a) `requests` and `ebrains-kg-core` (imported as `kg_core` in
+  `scripts/ebrains_auth.py`) were used but never declared in
+  `requirements.txt` — both are now dependencies; (b) `torch` must come from
+  the PyTorch CPU index (`download.pytorch.org/whl/cpu via
+  [tool.uv.sources]`) because PyPI's torch tops out at 2.9.1 and has no cp314
+  wheels, while the CPU index serves the `2.14.0+cpu` the host runs — a plain
+  PyPI resolve would either fail or pull multi-GB CUDA wheels; (c) D16's
+  torchvision ban is now enforced mechanically by
+  `exclude-dependencies = ["torchvision"]`, because
+  `hd-bet → nnunetv2 → dynamic-network-architectures → timm` requires it
+  transitively (uv dropped it from the lock). `playwright` moved to the
+  `viewer` optional extra (`uv sync --extra viewer`); the Kaggle notebooks keep
+  their inline `!pip install` lists since Kaggle has no uv. Verified:
+  `uv lock --check` clean (114 packages, no torchvision), 11/11 harness tests
+  pass, `peft` imports clean under `transformers 4.57.6` (<5), and the random-init
+  smoke train runs (loss 0.91 → 0.71, target std/rank healthy). Caveat:
+  `uv pip check` reports exactly one incompatibility — `timm` requires
+  `torchvision` — so `import timm` (and therefore HD-BET inference) fails and
+  `skull_strip` uses its percentile-mask fallback. That was already true before
+  the migration (timm was installed, torchvision was not); the exclusion keeps
+  it that way rather than silently resolving it.
