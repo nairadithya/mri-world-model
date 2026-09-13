@@ -41,7 +41,7 @@ assert transformers.__version__.startswith('4')
 # %%
 !rm -rf world-model && git clone https://github.com/nairadithya/mri-world-model.git world-model
 %cd world-model
-!git checkout 3241596  # pinned: includes scripts/harness.py (D33-D35)
+!git checkout 5162746  # pinned: harness analyses/trainers migration (D40)
 !git rev-parse --short HEAD
 
 # %%
@@ -74,7 +74,7 @@ print('wrote kaggle.yaml (augment + surgery_window + transition_weighting)')
 # %%
 # Same-space persistence gate (needs the model's own states/targets cache).
 !python -u scripts/harness.py encode --config kaggle.yaml --champion /kaggle/working/a32s/best.pt --cache /kaggle/working/a32s_hcache.pt --views z states 2>&1 | tee /kaggle/working/encode_a32s.log
-!python -u scripts/split_gate.py --champion /kaggle/working/a32s/best.pt --cache /kaggle/working/a32s_hcache.pt --boot 10000 2>&1 | tee /kaggle/working/gate_a32s.log
+!python -u scripts/harness.py run split-gate --champion /kaggle/working/a32s/best.pt --cache /kaggle/working/a32s_hcache.pt --boot 10000 2>&1 | tee /kaggle/working/gate_a32s.log
 
 # %%
 # Locked RANO probe (within-unseen CV + reserved final), reusing one cache.
