@@ -5,8 +5,8 @@ RANO_{t+1}. Patient-level chunks, class-weighted CE, augmentation, early stop
 on the 13 `dev`; optional feature encoding for the cross-site comparison.
 
 Usage:
-    python scripts/train_supervised_cnn.py --train --epochs 20
-    python scripts/train_supervised_cnn.py --encode --ckpt checkpoints/cnn/best.pt
+    python scripts/harness.py train cnn3d --train --epochs 20
+    python scripts/harness.py train cnn3d --encode --ckpt checkpoints/cnn/best.pt
 """
 from __future__ import annotations
 
@@ -25,13 +25,11 @@ import torch.nn.functional as F
 import yaml
 from torch.utils.data import DataLoader
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from src.data.collate import make_collate
-from src.data.dataset import LUMIEREDataset
-from src.data.eval_protocol import load_protocol
-from src.model.cnn import SupervisedCNN, pair_channels, pair_present
-from src.harness.eval.metrics import macro_f1  # noqa: F401
+from ...data.collate import make_collate
+from ...data.dataset import LUMIEREDataset
+from ...data.eval_protocol import load_protocol
+from ...model.cnn import SupervisedCNN, pair_channels, pair_present
+from ..eval.metrics import macro_f1  # noqa: F401
 
 RANO_ACTION_TO_FLAT = {3: 0, 2: 1, 5: 2, 4: 3}
 CLEAN_ACTIONS = (2, 3, 4, 5)
@@ -204,7 +202,7 @@ def encode_features(args, cfg, device):
             _run(_build(cfg, proto[split]), "lum")
     if args.encode_scope in ("sailor", "all"):
         if os.path.isdir(SAILOR_ROOT):
-            from src.data.sailor import SAILORDataset
+            from ...data.sailor import SAILORDataset
             _run(SAILORDataset(SAILOR_ROOT), "sailor")
         else:
             print(f"skip SAILOR encode (root not present: {SAILOR_ROOT}); "
@@ -213,7 +211,7 @@ def encode_features(args, cfg, device):
     print(f"wrote {args.feature_cache}: lum {len(out['lum'])} / sailor {len(out['sailor'])}")
 
 
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="config/default.yaml")
     ap.add_argument("--protocol", default="info/eval_folds.json")
@@ -232,7 +230,7 @@ def main():
     ap.add_argument("--encode-scope", choices=["lum", "sailor", "all"], default="all")
     ap.add_argument("--ckpt", default="checkpoints/cnn/best.pt")
     ap.add_argument("--feature-cache", default="checkpoints/cnn_features.pt")
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
     random.seed(0)
     with open(args.config) as f:
         cfg = yaml.safe_load(f)

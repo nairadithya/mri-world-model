@@ -25,10 +25,9 @@ and `info/` for why things are the way they are.
   `horizon_eval.py` (per-horizon JEPA-vs-persistence for a trained leg),
   `pred_latent_probe.py` (predicted-vs-EMA latent probes; `--refit` field
   models + held-out preds, `--probe` classifier tables),
-  `encode_interface.py` (per-modality/ROI/volumetry feature cache),
-  `task_train.py` (frozen-backbone temporal+head task training),
-  `finetune_lora.py` (supervised LoRA vision finetune),
-  `train_supervised_cnn.py` (MONAI 3D ResNet-18 comparator),
+  `encode_interface.py` (per-modality/ROI/volumetry feature cache);
+  training methods (`field`, `head`, `lora`, `cnn3d`, `cnn2d`; `jepa`) live in
+  `src/harness/train/` and run via `scripts/harness.py train <method>`;
   `cross_site_adapt.py` (zero-shot + K-shot CNN-vs-JEPA on SAILOR),
   `view_scans.py` (local browser NIfTI explorer),
   `shot_viewer.py` (headless screenshot validator for it; dev-only),
@@ -41,8 +40,8 @@ and `info/` for why things are the way they are.
   `kaggle/kernel-*/` are pushable-run variants (own `.py` source +
   `kernel-metadata.json`; shell commands LIVE — push executes the notebook
   as-is, so never `py_compile` them, only `jupytext --to ipynb`).
-  `kernel-lora/` (supervised vision finetune, `finetune_lora.py`) and
-  `kernel-cnn/` (supervised ResNet-18 comparator, `train_supervised_cnn.py`)
+  `kernel-lora/` (supervised vision finetune, `harness.py train lora`) and
+  `kernel-cnn/` (supervised ResNet-18 comparator, `harness.py train cnn3d`)
   are the current pushable legs.
 - `info/` — decision log (`decisions.md`, IDs D0–), ablations (`ablations.md`,
   IDs A–/I–), pilot notes (`pilot.md`). Append-only; reference IDs.
@@ -186,7 +185,7 @@ Rules, all earned:
    config hash, git sha, date} at creation; loaders assert it. Pre-2026-09-10
    caches are filename-only (same bug class as the D22 champion overwrite).
 7. Persist trained weights, not just scores, whenever a follow-up might need
-   predictions (`train_field.py` saved scores only; recovering field
+   predictions (`src/harness/train/field.py` saved scores only; recovering field
    predictions cost a full refit — now `checkpoints/field_models.pt`).
 8. Update the record with the result: every experiment lands in `info/` (new
    D/A/R ID, append-only) and, when plots or conclusions change,

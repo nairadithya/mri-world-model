@@ -6,8 +6,8 @@ this small cohort. Pair-level predictions/features are the mean over the
 pair's slices, matching the JEPA per-pair granularity for `cross_site_adapt`.
 
 Usage:
-    python scripts/train_supervised_cnn2d.py --train --eval-final --encode --encode-scope lum
-    python scripts/train_supervised_cnn2d.py --encode --encode-scope sailor
+    python scripts/harness.py train cnn2d --train --eval-final --encode --encode-scope lum
+    python scripts/harness.py train cnn2d --encode --encode-scope sailor
 """
 from __future__ import annotations
 
@@ -25,12 +25,11 @@ import torch.nn.functional as F
 import yaml
 from torch.utils.data import DataLoader
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from src.data.collate import make_collate
-from src.data.dataset import LUMIEREDataset
-from src.data.eval_protocol import load_protocol
-from src.model.cnn import (SupervisedCNN2D, pair_present, pair_slices,
-                           roi_pair_slices)
+from ...data.collate import make_collate
+from ...data.dataset import LUMIEREDataset
+from ...data.eval_protocol import load_protocol
+from ...model.cnn import (SupervisedCNN2D, pair_present, pair_slices,
+                          roi_pair_slices)
 
 RANO_ACTION_TO_FLAT = {3: 0, 2: 1, 5: 2, 4: 3}
 SAILOR_ROOT = "data/sailor/sailor_ebrains_pseud/derivatives/mni2009c-n-s"
@@ -79,7 +78,7 @@ def sailor_mask(pid: str, visit: str):
 
 
 def macro_f1(pred, y, n_cls=4):  # re-exported shared metric
-    from src.harness.eval.metrics import macro_f1 as _macro_f1
+    from ..eval.metrics import macro_f1 as _macro_f1
     return _macro_f1(pred, y, n_cls)
 
 
@@ -289,7 +288,7 @@ def encode_features(args, cfg, device, chunk=64):
             _run(_build(cfg, proto[split]), "lum")
     if args.encode_scope in ("sailor", "all"):
         if os.path.isdir(SAILOR_ROOT):
-            from src.data.sailor import SAILORDataset
+            from ...data.sailor import SAILORDataset
             _run(SAILORDataset(SAILOR_ROOT), "sailor")
         else:
             print(f"skip SAILOR (root missing: {SAILOR_ROOT})")
@@ -297,7 +296,7 @@ def encode_features(args, cfg, device, chunk=64):
     print(f"wrote {args.feature_cache}: lum {len(out['lum'])} / sailor {len(out['sailor'])}")
 
 
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="config/default.yaml")
     ap.add_argument("--protocol", default="info/eval_folds.json")
@@ -319,7 +318,7 @@ def main():
     ap.add_argument("--encode-scope", choices=["lum", "sailor", "all"], default="all")
     ap.add_argument("--ckpt", default="checkpoints/cnn2d/best.pt")
     ap.add_argument("--feature-cache", default="checkpoints/cnn2d_features.pt")
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
     random.seed(0)
     with open(args.config) as f:
         cfg = yaml.safe_load(f)

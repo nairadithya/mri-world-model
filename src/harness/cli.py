@@ -6,15 +6,14 @@ Subcommands:
   eval                       task x protocol x readout x metrics (pluggable)
   train <method> [args...]   train a representation method (native or legacy)
 
-Old ``scripts/*.py`` entry points remain until each method is migrated; this
-CLI is the forward target and preserves every artifact path in
-:mod:`src.harness.paths`.
+Train methods live under :mod:`src.harness.train`; the CLI preserves every
+artifact path in :mod:`src.harness.paths`.
 """
 from __future__ import annotations
 
 import argparse
+import importlib
 import os
-import runpy
 import sys
 
 from . import METHODS, METRICS, PROTOCOLS, TASKS
@@ -29,14 +28,14 @@ from .eval.report import print_latent, print_provenance, print_result
 from .paths import CHAMPION, DEFAULT_CONFIG, EVAL_FOLDS, PROBE_CACHE, PROBE_HEAD
 from .runrecord import make_record
 
-ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-LEGACY_TRAIN = {
-    "field": "scripts/train_field.py",
-    "head": "scripts/task_train.py",
-    "lora": "scripts/finetune_lora.py",
-    "cnn3d": "scripts/train_supervised_cnn.py",
-    "cnn2d": "scripts/train_supervised_cnn2d.py",
+# Train methods that live under src/harness/train but are imported lazily (they
+# pull heavy deps: MONAI/peft/CNN). Entries are "module:function".
+TRAIN_MODULES = {
+    "field": "src.harness.train.field:main",
+    "head": "src.harness.train.head:main",
+    "lora": "src.harness.train.lora:main",
+    "cnn3d": "src.harness.train.cnn3d:main",
+    "cnn2d": "src.harness.train.cnn2d:main",
 }
 
 USAGE = """\
@@ -60,7 +59,7 @@ def cmd_list(_args) -> None:
     _log("metrics:   " + ", ".join(METRICS.names()))
     _log("tasks:     " + ", ".join(TASKS.names()))
     _log("protocols: " + ", ".join(PROTOCOLS.names()))
-    _log("methods:   " + ", ".join(sorted(set(METHODS.names()) | set(LEGACY_TRAIN))))
+    _log("methods:   " + ", ".join(sorted(set(METHODS.names()) | set(TRAIN_MODULES))))
 
 
 def _resolve_protocol(spec: str, cfg: dict):
@@ -191,18 +190,12 @@ def cmd_train(args) -> None:
         if entry is not None:
             entry(rest)
             return
-    if method not in LEGACY_TRAIN:
-        raise SystemExit(f"unknown train method {method!r}; "
-                         f"known: {sorted(set(METHODS.names()) | set(LEGACY_TRAIN))}")
-    script = os.path.join(ROOT, LEGACY_TRAIN[method])
-    print(f"[harness] delegating train {method} -> {LEGACY_TRAIN[method]} "
-          f"(migrated in a later phase)", flush=True)
-    old_argv = sys.argv
-    sys.argv = [script, *rest]
-    try:
-        runpy.run_path(script, run_name="__main__")
-    finally:
-        sys.argv = old_argv
+    if method in TRAIN_MODULES:
+        mod_name, fn_name = TRAIN_MODULES[method].split(":")
+        getattr(importlib.import_module(mod_name), fn_name)(rest)
+        return
+    known = sorted(set(METHODS.names()) | set(TRAIN_MODULES))
+    raise SystemExit(f"unknown train method {method!r}; known: {known}")
 
 
 # ---------------------------------------------------------------- parsers --

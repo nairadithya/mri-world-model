@@ -45,7 +45,7 @@ from src.model.dynamics_field import PatientTempo, VelocityField, integrate  # n
 from horizon_probe import HorizonPredictor  # noqa: E402  (probe head class)
 from src.harness.train.readout import fit_linear, scores  # noqa: E402
 from split_gate import load_predictor  # noqa: E402  (champion 1-step head)
-from train_field import fit_field, pairs_of  # noqa: E402
+from src.harness.train.field import fit_field, pairs_of  # noqa: E402
 
 FIELD_MODELS = "checkpoints/field_models.pt"
 SAILOR_PROBE_MAP = {1: 0, 2: 1, 3: 2, 5: 3}
@@ -72,7 +72,7 @@ def _heldout_preds(field, tempo, rows, steps=3):
 def refit(cache_path= "checkpoints/field_cache.pt",
           save_path=FIELD_MODELS, hidden=256, dropout=0.2, wd=0.1,
           lr=1e-3, max_epochs=400, steps=3, seed=42):
-    """Mirror train_field.run_cv exactly, but persist models + predictions."""
+    """Mirror field.run_cv exactly, but persist models + predictions."""
     cache = torch.load(cache_path, map_location="cpu",
                        weights_only=False)["patients"]
     saved = {"folds": {}, "heldout": {"cond": [], "uncond": []}}

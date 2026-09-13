@@ -16,9 +16,9 @@ Field init: final layer scaled x0.01 so training starts AT persistence
 AND held-out must beat persistence, else the field just found the fixed point.
 
 Usage:
-    python scripts/train_field.py --encode            # one-time, CPU ~40 min
-    python scripts/train_field.py --train             # 5-fold CV, CPU
-    python scripts/train_field.py --encode --subjects sub-01 sub-02   # smoke
+    python scripts/harness.py train field --encode            # one-time, CPU ~40 min
+    python scripts/harness.py train field --train             # 5-fold CV, CPU
+    python scripts/harness.py train field --encode --subjects sub-01 sub-02   # smoke
 """
 from __future__ import annotations
 
@@ -33,14 +33,11 @@ import torch.nn.functional as F
 import yaml
 from torch.utils.data import DataLoader
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from src.data.collate import make_collate
-from src.data.sailor import SAILORDataset, TREATMENT_NAMES
-from src.model.dynamics_field import PatientTempo, VelocityField, integrate
-from src.model.jepa_model import JEPAWorldModel
-
-from surprise_signal import auc_mann_whitney  # noqa: E402
+from ...data.collate import make_collate
+from ...data.sailor import SAILORDataset, TREATMENT_NAMES
+from ...model.dynamics_field import PatientTempo, VelocityField, integrate
+from ...model.jepa_model import JEPAWorldModel
+from ..eval.metrics import auc_mann_whitney
 
 SAILOR_ROOT = "data/sailor/sailor_ebrains_pseud/derivatives/mni2009c-n-s"
 
@@ -244,7 +241,7 @@ def run_cv(cache_path, hidden=256, dropout=0.2, wd=0.1, lr=1e-3,
     print("per-pair held-out scores -> checkpoints/field_scores.pt")
 
 
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="config/default.yaml")
     ap.add_argument("--champion", default="checkpoints/champion_0.0081.pt")
@@ -259,7 +256,7 @@ def main():
     ap.add_argument("--max-epochs", type=int, default=400)
     ap.add_argument("--steps", type=int, default=3)
     ap.add_argument("--seed", type=int, default=42)
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
     with open(args.config) as f:
         cfg = yaml.safe_load(f)
     if args.encode:

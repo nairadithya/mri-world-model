@@ -14,9 +14,9 @@ the end, and never during training. Selection metric = dev macro-F1.
 
 Usage:
     # CPU structural smoke
-    python scripts/finetune_lora.py --max-patients 2 --epochs 1 --jepa-lambda 0
+    python scripts/harness.py train lora --max-patients 2 --epochs 1 --jepa-lambda 0
     # real GPU run
-    python scripts/finetune_lora.py --epochs 20 --lr 2e-5 --accum-steps 8 --augment
+    python scripts/harness.py train lora --epochs 20 --lr 2e-5 --accum-steps 8 --augment
 """
 from __future__ import annotations
 
@@ -36,16 +36,15 @@ import torch.nn.functional as F
 import yaml
 from torch.utils.data import DataLoader
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from src.data.collate import make_collate
-from src.data.dataset import LUMIEREDataset
-from src.data.eval_protocol import load_protocol
-from src.model.heads import ACTION_TO_FLAT, CLEAN_ACTIONS
-from src.model.jepa import jepa_loss
-from src.model.jepa_model import JEPAWorldModel
-from src.harness.eval.aggregate import percentile_ci as _ci
-from src.harness.eval.aggregate import patient_bootstrap
-from src.harness.eval.metrics import macro_f1  # noqa: F401
+from ...data.collate import make_collate
+from ...data.dataset import LUMIEREDataset
+from ...data.eval_protocol import load_protocol
+from ...model.heads import ACTION_TO_FLAT, CLEAN_ACTIONS
+from ...model.jepa import jepa_loss
+from ...model.jepa_model import JEPAWorldModel
+from ..eval.aggregate import percentile_ci as _ci
+from ..eval.aggregate import patient_bootstrap
+from ..eval.metrics import macro_f1  # noqa: F401
 
 
 def bootstrap(per, boot=10000, seed=42):
@@ -131,7 +130,7 @@ def eval_dev(model, loader, device):
     return f1, per
 
 
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="config/default.yaml")
     ap.add_argument("--champion", default="checkpoints/champion_0.0081.pt")
@@ -157,7 +156,7 @@ def main():
     ap.add_argument("--eval-final", action="store_true",
                     help="touch the reserved final slice ONCE at the end (default off)")
     ap.add_argument("--seed", type=int, default=42)
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
 
     torch.manual_seed(args.seed)
     random.seed(args.seed)

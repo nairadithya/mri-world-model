@@ -7,8 +7,8 @@ report-only (locked protocol). Gate: beat the frozen-state readout baseline
 final macro-F1 0.448 [0.304, 0.505] (A25/A26).
 
 Usage:
-    python scripts/task_train.py --mode temporal --epochs 30 --lr 1e-4
-    python scripts/task_train.py --mode head          # frozen-state reference
+    python scripts/harness.py train head --mode temporal --epochs 30 --lr 1e-4
+    python scripts/harness.py train head --mode head          # frozen-state reference
 """
 from __future__ import annotations
 
@@ -25,9 +25,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import yaml
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from src.data.dataset import parse_week_to_days
-from src.model.jepa_model import JEPAWorldModel
+from ...data.dataset import parse_week_to_days
+from ...model.jepa_model import JEPAWorldModel
 
 RANO_NAMES = ["PD", "SD", "PR", "CR"]
 
@@ -90,7 +89,7 @@ def bootstrap(per, boot=10000, seed=42):
     return _ci(vals)
 
 
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="config/default.yaml")
     ap.add_argument("--champion", default="checkpoints/champion_0.0081.pt")
@@ -103,13 +102,13 @@ def main():
     ap.add_argument("--hidden", type=int, default=0, help="MLP head width (0=linear)")
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--boot", type=int, default=10000)
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
 
     torch.manual_seed(args.seed)
     random.seed(args.seed)
     with open(args.config) as f:
         cfg = yaml.safe_load(f)
-    from src.data.eval_protocol import load_protocol
+    from ...data.eval_protocol import load_protocol
 
     proto = load_protocol(args.protocol)
     cache = torch.load(args.cache, map_location="cpu", weights_only=False)

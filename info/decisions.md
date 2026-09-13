@@ -501,3 +501,18 @@ referenced, not repeated — only session decisions are recorded here in full.
   the specialized analyses (volume/radiomics/concept/cross-site/sailor/
   persistence/freeze). Retiring those needs their logic moved into the registry
   first (Phase 5b, pending).
+
+- **D39 — Phase 5b: trainers moved into `src/harness/train` (2026-09-13).**
+  Moved `train_field`→`field`, `task_train`→`head`, `finetune_lora`→`lora`,
+  `train_supervised_cnn`→`cnn3d`, `train_supervised_cnn2d`→`cnn2d` (all
+  `main(argv=None)`, relative imports, no `scripts/` path hacks), and deleted
+  the five legacy script entry points. The CLI now dispatches them lazily via a
+  `TRAIN_MODULES` map (`src.harness.train.<mod>:main`) so heavy deps
+  (MONAI/peft/CNN) load only when that method runs; `jepa` stays native and
+  `readout` routes to the evaluator. `pred_latent_probe` now imports
+  `fit_field`/`pairs_of` from `src.harness.train.field`. Verified: compileall
+  clean, every script imports, 11/11 tests, `harness.py list` shows all seven
+  methods, and a 1-epoch `train field --train` smoke ran end-to-end
+  (`field_scores.pt` restored afterward). Kaggle kernels stay valid: they pin
+  `3241596`, where the old delegated paths still exist, so no kernel bump is
+  required for this change.
