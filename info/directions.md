@@ -164,6 +164,7 @@ It lists interval-stratified eval + persistence baselines as open; both are sinc
 - **R25. Perfusion second tower.** Small encoder over SAILOR rCBF/rCBV (+ dose map) fused late — structural BRAINIAC stays frozen. Direct lineage to Larsson 2020 / Huisman 2026, and LUMIERE can't do it (no perfusion) so it's SAILOR-native work.
 - **R26. Uncertainty + OOD (stage D).** Ensemble/dropout surprise intervals; new-site detection via target-space typicality (pairs with the R-data-5 site-discriminator). Required before any clinical-facing claim.
 - **R27. Treatment counterfactuals (stage E).** Reachable only after R14: roll the action-conditioned dynamics under CRT-vs-TMZ-swapped phases. Simulation, not prescription — but the program's namesake payoff.
+- **R28. Pretrained supervised comparator (the missing SOTA-family test).** A29–A31's from-scratch CNNs collapsed to always-PD (final 0.18–0.22), which makes the "JEPA adapts better than supervised" claim *uncitable*: the comparator already loses in-domain before transfer is tested (A32: under-trained, and not a faithful Matoso reproduction). The field's ResNets are **pretrained** (ImageNet/medical-initialised); ours had no pretrained weights because torchvision is banned by D16 and MONAI ships none. Protocol: obtain a pretrained 2D encoder without violating D16 — weights-only load (fetch the `resnet18` state_dict as raw tensors; the ban is on the *package*, not the weights) — or formally resolve/lift D16; **behavioural-verify any port (I4)** before use. Train the same ROI-cropped 2D harness (A31 setup) to convergence with Matoso-style patience/max-epochs and a weighted sampler, then rerun `cross_site_adapt.py` zero-shot + K-shot. Success bar: comparator competitive in-domain (within readout-seed noise of the frozen JEPA final, A27) *and* still losing to JEPA cross-site — only then is the representation-transfer result citable. Falsifier: a pretrained CNN that matches JEPA cross-site retires the SSL-adapts-better story. Cost: one Kaggle session + a dependency decision.
 
 ### Suggested order (next two weeks)
 
@@ -188,6 +189,8 @@ cross-site. Reading Matoso (A32) yields JEPA-side portables, independent of
 the SOTA comparison: (a) surgery-window pair exclusion (R7), (b) augmentation
 inside SSL with gamma + an unaugmented EMA-target view, (c) transition-balanced
 sampling (R13), (d) CT1-drop modality probe (R9), (e) saliency-mask overlap.
+The A29–A31 comparison is left **uncitable** until a pretrained supervised
+comparator is run (R28) — the from-scratch CNNs were not the field's setup.
 
 ---
 
@@ -223,3 +226,103 @@ sampling (R13), (d) CT1-drop modality probe (R9), (e) saliency-mask overlap.
   2` both run end-to-end, finite losses, `best.pt`/`last.pt` written.
 - Queued, not done: G1 (dims/checkpoint compat — needs a decision), G4/G5
   (would shift published SAILOR numbers — fold into the R4 bundle).
+
+---
+
+## Note formalization — `info/notes.md` (2026-09-13)
+
+`notes.md` carried four unformalized bullets. Each is mapped below to what the
+record already answers (so it is not re-run) and the next executable step. IDs
+continue the R-series; `notes.md` now points here.
+
+### R29 — Train/val generalization-gap monitor (note 1)
+
+- **State.** Only **val** loss is persisted and plotted (`metrics.json`
+  `hero_leg1.val`; `make_plots.py:104` `plot_hero_leg1`). Train loss exists
+  transiently in logs (A27 quotes 3.5 → 0.8; A29 0.42 → 0.36) but is never
+  saved, so the overfit/underfit split is argued from val alone.
+- **Hypothesis.** The negative legs occupy two regimes: LUMIERE JEPA/head/LoRA
+  legs **overfit** (train falls, val U-shape — Run 4, A27, A28), while the
+  from-scratch CNNs **underfit** (both high, still falling — A29–A31). A
+  persisted gap makes that falsifiable and is the figure a reviewer expects.
+- **Protocol.** (a) persist per-epoch `train_loss` (same pair-weighted
+  aggregation as val) to the run JSON + `metrics.json`; (b) add a
+  `train_val_gap` panel (two curves + shaded gap) to `make_plots.py`;
+  (c) backfill from saved Kaggle `logs_run.json` where they exist.
+- **Success bar.** Every reported leg carries both curves; "overfit" is
+  licensed only when val rises while train falls, "underfit" when both fall.
+  No training change — a diagnostic and a writeup prerequisite.
+- **Cost.** CPU-hours, zero GPU.
+
+### R30 — Imbalance handling beyond class-weighted CE (note 2)
+
+- **State.** Class-weighted CE is already the default in the RANO probes/heads.
+  Inverse-prevalence **loss reweighting** of the JEPA objective was tested from
+  scratch (`--transition-weighting`, A34) and did **not** help (dynamics gate
+  worse). PD ≈ 64%; PR/CR are n=1/2 noise (Synthesis-3).
+- **What remains untested, by value:**
+  - (a) **Weighted sampler** (Matoso `W(s)=1−P(s)`, A32 portable (c)) — the
+    *sampling-side* analogue of A34's loss-side reweighting. Pre-register on a
+    short accum-8 leg plus the locked probe.
+  - (b) **Focal / logit-adjusted loss** on the frozen RANO readout — pure
+    readout, no encoder risk, bootstrap CI on the locked protocol.
+  - (c) **Binary progression-vs-not** as the primary target (Synthesis-3: the
+    4-class framing undersells the model; PR/CR too rare to score).
+- **Success bar.** Locked-CV macro-F1 or balanced accuracy beats the frozen
+  0.309 CI-separated, or binary AUROC/AUPRC improves; else record null and
+  close. Prior: A34's data-limited verdict predicts null for (a); (b)/(c) are
+  cheap enough to run regardless.
+- **Cost.** CPU-days for (b)/(c); one short T4 leg for (a).
+
+### R31 — Feature-alignment **loss** for cross-domain dynamics (note 3)
+
+- **State.** Cross-domain has been attacked on the **preprocessing** side and
+  is closed: skull (A19/A21), uint8 (A21 addendum), pipeline reprocessing
+  (A19), raw-vs-MNI (A18) all leave the dynamics failure intact — the residual
+  is site calibration, and a SAILOR-fit field already flips the gate (A15/A16,
+  R16). A16's **inference-time** CORAL cut head error 2.4× with frozen weights;
+  the higher-order residual it left was never attacked *during training*.
+- **Hypothesis.** A latent alignment term on the online branch (CORAL or MMD
+  against site statistics, or an adversarial site discriminator on the
+  projector) removes the residual A16 could not, because it shapes the space
+  rather than matching it post hoc.
+- **Protocol.** Frozen champion; train only the image projector (+ optional
+  LoRA scale) with an alignment loss to SAILOR latent stats (N=27); evaluate
+  with `split_gate` and the per-bin gap table under `info/eval_protocol.md`,
+  pre-registered, including the shuffled-site control.
+- **Success bar.** SAILOR JEPA/persistence ratio ≤ 1 (currently 5–12×, A21)
+  with the in-domain gate re-passed; if alignment only shrinks toward
+  persistence (A22's "best error, worse signal"), record it null.
+- **Cost.** One T4 leg. Loss-side only; preprocessing stays closed (A21).
+  Relation: R16 localizes scale on-site; R31 asks whether the training
+  objective can absorb the shift without site labels at inference.
+
+### R32 — Pretrained comparator, and is the edge BRAINIAC-specific? (note 4)
+
+- **State.** Note 4 is already formalized as **R28** (pretrained supervised
+  comparator; D16 blocks `torchvision`, weights-only load is the workaround;
+  A29–A31 from-scratch CNNs collapse, so the adaptability claim is uncitable
+  until this runs). R28 is the execution item.
+- **New arm.** R28 tests against a pretrained *supervised* model. A separate
+  question: is the frozen-JEPA edge the **objective** or **BRAINIAC**? Add one
+  arm — a second pretrained medical 3D encoder (or alternative SSL backbone)
+  under the identical frozen-probe locked protocol.
+- **Protocol.** As R28 (ROI 2D harness + weighted sampler + Matoso patience;
+  weights-only port; behavioural verify per I4), plus the alternative-encoder
+  frozen probe for the objective-attribution arm.
+- **Success bar.** (i) R28's comparator competitive in-domain (within A27
+  readout-seed noise of the frozen JEPA) and still losing cross-site — then the
+  transfer result is citable; (ii) if the alternative encoder matches/beats
+  BRAINIAC-JEPA on the same readout, attribute the edge to the objective,
+  otherwise to the pretrained representation.
+- **Cost.** One Kaggle session + the dependency decision.
+
+### Hygiene created by A33–A34 (so it is not re-opened)
+
+- **R13 is answered negative** in its loss-side form (`--transition-weighting`,
+  A34); only the sampling-side form (R30a) remains distinct.
+- **R7 (surgery window) is implemented** (`--surgery-window`) but was only
+  tested bundled with augmentation + weighting (A34); isolate the flag before
+  citing or retiring it.
+- **Order:** R29 + R30(b/c) first (CPU, writeup-grade) → R31 + R30(a) (one T4
+  leg each) → R28/R32 (external-validity capstone).
