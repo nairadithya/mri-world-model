@@ -12,6 +12,10 @@ table{border-collapse:collapse;margin:.8em 0;width:100%}
 th,td{border:1px solid #bbb;padding:.35em .6em;text-align:left;font-size:.93em}
 th{background:#f0f0f0}
 code{background:#f4f4f4;padding:.1em .3em;border-radius:3px;font-size:.9em}
+/* Plot <img> widths are set from each figure's width in inches (0.9 x 96 px/in)
+   so every plot renders at a consistent text scale; panels wider than the
+   920px column cap there. Regenerating a plot at a new figsize means
+   updating its width attribute. */
 img{max-width:100%;height:auto;display:block;margin:.8em auto;border:1px solid #ddd;border-radius:4px}
 figcaption{text-align:center;color:#444;font-size:.9em;margin-bottom:1em}
 .why{background:#f7f9ff;border-left:4px solid #4060c0;padding:.6em 1em;margin:.6em 0}
@@ -63,7 +67,7 @@ held-out patient worst by far. Verdict: <b>more patients, not more
 epochs</b> — the argument for the full-cohort GPU run.</p>
 
 <h3>Run 4 — hero leg 1 (Kaggle GPU, all 91 patients): the champion <span class="id">D18 · D20 · D21 · A8 (+addendum)</span></h3>
-<img src="plots/hero_leg1_val.png" alt="Hero leg 1 val curve, best at epoch 7">
+<img width="570" src="plots/hero_leg1_val.png" alt="Hero leg 1 val curve, best at epoch 7">
 <p>Validation dives 0.083 → <b>0.0081 at epoch 7</b>, then overfits steadily
 to 0.07 by epoch 30. Test: 0.0074. First clean beat of persistence on held-out
 patients — biggest on the most dynamic ones, losing only where "no change" is
@@ -72,7 +76,7 @@ label every file with (leg, epoch, score) — a resume leg's file once
 overwrote the staged champion.</p>
 
 <h3>Run 5 — resume the champion gently: the optimum won't hold <span class="id">D22</span></h3>
-<img src="plots/hero_leg2_val.png" alt="Hero leg 2 val drifts up">
+<img width="570" src="plots/hero_leg2_val.png" alt="Hero leg 2 val drifts up">
 <p>Thirty more epochs at 5× lower learning rate: loss rises from epoch 1
 (0.0089 → 0.031) and never touches 0.0081. Two schedules, same direction —
 the good spot is a narrow dip that continued training slides out of.
@@ -83,7 +87,7 @@ accumulated batches the basin <i>does</i> hold — batch noise is part of the
 ejector. See §7.)</p>
 
 <h3>Run 6 — teach it the task directly: damaging without gain <span class="id">D25</span></h3>
-<img src="plots/run6_tradeoff.png" alt="Run 6 tradeoff: dynamics cost vs flat honest F1">
+<img width="920" src="plots/run6_tradeoff.png" alt="Run 6 tradeoff: dynamics cost vs flat honest F1">
 <p>Joint training with extra heads predicting next-visit response categories.
 Classification losses fell — but dynamics error more than doubled
 (0.0081 → 0.0191) while the honest task number didn't move (see §2). The
@@ -135,7 +139,7 @@ divergence: rare response transitions surprise our model most and persistence
 least — noticed as anomalous, not known as categories.</p>
 
 <h2>3. Cross-site: dynamics fail, representation transfers <span class="id">D26 · A12</span></h2>
-<img src="plots/sailor_transfer.png" alt="Cross-site: dynamics fail, readouts transfer">
+<img width="920" src="plots/sailor_transfer.png" alt="Cross-site: dynamics fail, readouts transfer">
 <p>The split that organized everything after: zero-shot dynamics lose ~5×
 (JEPA 0.029 vs persistence 0.006) while discriminative readouts transfer at
 full strength (F1 0.37 ≈ in-domain 0.33; surprise-AUC 0.87) with zero SAILOR
@@ -143,14 +147,14 @@ training. Not interval (median gap 76d, persistence wins <i>every</i> bin),
 not disease (same protocol, near-identical survival) — the champion
 over-predicts change everywhere (flat ~0.03) on mostly-stable disease.</p>
 
-<img src="plots/sailor_gap_bins.png" alt="Persistence wins every gap bin">
+<img width="743" src="plots/sailor_gap_bins.png" alt="Persistence wins every gap bin">
 <p>Per-gap accounting: persistence wins 7–14× in all four bins while the head
 sits flat. Same pairs, same space both sides — the interval excuse is dead
 and the mechanism is named: LUMIERE-calibrated stride on quieter
 trajectories.</p>
 
 <h3>Time-awareness helps, then stops helping</h3>
-<img src="plots/sailor_gaphead_vs_champ.png" alt="Gap-conditioned head vs champion head">
+<img width="743" src="plots/sailor_gaphead_vs_champ.png" alt="Gap-conditioned head vs champion head">
 <div class="concept"><b class="t">Concept: the gap-conditioned head.</b> The
 champion's head is time-blind — same step for 7 or 200 days. The probe head
 takes history state (1152 numbers) plus one gap number,
@@ -163,7 +167,7 @@ Time was part of it; the residual sits below the head. Spending stopped here
 by pre-registered rule.</div>
 
 <h3>The rescue: refit only dynamics, on-site <span class="id">D30 · A15</span></h3>
-<img src="plots/sailor_field_rescue.png" alt="Velocity field beats champion, at persistence level">
+<img width="743" src="plots/sailor_field_rescue.png" alt="Velocity field beats champion, at persistence level">
 <div class="concept"><b class="t">Concept: the velocity field.</b> Instead of
 predicting the endpoint in one shot, learn a <i>rate of change</i> and
 integrate it over the true day gap. Inputs per pair: running latent (current
@@ -177,7 +181,7 @@ the champion head, which emits fixed-scale steps unconditionally.</div>
 persistence ~10% on held-out subjects where zero-shot lost 5×. The failure
 was dynamics <i>scale</i> — fixable on-site with 27 patients.</p>
 
-<img src="plots/sailor_field_ablation.png" alt="Treatment ablation: exact tie">
+<img width="743" src="plots/sailor_field_ablation.png" alt="Treatment ablation: exact tie">
 <p>Treatment-phase vs constant-phase input: a pixel-perfect tie in 3 of 4
 bins (and near-identical in the fourth), every fold, both model sizes. Given
 the 1152-d history state — which already encodes disease stage — the phase
@@ -186,7 +190,7 @@ operational gain at N=27. (LUMIERE couldn't even run this test — it has no
 treatment column.)</p>
 
 <h3>What the predictions still know <span class="id">A22</span></h3>
-<img src="plots/gauntlet_probe.png" alt="Predicted vs actual latents as RANO features">
+<img width="920" src="plots/gauntlet_probe.png" alt="Predicted vs actual latents as RANO features">
 <div class="concept"><b class="t">Concept: probing predictions instead of
 errors.</b> Cosine error mixes up <i>how far</i> a prediction lands with
 <i>what it still says</i>. Instead, feed each method's <i>predicted</i>
@@ -213,7 +217,7 @@ both directions. Error ratio and preserved signal dissociate both ways — a
 low JEPA error is not a representation-quality certificate.</p>
 
 <h2>4. The encoder is innocent (three independent exonerations) <span class="id">A16</span></h2>
-<img src="plots/site_shift.png" alt="Site shift: two cohorts, two neighborhoods">
+<img width="588" src="plots/site_shift.png" alt="Site shift: two cohorts, two neighborhoods">
 <div class="concept"><b class="t">Concept: site shift, PCA, PC1/PC2.</b> Each
 visit is a point in 1152-d space; PCA finds the two widest viewing directions
 (PC1 34%, PC2 21% of variance — directions of spread, not clinical meanings).
@@ -224,7 +228,7 @@ survive while step sizes don't. Note SAILOR's tightness — the damping story,
 visible before any model runs. (Plotted: per-visit fused latents, the space
 probes read; the dynamics' own target space separates even more strongly.)</div>
 
-<img src="plots/coral_alignment.png" alt="CORAL cuts head error 2.1x">
+<img width="760" src="plots/coral_alignment.png" alt="CORAL cuts head error 2.1x">
 <div class="concept"><b class="t">Concept: CORAL.</b> Correlation Alignment —
 closed-form linear fix: subtract the source mean, un-stretch the cloud to a
 ball along its own axes (whiten), re-stretch along the <i>target's</i> axes
@@ -242,7 +246,7 @@ on <i>all</i> points including scored ones and you get 0.0081 — the floor for
 only (no streaming deployment); the honest fold-wise 0.0140 is the claimable
 number. The 0.0081→0.004 remainder is what no covariance fix can reach.</div>
 
-<img src="plots/site_shift_aligned.png" alt="After CORAL: shared frame, residual structure">
+<img width="588" src="plots/site_shift_aligned.png" alt="After CORAL: shared frame, residual structure">
 <p>The before/after pair is the story in one glance: shared frame afterward
 (same PC1 range), but SAILOR bands in the middle on PC2 — higher-order shape
 no linear fix touches. That's the residual, visualized. (Visualization fits
@@ -257,7 +261,7 @@ longitudinal intensity handling (ours preserves visit differences; PLHM
 normalizes them away <i>by design</i>), resolution path (extra resampling
 generation). SAILOR's intra-patient step is the one piece that helps us
 (less jitter than our own floor).</p>
-<img src="plots/raw_vs_mni.png" alt="Raw change ~4x MNI change">
+<img width="743" src="plots/raw_vs_mni.png" alt="Raw change ~4x MNI change">
 <p>Decisive measurement on identical pairs (243 linked pairs, raw tarballs
 extracted locally): raw change 0.673 vs MNI 0.173 — <b>~3.9× total pipeline
 damping</b>, every modality (T1 most, T2 least at 2.6× with a heavy tail —
@@ -275,7 +279,7 @@ environment, so a dumb fallback left whole skulls in (half of every image
 vs one-sixth). Redoing only the skull-strip with the real tool in an
 isolated environment (<code>scripts/bet_repair.py</code>, QA drift 1.03×)
 decided it (numbers below are the A23 clean rebuild; see note):</p>
-<img src="plots/betfix_decider.png" alt="Skull restored, gate still lost every bin">
+<img width="743" src="plots/betfix_decider.png" alt="Skull restored, gate still lost every bin">
 <table>
 <tr><th>arm</th><th>JEPA</th><th>persist</th><th>transfer F1</th><th>surprise AUC</th></tr>
 <tr><td>derivatives</td><td>0.0294</td><td>0.0060</td><td>0.357</td><td>0.844</td></tr>
@@ -293,7 +297,7 @@ flagged ceiling&lt;transfer anomaly resolves (ceiling 0.77 now above
 transfer): the fit path was never broken, the cache was. So skull
 restoration did not recover the readouts; it only restored derivatives-like
 features (four clouds) while the gate stays lost.</p>
-<img src="plots/four_clouds.png" alt="Skull-out rejoins derivatives; LUMIERE stays distant">
+<img width="639" src="plots/four_clouds.png" alt="Skull-out rejoins derivatives; LUMIERE stays distant">
 <p>Four clouds, one glance: skull-out rejoins the derivatives neighborhood
 without approaching LUMIERE — stripping restored derivatives-like features
 (hence the F1 recovery) while the training site stays distant (hence the
@@ -325,7 +329,7 @@ visit-pair, 2D whole-brain slices, 2D tumor-ROI) all collapse to
 always-predict-PD in-domain (final 0.18–0.22) and lose to JEPA at every SAILOR
 K-shot point.</li>
 </ul>
-<img src="plots/cross_site_adapt.png" alt="Cross-site adaptability: frozen JEPA vs from-scratch supervised CNNs">
+<img width="674" src="plots/cross_site_adapt.png" alt="Cross-site adaptability: frozen JEPA vs from-scratch supervised CNNs">
 <p>The picture: the value is the <b>pretrained representation</b>, not further
 training on 91 patients. A32 (reading Matoso 2025) sharpens it — our comparators
 were not faithful reproductions (under-trained, different preprocessing, no
