@@ -32,7 +32,6 @@ from .runrecord import make_record
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 LEGACY_TRAIN = {
-    "jepa": "scripts/run_train.py",
     "field": "scripts/train_field.py",
     "head": "scripts/task_train.py",
     "lora": "scripts/finetune_lora.py",

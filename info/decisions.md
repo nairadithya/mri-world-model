@@ -478,3 +478,26 @@ referenced, not repeated — only session decisions are recorded here in full.
   `skull_strip` uses its percentile-mask fallback. That was already true before
   the migration (timm was installed, torchvision was not); the exclusion keeps
   it that way rather than silently resolving it.
+
+- **D38 — Harness migration verified; first legacy scripts retired (2026-09-13).**
+  Verification pass on `main` (`ce221d0`): compileall clean; every non-viewer
+  script imports; `tests/test_harness.py` 11/11; byte-identical outputs for
+  `probe_rano --probe/--cv`, `volume_probe`, `radiomics_probe`; `split_gate`
+  reproduces the A8 addendum exactly (test pooled 0.0070/0.0088, overall win
+  41/91); harness `eval` matches the legacy locked probe exactly
+  (`0.3093 [0.2540,0.3575]`); and every Kaggle log regex replays against a real
+  jepa log (`val epoch`/`done. best val loss`) plus synthetic delegated
+  lora/cnn lines. Retirement: deleted `scripts/run_train.py` (native
+  `harness.py train jepa`) and `scripts/probe_rano.py` (native
+  `harness.py encode`/`eval`), migrating all eight importers
+  (`leadtime`, `sailor_eval`, `horizon_probe`, `horizon_eval`,
+  `pred_latent_probe`, `radiomics_probe`, `concept_probe`, `surprise_signal`)
+  to `src.harness.*`; removed the dead `jepa` entry from `LEGACY_TRAIN`; updated
+  `AGENTS.md`. Scripts holding functionality not yet in the harness stay
+  load-bearing: the CLI-delegated trainers (`train_field`, `task_train`,
+  `finetune_lora`, `train_supervised_cnn{,2d}`), ROI encoder
+  (`encode_interface`), gap-head train/curve (`horizon_probe`), live-model
+  horizon eval (`horizon_eval`), patient-uniform/wins gate (`split_gate`), and
+  the specialized analyses (volume/radiomics/concept/cross-site/sailor/
+  persistence/freeze). Retiring those needs their logic moved into the registry
+  first (Phase 5b, pending).

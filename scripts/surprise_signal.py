@@ -18,12 +18,12 @@ import yaml
 from torch.utils.data import DataLoader
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))  # scripts/probe_rano
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from src.data.collate import make_collate
 from src.data.dataset import LUMIEREDataset
 from src.model.jepa_model import JEPAWorldModel
 
-from probe_rano import RANO_PROBE_MAP  # noqa: E402  (scripts/ on path via cwd)
+from src.harness.data.tasks import RANO_PROBE_MAP  # noqa: E402
 from src.harness.eval.metrics import auc_mann_whitney  # noqa: E402,F401
 
 

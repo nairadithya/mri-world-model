@@ -32,7 +32,7 @@ from src.data.collate import make_collate
 from src.data.dataset import LUMIEREDataset
 from src.model.jepa_model import JEPAWorldModel
 
-from probe_rano import RANO_PROBE_MAP  # noqa: E402
+from src.harness.data.tasks import RANO_PROBE_MAP  # noqa: E402
 from surprise_signal import auc_mann_whitney  # noqa: E402
 
 NAMES = ["PD", "SD", "PR", "CR"]

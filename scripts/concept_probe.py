@@ -36,7 +36,10 @@ _ROOT = os.path.dirname(_HERE)
 sys.path.insert(0, _ROOT)
 sys.path.insert(0, _HERE)
 
-from probe_rano import _bootstrap, _ci, _pooled, fit_linear, macro_f1  # noqa: E402
+from src.harness.eval.aggregate import patient_bootstrap as _bootstrap  # noqa: E402
+from src.harness.eval.aggregate import percentile_ci as _ci, pooled as _pooled  # noqa: E402
+from src.harness.eval.metrics import macro_f1  # noqa: E402
+from src.harness.train.readout import fit_linear  # noqa: E402
 from src.data.eval_protocol import assert_disjoint, fold_patients, load_protocol  # noqa: E402
 
 REGIONS = ("nec", "enh", "edema")

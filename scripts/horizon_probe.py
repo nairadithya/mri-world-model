@@ -36,7 +36,7 @@ import yaml
 from torch.utils.data import DataLoader
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from scripts.probe_rano import build_datasets
+from src.harness.data.builder import build_datasets
 from src.data.collate import make_collate
 from src.model.jepa_model import JEPAWorldModel
 from src.harness.train.latent import GapHeadPredictor as HorizonPredictor  # noqa: E402,F401

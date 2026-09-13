@@ -14,10 +14,11 @@ and `info/` for why things are the way they are.
   contract pipeline), `harness/` (modular train/eval harness: registries for
   metrics/tasks/protocols/methods/views, `ReadoutEvaluator`, frozen `paths`,
   provenance, unified `cli`).
-- `scripts/` — runnable entry points. `run_train.py` (+`--aux-lambda`,
-  `--resume-from`, `--horizon`, `--dynamics`), `preprocess.py`, `probe_rano.py`
-  (frozen RANO probes; `--cv-unseen` locked protocol + `--cohort`/`--readout-seed`;
-  legacy `--cv` is leaky, K3-16), `lock_eval.py` (materialize/verify the locked
+- `scripts/` — runnable entry points. `harness.py` (unified train/eval CLI:
+  `train jepa` with `--aux-lambda`/`--resume-from`/`--horizon`/`--dynamics`;
+  `encode`; `eval` with pluggable metrics, including the frozen RANO probes'
+  locked unseen protocol — the legacy `--cv` was leaky, K3-16), `preprocess.py`,
+  `lock_eval.py` (materialize/verify the locked
   folds), `surprise_signal.py` (error→PD AUC), `volume_probe.py` (auto-mask
   volumetry), `sailor_eval.py` (cross-site eval),
   `horizon_probe.py` (`--encode`/`--curve`/`--train`: multi-horizon gate),
@@ -77,10 +78,10 @@ need the artifacts below — all gitignored, documented not committed.
 python scripts/preprocess.py --patients Patient-067 Patient-031 \
   --workers 4 --template data/templates/MNI152_T1_1mm.nii.gz
 # Train
-python scripts/run_train.py --config config/pilot.yaml \
+python scripts/harness.py train jepa --config config/pilot.yaml \
   --patients Patient-067 Patient-031 Patient-073 Patient-078 Patient-029 --no-wandb
 # Smoke test (no weights needed)
-python scripts/run_train.py --epochs 1 --batch-size 1 --no-wandb --random-init
+python scripts/harness.py train jepa --epochs 1 --batch-size 1 --no-wandb --random-init
 # Modular harness (D33): list registries; encode/eval with pluggable metrics.
 python scripts/harness.py list
 python scripts/harness.py eval --cache checkpoints/probe_cache.pt \
@@ -269,7 +270,7 @@ Rules, all earned:
 - **Fail fast on the wrong GPU.** First code cell asserts `torch.cuda` and
   `'T4' in device name` — a P100 session aborts in seconds instead of burning
   quota. Verify from the log (`device: Tesla T4`), never assume.
-- **Persist CLI-set flags to `kaggle.yaml`.** `run_train.py` flags mutate the
+- **Persist CLI-set flags to `kaggle.yaml`.** `harness.py train jepa` flags mutate the
   in-memory config only; later eval cells re-read the file. The horizon leg
   lost its whole eval table to this (training completed, assert tripped on a
   stale file). Write every flag the run depends on into `kaggle.yaml` at wire-up.

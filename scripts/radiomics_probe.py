@@ -21,7 +21,9 @@ import torch
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from probe_rano import _ci, fit_linear, macro_f1  # noqa: E402
+from src.harness.eval.aggregate import percentile_ci as _ci  # noqa: E402
+from src.harness.eval.metrics import macro_f1  # noqa: E402
+from src.harness.train.readout import fit_linear  # noqa: E402
 from src.data.eval_protocol import fold_patients, load_protocol  # noqa: E402
 from src.harness.eval.aggregate import patient_bootstrap  # noqa: E402
 

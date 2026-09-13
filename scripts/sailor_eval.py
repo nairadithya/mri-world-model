@@ -35,7 +35,8 @@ from src.data.collate import make_collate
 from src.data.sailor import SAILORDataset
 from src.model.jepa_model import JEPAWorldModel
 
-from probe_rano import RANO_PROBE_NAMES, fit_linear, rows_for, scores  # noqa: E402
+from src.harness.data.tasks import RANO_PROBE_NAMES, rows_for  # noqa: E402
+from src.harness.train.readout import fit_linear, scores  # noqa: E402
 
 SAILOR_ROOT = "data/sailor/sailor_ebrains_pseud/derivatives/mni2009c-n-s"
 # SAILOR numeric code -> probe label {PD:0, SD:1, PR:2, CR:3} (D26 codebook).

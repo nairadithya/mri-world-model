@@ -43,7 +43,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from src.model.dynamics_field import PatientTempo, VelocityField, integrate  # noqa: E402
 
 from horizon_probe import HorizonPredictor  # noqa: E402  (probe head class)
-from probe_rano import fit_linear, scores  # noqa: E402
+from src.harness.train.readout import fit_linear, scores  # noqa: E402
 from split_gate import load_predictor  # noqa: E402  (champion 1-step head)
 from train_field import fit_field, pairs_of  # noqa: E402
 
