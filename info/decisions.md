@@ -536,3 +536,13 @@ referenced, not repeated — only session decisions are recorded here in full.
   `persistence --lumiere`, `split-gate` (A8 exact: 0.0070/0.0088, 41/91) and
   `freeze --separability` all run. Kaggle kernels untouched (still pinned to
   `3241596`).
+
+- **D41 — `jupytext` restored as a `dev` extra (2026-09-13).** The uv
+  migration (D37) had dropped the ad-hoc `jupytext` install, so the Kaggle
+  notebooks could not be regenerated from their `.py` sources. Added
+  `[project.optional-dependencies] dev = ["jupytext>=1.16"]`; `uv lock` pulls
+  jupytext 1.19.5 (+ nbformat/jupyter-core/traitlets, no torchvision), and
+  `uv sync --extra dev` installs it (`uv lock --check` clean). `AGENTS.md`
+  Setup now lists `uv sync --extra dev`, and the Kaggle sections regenerate via
+  `uv run --extra dev jupytext --to ipynb <file>.py`; the `viewer` extra is
+  unchanged.

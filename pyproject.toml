@@ -27,10 +27,15 @@ dependencies = [
 ]
 
 # Dev-only tooling. playwright drives the headless NIfTI-viewer screenshot
-# check (scripts/shot_viewer.py); opt in with `uv sync --extra viewer`.
+# check (scripts/shot_viewer.py); jupytext regenerates the Kaggle notebooks
+# from their .py sources (never edit an .ipynb by hand). Opt in with
+# `uv sync --extra viewer` and/or `uv sync --extra dev`.
 [project.optional-dependencies]
 viewer = [
     "playwright>=1.40",
+]
+dev = [
+    "jupytext>=1.16",
 ]
 
 [tool.uv]

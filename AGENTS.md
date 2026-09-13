@@ -30,8 +30,9 @@ and `info/` for why things are the way they are.
 - `config/` — `default.yaml` (full run; `aux:` section, lambda 0 = JEPA
   only), `pilot.yaml` (5-patient CPU pilot).
 - `kaggle/` — hero-run notebook. `hero_run.py` is the source of truth;
-  never edit the `.ipynb` directly (JSON churn breaks diffs). Regenerate
-  with `jupytext --to ipynb kaggle/hero_run.py` after editing.
+  never edit the `.ipynb` directly (JSON churn breaks diffs). Regenerate with
+  `uv run --extra dev jupytext --to ipynb kaggle/hero_run.py` after editing
+  (`jupytext` comes from `uv sync --extra dev`).
   `kaggle/kernel-*/` are pushable-run variants (own `.py` source +
   `kernel-metadata.json`; shell commands LIVE — push executes the notebook
   as-is, so never `py_compile` them, only `jupytext --to ipynb`).
@@ -48,7 +49,8 @@ and `info/` for why things are the way they are.
 ## Setup
 
 ```bash
-uv sync              # create .venv from uv.lock (uv >= 0.9.8)
+uv sync                  # create .venv from uv.lock (uv >= 0.9.8)
+uv sync --extra dev      # + jupytext (regenerate Kaggle notebooks from .py)
 uv sync --extra viewer   # + playwright for the shot_viewer screenshot check
 ```
 
@@ -56,7 +58,10 @@ uv sync --extra viewer   # + playwright for the shot_viewer screenshot check
 Activate the venv (`source .venv/bin/activate`) or prefix commands with
 `uv run`. Notes: uv resolves CPU-only `torch` from the PyTorch index and
 mechanically excludes `torchvision` (a skewed build breaks the `peft` import
-with a misleading error; see D16/D37 in `info/decisions.md`). You additionally
+with a misleading error; see D16/D37 in `info/decisions.md`). The `dev` extra
+supplies `jupytext` — run notebook regeneration through the venv
+(`uv run --extra dev jupytext --to ipynb <file>.py`, or `.venv/bin/jupytext`),
+never by hand-editing the `.ipynb` JSON. You additionally
 need the artifacts below — all gitignored, documented not committed.
 
 - `checkpoints/BrainIAC.ckpt` — official weights ONLY (see gotchas).
@@ -260,7 +265,8 @@ Rules, all earned:
   suspenders; the flag alone has mixed reports).
 - **Push executes the notebook as-is.** Training shell commands must be LIVE
   in the pushed `.ipynb` (unlike `hero_run.py`, where they stay commented).
-  Keep the `.py` jupytext source as truth; regenerate after editing.
+  Keep the `.py` jupytext source as truth; regenerate after editing
+  (`uv run --extra dev jupytext --to ipynb <file>.py`).
 - **Fail fast on the wrong GPU.** First code cell asserts `torch.cuda` and
   `'T4' in device name` — a P100 session aborts in seconds instead of burning
   quota. Verify from the log (`device: Tesla T4`), never assume.
