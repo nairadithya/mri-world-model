@@ -13,9 +13,9 @@ Phase --eval:
 --pairs: only the (a) row (no transfer/surprise passes).
 
 Usage:
-    python scripts/sailor_eval.py --champion checkpoints/champion_0.0081.pt --encode
-    python scripts/sailor_eval.py --pairs
-    python scripts/sailor_eval.py --eval --lum-cache checkpoints/probe_cache.pt
+    python scripts/harness.py run sailor --champion checkpoints/champion_0.0081.pt --encode
+    python scripts/harness.py run sailor --pairs
+    python scripts/harness.py run sailor --eval --lum-cache checkpoints/probe_cache.pt
 """
 from __future__ import annotations
 
@@ -29,8 +29,6 @@ import torch.nn.functional as F
 import yaml
 from torch.utils.data import DataLoader
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from src.data.collate import make_collate
 from src.data.sailor import SAILORDataset
 from src.model.jepa_model import JEPAWorldModel
@@ -158,7 +156,7 @@ def eval_all(cfg, champion_path, cache_path, lum_cache_path, root=SAILOR_ROOT):
     acc2, f12, _, _ = scores(net2, x_sa, y_sa)
     print(f"(b2) SAILOR-fit (train=test, ceiling): acc={acc2:.4f} macro-F1={f12:.4f}")
     # (d) surprise-AUC with SAILOR RANO
-    from surprise_signal import auc_mann_whitney  # noqa: E402
+    from .surprise import auc_mann_whitney  # noqa: E402
     errs, yb = [], []
     with torch.no_grad():
         for batch in loader:
@@ -179,7 +177,7 @@ def eval_all(cfg, champion_path, cache_path, lum_cache_path, root=SAILOR_ROOT):
           f"(n={len(errs)} PD-rate={yb.float().mean():.3f})")
 
 
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="config/default.yaml")
     ap.add_argument("--champion", default="checkpoints/champion_0.0081.pt")
@@ -190,7 +188,7 @@ def main():
     ap.add_argument("--pairs", action="store_true",
                     help="only the same-space (a) JEPA/persist row")
     ap.add_argument("--root", default=SAILOR_ROOT)
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
     with open(args.config) as f:
         cfg = yaml.safe_load(f)
     if args.encode:

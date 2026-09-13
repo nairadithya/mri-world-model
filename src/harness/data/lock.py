@@ -4,8 +4,8 @@ Writes ``info/eval_folds.json`` (frozen patient-wise folds over the 26
 encoder-unseen patients) and asserts encoder-train/probe disjointness.
 
 Usage:
-    python scripts/lock_eval.py --write
-    python scripts/lock_eval.py            # verify an existing file
+    python scripts/harness.py lock --write
+    python scripts/harness.py lock            # verify an existing file
 """
 from __future__ import annotations
 
@@ -16,20 +16,19 @@ import sys
 
 import yaml
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.data.eval_protocol import (DEFAULT_PROTOCOL, assert_disjoint,
                                     build_protocol, load_protocol,
                                     write_protocol)
 
 
-def main() -> int:
+def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="config/default.yaml")
     ap.add_argument("--protocol", default=DEFAULT_PROTOCOL)
     ap.add_argument("--k", type=int, default=5)
     ap.add_argument("--fold-seed", type=int, default=2026)
     ap.add_argument("--write", action="store_true")
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
 
     if args.write:
         with open(args.config) as f:

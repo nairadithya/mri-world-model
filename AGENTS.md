@@ -14,24 +14,19 @@ and `info/` for why things are the way they are.
   contract pipeline), `harness/` (modular train/eval harness: registries for
   metrics/tasks/protocols/methods/views, `ReadoutEvaluator`, frozen `paths`,
   provenance, unified `cli`).
-- `scripts/` — runnable entry points. `harness.py` (unified train/eval CLI:
-  `train jepa` with `--aux-lambda`/`--resume-from`/`--horizon`/`--dynamics`;
-  `encode`; `eval` with pluggable metrics, including the frozen RANO probes'
-  locked unseen protocol — the legacy `--cv` was leaky, K3-16), `preprocess.py`,
-  `lock_eval.py` (materialize/verify the locked
-  folds), `surprise_signal.py` (error→PD AUC), `volume_probe.py` (auto-mask
-  volumetry), `sailor_eval.py` (cross-site eval),
-  `horizon_probe.py` (`--encode`/`--curve`/`--train`: multi-horizon gate),
-  `horizon_eval.py` (per-horizon JEPA-vs-persistence for a trained leg),
-  `pred_latent_probe.py` (predicted-vs-EMA latent probes; `--refit` field
-  models + held-out preds, `--probe` classifier tables),
-  `encode_interface.py` (per-modality/ROI/volumetry feature cache);
-  training methods (`field`, `head`, `lora`, `cnn3d`, `cnn2d`; `jepa`) live in
-  `src/harness/train/` and run via `scripts/harness.py train <method>`;
-  `cross_site_adapt.py` (zero-shot + K-shot CNN-vs-JEPA on SAILOR),
-  `view_scans.py` (local browser NIfTI explorer),
-  `shot_viewer.py` (headless screenshot validator for it; dev-only),
-  fetch/auth scripts.
+- `scripts/` — runnable entry points. `harness.py` is the unified CLI:
+  `encode`; `eval` with pluggable metrics (incl. the frozen RANO probes'
+  locked unseen protocol — the legacy `--cv` was leaky, K3-16);
+  `train <jepa|field|head|lora|cnn3d|cnn2d|readout>`; and
+  `run <name>` for the bespoke analyses / feature builders. All training
+  methods live in `src/harness/train/`, analyses in `src/harness/analysis/`,
+  feature builders in `src/harness/encode/`; `harness.py list` prints the
+  registered targets (volume, radiomics, concept, surprise, leadtime,
+  persistence, split-gate, horizon-eval, horizon-probe, pred-latent,
+  cross-site, sailor, sailor-gap, sailor-interval, freeze, interface,
+  radiomics-features, lock). Remaining scripts are the data pipeline
+  (`preprocess.py`, `preprocess_qa.py`, `bet_repair.py`, `raw_mni_deltas.py`),
+  the viewer (`view_scans.py`, `shot_viewer.py`), and fetch/auth tools.
 - `config/` — `default.yaml` (full run; `aux:` section, lambda 0 = JEPA
   only), `pilot.yaml` (5-patient CPU pilot).
 - `kaggle/` — hero-run notebook. `hero_run.py` is the source of truth;
@@ -280,7 +275,7 @@ Rules, all earned:
   takes plain `nohup … &` children with it (killed the first local eval).
   Use `setsid nohup … & disown` for anything outliving the call.
 - **Outputs are gitignored, always.** `outputs/` holds ~1.5GB `best.pt` files;
-  judge the gate locally (`scripts/horizon_eval.py` runs CPU-only), commit
+  judge the gate locally (`scripts/harness.py run horizon-eval` runs CPU-only), commit
   only code + notes.
 
 ## Verification bar

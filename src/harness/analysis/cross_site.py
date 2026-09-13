@@ -12,8 +12,8 @@ Features (forecast framing, pair_t -> RANO_{t+1}):
   CNN  : `checkpoints/cnn_features.pt` avgpool features (512-d)
 
 Usage:
-    python scripts/cross_site_adapt.py
-    python scripts/cross_site_adapt.py --cnn-cache checkpoints/cnn_features.pt
+    python scripts/harness.py run cross-site
+    python scripts/harness.py run cross-site --cnn-cache checkpoints/cnn_features.pt
 """
 from __future__ import annotations
 
@@ -27,7 +27,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.data.eval_protocol import load_protocol
 from src.harness.eval.metrics import macro_f1  # noqa: F401
 from src.harness.train.readout import fit_clf  # noqa: F401
@@ -118,7 +117,7 @@ def kshot(sa, ks, repeats=20, seed=0):
     return out
 
 
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--protocol", default="info/eval_folds.json")
     ap.add_argument("--jepa-sailor", default="checkpoints/sailor_cache.pt")
@@ -134,7 +133,7 @@ def main():
     ap.add_argument("--ks", type=int, nargs="*", default=[3, 5, 10, 15, 20])
     ap.add_argument("--repeats", type=int, default=20)
     ap.add_argument("--seed", type=int, default=0)
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
 
     proto = load_protocol(args.protocol)
     jepa_sa = jepa_rows(torch.load(args.jepa_sailor, map_location="cpu", weights_only=False),

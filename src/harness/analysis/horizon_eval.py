@@ -4,7 +4,7 @@ Loads best.pt with horizon enabled, runs forward per patient, groups the
 model's own (t, t+n) pair errors by n against persistence (z_t as prediction)
 on the identical pair set. Split-aware via the standard patient splits.
 
-Usage: .venv/bin/python scripts/horizon_eval.py --ckpt outputs/horizon-leg/checkpoints/best.pt
+Usage: .venv/bin/python scripts/harness.py run horizon-eval --ckpt outputs/horizon-leg/checkpoints/best.pt
 """
 from __future__ import annotations
 
@@ -17,17 +17,16 @@ import torch.nn.functional as F
 import yaml
 from torch.utils.data import DataLoader
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.harness.data.builder import build_datasets
 from src.data.collate import make_collate
 from src.model.jepa_model import JEPAWorldModel
 
 
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="config/default.yaml")
     ap.add_argument("--ckpt", required=True)
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
 
     cfg = yaml.safe_load(open(args.config))
     cfg["model"]["predictor"].setdefault("horizon", {})["enabled"] = True

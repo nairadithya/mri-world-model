@@ -9,7 +9,7 @@ Per valid (t -> t+1) pair: 1-step JEPA error (champion forward), persistence
 error (1 - cos of target-space endpoints), gap days from time_deltas.
 Reports means per gap bin plus gap distribution.
 
-Usage: python scripts/sailor_interval_eval.py --champion checkpoints/champion_0.0081.pt
+Usage: python scripts/harness.py run sailor-interval --champion checkpoints/champion_0.0081.pt
 """
 from __future__ import annotations
 
@@ -23,7 +23,6 @@ import torch.nn.functional as F
 import yaml
 from torch.utils.data import DataLoader
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.data.collate import make_collate
 from src.data.sailor import SAILORDataset
 from src.model.jepa_model import JEPAWorldModel
@@ -40,12 +39,12 @@ def gap_bin(g):
     return len(BINS) - 2
 
 
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="config/default.yaml")
     ap.add_argument("--champion", default="checkpoints/champion_0.0081.pt")
     ap.add_argument("--root", default=SAILOR_ROOT)
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
     with open(args.config) as f:
         cfg = yaml.safe_load(f)
 

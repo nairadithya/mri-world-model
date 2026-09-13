@@ -13,7 +13,7 @@ edema} + total:
   plus total-volume versions of the first four.
 
 Usage:
-    python scripts/radiomics_features.py
+    python scripts/harness.py run radiomics-features
 """
 from __future__ import annotations
 
@@ -25,7 +25,6 @@ import sys
 
 import torch
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.data.dataset import LUMIEREDataset
 from src.data.eval_protocol import load_protocol
 from src.model.heads import ACTION_TO_FLAT
@@ -140,12 +139,12 @@ def _label(action_id: int):
     return ACTION_TO_FLAT.get(int(action_id))
 
 
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="config/default.yaml")
     ap.add_argument("--protocol", default="info/eval_folds.json")
     ap.add_argument("--out", default="checkpoints/radiomics_features.pt")
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
     import yaml
 
     with open(args.config) as f:

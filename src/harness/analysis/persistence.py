@@ -11,9 +11,9 @@ identical pair sets and compares against the reported JEPA-error AUCs
   --sailor        : persistence AUC from the z cache (PD = raw code 1)
 
 Usage:
-    python scripts/persistence_baseline.py --lumiere
-    python scripts/persistence_baseline.py --sailor-encode
-    python scripts/persistence_baseline.py --sailor
+    python scripts/harness.py run persistence --lumiere
+    python scripts/harness.py run persistence --sailor-encode
+    python scripts/harness.py run persistence --sailor
 """
 from __future__ import annotations
 
@@ -27,13 +27,11 @@ import torch.nn.functional as F
 import yaml
 from torch.utils.data import DataLoader
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from src.data.collate import make_collate
 from src.data.sailor import SAILORDataset
 from src.model.jepa_model import JEPAWorldModel
 
-from surprise_signal import auc_mann_whitney  # noqa: E402
+from .surprise import auc_mann_whitney  # noqa: E402
 
 SAILOR_ROOT = "data/sailor/sailor_ebrains_pseud/derivatives/mni2009c-n-s"
 
@@ -130,7 +128,7 @@ def sailor(cache_path):
           f"{auc_mann_whitney(errs, yb):.4f}  [JEPA-err reference: 0.87]")
 
 
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="config/default.yaml")
     ap.add_argument("--champion", default="checkpoints/champion_0.0081.pt")
@@ -140,7 +138,7 @@ def main():
     ap.add_argument("--lumiere", action="store_true")
     ap.add_argument("--sailor-encode", action="store_true")
     ap.add_argument("--sailor", action="store_true")
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
     if args.lumiere:
         lumiere(args.horizon_cache, args.probe_cache)
         return

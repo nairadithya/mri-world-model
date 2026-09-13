@@ -13,7 +13,7 @@ and 95% CIs from a patient-level cluster bootstrap (K3-11). The test column
 is the uncontaminated gate; the pooled train row reproduces A8's harness.
 
 Usage:
-    python scripts/split_gate.py --champion checkpoints/champion_0.0081.pt
+    python scripts/harness.py run split-gate --champion checkpoints/champion_0.0081.pt
 """
 from __future__ import annotations
 
@@ -26,21 +26,19 @@ import sys
 import torch
 import torch.nn.functional as F
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from src.harness.eval.aggregate import percentile_ci as _ci  # noqa: E402
 from src.harness.train.latent import load_1step_predictor as load_predictor  # noqa: E402,F401
 
 
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--champion", default="checkpoints/champion_0.0081.pt")
     ap.add_argument("--cache", default="checkpoints/horizon_cache.pt")
     ap.add_argument("--boot", type=int, default=10000,
                     help="patient-level bootstrap resamples (0 = skip)")
     ap.add_argument("--seed", type=int, default=42)
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
 
     pred = load_predictor(args.champion)
     patients = torch.load(args.cache, map_location="cpu",

@@ -10,8 +10,8 @@ identical pairs, plus the champion 1-step reference means from the interval
 eval (0.0283 / 0.0362 / 0.0290 / 0.0314).
 
 Usage:
-    python scripts/horizon_probe.py --train --epochs 300 --save checkpoints/probe_head.pt
-    python scripts/sailor_gap_probe.py --head checkpoints/probe_head.pt
+    python scripts/harness.py run horizon-probe --train --epochs 300 --save checkpoints/probe_head.pt
+    python scripts/harness.py run sailor-gap --head checkpoints/probe_head.pt
 """
 from __future__ import annotations
 
@@ -23,20 +23,18 @@ import sys
 import torch
 import torch.nn.functional as F
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from src.data.sailor import SAILORDataset
 
-from horizon_probe import HorizonPredictor  # noqa: E402
-from sailor_interval_eval import SAILOR_ROOT, gap_bin, BIN_LABELS  # noqa: E402
+from .horizon_probe import HorizonPredictor  # noqa: E402
+from .sailor_interval import SAILOR_ROOT, gap_bin, BIN_LABELS  # noqa: E402
 
 
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--head", default="checkpoints/probe_head.pt")
     ap.add_argument("--sailor-cache", default="checkpoints/sailor_cache.pt")
     ap.add_argument("--z-cache", default="checkpoints/sailor_z_cache.pt")
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
 
     saved = torch.load(args.head, map_location="cpu", weights_only=False)
     net = HorizonPredictor(hidden=saved.get("hidden", 1024),

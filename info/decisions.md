@@ -516,3 +516,23 @@ referenced, not repeated — only session decisions are recorded here in full.
   (`field_scores.pt` restored afterward). Kaggle kernels stay valid: they pin
   `3241596`, where the old delegated paths still exist, so no kernel bump is
   required for this change.
+
+- **D40 — Phase 5b complete: all analyses/feature builders moved into the
+  harness (2026-09-13).** Moved the remaining 17 train/eval/feature scripts
+  under `src/harness/`: analyses (`surprise`, `leadtime`, `persistence`,
+  `split-gate`, `horizon-eval`, `horizon-probe`, `pred-latent`, `volume`,
+  `radiomics`, `concept`, `cross-site`, `sailor`, `sailor-gap`,
+  `sailor-interval`, `freeze`) into `analysis/`, feature builders
+  (`interface`, `radiomics-features`) into `encode/`, and protocol admin
+  (`lock`) into `data/lock.py`. All became `main(argv=None)` with sibling
+  imports relative; the CLI gained `harness.py run <name>` with a lazy
+  `RUN_MODULES` map (heavy imports load only on use), and `list` prints all 18
+  run targets. `scripts/` now holds only `harness.py` plus the data pipeline
+  (`preprocess`, `preprocess_qa`, `bet_repair`, `raw_mni_deltas`), the viewer
+  (`view_scans`, `shot_viewer`), and fetch/auth tools — i.e. the train/eval
+  migration is complete. Verified: compileall + all 17 modules import; 18/18
+  `run <name> --help`; `volume` and `radiomics` outputs byte-identical to the
+  pre-move baselines; `lock` verifies the 65/26 folds; `horizon-probe --curve`,
+  `persistence --lumiere`, `split-gate` (A8 exact: 0.0070/0.0088, 41/91) and
+  `freeze --separability` all run. Kaggle kernels untouched (still pinned to
+  `3241596`).

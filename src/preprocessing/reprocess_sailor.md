@@ -89,20 +89,21 @@ symlink per session dir: `T1c.nii.gz → CT1.nii.gz`,
 
 ## 5. Eval (needs a one-line root override)
 
-`scripts/sailor_interval_eval.py` and `scripts/sailor_eval.py` hardcode
-`SAILOR_ROOT`. Add a `--root` CLI flag to both (5 lines each, default =
-current constant) rather than temp-editing constants, then:
+`scripts/harness.py run sailor-interval` and `scripts/harness.py run sailor`
+hardcode `SAILOR_ROOT`. Add a `--root` CLI flag to both (5 lines each, default
+= current constant) rather than temp-editing constants, then:
 
 ```bash
-.venv/bin/python scripts/sailor_interval_eval.py \
+.venv/bin/python scripts/harness.py run sailor-interval \
   --champion checkpoints/champion_0.0081.pt --root data/sailor_reprocessed
-.venv/bin/python scripts/sailor_eval.py --encode --eval   # same --root
+.venv/bin/python scripts/harness.py run sailor --encode --eval   # same --root
 ```
 
 Report, same-space both sides, per gap bin + pooled: JEPA vs persistence
 (the gate), transferred-probe F1, surprise AUC. Reuse
-`scripts/split_gate.py`-style accounting; record pair counts next to the
-derivatives-eval counts (any T2-missing delta must be visible, not silent).
+`scripts/harness.py run split-gate`-style accounting; record pair counts next
+to the derivatives-eval counts (any T2-missing delta must be visible, not
+silent).
 
 ## 6. Read the outcome
 

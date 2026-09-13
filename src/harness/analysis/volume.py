@@ -6,7 +6,7 @@ Tasks (all log-mm3, closed-form least squares, hero splits):
   forecast:  log(vol_{t+1}) from state_t        (dynamics → future burden)
 Baselines: mean (readout), persistence vol_t (forecast).
 
-Usage: python scripts/volume_probe.py --cache checkpoints/probe_cache.pt
+Usage: python scripts/harness.py run volume --cache checkpoints/probe_cache.pt
 """
 from __future__ import annotations
 
@@ -18,7 +18,6 @@ import sys
 import torch
 import yaml
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.data.dataset import LUMIEREDataset
 from src.harness.train.readout import fit_ridge_cv  # noqa: E402,F401
 
@@ -48,12 +47,12 @@ def report(name, y_te, pred, base):
           f"R2={1 - ss_res / max(1e-9, ss_tot):.4f}")
 
 
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--cache", default="checkpoints/probe_cache.pt")
     ap.add_argument("--config", default="config/default.yaml")
     ap.add_argument("--vols", default="data/autoseg/vols/Imaging")
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
     with open(args.config) as f:
         cfg = yaml.safe_load(f)
 

@@ -38,6 +38,28 @@ TRAIN_MODULES = {
     "cnn2d": "src.harness.train.cnn2d:main",
 }
 
+# Bespoke frozen-model analyses / feature builders, imported lazily.
+RUN_MODULES = {
+    "interface": "src.harness.encode.interface:main",
+    "radiomics-features": "src.harness.encode.radiomics:main",
+    "surprise": "src.harness.analysis.surprise:main",
+    "leadtime": "src.harness.analysis.leadtime:main",
+    "persistence": "src.harness.analysis.persistence:main",
+    "split-gate": "src.harness.analysis.split_gate:main",
+    "horizon-eval": "src.harness.analysis.horizon_eval:main",
+    "horizon-probe": "src.harness.analysis.horizon_probe:main",
+    "pred-latent": "src.harness.analysis.pred_latent:main",
+    "volume": "src.harness.analysis.volume:main",
+    "radiomics": "src.harness.analysis.radiomics:main",
+    "concept": "src.harness.analysis.concept:main",
+    "cross-site": "src.harness.analysis.cross_site:main",
+    "sailor": "src.harness.analysis.sailor:main",
+    "sailor-gap": "src.harness.analysis.sailor_gap:main",
+    "sailor-interval": "src.harness.analysis.sailor_interval:main",
+    "freeze": "src.harness.analysis.freeze:main",
+    "lock": "src.harness.data.lock:main",
+}
+
 USAGE = """\
 usage: harness.py <command> [options]
 
@@ -48,6 +70,7 @@ usage: harness.py <command> [options]
        [--train-pool unseen|train] [--readout linear|mlp|ridge] [--metrics ...] \\
        [--compare VIEW] [--out results.json]
   train <jepa|field|head|lora|cnn3d|cnn2d|readout> [native args ...]
+  run <name> [args ...]         bespoke analyses / feature builders (see `list`)
 """
 
 
@@ -60,6 +83,7 @@ def cmd_list(_args) -> None:
     _log("tasks:     " + ", ".join(TASKS.names()))
     _log("protocols: " + ", ".join(PROTOCOLS.names()))
     _log("methods:   " + ", ".join(sorted(set(METHODS.names()) | set(TRAIN_MODULES))))
+    _log("run:       " + ", ".join(sorted(RUN_MODULES)))
 
 
 def _resolve_protocol(spec: str, cfg: dict):
@@ -198,6 +222,17 @@ def cmd_train(args) -> None:
     raise SystemExit(f"unknown train method {method!r}; known: {known}")
 
 
+def cmd_run(args) -> None:
+    """Dispatch ``run <name>`` to a bespoke analysis / feature-builder module."""
+    if not args.rest:
+        raise SystemExit("usage: harness.py run <name> [args...]")
+    name, rest = args.rest[0], args.rest[1:]
+    if name not in RUN_MODULES:
+        raise SystemExit(f"unknown run target {name!r}; known: {sorted(RUN_MODULES)}")
+    mod_name, fn_name = RUN_MODULES[name].split(":")
+    getattr(importlib.import_module(mod_name), fn_name)(rest)
+
+
 # ---------------------------------------------------------------- parsers --
 def _encode_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="harness.py encode")
@@ -248,5 +283,7 @@ def main(argv=None) -> None:
         cmd_eval(_eval_parser().parse_args(rest))
     elif cmd == "train":
         cmd_train(argparse.Namespace(rest=rest))
+    elif cmd == "run":
+        cmd_run(argparse.Namespace(rest=rest))
     else:
         raise SystemExit(f"unknown command {cmd!r}\n\n{USAGE}")

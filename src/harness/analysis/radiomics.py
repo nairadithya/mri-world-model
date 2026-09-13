@@ -7,7 +7,7 @@ final seed-42). Features are standardized with training statistics before the
 linear/MLP probe.
 
 Usage:
-    python scripts/radiomics_probe.py
+    python scripts/harness.py run radiomics
 """
 from __future__ import annotations
 
@@ -19,8 +19,6 @@ import sys
 
 import torch
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from src.harness.eval.aggregate import percentile_ci as _ci  # noqa: E402
 from src.harness.eval.metrics import macro_f1  # noqa: E402
 from src.harness.train.readout import fit_linear  # noqa: E402
@@ -65,13 +63,13 @@ def _bootstrap(per, boot=10000, seed=42):
     return _ci(vals)
 
 
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--cache", default="checkpoints/radiomics_features.pt")
     ap.add_argument("--protocol", default="info/eval_folds.json")
     ap.add_argument("--hidden", type=int, default=0)
     ap.add_argument("--boot", type=int, default=10000)
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
     proto = load_protocol(args.protocol)
     cache = torch.load(args.cache, map_location="cpu", weights_only=False)["lum"]
     unseen = sorted(proto["folds"])

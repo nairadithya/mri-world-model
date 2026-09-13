@@ -18,9 +18,9 @@ Gap semantics: time_deltas[t] = days since visit t-1 (deltas[0] = 0), so the
 horizon gap t -> t+n is deltas[t+1 .. t+n].sum().
 
 Usage:
-    python scripts/horizon_probe.py --encode
-    python scripts/horizon_probe.py --curve
-    python scripts/horizon_probe.py --train --epochs 300
+    python scripts/harness.py run horizon-probe --encode
+    python scripts/harness.py run horizon-probe --curve
+    python scripts/harness.py run horizon-probe --train --epochs 300
 """
 from __future__ import annotations
 
@@ -35,7 +35,6 @@ import torch.nn.functional as F
 import yaml
 from torch.utils.data import DataLoader
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.harness.data.builder import build_datasets
 from src.data.collate import make_collate
 from src.model.jepa_model import JEPAWorldModel
@@ -292,7 +291,7 @@ def train_predictor(patients, epochs=300, lr=1e-3, seed=42, weight="inv_n",
         print(f"{h:>4} {m.sum():>7} {pe.mean():>10.4f} {se.mean():>11.4f}{flag}")
 
 
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="config/default.yaml")
     ap.add_argument("--champion", default="checkpoints/champion_0.0081.pt")
@@ -313,7 +312,7 @@ def main():
                     help="load joint net + gap normalizer instead of training")
     ap.add_argument("--weight", default="inv_n", choices=["inv_n", "inv_gap_err"],
                     help="pair weighting: 1/n or 1/mean-gap-bin-persistence-error")
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
 
     if args.encode:
         with open(args.config) as f:

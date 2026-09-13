@@ -21,8 +21,8 @@ transform is not saved, K3-5). Treat vision_roi as a hypothesis probe, not a
 precise segmentation read; validate before citing.
 
 Usage:
-    python scripts/encode_interface.py --patients Patient-014 Patient-030  # smoke
-    python scripts/encode_interface.py                                     # full
+    python scripts/harness.py run interface --patients Patient-014 Patient-030  # smoke
+    python scripts/harness.py run interface                                     # full
 """
 from __future__ import annotations
 
@@ -40,7 +40,6 @@ import torch.nn.functional as F
 import yaml
 from torch.utils.data import DataLoader
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.data.collate import make_collate
 from src.data.dataset import LUMIEREDataset
 from src.data.splits import patient_splits
@@ -118,14 +117,14 @@ def encode_tokens(model, flat):
     return torch.cat(outs, 0)
 
 
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="config/default.yaml")
     ap.add_argument("--champion", default="checkpoints/champion_0.0081.pt")
     ap.add_argument("--cache", default="checkpoints/interface_cache.pt")
     ap.add_argument("--patients", nargs="*", default=None)
     ap.add_argument("--no-roi", action="store_true")
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
     with open(args.config) as f:
         cfg = yaml.safe_load(f)
     size = tuple(cfg["preprocessing"].get("target_size", [96, 96, 96]))

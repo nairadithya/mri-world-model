@@ -23,8 +23,8 @@ Phases:
             error table).
 
 Usage:
-    python scripts/pred_latent_probe.py --refit
-    python scripts/pred_latent_probe.py --probe
+    python scripts/harness.py run pred-latent --refit
+    python scripts/harness.py run pred-latent --probe
 """
 from __future__ import annotations
 
@@ -37,14 +37,12 @@ import time
 import torch
 import torch.nn.functional as F
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from src.model.dynamics_field import PatientTempo, VelocityField, integrate  # noqa: E402
 
-from horizon_probe import HorizonPredictor  # noqa: E402  (probe head class)
+from .horizon_probe import HorizonPredictor  # noqa: E402  (probe head class)
 from src.harness.train.readout import fit_linear, scores  # noqa: E402
-from split_gate import load_predictor  # noqa: E402  (champion 1-step head)
+from .split_gate import load_predictor  # noqa: E402  (champion 1-step head)
 from src.harness.train.field import fit_field, pairs_of  # noqa: E402
 
 FIELD_MODELS = "checkpoints/field_models.pt"
@@ -382,11 +380,11 @@ def probe():
               f"{statistics.pstdev(f1s):.4f}", flush=True)
 
 
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--refit", action="store_true")
     ap.add_argument("--probe", action="store_true")
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
     if args.refit:
         refit()
     if args.probe or not args.refit:

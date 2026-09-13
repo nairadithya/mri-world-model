@@ -20,8 +20,8 @@ final):
     ~= max, it already holds it.
 
 Usage:
-    python scripts/concept_probe.py
-    python scripts/concept_probe.py --sources states fused
+    python scripts/harness.py run concept
+    python scripts/harness.py run concept --sources states fused
 """
 from __future__ import annotations
 
@@ -251,7 +251,7 @@ def paired(name_a, name_b, res, regime="CV"):
           f"diff {fa - fb:+.4f} [{dlo:+.4f},{dhi:+.4f}] {sig}")
 
 
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--radiomics", default="checkpoints/radiomics_features.pt")
     ap.add_argument("--latents", default="checkpoints/interface_cache.pt")
@@ -259,7 +259,7 @@ def main():
     ap.add_argument("--boot", type=int, default=10000)
     ap.add_argument("--sources", nargs="*",
                     default=["vision", "fused", "states", "fused_next"])
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
 
     proto = load_protocol(args.protocol)
     assert_disjoint(proto)

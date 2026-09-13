@@ -17,7 +17,7 @@
    latent drift + frozen-head error per bin per cohort. Same gaps, different
    behavior? (follows the A14 gap reframe).
 
-Usage: python scripts/freeze_battery.py --separability --coral --plhm --interval-match
+Usage: python scripts/harness.py run freeze --separability --coral --plhm --interval-match
 """
 from __future__ import annotations
 
@@ -29,10 +29,8 @@ import sys
 import torch
 import torch.nn.functional as F
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from surprise_signal import auc_mann_whitney  # noqa: E402
+from .surprise import auc_mann_whitney  # noqa: E402
 
 HZ = "checkpoints/horizon_cache.pt"
 FLD = "checkpoints/field_cache.pt"
@@ -124,7 +122,7 @@ def coral_map(Xs, Xt, eps=1e-2):
 
 
 def coral():
-    from split_gate import load_predictor
+    from .split_gate import load_predictor
     hz, fl = load()
     pred = load_predictor("checkpoints/champion_0.0081.pt")
     # reference pools: all LUMIERE imaged visits
@@ -243,7 +241,7 @@ SAILOR_ROOT_PLHM = "data/sailor/sailor_ebrains_pseud/derivatives/mni2009c-n-s"
 
 
 def interval_match():
-    from split_gate import load_predictor
+    from .split_gate import load_predictor
     hz, fl = load()
     pred = load_predictor("checkpoints/champion_0.0081.pt")
     BINS = [0, 30, 90, 180, float("inf")]
@@ -281,13 +279,13 @@ def interval_match():
                   f"{statistics.mean(dd):>8.4f} {statistics.mean(hh):>8.4f}")
 
 
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--separability", action="store_true")
     ap.add_argument("--coral", action="store_true")
     ap.add_argument("--plhm", action="store_true")
     ap.add_argument("--interval-match", action="store_true")
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
     if args.separability:
         print("== 1. site separability ==")
         separability()
