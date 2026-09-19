@@ -32,6 +32,7 @@ from torch.utils.data import DataLoader
 from src.data.collate import make_collate
 from src.data.sailor import SAILORDataset
 from src.model.jepa_model import JEPAWorldModel
+from src.harness import provenance as prov_mod
 
 from src.harness.data.tasks import RANO_PROBE_NAMES, rows_for  # noqa: E402
 from src.harness.train.readout import fit_linear, scores  # noqa: E402
@@ -52,7 +53,7 @@ def encode_sailor(cfg, champion_path, cache_path, root=SAILOR_ROOT):
     model.eval()
     for p in model.parameters():
         p.requires_grad = False
-    cache = {"patients": {}}
+    cache = {"schema_version": 2, "patients": {}}
     t0 = time.time()
     with torch.no_grad():
         for i, batch in enumerate(loader):
@@ -64,17 +65,27 @@ def encode_sailor(cfg, champion_path, cache_path, root=SAILOR_ROOT):
                 tok, batch["time_deltas"], batch["visit_mask"])
             n = int(batch["n_visits"][0])
             item = ds[ds.subjects.index(pid)]
-            labels = [SAILOR_PROBE_MAP.get(ds.sailor_rano.get((pid, s)), -1)
-                      for s in item["visits"]]
+            labels = batch["response_labels"][0, :n].clone()
             cache["patients"][pid] = {
                 "split": "sailor", "vision": v[0, :n].clone(),
                 "fused": tok[0, :n].clone(), "clinical": c[0].clone(),
-                "labels": torch.tensor(labels, dtype=torch.long),
+                "labels": labels,
+                "response_labels": labels.clone(),
+                "response_valid": batch["response_valid"][0, :n].clone(),
+                "operative_event": batch["operative_event"][0, :n].clone(),
+                "treatment": batch["treatment"][0, :n].clone(),
+                "deltas": batch["time_deltas"][0, :n].clone(),
+                "has_img": batch["mri_mask"][0, :n].any(dim=-1).clone(),
                 "states": states[0, :n - 1].clone(),
             }
             el = time.time() - t0
             print(f"encoded {i + 1}/{len(ds)} ({el / (i + 1):.1f}s/subject)",
                   flush=True)
+    cache["provenance"] = prov_mod.make_provenance(
+        champion_path, "config/default.yaml",
+        champion_epoch=ckpt.get("epoch"), champion_val=ckpt.get("val_loss"),
+        site="SAILOR", views=["vision", "fused", "clinical", "states"],
+    )
     print(f"cache -> {cache_path}")
     torch.save(cache, cache_path)
 
