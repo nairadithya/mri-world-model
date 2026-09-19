@@ -197,15 +197,18 @@ def main(argv=None):
     cache = torch.load(args.cache, map_location="cpu", weights_only=False)
     protocol = load_protocol(args.protocol)
     data = rows(cache, sorted(set(protocol["encoder_train"]) | set(protocol["encoder_unseen"])))
+    all_y = torch.tensor([r["y"] for rr in data.values() for r in rr], dtype=torch.long)
+    prevalence = torch.bincount(all_y, minlength=4).float() / max(1, len(all_y))
     print(f"cache={args.cache} schema={cache.get('schema_version', 1)} "
           f"patients={len(data)} label_version={LABEL_VERSION}")
+    print(f"forecast prevalence PD/SD/PR/CR={['%.3f' % x for x in prevalence.tolist()]}")
     clinical_schema = (cache.get("provenance") or {}).get("clinical_schema")
     if "clinical" in FEATURES and clinical_schema != "survival_free_v1" \
             and not args.allow_legacy_clinical:
         print("clinical: BLOCKED (cache is not marked survival_free_v1; "
               "eventual OS status unknown)")
     output = {"cache": args.cache, "label_version": LABEL_VERSION,
-              "methods": {}, "blocked": {}}
+              "prevalence": prevalence.tolist(), "methods": {}, "blocked": {}}
     for method in METHODS:
         if method == "clinical" and clinical_schema != "survival_free_v1" \
                 and not args.allow_legacy_clinical:
