@@ -85,6 +85,8 @@ def encode_sailor(cfg, champion_path, cache_path, root=SAILOR_ROOT):
         champion_path, "config/default.yaml",
         champion_epoch=ckpt.get("epoch"), champion_val=ckpt.get("val_loss"),
         site="SAILOR", views=["vision", "fused", "clinical", "states"],
+        clinical_schema=("survival_free_v1" if not cfg.get("data", {}).get(
+            "include_survival", False) else "retrospective_survival_v1"),
     )
     print(f"cache -> {cache_path}")
     torch.save(cache, cache_path)
