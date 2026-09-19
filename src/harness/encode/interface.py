@@ -242,6 +242,8 @@ def main(argv=None):
         "date": time.strftime("%Y-%m-%d"),
         "mask_root": MASK_ROOT,
         "roi_alignment": "approximate (MNI152 atlas resized to 96^3)",
+        "clinical_schema": ("survival_free_v1" if not cfg["data"].get(
+            "include_survival", False) else "retrospective_survival_v1"),
     }
     cache["provenance"] = prov
     torch.save(cache, args.cache)

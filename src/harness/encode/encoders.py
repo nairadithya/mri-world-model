@@ -109,6 +109,9 @@ def encode_lumiere(cfg: dict, champion_path: str, cache_path: str,
             champion_epoch=ckpt.get("epoch"),
             champion_val=ckpt.get("val_loss"),
             views=list(views),
+            clinical_schema=("survival_free_v1"
+                             if not cfg.get("data", {}).get("include_survival", False)
+                             else "retrospective_survival_v1"),
         )
     n_lab = sum(int((p["labels"] >= 0).sum()) for p in cache["patients"].values())
     torch.save(cache, cache_path)
