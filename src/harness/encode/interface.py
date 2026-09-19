@@ -193,7 +193,8 @@ def main(argv=None):
             if args.no_roi:
                 v_roi = v_mean
 
-            c = model.clinical(batch["clinical"])               # (1,384)            ce = c.unsqueeze(1).expand(-1, T, -1)
+            c = model.clinical(batch["clinical"])               # (1,384)
+            ce = c.unsqueeze(1).expand(-1, T, -1)
             fused = model.fusion(v_mean.unsqueeze(0), ce)[0]     # (T,1152)
             states, _ = model.temporal.forward_prefixes(
                 fused.unsqueeze(0), batch["time_deltas"], batch["visit_mask"])
