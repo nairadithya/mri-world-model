@@ -10,6 +10,7 @@ data:
   train_split: 0.7
   val_split: 0.15
   seed: 42
+  include_survival: false
 
 preprocessing:
   template: MNI152

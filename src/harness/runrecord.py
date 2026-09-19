@@ -25,6 +25,7 @@ class RunRecord:
             "name": result.name,
             "metrics": result.metrics,
             "ci": {k: list(v) for k, v in result.ci.items()},
+            "patient_metrics": result.patient_metrics,
             "n_pat": result.n_pat,
             "n_rows": result.n_rows,
             "majority": result.majority,

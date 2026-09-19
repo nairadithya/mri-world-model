@@ -13,6 +13,7 @@ def _common(cfg: dict) -> dict:
         raw_root=cfg["data"].get("raw_root"),
         modalities=tuple(cfg["data"].get("modalities", ["CT1", "T1", "T2", "FLAIR"])),
         min_visits=cfg["data"].get("min_visits", 2),
+        include_survival=bool(cfg["data"].get("include_survival", False)),
     )
 
 

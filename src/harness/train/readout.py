@@ -61,11 +61,25 @@ def standardize(Xtr: torch.Tensor, Xte: torch.Tensor):
 
 
 def fit_ridge_cv(x_tr: torch.Tensor, y_tr: torch.Tensor,
-                 lams=(0.1, 1.0, 10.0, 100.0, 1000.0), seed: int = 42):
-    """Ridge with standardized features; lambda picked by 5-fold CV (legacy)."""
+                 lams=(0.1, 1.0, 10.0, 100.0, 1000.0), seed: int = 42,
+                 groups: list | torch.Tensor | None = None):
+    """Ridge with standardized features and grouped inner CV when supplied.
+
+    ``groups`` should identify patients.  Grouped folds prevent visits from
+    the same patient leaking across lambda-selection folds; the legacy
+    row-wise behavior remains available when groups is omitted.
+    """
     g = torch.Generator().manual_seed(seed)
-    idx = torch.randperm(len(x_tr), generator=g)
-    folds = [idx[i::5] for i in range(5)]
+    if groups is None:
+        idx = torch.randperm(len(x_tr), generator=g)
+        folds = [idx[i::5] for i in range(5)]
+    else:
+        groups = torch.as_tensor(groups)
+        unique = torch.unique(groups, sorted=True)
+        perm = unique[torch.randperm(len(unique), generator=g)]
+        group_folds = [perm[i::5] for i in range(5)]
+        folds = [torch.nonzero(torch.isin(groups, gf), as_tuple=False).flatten()
+                 for gf in group_folds]
     mu, sd = x_tr.mean(0), x_tr.std(0).clamp_min(1e-6)
     z = (x_tr - mu) / sd
     d = z.shape[1]

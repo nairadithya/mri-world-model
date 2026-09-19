@@ -75,6 +75,20 @@ state_t → RANO_{t+1} beats reading the current snapshot — with CIs excluding
 Clinical-only is weak, so the label signal is not demographics. These are the
 numbers Step 2 (ROI/mask pooling) must move.
 
+## P0 status and holdout policy
+
+The historical `final` slice has been scored by multiple downstream probes and
+is therefore **development evidence, not an untouched final holdout**. It must
+not be used to select another representation, readout, threshold, or
+harmonization method. A new external or hidden evaluation cohort is required
+for the next headline claim. The locked 26-patient folds remain useful for
+reproducible development comparisons, but their intervals do not restore
+independence after repeated selection.
+
+Prospective evaluations must exclude eventual overall survival from the input
+clinical vector. Survival is an outcome available only after follow-up and may
+be used only as a separate censored target.
+
 ## Known limits
 
 - The encoder early-stopped on `dev`, so only `final` is fully clean; a

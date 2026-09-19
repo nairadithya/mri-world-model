@@ -59,10 +59,17 @@ def features_for_batch(model, batch, item, ds, views):
             feats["ema_z"] = z.clone()
         if "z" in views:
             feats["z"] = z.clone()
-    labels = [RANO_PROBE_MAP.get(ds.rano.get((pid, visit), ""), -1)
-              for visit in item["visits"][:n]]
+    labels = batch.get("response_labels", torch.full_like(batch["actions"], -1))[0, :n]
+    valid = batch.get("response_valid", (labels >= 0).unsqueeze(0))[0, :n]
+    operative = batch.get("operative_event",
+                          torch.zeros((1, n), dtype=torch.bool))[0, :n]
+    treatment = batch.get("treatment", torch.full((1, n), -1, dtype=torch.long))[0, :n]
     meta = {
-        "labels": torch.tensor(labels, dtype=torch.long),
+        "labels": labels.clone(),
+        "response_labels": labels.clone(),
+        "response_valid": valid.clone(),
+        "operative_event": operative.clone(),
+        "treatment": treatment.clone(),
         "visits": list(item["visits"][:n]),
         "deltas": batch["time_deltas"][0, :n].clone(),
         "has_img": batch["mri_mask"][0, :n].any(dim=-1).clone(),
@@ -78,7 +85,7 @@ def encode_lumiere(cfg: dict, champion_path: str, cache_path: str,
     collate = make_collate(size)
     model, ckpt = load_champion(cfg, champion_path)
 
-    cache = {"patients": {}}
+    cache = {"schema_version": 2, "patients": {}}
     t0 = time.time()
     done = 0
     total = sum(len(ds) for ds in datasets.values())

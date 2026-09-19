@@ -18,10 +18,13 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import os
+import subprocess
 import sys
+import time
 
 import torch
 
@@ -150,7 +153,14 @@ def main(argv=None):
     with open(args.config) as f:
         cfg = yaml.safe_load(f)
     proto = load_protocol(args.protocol)
-    out = {"lum": {}, "sailor": {}, "feature_dim": 22}
+    with open(args.config, "rb") as f:
+        cfg_sha1 = hashlib.sha1(f.read()).hexdigest()
+    out = {"schema_version": 2, "lum": {}, "sailor": {}, "feature_dim": 22,
+           "provenance": {"config": os.path.abspath(args.config),
+                          "config_sha1": cfg_sha1,
+                          "git_sha": subprocess.check_output(
+                              ["git", "rev-parse", "HEAD"], text=True).strip(),
+                          "date": time.strftime("%Y-%m-%d")}}
 
     common = dict(meta_dir=cfg["data"]["meta_dir"], processed_root=cfg["data"]["root"],
                   raw_root=cfg["data"].get("raw_root"),

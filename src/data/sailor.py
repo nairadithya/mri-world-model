@@ -28,6 +28,8 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 
+from .labels import response_label
+
 SAILOR_MODALITIES = (("CT1", ("T1c", "T1c-icor")),
                      ("T1", ("T1", "T1-icor")),
                      ("T2", ("T2", "T2-icor")),
@@ -119,8 +121,10 @@ def _ses_key(ses: str) -> int:
 
 
 class SAILORDataset(Dataset):
-    def __init__(self, root: str, subjects: list[str] | None = None, min_visits: int = 2):
+    def __init__(self, root: str, subjects: list[str] | None = None,
+                 min_visits: int = 2, include_survival: bool = False):
         self.root = root
+        self.include_survival = include_survival
         self._content: dict[str, list] = {}
         self._content_dirty = False
         self._load_manifest()
@@ -268,19 +272,27 @@ class SAILORDataset(Dataset):
         paths = {s: [self._image_path(sub, v, s) for v in visits] for s in SAILOR_SLOTS}
         deltas = self._aligned_deltas(sub, visits)
         actions = []
+        response_labels = []
         for v in visits:
             code = self.sailor_rano.get((sub, v))
-            actions.append(SAILOR_RANO_TO_ACTION.get(code, 2) if code else 2)
+            actions.append(SAILOR_RANO_TO_ACTION.get(code, -1) if code else -1)
+            response_labels.append({1: 0, 2: 1, 3: 2, 5: 3}.get(code, -1))
         treat = [self.treatment.get((sub, v), 3) for v in visits]
         age = self.age.get(sub, 0.0) / 100.0
-        surv = self.os_months.get(sub, 0.0) * 4.345 / 200.0
+        surv = (self.os_months.get(sub, 0.0) * 4.345 / 200.0
+                if self.include_survival else 0.0)
         clinical = torch.tensor([0, age, 3, 2, 0.0, surv], dtype=torch.float32)
         return {
             "patient_id": sub,
             "visits": visits,
             "paths": paths,
             "clinical": clinical,
+            # Legacy response-derived action ids retained for old checkpoints.
             "actions": torch.tensor(actions, dtype=torch.long),
+            "response_labels": torch.tensor(response_labels, dtype=torch.long),
+            "response_valid": torch.tensor([x >= 0 for x in response_labels],
+                                            dtype=torch.bool),
+            "operative_event": torch.zeros(len(visits), dtype=torch.bool),
             "treatment": torch.tensor(treat, dtype=torch.long),
             "time_deltas": torch.tensor(deltas, dtype=torch.float32),
             "n_visits": len(visits),

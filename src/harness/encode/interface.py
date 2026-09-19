@@ -148,7 +148,7 @@ def main(argv=None):
     print(f"champion {args.champion} (epoch {ckpt.get('epoch')}, val {ckpt.get('val_loss')})")
     vols = load_volumes()
 
-    cache = {"patients": {}}
+    cache = {"schema_version": 2, "patients": {}}
     t0 = time.time()
     total = sum(len(ds) for ds in datasets.values())
     done = 0
@@ -201,7 +201,7 @@ def main(argv=None):
             states_roi, _ = model.temporal.forward_prefixes(
                 fused_roi.unsqueeze(0), batch["time_deltas"], batch["visit_mask"])
 
-            labels = [RANO_PROBE_MAP.get(ds.rano.get((pid, v), ""), -1) for v in visits]
+            labels = batch["response_labels"][0, :n].clone()
             vv = []
             for v in visits:
                 d = vols.get((pid, v))
@@ -220,7 +220,13 @@ def main(argv=None):
                 "states": states[0, :n - 1].clone(),
                 "states_roi": states_roi[0, :n - 1].clone(),
                 "volumes": torch.tensor(vv, dtype=torch.float32),
-                "labels": torch.tensor(labels, dtype=torch.long),
+                "labels": labels,
+                "response_labels": labels.clone(),
+                "response_valid": batch["response_valid"][0, :n].clone(),
+                "operative_event": batch["operative_event"][0, :n].clone(),
+                "treatment": batch["treatment"][0, :n].clone(),
+                "deltas": batch["time_deltas"][0, :n].clone(),
+                "has_img": mri_mask[0, :n].any(dim=-1).clone(),
             }
             done += 1
             el = time.time() - t0

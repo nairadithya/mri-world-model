@@ -47,6 +47,10 @@ def collate_fn(batch: list[dict], size: tuple[int, int, int] = (96, 96, 96),
     visit_mask = torch.zeros(B, T, dtype=torch.bool)
     visit_valid = torch.zeros(B, T, dtype=torch.bool)
     actions = torch.zeros(B, T, dtype=torch.long)
+    response_labels = torch.full((B, T), -1, dtype=torch.long)
+    response_valid = torch.zeros(B, T, dtype=torch.bool)
+    operative_event = torch.zeros(B, T, dtype=torch.bool)
+    treatment = torch.full((B, T), -1, dtype=torch.long)
     deltas = torch.zeros(B, T, dtype=torch.float32)
 
     clinical = torch.stack([s["clinical"] for s in batch])
@@ -61,6 +65,12 @@ def collate_fn(batch: list[dict], size: tuple[int, int, int] = (96, 96, 96),
         else:
             visit_valid[b, :n] = True
         actions[b, :n] = s["actions"]
+        if "response_labels" in s:
+            response_labels[b, :n] = s["response_labels"]
+            response_valid[b, :n] = s["response_valid"]
+            operative_event[b, :n] = s["operative_event"]
+        if "treatment" in s:
+            treatment[b, :n] = s["treatment"]
         deltas[b, :n] = s["time_deltas"]
         for mi, mod in enumerate(MODALITIES):
             for t, path in enumerate(s["paths"][mod]):
@@ -84,6 +94,10 @@ def collate_fn(batch: list[dict], size: tuple[int, int, int] = (96, 96, 96),
         "visit_valid": visit_valid,
         "clinical": clinical,
         "actions": actions,
+        "response_labels": response_labels,
+        "response_valid": response_valid,
+        "operative_event": operative_event,
+        "treatment": treatment,
         "time_deltas": deltas,
         "n_visits": n_visits,
         "patient_id": patient_ids,

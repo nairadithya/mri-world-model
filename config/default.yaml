@@ -8,6 +8,8 @@ data:
   train_split: 0.7
   val_split: 0.15
   seed: 42
+  # Eventual overall survival is an outcome, not an index-visit input.
+  include_survival: false
   # Halve collate input memory (fp16 storage; backbone casts to float per
   # chunk). Default false = exact legacy numerics for eval comparability.
   store_half: false
@@ -63,8 +65,8 @@ model:
 
 actions:
   classes: [Pre-Op, Post-Op, SD, PD, CR, PR]
-  # Post-Op/PD and missing map to PD-like / unknown ids at dataset level;
-  # see src/data/dataset.py RANO_ACTION_MAP
+  # Operative and missing response ratings use -1 in the legacy action field;
+  # clean labels live in response_labels/response_valid.
 
 training:
   batch_size: 4

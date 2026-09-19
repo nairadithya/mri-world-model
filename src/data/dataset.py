@@ -14,6 +14,8 @@ import pandas as pd
 import torch
 from torch.utils.data import Dataset
 
+from .labels import operative_event, response_label
+
 MODALITIES = ("CT1", "T1", "T2", "FLAIR")
 
 # RANO rating -> categorical action id (config classes order).
@@ -24,9 +26,9 @@ RANO_ACTION_MAP = {
     "PD": 3,
     "CR": 4,
     "PR": 5,
-    "Post-Op/PD": 3,  # treat as progression
-    "None": 2,        # treat missing rating as stable
-    "": 2,
+    "Post-Op/PD": -1,  # operative/ambiguous, not a clean response
+    "None": -1,        # missing response
+    "": -1,
 }
 
 IDH_MAP = {"WT": 0, "R132H mut": 1, "IDH1 neg, Sequencing required": 2, "na": 3, "": 3}
@@ -59,12 +61,17 @@ class LUMIEREDataset(Dataset):
         patients: list[str] | None = None,
         modalities: tuple[str, ...] = MODALITIES,
         min_visits: int = 2,
+        include_survival: bool = False,
     ):
         self.meta_dir = meta_dir
         self.processed_root = processed_root
         self.raw_root = raw_root
         self.modalities = modalities
         self.min_visits = min_visits
+        # Eventual survival is unavailable at an index visit. Keep the
+        # six-dimensional clinical contract for checkpoint compatibility, but
+        # zero this field unless explicitly requested for retrospective work.
+        self.include_survival = include_survival
 
         demo = pd.read_csv(os.path.join(meta_dir, [f for f in os.listdir(meta_dir) if f.startswith("demographics")][0]))
         rano_files = [f for f in os.listdir(meta_dir) if f.startswith("rano")]
@@ -141,14 +148,15 @@ class LUMIEREDataset(Dataset):
         return default if pd.isna(v) else v
 
     @staticmethod
-    def _clinical_vector(row: pd.Series) -> torch.Tensor:
+    def _clinical_vector(row: pd.Series, include_survival: bool = False) -> torch.Tensor:
         sex = SEX_MAP.get(str(row.get("Sex", "")), 0)
         age = LUMIEREDataset._num(row.get("Age at surgery (years)", 0)) / 100.0
         idh = IDH_MAP.get(str(row.get("IDH (WT: wild type)", "")), 3)
         mgmt = MGMT_MAP.get(str(row.get("MGMT qualitative", "")), 2)
         mgmt_q = LUMIEREDataset._num(
             str(row.get("MGMT quantitative", "na")).replace("%", "")) / 100.0
-        surv = LUMIEREDataset._num(row.get("Survival time (weeks)", 0)) / 200.0
+        surv = (LUMIEREDataset._num(row.get("Survival time (weeks)", 0)) / 200.0
+                if include_survival else 0.0)
         return torch.tensor([sex, age, idh, mgmt, mgmt_q, surv], dtype=torch.float32)
 
     def __getitem__(self, idx: int) -> dict:
@@ -186,16 +194,27 @@ class LUMIEREDataset(Dataset):
         actions = []
         for v in visits:
             rating = self.rano.get((patient, v), "")
-            actions.append(RANO_ACTION_MAP.get(rating, 2))
+            actions.append(RANO_ACTION_MAP.get(rating, -1))
 
-        clinical = self._clinical_vector(self.demographics[patient])
+        raw_ratings = [self.rano.get((patient, v), "") for v in visits]
+        clinical = self._clinical_vector(self.demographics[patient],
+                                         self.include_survival)
 
         return {
             "patient_id": patient,
             "visits": visits,
             "paths": paths,  # modality -> list[path|None] per visit
             "clinical": clinical,
+            # Legacy response-derived action ids retained for old checkpoints.
             "actions": torch.tensor(actions, dtype=torch.long),
+            "response_labels": torch.tensor([response_label(r) for r in raw_ratings],
+                                             dtype=torch.long),
+            "response_valid": torch.tensor([response_label(r) >= 0 for r in raw_ratings],
+                                            dtype=torch.bool),
+            "operative_event": torch.tensor([operative_event(r) for r in raw_ratings],
+                                             dtype=torch.bool),
+            # LUMIERE treatment metadata is not available in this adapter.
+            "treatment": torch.full((len(visits),), -1, dtype=torch.long),
             "time_deltas": torch.tensor(deltas, dtype=torch.float32),
             "visit_window": torch.tensor(window, dtype=torch.bool),
             "n_visits": len(visits),

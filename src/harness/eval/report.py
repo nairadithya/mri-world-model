@@ -18,8 +18,10 @@ def print_result(result: EvalResult) -> None:
         return
     ci = result.ci.get(primary)
     ci_str = f" [{ci[0]:.4f},{ci[1]:.4f}]" if ci else ""
+    patient = result.patient_metrics.get(primary)
+    patient_str = f"  patient-uniform {patient:.4f}" if patient is not None else ""
     print(f"  pooled {primary} {result.metrics[primary]:.4f}{ci_str}  "
-          f"(n_pat={result.n_pat}, n_rows={result.n_rows})")
+          f"(n_pat={result.n_pat}, n_rows={result.n_rows}){patient_str}")
     if result.majority is not None:
         k = result.majority["class"]
         names = result.meta.get("class_names") or RANO_PROBE_NAMES

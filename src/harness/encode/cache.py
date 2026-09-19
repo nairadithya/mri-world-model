@@ -19,6 +19,8 @@ import torch
 from .. import provenance as _prov
 from . import views
 
+CACHE_SCHEMA_VERSION = 2
+
 FEATURE_KEYS = (
     "vision", "vision_mod", "vision_roi", "vision_roi_mod", "fused",
     "states", "states_roi", "volumes", "clinical", "ema_z", "z",
@@ -26,7 +28,7 @@ FEATURE_KEYS = (
 
 
 def make_cache(prov: dict | None = None) -> dict:
-    cache = {"patients": {}}
+    cache = {"schema_version": CACHE_SCHEMA_VERSION, "patients": {}}
     if prov is not None:
         cache["provenance"] = prov
     return cache
@@ -46,9 +48,14 @@ def save(path: str, cache: dict) -> None:
     torch.save(cache, path)
 
 
-def load(path: str, *, warn_provenance: bool = True) -> dict:
+def load(path: str, *, warn_provenance: bool = True,
+         require_current: bool = False) -> dict:
     cache = torch.load(path, map_location="cpu", weights_only=False)
     _prov.assert_provenance(cache, warn=warn_provenance)
+    if require_current:
+        problems = validate(cache, strict=True)
+        if problems:
+            raise ValueError(f"invalid cache {path}: {'; '.join(problems)}")
     return cache
 
 
@@ -58,7 +65,7 @@ def canonicalize(cache: dict) -> dict:
     Non-destructive: feature tensors are shared by reference, so this is
     cheap and safe to call on a freshly loaded legacy cache.
     """
-    out = {"patients": {}}
+    out = {"schema_version": cache.get("schema_version", 1), "patients": {}}
     if "provenance" in cache:
         out["provenance"] = cache["provenance"]
     for pid, p in cache["patients"].items():
@@ -75,9 +82,13 @@ def canonicalize(cache: dict) -> dict:
     return out
 
 
-def validate(cache: dict, require=("labels",)) -> list[str]:
-    """Return a list of human-readable problems (empty == ok)."""
+def validate(cache: dict, require=("labels",), strict: bool = False) -> list[str]:
+    """Return human-readable problems; strict mode enforces current artifacts."""
     problems = []
+    if strict and cache.get("schema_version") != CACHE_SCHEMA_VERSION:
+        problems.append(f"cache schema {cache.get('schema_version', 1)} != {CACHE_SCHEMA_VERSION}")
+    if strict and "provenance" not in cache:
+        problems.append("missing provenance")
     if "patients" not in cache:
         problems.append("cache has no 'patients'")
         return problems

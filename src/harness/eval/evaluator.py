@@ -16,6 +16,7 @@ from .aggregate import patient_bootstrap, percentile_ci
 from .metrics import compute_metrics, macro_f1
 from ..data.tasks import Task
 from ..train.readout import fit_linear, fit_ridge_cv
+from ..registry import METRICS
 
 
 @dataclass
@@ -24,6 +25,8 @@ class EvalResult:
     metrics: dict = field(default_factory=dict)
     ci: dict = field(default_factory=dict)
     oof: dict = field(default_factory=dict)
+    score_oof: dict = field(default_factory=dict)
+    patient_metrics: dict = field(default_factory=dict)
     fold_values: list = field(default_factory=list)
     n_pat: int = 0
     n_rows: int = 0
@@ -84,9 +87,9 @@ class ReadoutEvaluator:
             return 2
         return 4
 
-    def _fit(self, X: torch.Tensor, y: torch.Tensor):
+    def _fit(self, X: torch.Tensor, y: torch.Tensor, groups=None):
         if self.readout == "ridge":
-            w, b, lam = fit_ridge_cv(X, y, seed=self.seed)
+            w, b, lam = fit_ridge_cv(X, y, seed=self.seed, groups=groups)
             return ("ridge", w, b, lam)
         hidden = self.hidden if self.readout == "mlp" else 0
         mu = sd = None
@@ -100,16 +103,34 @@ class ReadoutEvaluator:
     def _predict(self, model, X: torch.Tensor):
         if model[0] == "ridge":
             _, w, b, _ = model
-            return X @ w + b
-        _, net, mu, sd = model
-        with torch.no_grad():
-            z = (X - mu) / sd if mu is not None else X
-            logits = net(z)
+            logits = X @ w + b
+        else:
+            _, net, mu, sd = model
+            with torch.no_grad():
+                z = (X - mu) / sd if mu is not None else X
+                logits = net(z)
         return logits.argmax(1), logits
+
+    def _metric_requires_scores(self, name: str) -> bool:
+        metric = METRICS.get(name)
+        metric = metric() if isinstance(metric, type) else metric
+        return getattr(metric, "requires", "labels") == "scores"
+
+    def _bootstrap_metric(self, oof, score_oof, name: str):
+        from .metrics import compute_metrics
+        source = score_oof if self._metric_requires_scores(name) else oof
+        vals, _ = patient_bootstrap(
+            source, None, boot=self.boot, seed=self.metric_seed,
+            metric_fn=lambda p, t: compute_metrics(
+                [name], t, p if not self._metric_requires_scores(name) else
+                torch.argmax(p, dim=-1), scores=p if self._metric_requires_scores(name) else None,
+                n_cls=self.n_cls)[name])
+        return vals
 
     # ---------------------------------------------------------------- run ---
     def run(self, patients: dict, *, verbose: bool = False) -> EvalResult:
         oof = {}
+        score_oof = {}
         fold_values = []
         for fold, (tr, te) in enumerate(self.protocol.splits(self.train_pool,
                                                              self.cohort)):
@@ -119,18 +140,22 @@ class ReadoutEvaluator:
                 continue
             Xtr = torch.cat([v[0] for v in tr_rows.values()])
             ytr = torch.cat([v[1] for v in tr_rows.values()])
-            model = self._fit(Xtr, ytr)
-            fold_pred, fold_y = [], []
+            groups = torch.cat([
+                torch.full((len(v[1]),), i, dtype=torch.long)
+                for i, v in enumerate(tr_rows.values())])
+            model = self._fit(Xtr, ytr, groups=groups)
+            fold_pred, fold_scores, fold_y = [], [], []
             for pid, (Xte, yte) in te_rows.items():
-                pred = self._predict(model, Xte)
-                if isinstance(pred, tuple):
-                    pred = pred[0]
+                pred, logits = self._predict(model, Xte)
                 oof[pid] = (pred, yte)
+                score_oof[pid] = (logits, yte)
                 fold_pred.append(pred)
+                fold_scores.append(logits)
                 fold_y.append(yte)
             if fold_pred:
-                fold_values.append(self._score(torch.cat(fold_pred),
-                                               torch.cat(fold_y)))
+                fold_values.append(self._score(
+                    torch.cat(fold_pred), torch.cat(fold_y),
+                    torch.cat(fold_scores)))
             if verbose:
                 print(f"  fold {fold}: n_te={len(te_rows)}", flush=True)
         if not oof:
@@ -140,12 +165,29 @@ class ReadoutEvaluator:
         pred = torch.cat([oof[p][0] for p in pids])
         y = torch.cat([oof[p][1] for p in pids])
         primary = self.metrics[0]
-        metrics = compute_metrics(self.metrics, y, pred, n_cls=self.n_cls)
+        score = torch.cat([score_oof[p][0] for p in pids]) if score_oof else None
+        metrics = compute_metrics(self.metrics, y, pred, scores=score, n_cls=self.n_cls)
+        patient_values = {name: [] for name in self.metrics}
+        for pid in pids:
+            py = oof[pid][1]
+            pp = oof[pid][0]
+            ps = score_oof[pid][0]
+            for name in self.metrics:
+                metric = METRICS.get(name)
+                metric = metric() if isinstance(metric, type) else metric
+                needs = getattr(metric, "requires", "labels") == "scores"
+                if needs and len(torch.unique(py)) < 2 and name in ("auc", "auprc"):
+                    continue
+                value = compute_metrics(
+                    [name], py, pp, scores=ps if needs else None,
+                    n_cls=self.n_cls)[name]
+                if value == value:
+                    patient_values[name].append(value)
+        patient_metrics = {name: sum(vals) / len(vals)
+                           for name, vals in patient_values.items() if vals}
         ci = {}
-        if self.boot and primary in ("macro_f1", "accuracy"):
-            vals, _ = patient_bootstrap(
-                oof, None, boot=self.boot, seed=self.metric_seed,
-                metric_fn=lambda p, t: macro_f1(p, t, self.n_cls))
+        if self.boot and primary in METRICS:
+            vals = self._bootstrap_metric(oof, score_oof, primary)
             ci[primary] = percentile_ci(vals)
         majority = None
         if self.task.frame != "latent":
@@ -154,6 +196,7 @@ class ReadoutEvaluator:
                         "accuracy": (y == maj).float().mean().item()}
         return EvalResult(
             name=self.name, metrics=metrics, ci=ci, oof=oof,
+            score_oof=score_oof, patient_metrics=patient_metrics,
             fold_values=fold_values, n_pat=len(oof), n_rows=len(y),
             majority=majority,
             meta={"view": self.view, "readout": self.readout,
@@ -161,6 +204,6 @@ class ReadoutEvaluator:
                   "folds": len(fold_values), "n_cls": self.n_cls,
                   "class_names": list(self.task.class_names)})
 
-    def _score(self, pred, y) -> float:
-        return compute_metrics(self.metrics[:1], y, pred,
+    def _score(self, pred, y, scores=None) -> float:
+        return compute_metrics(self.metrics[:1], y, pred, scores=scores,
                                n_cls=self.n_cls)[self.metrics[0]]

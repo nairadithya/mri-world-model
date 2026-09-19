@@ -58,6 +58,7 @@ RUN_MODULES = {
     "sailor-interval": "src.harness.analysis.sailor_interval:main",
     "freeze": "src.harness.analysis.freeze:main",
     "lock": "src.harness.data.lock:main",
+    "manifest": "src.harness.data.manifest:main",
 }
 
 USAGE = """\
@@ -117,7 +118,7 @@ def _run_eval(cfg, cache, args, view):
 
 def cmd_eval(args) -> None:
     cfg = load_config(args.config)
-    cache = load_cache(args.cache, warn_provenance=False)
+    cache = load_cache(args.cache, warn_provenance=True, require_current=True)
     patients = cache["patients"]
     print_provenance(cache.get("provenance"))
     task_cls = TASKS.get(args.task)
@@ -149,9 +150,15 @@ def cmd_eval(args) -> None:
         other = _run_eval(cfg, cache, args, args.compare)
         primary = args.metrics[0]
         n_cls = result.meta.get("n_cls", 4)
+        metric = METRICS.get(primary)
+        metric = metric() if isinstance(metric, type) else metric
+        score_metric = getattr(metric, "requires", "labels") == "scores"
+        left = result.score_oof if score_metric else result.oof
+        right = other.score_oof if score_metric else other.oof
         _, d_vals = patient_bootstrap(
-            result.oof, other.oof, boot=args.boot, seed=args.seed,
-            metric_fn=lambda p, t: _metric_fn(primary, p, t, n_cls))
+            left, right, boot=args.boot, seed=args.seed,
+            metric_fn=lambda p, t: _metric_fn(
+                primary, p, t, n_cls, scores=p if score_metric else None))
         dlo, dhi = percentile_ci(d_vals)
         base = result.metrics[primary] - other.metrics[primary]
         sig = "SIG" if dhi < 0 or dlo > 0 else "n.s."
@@ -195,10 +202,11 @@ def _cmd_eval_latent(args, cache, task, proto) -> None:
         _log(f"wrote {args.out}")
 
 
-def _metric_fn(name, pred, y, n_cls=4):
+def _metric_fn(name, pred, y, n_cls=4, scores=None):
     from .eval.metrics import compute_metrics
-    # bootstrap passes argmax labels; only label metrics are supported here
-    return compute_metrics([name], y, pred, n_cls=n_cls)[name]
+    metric_pred = pred if scores is None else pred.argmax(dim=-1)
+    return compute_metrics([name], y, metric_pred, scores=scores,
+                           n_cls=n_cls)[name]
 
 
 def cmd_train(args) -> None:
