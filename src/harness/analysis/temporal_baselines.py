@@ -22,10 +22,11 @@ from src.harness.eval.metrics import macro_f1
 
 
 class Row:
-    __slots__ = ("pid", "seq", "y")
+    __slots__ = ("pid", "seq", "y", "observed_count")
 
-    def __init__(self, pid, seq, y):
+    def __init__(self, pid, seq, y, observed_count):
         self.pid, self.seq, self.y = pid, seq, int(y)
+        self.observed_count = int(observed_count)
 
 
 def build_rows(cache, pids):
@@ -41,7 +42,8 @@ def build_rows(cache, pids):
         for t in range(n - 1):
             if not has[t] or not has[t + 1] or labels[t + 1] < 0:
                 continue
-            out.append(Row(pid, seq[:t + 1].clone(), labels[t + 1]))
+            out.append(Row(pid, seq[:t + 1].clone(), labels[t + 1],
+                           int(has[:t + 1].sum())))
     return out
 
 
@@ -105,6 +107,15 @@ def fit_gru(rows, mu, sd, seed=42, steps=300, shuffle=False, truncate=False):
     return model, head
 
 
+def fit_count(rows):
+    from src.harness.train.readout import fit_linear
+    x = torch.tensor([[len(r.seq), r.observed_count] for r in rows],
+                     dtype=torch.float32)
+    mu, sd = x.mean(0), x.std(0).clamp_min(1e-6)
+    y = torch.tensor([r.y for r in rows])
+    return fit_linear((x - mu) / sd, y, hidden=0, seed=42), mu, sd
+
+
 def fit_mean(rows, mu, sd):
     # A class-weighted linear head on mean history, preserving the same
     # classifier family as the frozen current-image baseline.
@@ -115,6 +126,11 @@ def fit_mean(rows, mu, sd):
 
 
 def predict(method, model, rows, mu, sd):
+    if method == "scan_count":
+        x = torch.tensor([[len(r.seq), r.observed_count] for r in rows],
+                         dtype=torch.float32)
+        with torch.no_grad():
+            return model[0]((x - model[1]) / model[2]).argmax(1)
     if method == "mean_history":
         x = torch.stack([((r.seq - mu) / sd).mean(0) for r in rows])
         with torch.no_grad():
@@ -143,7 +159,9 @@ def predict(method, model, rows, mu, sd):
 
 def evaluate(train, test, method, seed=42, boot=1000, steps=300):
     mu, sd = normalizer(train)
-    if method == "mean_history":
+    if method == "scan_count":
+        model = fit_count(train)
+    elif method == "mean_history":
         model = fit_mean(train, mu, sd)
     elif method == "last_mlp":
         model = fit_mlp(train, mu, sd, seed=seed, steps=steps)
@@ -179,7 +197,8 @@ def main(argv=None):
     proto = load_protocol(args.protocol)
     pids = sorted(set(proto["encoder_train"]) | set(proto["encoder_unseen"]))
     data = build_rows(cache, pids)
-    methods = ("mean_history", "last_mlp", "gru", "shuffle_gru", "truncated_gru")
+    methods = ("scan_count", "mean_history", "last_mlp", "gru",
+               "shuffle_gru", "truncated_gru")
     output = {"cache": args.cache, "methods": {}}
     print(f"temporal rows={len(data)} patients={len(set(r.pid for r in data))}")
     for method in methods:
