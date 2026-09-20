@@ -51,6 +51,7 @@ RUN_MODULES = {
     "pred-latent": "src.harness.analysis.pred_latent:main",
     "volume": "src.harness.analysis.volume:main",
     "forecast-baselines": "src.harness.analysis.forecast_baselines:main",
+    "temporal-baselines": "src.harness.analysis.temporal_baselines:main",
     "radiomics": "src.harness.analysis.radiomics:main",
     "concept": "src.harness.analysis.concept:main",
     "cross-site": "src.harness.analysis.cross_site:main",

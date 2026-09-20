@@ -36,6 +36,13 @@ assessment/development diagnostics: the historical-final slice is not an
 untouched test, and the JEPA forecast readout must be evaluated on the same
 current cache before claiming an advantage.
 
+The temporal baseline suite is implemented as
+`src/harness/analysis/temporal_baselines.py` and registered as
+`run temporal-baselines`. It evaluates mean-history pooling, a last-visit MLP,
+a GRU, order-shuffled GRU, and truncated-history GRU on the same 393 forecast
+rows. A 3-step smoke run passed; the full prespecified run is queued behind the
+current P0 refresh analysis.
+
 ## Exploratory legacy-cache run
 
 Run on `checkpoints/interface_cache.pt` (schema 1, 79 patients; not citable as
