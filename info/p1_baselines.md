@@ -15,6 +15,27 @@ source visit: last observed RANO, smoothed RANO transition counts, current
 image features, current volumes, or past volume trend. The clinical baseline
 is refused unless cache provenance says `clinical_schema=survival_free_v1`.
 
+## Current survival-free LUMIERE run
+
+Run on `checkpoints/p0_interface_cache.pt` (schema 2, provenance
+`clinical_schema=survival_free_v1`; 79 patients contribute forecast rows):
+
+| method | within-unseen CV | transfer -> historical final |
+|---|---:|---:|
+| majority | 0.1952 | 0.1975 |
+| last RANO | 0.2566 | 0.3868 |
+| transition | 0.1952 | 0.3212 |
+| clinical | 0.1625 | 0.1726 |
+| current image | 0.2388 | 0.2619 |
+| current volume | 0.2180 | 0.2509 |
+| past volume trend | 0.1597 | 0.2725 |
+
+Bootstrap intervals and prevalence are preserved in
+`outputs/p1_forecast_baselines_clean.json` (gitignored). These are still
+assessment/development diagnostics: the historical-final slice is not an
+untouched test, and the JEPA forecast readout must be evaluated on the same
+current cache before claiming an advantage.
+
 ## Exploratory legacy-cache run
 
 Run on `checkpoints/interface_cache.pt` (schema 1, 79 patients; not citable as
@@ -30,8 +51,6 @@ the final result because the cache predates the survival-free contract):
 | past volume trend | 0.1597 | 0.2725 |
 | clinical | **blocked** | **blocked** |
 
-These values are development diagnostics only. The within-unseen value is the
-mean of the five locked fold-pooled scores; the transfer value is evaluated on
-the historical final slice, which is now development-only. Re-run after the
-Kaggle checkpoint and current-schema cache rebuild before interpreting any
-JEPA comparison.
+These legacy values are development diagnostics only. The within-unseen value
+is the mean of the five locked fold-pooled scores; the transfer value is
+evaluated on the historical final slice, which is now development-only.

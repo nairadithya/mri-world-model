@@ -65,6 +65,33 @@ def lumiere(horizon_path, probe_path):
           f"{auc_mann_whitney(errs, yb):.4f}  [JEPA-err reference: 0.7677]")
 
 
+def lumiere_probe(probe_path):
+    """Run the persistence control from the canonical current probe cache."""
+    patients = torch.load(probe_path, map_location="cpu",
+                          weights_only=False)["patients"]
+    errs, yb, yc = [], [], []
+    for p in patients.values():
+        z, lab = p["z"], p["labels"]
+        T = min(len(z), len(lab), len(p["has_img"]))
+        for t in range(T - 1):
+            if not p["has_img"][t] or not p["has_img"][t + 1]:
+                continue
+            if int(lab[t + 1]) < 0:
+                continue
+            e = 1 - (F.normalize(z[t], dim=0) *
+                     F.normalize(z[t + 1], dim=0)).sum().item()
+            errs.append(e)
+            yc.append(int(lab[t + 1]))
+            yb.append(1 if int(lab[t + 1]) == 0 else 0)
+    errs, yb, yc = map(torch.tensor, (errs, yb, yc))
+    print(f"LUMIERE pairs: {len(errs)} PD-rate={yb.float().mean():.3f}")
+    for k, nm in enumerate(["PD", "SD", "PR", "CR"]):
+        m = yc == k
+        print(f"mean persistence err {nm}: {errs[m].mean():.4f} (n={int(m.sum())})")
+    print(f"AUC(persistence-err -> next-visit PD): "
+          f"{auc_mann_whitney(errs, yb):.4f}  [canonical probe cache]")
+
+
 def sailor_encode(cfg, champion_path, cache_path):
     ds = SAILORDataset(SAILOR_ROOT)
     size = tuple(cfg["preprocessing"].get("target_size", [96, 96, 96]))
@@ -140,7 +167,13 @@ def main(argv=None):
     ap.add_argument("--sailor", action="store_true")
     args = ap.parse_args(argv)
     if args.lumiere:
-        lumiere(args.horizon_cache, args.probe_cache)
+        probe = torch.load(args.probe_cache, map_location="cpu",
+                           weights_only=False)
+        first = next(iter(probe.get("patients", {}).values()), {})
+        if probe.get("schema_version") == 2 and "z" in first:
+            lumiere_probe(args.probe_cache)
+        else:
+            lumiere(args.horizon_cache, args.probe_cache)
         return
     with open(args.config) as f:
         cfg = yaml.safe_load(f)
