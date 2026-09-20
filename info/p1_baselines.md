@@ -1,7 +1,8 @@
 # P1 prospective baseline suite
 
-Status: implementation complete; authoritative run pending the survival-free
-current-schema cache. The suite is `src/harness/analysis/forecast_baselines.py`
+Status: implementation complete; the current survival-free LUMIERE run is
+complete, while the matched JEPA forecast readout and external confirmation
+remain pending. The suite is `src/harness/analysis/forecast_baselines.py`
 and is registered as:
 
 ```bash
@@ -12,8 +13,8 @@ python scripts/harness.py run forecast-baselines \
 
 Every row is a clean-labelled `t -> t+1` forecast row. Features use only the
 source visit: last observed RANO, smoothed RANO transition counts, current
-image features, current volumes, or past volume trend. The clinical baseline
-is refused unless cache provenance says `clinical_schema=survival_free_v1`.
+image features, current volumes, or past volume trend. The clinical baseline is refused unless cache provenance says
+`clinical_schema=survival_free_v1`.
 
 ## Current survival-free LUMIERE run
 
