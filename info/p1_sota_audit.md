@@ -52,9 +52,15 @@ Already recorded from A25--A36:
 
 Still actionable after the refreshed forecast controls:
 
-1. build a scalar volumetry + nadir + interval tabular baseline;
-2. add spatial growth/shrinkage-region radiomics rather than only scalar
+1. A reduced 22-dimensional observed-pair tabular proxy is now implemented as
+   `run tabular-baseline` using sklearn histogram gradient boosting. On the
+   current radiomics cache it reaches within-unseen macro-F1 **0.3033** and
+   historical-final transfer macro-F1 **0.5703** (development evidence only;
+   43 final rows, not the published CatBoost result). A true CatBoost and the
+   scalar-only feature restriction remain to be implemented.
+2. build a scalar volumetry + nadir + interval tabular baseline;
+3. add spatial growth/shrinkage-region radiomics rather than only scalar
    volume features;
-3. obtain a behaviorally verified pretrained paired-image ROI encoder;
-4. perform out-of-fold late probability fusion on identical assessment rows;
-5. report minority recall and train/validation curves under matched budgets.
+4. obtain a behaviorally verified pretrained paired-image ROI encoder;
+5. perform out-of-fold late probability fusion on identical assessment rows;
+6. report minority recall and train/validation curves under matched budgets.

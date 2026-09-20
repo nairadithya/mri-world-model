@@ -52,6 +52,7 @@ RUN_MODULES = {
     "volume": "src.harness.analysis.volume:main",
     "forecast-baselines": "src.harness.analysis.forecast_baselines:main",
     "temporal-baselines": "src.harness.analysis.temporal_baselines:main",
+    "tabular-baseline": "src.harness.analysis.tabular_baseline:main",
     "radiomics": "src.harness.analysis.radiomics:main",
     "concept": "src.harness.analysis.concept:main",
     "cross-site": "src.harness.analysis.cross_site:main",
