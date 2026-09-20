@@ -16,7 +16,7 @@ from sklearn.ensemble import HistGradientBoostingClassifier
 
 from src.data.eval_protocol import fold_patients, load_protocol
 from src.harness.eval.aggregate import patient_bootstrap, percentile_ci
-from src.harness.eval.metrics import macro_f1
+from src.harness.eval.metrics import macro_f1, per_class_recall
 
 
 def rows(cache, pids):
@@ -54,6 +54,9 @@ def evaluate(model, test, boot, seed):
     uniform = sum(macro_f1(p, y) for p, y in per.values()) / len(per)
     vals, _ = patient_bootstrap(per, None, boot=boot, seed=seed)
     return {"pooled_macro_f1": pooled, "patient_uniform_macro_f1": uniform,
+            "per_class_recall": per_class_recall(
+                torch.cat([v[0] for v in per.values()]),
+                torch.cat([v[1] for v in per.values()])),
             "ci": list(percentile_ci(vals)), "n_pat": len(per),
             "n_rows": sum(len(y) for _, y in per.values())}
 
