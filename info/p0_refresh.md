@@ -12,15 +12,18 @@ The survival-free retrain and cache refresh completed on 2026-09-21.
 - SAILOR cache: schema 2, 27 subjects, 270 sessions,
   `clinical_schema=survival_free_v1`.
 
-The current-cache persistence control uses the canonical LUMIERE target
-embeddings and clean next-visit labels:
+The refreshed P0 controls are complete:
 
-- 393 pairs; PD prevalence 0.639.
-- Mean persistence error: PD 0.0054, SD 0.0076, PR 0.0058, CR 0.0032.
-- Persistence-error AUC for next-visit PD: **0.4611**.
+- LUMIERE surprise-error AUC for next-visit PD: **0.4971** (393 pairs).
+- LUMIERE persistence-error AUC: **0.4611** (393 pairs; PD prevalence 0.639).
+- Incident-PD lead-time AUCs (JEPA / persistence): k=1 **0.4971 / 0.4611**
+  (393 pairs), k=2 **0.4289 / 0.5932** (124), k=3 **0.4907 / 0.5752** (60).
+- SAILOR persistence-error AUC: **0.6600** (240 pairs; PD prevalence 0.312).
+- SAILOR zero-shot/K-shot JEPA macro-F1: **0.123 / 0.252 / 0.241 / 0.253 /
+  0.264 / 0.263** for zero-shot/K=3/5/10/15/20. CNN control:
+  **0.261 / 0.228 / 0.225 / 0.261 / 0.264 / 0.227**.
 
-The LUMIERE forecast-baseline run is recorded in `info/p1_baselines.md` and
-its full bootstrap output is in the ignored file
-`outputs/p1_forecast_baselines_clean.json`. Surprise, lead-time, SAILOR
-persistence, and cross-site analyses are being rerun against the refreshed
-champion/caches before the final P0 scorecard is closed.
+The full execution log is `logs/p0_refreshed_analyses.log`. The LUMIERE
+forecast-baseline run is recorded in `info/p1_baselines.md` and its full
+bootstrap output is in the ignored file
+`outputs/p1_forecast_baselines_clean.json`.

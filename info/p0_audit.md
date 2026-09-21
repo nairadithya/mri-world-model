@@ -40,15 +40,18 @@ The old implementation returned 0.75 for scores `[.2,.4,.1,.3]` with labels
 correct value is 0.5.
 
 The evaluator now preserves score logits and supports AUROC, AUPRC, Brier,
-log-loss, and ECE with metric-specific bootstrap CIs. The cached LUMIERE
-recheck gives:
+log-loss, and ECE with metric-specific bootstrap CIs. The legacy cached LUMIERE recheck gave persistence-error AUC **0.4574** and
+JEPA-error AUC **0.4973**. The survival-free current-schema refresh gives:
 
-- persistence-error AUC for next-visit PD: **0.4574** (393 pairs)
-- champion JEPA-error AUC from cached states/targets: **0.4973** (393 pairs)
-- corrected site-probe AUCs: z **0.9996**, states **0.8518**
+- persistence-error AUC for next-visit PD: **0.4611** (393 pairs)
+- champion JEPA-error AUC: **0.4971** (393 pairs)
+- lead-time JEPA/persistence AUCs: k=1 **0.4971/0.4611**, k=2
+  **0.4289/0.5932**, k=3 **0.4907/0.5752**
+- SAILOR persistence-error AUC: **0.6600** (240 pairs)
+- corrected legacy site-probe AUCs: z **0.9996**, states **0.8518**
 
-These replace the old AUC values for development purposes. Lead-time and
-SAILOR JEPA-surprise analyses still require a current-schema cache/re-run.
+These replace the old AUC values for current development purposes. Full
+provenance and the refreshed SAILOR transfer table are in `info/p0_refresh.md`.
 
 ## Blocked items
 

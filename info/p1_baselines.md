@@ -39,10 +39,24 @@ current cache before claiming an advantage.
 
 The temporal baseline suite is implemented as
 `src/harness/analysis/temporal_baselines.py` and registered as
-`run temporal-baselines`. It evaluates mean-history pooling, a last-visit MLP,
-a scan-count control, mean-history pooling, a last-visit MLP, a GRU,
-order-shuffled GRU, and truncated-history GRU on the same 393 forecast rows. A 3-step smoke run passed; the full prespecified run is queued behind the
-current P0 refresh analysis.
+`run temporal-baselines`. It evaluates a scan-count control, mean-history
+pooling, a last-visit MLP, a GRU, order-shuffled GRU, and truncated-history GRU
+on the same 393 forecast rows. The full five-fold run completed with these
+within-unseen fold-mean pooled macro-F1 values:
+
+| method | macro-F1 |
+|---|---:|
+| scan-count | 0.2423 |
+| mean-history | 0.1322 |
+| last-visit MLP | 0.2236 |
+| GRU | 0.2423 |
+| order-shuffled GRU | 0.2314 |
+| truncated-history GRU | 0.2522 |
+
+Full patient-bootstrap results are in the ignored file
+`outputs/p1_temporal_baselines.json`. These are development controls; the
+survival-free JEPA readout and a transfer-final temporal run still need to be
+reported on the same prespecified rows.
 
 ## Exploratory legacy-cache run
 
