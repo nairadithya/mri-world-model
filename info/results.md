@@ -20,6 +20,28 @@ This document is the plain-language record of what was trained, what worked,
 what failed, and what each check taught us. The working notes with internal
 reference IDs live in `info/`; this file stands alone and does not use those IDs.
 
+## Current validity reset (2026-09-14)
+
+The historical tables below remain useful development history, but they are
+not all current citable results. K3/A23/A24 corrected the SAILOR phantom-input
+and mixed-space issues: same-space SAILOR dynamics lose to persistence by
+**7.1–10.5×**, while the in-domain gate is pooled-nonsignificant and wins only
+on the selected test patient-uniform aggregation (**41/91** patient wins
+overall). The old “82/91” and “~5×” headlines must not be reused.
+
+ASTRA also split the program into distinct tasks: observed-scan response
+assessment, past-only future forecasting, future-anatomy forecasting, and
+surprise/change detection. Published paired-scan assessment scores are not
+thresholds for the past-only forecast task. The corrected AUC implementation
+currently gives LUMIERE persistence-error **0.4574** and JEPA-error **0.4973**
+(on legacy cached rows); old 0.77/0.87 surprise values are withdrawn pending
+current-schema re-runs. The historical final split is development evidence,
+not a new holdout. See `info/p0_audit.md`, `info/p1_baselines.md`, and
+`info/eval_protocol.md` for the active status and blocked items.
+
+No broad JEPA training sweep is planned before the survival-free row/label
+contract, prospective baseline suite, and a matched assessment benchmark pass.
+
 ---
 
 ## Glossary
@@ -94,9 +116,10 @@ reference IDs live in `info/`; this file stands alone and does not use those IDs
 
 ## Data and model in one paragraph
 
-Training corpus: **LUMIERE**, 91 glioblastoma patients with weekly MRI during
-chemo-radiotherapy (four sequences per visit: CT1, T1, T2, FLAIR), 616 expert
-RANO ratings, demographics, and acquisition parameters. Held-out evaluation:
+Training corpus: **LUMIERE**, 91 glioblastoma patients with longitudinal MRI
+during chemo-radiotherapy and variable follow-up intervals (four sequences per
+visit: CT1, T1, T2, FLAIR), 616 expert RANO ratings, demographics, and
+acquisition parameters. Held-out evaluation:
 **SAILOR**, 27 high-grade-glioma patients with 3–19 timepoints each, richer
 annotations (treatment status, expert plus automated tissue masks, survival).
 The model: BRAINIAC reads each available sequence; per-visit latents average
@@ -111,21 +134,18 @@ spans splits.
 
 ## Scorecard
 
-Honest headline per question. "Hero split" means the single fixed 13-patient
-test split; "CV" means 5-fold patient-wise cross-validation. Only CV counts.
+Historical headline per question. "Hero split" means the single fixed
+13-patient test split; "CV" means 5-fold patient-wise cross-validation. The
+current validity reset above overrides any legacy number not backed by a
+current-schema manifest.
 
 | Question | Honest result | Detail and caveat |
 |---|---|---|
-| Does the dynamics model beat persistence in-domain? | **Yes on held-out test (pooled 0.0070 vs 0.0088; patient-uniform 0.0074 vs 0.0160); narrowly patient-uniform overall (0.0081 vs 0.0086)** | CORRECTION (2026-09-06, A8 addendum): the earlier "~2.7× (0.0081 vs 0.0218)" mixed spaces — JEPA error in EMA-target space vs persistence in online-projector space, which spreads consecutive visits ~3× wider. Same-space numbers above (`scripts/split_gate.py`). The gate still passes where it counts (uncontaminated test, both aggregations) but the margin is honest-narrow, not 2.7×. Pooled-all loses (0.0080 vs 0.0069) on static pair-rich patients. |
-| Does the frozen representation encode progression status? | **Modestly: CV macro-F1 0.33** | Beats the always-guess-PD floor (~0.20) and a volumes-only probe (0.30); trails supervised end-to-end literature (0.50). The single-split 0.45 was the lucky end of the spread (folds: 0.25–0.42), not the centre. |
- | Does prediction surprise anticipate progression? | **Weakly and non-specifically, contemporaneous only: JEPA-error AUC 0.77 in-domain (393 pairs) vs 0.75 for trivial persistence error; 0.87 cross-site (240 pairs) vs 0.86. No lead advantage: at k=2 visits out, persistence error predicts incident PD better (0.81 vs 0.70, n=124); k=3 inconclusive (n=60)** | Stable futures are predictable, change is not — but raw scan-to-scan change predicts progression nearly as well, including ahead of time. Surprise is change-detection, not a JEPA-specific signal and not early warning. One divergence: JEPA is most surprised by rare response transitions (PR/CR), persistence least by CR — task-blindness signal raw change misses, but on n=20–27 samples. |
+| Does the dynamics model beat persistence in-domain? | **Not as a general claim: test pooled is non-significant; only the selected test patient-uniform cell is significant** | Same-space A24: test pooled 0.0070 vs 0.0088, paired difference −0.0017 [−0.0072,+0.0012]; test patient-uniform 0.0074 vs 0.0160, difference −0.0086 [−0.0182,−0.0009]. Train pooled is significantly worse; overall pooled is 0.0080 vs 0.0069 and patient wins are 41/91. |
+| Does the frozen representation encode progression status? | **Modestly in legacy development data: 0.309 within-unseen CV, 0.408 transfer** | These are A25 locked-protocol development numbers, not a final prospective claim: the old cache includes the pre-survival-free schema and the historical final slice is no longer untouched. The readout seed/width also spans roughly 0.34–0.45. |
+ | Does prediction surprise anticipate progression? | **Unresolved after metric repair; legacy surprise AUCs are withdrawn** | Corrected legacy-cache AUCs are persistence 0.4574 and JEPA 0.4973 for next-visit PD. Lead-time and SAILOR surprise require current-schema re-runs. Do not call contemporaneous surprise early warning. |
 | Does the latent encode tumour size? | **Weakly: readout R² ≈ 0.15 (mean error 1.26 vs 1.38 for predicting the mean, log-mm³); forecasting next-visit size loses to persistence (1.52 vs 1.07, forecast R² ≈ 0.04)** | Tumour volumes come from automated (not expert) masks. Size signal exists but is diffuse; volumes evolve slowly, so "same as last visit" wins. |
-| Do dynamics transfer across site/scanner/protocol? | **Split, decided against regime: mean-error dynamics do NOT transfer at any gap (persistence wins 0-21d through 180d+); discriminative readouts DO (F1 0.37 ≈ in-domain CV 0.33; surprise AUC 0.87)** | Interval stratification (`scripts/sailor_interval_eval.py`, 243 pairs, median gap 76d — not ~14d as earlier notes said) rules out the interval excuse: persistence wins 7–14× in every bin (e.g. 61-180d: 0.0035 vs 0.0283; 180d+: 0.0047 vs 0.0292). Mechanism: the champion systematically over-predicts change on SAILOR — its error sits flat ~0.03 at all gaps while SAILOR targets stay near-static even 76 days apart (LUMIERE-calibrated dynamics expecting weekly on-treatment volatility, applied to mostly-stable disease). Dynamics scale doesn't transfer; representation readouts do. Refinement
-(2026-09-07, A15): refitting only a small velocity field on SAILOR (frozen
-champion, subject-wise CV) beats persistence ~10% on held-out subjects
-(0.0036 vs 0.0040) — the failure is dynamics scale, fixable on-site with
-N=27, and treatment-phase conditioning adds nothing (exact tie with the
-unconditioned ablation).
+| Do dynamics transfer across site/scanner/protocol? | **No for same-space latent dynamics; readout transfer is developmental evidence only** | A23/A24 same-space SAILOR ratios are 7.1× (derivatives), 10.5× (skull-in), and 8.95× (skull-out). A23's rebuilt derivatives transfer readout is F1 0.357, but the SAILOR codebook is empirical and the old surprise numbers require corrected current-schema re-runs. The mechanism is sharper than “scale”: SAILOR prediction norms are 4.92× true norms with direction cosine 0.105; a scalar-gain diagnostic nearly closes the error gap, but it is not a deployable forecast. |
 
 Disease-mismatch check (is SAILOR a different disease?): no, mostly. SAILOR
 is 23 glioblastomas + 4 grade-III gliomas (Hovden's own slides); LUMIERE is
@@ -354,7 +374,7 @@ instability) is not earned. The champion stands untouched.
   and forecasts worse than persistence. Enhancing-core-only and growth-rate
   framings remain open but low-priority.
 
-## Downstream findings in brief
+## Downstream findings in brief (historical; validity reset applies)
 
 - **Progression readout (LUMIERE):** frozen history summaries separate
   progression (recall 0.72) from stable (0.64), far above demographics (~0.17)
@@ -382,16 +402,16 @@ instability) is not earned. The champion stands untouched.
   PLHM normalization step. Net: the representation was never the problem;
   scale (refit), statistics (align), and inputs (damped) were.
 
-## Conclusions
+## Conclusions (historical; validity reset applies)
 
-1. Latent next-visit forecasting beats "no change" on held-out test patients
-   (pooled 0.0070 vs 0.0088; patient-uniform 0.0074 vs 0.0160) and narrowly
-   overall on the selection-consistent metric (0.0081 vs 0.0086) — not the
-   ~2.7× first reported (mixed-space baseline, corrected 2026-09-06). The
-   mandatory baseline is cleared where it counts, thinly.
-2. The frozen history representation carries real, modest, transferable
-   progression signal (CV 0.33 in-domain, 0.37 cross-site with zero retraining;
-   surprise AUC 0.77 → 0.87). History beats snapshots structurally.
+1. The same-space gate is **not a general persistence win**: test pooled is
+   non-significant, the selected test patient-uniform cell wins, and the
+   overall patient win count is 41/91. The old mixed-space and 82/91 claims
+   are superseded by A24.
+2. The frozen history representation carried modest progression signal in
+   legacy development data (A25: 0.309 within-unseen CV, 0.408 transfer), but
+   those values are not a final prospective claim. Surprise AUC rankings are
+   withdrawn pending the corrected current-schema re-run.
 3. Further LUMIERE gradient steps are exhausted *at batch 1*: resumed
    training cannot hold the optimum, and task-tuning damages dynamics
    without generalizable gain. But accumulation changes the verdict:
@@ -403,11 +423,12 @@ instability) is not earned. The champion stands untouched.
    headline in this project so far has been the lucky end of a wide spread.
 5. Volume is the weak half: weakly readable, not forecastable beyond
    persistence. The thesis holds at trajectory level, not size level.
-6. The cross-site story is closed, not open: transfer failed on dynamics
-   scale (rescued by on-site refit), second-order statistics (two-thirds
-   recovered by alignment alone), and damped inputs (measured pre-encoder)
-   — never on the representation, which transfers at full strength
-   throughout. Nothing in the failure motivates unfreezing the encoder.
+6. The cross-site story is a **developmental failure of same-space
+   dynamics**: persistence wins by 7–10.5× after the A23/A24 correction.
+   Gain/direction decomposition localizes the failure to a large scalar
+   overshoot plus weak direction, but readout/codebook and surprise conclusions
+   need the P0 current-schema rerun. This does not justify another broad
+   encoder sweep.
 
 ## Follow-up: multi-horizon forecasting (gate passed, full run open)
 

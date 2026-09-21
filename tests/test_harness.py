@@ -157,6 +157,17 @@ def test_evaluator_composes():
     assert res.score_oof and res.meta["class_names"] == RANO_PROBE_NAMES
 
 
+def test_multi_output_metric():
+    task = TASKS.get("rano4_current")()
+    ev = ReadoutEvaluator(task, _StubProtocol(), view="fused", readout="linear",
+                          metrics=["macro_f1", "per_class_recall"], boot=0)
+    res = ev.run(_cache()["patients"])
+    assert "macro_f1" in res.metrics
+    assert set(res.patient_metrics) >= {
+        "macro_f1", "recall_PD", "recall_SD", "recall_PR", "recall_CR"
+    }
+
+
 def test_grouped_ridge_cv():
     x = torch.randn(10, 3, generator=torch.Generator().manual_seed(4))
     y = torch.randn(10, generator=torch.Generator().manual_seed(5))
@@ -225,6 +236,7 @@ def main():
     check("canonicalize_and_views", test_canonicalize_and_views)
     check("bootstrap_reproducible", test_bootstrap_reproducible)
     check("evaluator_composes", test_evaluator_composes)
+    check("multi_output_metric", test_multi_output_metric)
     check("grouped_ridge_cv", test_grouped_ridge_cv)
     check("score_metrics", test_score_metrics)
     check("frozen_paths", test_frozen_paths)

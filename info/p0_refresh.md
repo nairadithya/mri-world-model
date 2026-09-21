@@ -27,3 +27,18 @@ The full execution log is `logs/p0_refreshed_analyses.log`. The LUMIERE
 forecast-baseline run is recorded in `info/p1_baselines.md` and its full
 bootstrap output is in the ignored file
 `outputs/p1_forecast_baselines_clean.json`.
+
+## P0 scorecard closure (2026-09-21)
+
+`scripts/p0_scorecard.py` now regenerates the complete local scorecard from
+the current-schema probe cache. It reports pooled and patient-uniform metrics,
+10,000-resample patient-cluster CIs, prespecified paired comparisons, and a
+3-seed × 3-width readout sensitivity grid in `outputs/p0_scorecard.json`.
+
+For the primary locked unseen forecast comparison, `states_forecast` versus
+`fused` gives macro-F1 **0.2718 vs 0.2095 pooled** and **0.2247 vs 0.1428
+patient-uniform**, with paired difference **+0.0623 [0.0003, 0.1273]**.
+Development comparisons are now frozen to the MLP readout with hidden width
+256, seed 42, and no feature standardization. The remaining P0 blockers are
+independent SAILOR label confirmation, aligned RANO/treatment timing metadata,
+and a genuinely new external or hidden holdout.

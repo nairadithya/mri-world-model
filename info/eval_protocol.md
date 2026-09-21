@@ -98,8 +98,9 @@ be used only as a separate censored target.
   forecast state; the other 4 have no clean label at a forecastable step.
 - Frozen-encoder bootstrap CIs reflect patient sampling, not training-seed
   variance of the readout.
-- **Readout seed/width is not yet pre-registered and it matters** (A27):
-  final-13 macro-F1 swings 0.34–0.45 across readout seeds/widths on identical
-  features. Until v2 fixes a seed or an ensemble, no single frozen-readout
-  final number (including 0.448) is citable as a headline. The within-unseen
-  CV over 26 is the more stable instrument.
+- **Readout policy addendum (2026-09-21):** development comparisons now use a
+  class-weighted MLP readout with hidden width 256, seed 42, and no feature
+  standardization. The policy is frozen before further representation/model
+  selection; the current-schema 3-seed × 3-width sensitivity grid is retained
+  in `outputs/p0_scorecard.json`. The historical final-13 seed/width results
+  remain development evidence and are not a new holdout claim.

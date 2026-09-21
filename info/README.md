@@ -10,6 +10,16 @@ world-model program. Code is the primary artifact; these docs exist to record
   numbers, and the inference drawn. Append-only; never rewrite old entries.
 - [`pilot.md`](pilot.md) — the CPU pilot protocol, live results, and the
   scale-up verdict.
+- [`p0_audit.md`](p0_audit.md) — the active label, task-cutoff, metric, cache,
+  and holdout validity gates.
+- [`p1_baselines.md`](p1_baselines.md) — prospective forecast baselines and
+  their current-cache status.
+- [`eval_protocol.md`](eval_protocol.md) — the locked downstream readout
+  protocol and holdout policy.
+- [`directions.md`](directions.md) — research directions and the current
+  ASTRA/K3 execution triage.
+- [`frontier_lumiere.md`](frontier_lumiere.md) — literature/benchmark frontier
+  and assessment-versus-forecasting caveats.
 
 Conventions:
 

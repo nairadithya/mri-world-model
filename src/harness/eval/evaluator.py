@@ -116,6 +116,23 @@ class ReadoutEvaluator:
         metric = metric() if isinstance(metric, type) else metric
         return getattr(metric, "requires", "labels") == "scores"
 
+    def _metric_values(self, name: str, y: torch.Tensor, pred: torch.Tensor,
+                       scores: torch.Tensor | None = None) -> dict:
+        """Compute one metric, preserving metrics with multiple outputs.
+
+        Most metrics return ``{name: value}``, but reporting metrics such as
+        ``per_class_recall`` intentionally return one named value per class.
+        Keeping that shape here avoids silently dropping class-level results
+        and lets the evaluator use the same path for pooled and patient-level
+        summaries.
+        """
+        metric = METRICS.get(name)
+        metric = metric() if isinstance(metric, type) else metric
+        needs = getattr(metric, "requires", "labels") == "scores"
+        return metric.compute(
+            y, pred, scores=scores if needs else None,
+            n_cls=self.n_cls, names=self.task.class_names)
+
     def _bootstrap_metric(self, oof, score_oof, name: str):
         from .metrics import compute_metrics
         source = score_oof if self._metric_requires_scores(name) else oof
@@ -178,11 +195,11 @@ class ReadoutEvaluator:
                 needs = getattr(metric, "requires", "labels") == "scores"
                 if needs and len(torch.unique(py)) < 2 and name in ("auc", "auprc"):
                     continue
-                value = compute_metrics(
-                    [name], py, pp, scores=ps if needs else None,
-                    n_cls=self.n_cls)[name]
-                if value == value:
-                    patient_values[name].append(value)
+                values = self._metric_values(
+                    name, py, pp, scores=ps if needs else None)
+                for key, value in values.items():
+                    if value == value:
+                        patient_values.setdefault(key, []).append(value)
         patient_metrics = {name: sum(vals) / len(vals)
                            for name, vals in patient_values.items() if vals}
         ci = {}

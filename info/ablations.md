@@ -1384,3 +1384,41 @@ Logged inferences (evidence-backed; see A9/A10/A12 for numbers):
   ceiling). Retires "bolt a concept probe onto the frozen champion" as a step-5
   lever. No plot; numbers here are the record.
 
+## A37 — K3 transfer mechanism and validity triage (2026-09-09/14, local CPU)
+
+- **Scope.** This is a review follow-up over the legacy champion caches, not a
+  new training run. A23/A24 remain the authoritative SAILOR input-guard and
+  same-space gate records; the P0 audit (`info/p0_audit.md`) supersedes legacy
+  AUC values until survival-free caches are rebuilt.
+- **Gain/direction decomposition.** With the champion predictor over cached EMA
+  states, predicted and true displacement norms / directional cosine were:
+
+  | cohort | predicted norm | true norm | gain ratio | direction cosine |
+  |---|---:|---:|---:|---:|
+  | LUMIERE (n=547) | 6.80 | 2.85 | 2.38 | 0.190 |
+  | SAILOR (n=243) | 9.31 | 1.89 | 4.92 | 0.105 |
+
+  Rescaling only the predicted displacement to the true magnitude (diagnostic
+  oracle, not a deployable forecast) changed error from 0.0080 to 0.0047 in
+  LUMIERE and from 0.0290 to 0.0041 in SAILOR; persistence was 0.0069 and
+  0.0039. The cross-site failure is therefore a scalar gain overshoot plus an
+  almost uninformative direction, not merely generic “over-prediction”. A
+  frozen per-site gain calibration is the cheapest next dynamics experiment;
+  it must be evaluated without oracle future magnitudes.
+- **Image/latent drift by preprocessing arm.** Matched consecutive-pair
+  image-space change (median, z-scored 96³ mean absolute difference) was
+  derivatives **0.19**, skull-out reprocess **0.75**, and LUMIERE **0.72**.
+  Same-space latent persistence changed only approximately **0.0035 → 0.0039**
+  versus LUMIERE **~0.005–0.006**. Reprocessing restores image change that is
+  largely invisible to the encoder, supporting an encoder/site interaction
+  rather than a simple “pipeline damping” explanation.
+- **Volume control.** On the existing hero split, ridge-CV gives fused volume
+  R² **0.154**, vision-only **0.108**, and clinical-only **0.002**. The weak size
+  signal is vision-driven; eventual survival is not explaining it. This remains
+  a legacy-cache diagnostic, not a prospective claim.
+- **Inference.** The SAILOR dynamics headline is a same-space 7–10.5× loss
+  (A23/A24), while the in-domain gate is pooled-nonsignificant and wins only
+  on the selected test patient-uniform aggregation (41/91 overall patient
+  wins). The next scientific question is calibration and lesion-aware clinical
+  forecasting, not another cosine-loss sweep.
+

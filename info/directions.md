@@ -326,3 +326,103 @@ continue the R-series; `notes.md` now points here.
   citing or retiring it.
 - **Order:** R29 + R30(b/c) first (CPU, writeup-grade) → R31 + R30(a) (one T4
   leg each) → R28/R32 (external-validity capstone).
+
+---
+
+## Part 5 — ASTRA/K3 triage (2026-09-14)
+
+The earlier sections are an append-only record of hypotheses and completed
+work. This section is the current execution order; it supersedes older “next”
+lists where they conflict.
+
+### Gate 0 — finish the instrument before interpreting a model
+
+1. **Use the P0 contract.** Keep assessment, past-only forecast, anatomy
+   forecast, and surprise as separate manifests. Match immutable row IDs,
+   labels, exclusions, missingness, and information cutoffs across methods.
+2. **Rebuild current-schema caches.** The old caches contain eventual survival
+   and cannot support a final prospective claim. Preserve the corrected AUC
+   implementation and re-run surprise, lead-time, site, and SAILOR analyses
+   only after the survival-free cache is available.
+3. **Close blocked external validity items.** Verify the SAILOR codebook with
+   an independent reference, reconcile RANO/RANO-2.0 timing, and reserve a
+   genuinely new external or hidden test. The historical `final` slice is
+   development-only.
+4. **Use the right uncertainty.** Report pooled and patient-uniform means,
+   paired patient-cluster intervals, class prevalence, missingness, and
+   readout-seed variation. Do not promote a single 13-patient result or a
+   test-set redivision to a new headline.
+
+The implementation status and blockers live in `info/p0_audit.md`; the
+prospective floor is in `info/p1_baselines.md`.
+
+### E0 — establish the prospective floor (CPU first)
+
+Run the survival-free, row-matched majority, last-RANO, transition, current
+image, volume, and growth-trend baselines. For incident progression, exclude
+patients already PD at the index visit and handle censoring/death explicitly.
+For next-visit predictions, state whether the appointment interval is known
+at prediction time; otherwise use a fixed horizon or model the follow-up
+process. A JEPA state must beat these baselines before a larger temporal model
+is justified.
+
+### E1 — reproduce a fair observed-scan assessment baseline
+
+This is the fastest credible route toward a published benchmark. Reproduce a
+Tikhonov-style paired-image + growth/shrinkage-region radiomics + CatBoost
+system, and a compact Maurya-style shape/intensity arm, with patient-wise
+nested tuning. Then add pretrained paired-image features, history, and the
+JEPA state one at a time. Use out-of-fold probability fusion only. If the
+strongest radiomics model wins and JEPA adds nothing, retain that negative
+result rather than forcing JEPA into the final classifier.
+
+Assessment and forecasting must not share a scorecard: assessment may use
+`x_(t+1)`; forecasting may not. The current `states_forecast` interface is a
+forecast prefix and is not an assessment representation unless the observed
+assessment scan is explicitly included.
+
+### E2 — test whether temporal dynamics add value
+
+On identical forecast rows, compare current image, last-visit residual MLP,
+mean/history pooling, small GRU, temporal transformer, and JEPA training.
+Add scan-count/missingness controls, truncated and order-shuffled histories,
+and cumulative-time or time-relative-to-prediction encodings. Cross backbone
+and longitudinal objective where compute permits; a backbone-only comparison
+cannot establish a JEPA advantage. The exit condition is an incremental,
+reproducible gain from history and then from JEPA over matched non-JEPA
+history models.
+
+### E3 — only then build lesion-aware forecasting
+
+Use an explicit physical/common-geometry lesion state: enhancement,
+nonenhancing disease, edema/FLAIR abnormality, cavity, shape, spatial extent,
+growth and nadir change, treatment timing, modality availability, and
+segmentation uncertainty. Preserve transforms and voxel metadata; resized
+identity-affine 96³ tensors are not physical-volume rulers. Start with
+persistence, trend, scalar gain, site shrinkage, and a zero-initialized
+residual model before probabilistic or generative dynamics. Success is a gain
+on lesion outputs and calibrated progression risk at a new site, not merely a
+lower latent cosine error.
+
+### E4 — add information, not another 91-patient sweep
+
+Assign roles before training: UCSF-ALPTDG for lesion/change supervision,
+Burdenko for longer trajectories, UCSD-PTGBM for treatment-effect
+classification, and SAILOR for developmental transfer/support adaptation.
+Audit overlap, supplied preprocessing, label definitions, usable independent
+patients, and licensing. Keep site adaptation, transductive CORAL, and
+zero-shot transfer as separate regimes.
+
+### Explicit stop rules
+
+- No long champion resumes, larger horizon heads, or bundled augmentation /
+  weighting / surgery-filter sweeps.
+- No raw surprise or site readout headline until corrected AUCs and
+  survival-free caches are rerun.
+- No causal treatment or counterfactual claims from observational SAILOR
+  treatment tokens.
+- No diffusion/voxel generator until a lesion/past-trend forecast beats
+  persistence.
+- No claim that ROI, concepts, radiomics, or “data-limited ceiling” is
+  universal: A26/A35/A36 tested narrow frozen interfaces, not all lesion-aware
+  supervision or all radiomics.

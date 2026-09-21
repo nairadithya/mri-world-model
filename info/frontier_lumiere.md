@@ -135,7 +135,24 @@ Gomaa/Moassefi/Li/Jang/Bacchi pseudo-progression classifiers (AUC 0.75–0.95,
 closed DTI/DWI cohorts); Kickingereder 2019 *Lancet Oncol.* (Heidelberg,
 HD-GLIO lineage). Matoso Table 1 fences these from true RANO-4-class work.
 
-## 7. Gap verdict (see D24)
+## 7. Frontier refresh and task distinction (2026-09-14)
+
+The literature scoreboard must be split by information cutoff. Tikhonov,
+TRACE, and related RANO systems are observed-pair **assessment** methods: they
+use the follow-up scan whose response is being classified. Their macro-F1
+numbers are not direct targets for a past-only future forecast.
+
+Two additional references require protocol verification before being treated
+as matched SOTA: Amato et al. reports macro-F1 **0.616 ± 0.048** in the TRACE
+comparison table (primary protocol not fully checked), while Maurya et al.
+reports balanced accuracy **0.6415** on LUMIERE and **0.5118** on a hidden
+multicentric test (not macro-F1). The practical next benchmark is therefore a
+faithful, patient-wise reproduction with the same rows, masks, labels,
+preprocessing, and metric—not a literature-number chase. Verify the primary
+methods and averaging protocols before publication; these reported numbers are
+not interchangeable targets.
+
+## 8. Gap verdict (see D24)
 
 Unreported: (i) frozen JEPA-latent RANO probe as representation benchmark;
 (ii) next-visit latent prediction error as progression signal; (iii) any
