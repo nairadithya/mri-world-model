@@ -31,6 +31,7 @@ from src.harness.encode.anatomy import (  # noqa: E402
     history_vector, visit_features,
 )
 from src.harness.analysis.anatomy_residual import ResidualMLP  # noqa: E402
+from src.harness.data.anatomy_representations import representation_rows  # noqa: E402
 from src.data.labels import response_label, response_valid  # noqa: E402
 from src.harness.encode import cache as cache_mod  # noqa: E402
 from src.harness.encode import views  # noqa: E402
@@ -223,6 +224,38 @@ def test_residual_model_starts_at_persistence():
     assert torch.equal(delta, torch.zeros_like(delta))
 
 
+def test_anatomy_representation_join_is_row_exact():
+    import json
+
+    with tempfile.TemporaryDirectory() as td:
+        feature_path = os.path.join(td, "features.pt")
+        manifest_path = os.path.join(td, "manifest.json")
+        rep_path = os.path.join(td, "reps.pt")
+        names = history_feature_names()
+        torch.save({"feature_version": "lesion-physical-v1",
+                    "feature_names": names,
+                    "pairs": {"row": {"cohort": "LUMIERE", "patient_id": "p",
+                                        "source_visit_id": "visit-id",
+                                        "x": torch.zeros(len(names)),
+                                        "target": torch.zeros(3)}}}, feature_path)
+        with open(manifest_path, "w") as f:
+            json.dump({"visits": [{"visit_id": "visit-id", "visit": "week-000"}]}, f)
+        torch.save({"patients": {"p": {
+            "visits": ["week-000", "week-010"],
+            "vision": torch.tensor([[1.0, 2.0], [9.0, 9.0]]),
+            "states": torch.tensor([[3.0, 4.0]])}}}, rep_path)
+        vision = representation_rows(feature_cache=feature_path,
+                                     manifest_path=manifest_path,
+                                     representation_cache=rep_path,
+                                     cohort="LUMIERE", view="vision")
+        state = representation_rows(feature_cache=feature_path,
+                                    manifest_path=manifest_path,
+                                    representation_cache=rep_path,
+                                    cohort="LUMIERE", view="jepa_state")
+        assert torch.equal(vision["row"], torch.tensor([1.0, 2.0]))
+        assert torch.equal(state["row"], torch.tensor([3.0, 4.0]))
+
+
 def test_latent_metrics():
     a = torch.tensor([[1.0, 0.0], [0.0, 1.0]])
     b = torch.tensor([[1.0, 0.0], [1.0, 0.0]])
@@ -372,6 +405,8 @@ def main():
           test_physical_anatomy_features_are_history_only)
     check("residual_model_starts_at_persistence",
           test_residual_model_starts_at_persistence)
+    check("anatomy_representation_join_is_row_exact",
+          test_anatomy_representation_join_is_row_exact)
     check("latent_metrics", test_latent_metrics)
     check("legacy_task_rows", test_legacy_task_rows)
     check("canonicalize_and_views", test_canonicalize_and_views)

@@ -46,6 +46,7 @@ ANATOMY_MODULES = {
     "features": "src.harness.encode.anatomy:main",
     "baseline": "src.harness.analysis.anatomy_baselines:main",
     "residual": "src.harness.analysis.anatomy_residual:main",
+    "fusion": "src.harness.analysis.anatomy_fusion:main",
 }
 
 # Historical bespoke analyses / feature builders, imported lazily.
@@ -98,7 +99,7 @@ def _log(msg: str) -> None:
 
 def cmd_list(_args) -> None:
     _log("harness:    anatomy-v2")
-    _log("anatomy:    manifest, features, baseline, residual")
+    _log("anatomy:    manifest, features, baseline, residual, fusion")
     _log("checkpoint: inspect")
     _log("legacy:     list, encode, eval, train, run")
 
@@ -119,7 +120,7 @@ def _dispatch_entry(spec: str, argv: list[str]) -> None:
 
 def cmd_anatomy(rest: list[str]) -> None:
     if not rest or rest[0] in ("-h", "--help", "help"):
-        print("usage: harness.py anatomy <manifest|features|baseline|residual> [options]")
+        print("usage: harness.py anatomy <manifest|features|baseline|residual|fusion> [options]")
         return
     name, argv = rest[0], rest[1:]
     if name not in ANATOMY_MODULES:

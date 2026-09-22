@@ -1449,3 +1449,28 @@ Logged inferences (evidence-backed; see A9/A10/A12 for numbers):
   launch uncertainty or call a lesion-aware JEPA retrain validated from this
   base. Next work must be a prespecified structured ablation or genuinely new
   supervision, not selection on SAILOR transfer outcomes.
+
+## A39 — Frozen BRAINIAC/JEPA fusion adds no anatomy-forecast signal (2026-09-22, local CPU)
+
+- **Question.** Do frozen source-image or temporal JEPA representations add an
+  incremental signal when combined with the physical lesion history?
+- **Protocol.** Identical A38 rows/folds. Source-visit vision (768-d) or JEPA
+  state (1152-d) is joined by immutable anatomy row ID, reduced to 16 PCs using
+  outer-training patients only, and concatenated with the 48 structured
+  features. Direct ridge and zero-initialized residual branches use matched
+  patient-separated fitting. SAILOR is unchanged transfer only.
+- **Residual results.** Structured: LUMIERE/Sailor relative MAE
+  **0.997/1.288**; +vision **1.018/1.192**; +JEPA **1.040/1.426**. Every
+  LUMIERE paired interval crosses zero; every SAILOR learned-model difference
+  is harmful with its interval above zero. Direct ridge is worse: 1.898,
+  2.171, and 2.282 relative SAILOR MAE.
+- **Strata.** “Changing” is fixed for reporting only, before extracting the
+  stratum results and never used for model/row selection: any
+  compartment absolute delta-log-volume ≥ log(1.25). SAILOR has 219 changing
+  and 23 stable rows; persistence wins both. LUMIERE has only two stable rows,
+  precluding a stable-stratum inference.
+- **Inference.** The current frozen BRAINIAC and JEPA representations do not
+  repair the deterministic anatomy forecast and JEPA is the worse fusion arm.
+  The existing-representation P2 ladder is exhausted. Do not launch a
+  lesion-aware retrain without a new supervision source or prespecified
+  representation hypothesis.

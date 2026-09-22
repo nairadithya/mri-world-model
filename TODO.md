@@ -168,14 +168,14 @@ the cross-cohort endpoint.
 - [x] Fit a small zero-initialized residual forecast model:
   - [x] `u_hat(t+1) = u_t + delta(H_t)` for the frozen next-visit task
   - [x] keep uncertain gap timing out of the primary model
-  - [ ] keep global BRAINIAC state as a separate branch
+  - [x] keep frozen BRAINIAC and JEPA states as separate matched branches
 - [x] Evaluate volume/measurement forecast error with locked patient CV and unchanged SAILOR transfer.
 - [ ] Evaluate incident progression risk at fixed horizons.
 - [ ] Add a fixed-teacher lesion-feature prediction objective only after deterministic baselines pass.
 - [ ] Add uncertainty only after the deterministic model beats persistence.
 - [ ] Evaluate proper scores, interval coverage, and sharpness.
 - [ ] Evaluate mask forecasting against no-change mask persistence.
-- [ ] Report stable versus changing strata without selecting the test set by change status.
+- [x] Report stable versus changing strata without selecting the test set by change status.
 
 **Go condition:** improve clinical lesion outputs and calibrated progression risk on a new site, not merely latent cosine loss.
 
@@ -184,6 +184,12 @@ the structured residual model tied persistence on locked LUMIERE CV (relative
 MAE 0.997; paired CI crosses zero) and lost on SAILOR transfer (1.288; paired
 difference CI +0.176 to +0.369). Lesion-aware JEPA retraining and uncertainty
 remain gated rather than being launched after a null deterministic result.
+The matched fusion ablation also failed: adding frozen current-image BRAINIAC
+features gives relative MAE 1.018 in LUMIERE / 1.192 in SAILOR, while adding
+the JEPA state gives 1.040 / 1.426. Neither clears persistence, including in
+the reported stable/changing strata. The existing representation branch is
+therefore closed negative; P2 can advance only through new supervision or a
+new prespecified lesion representation, not further tuning on these outcomes.
 
 ## P2 — Acquire and audit external supervision
 

@@ -52,12 +52,15 @@ The second slice is implemented:
 ```bash
 python scripts/harness.py anatomy features
 python scripts/harness.py anatomy residual
+python scripts/harness.py anatomy fusion
 ```
 
 The first command builds the history-only `lesion-physical-v1` feature cache
 from native masks/affines. The second exposes continuous anatomy rows, runs the
 locked residual gate, and persists the final model plus feature/scaler
 provenance. This remains a deterministic structured forecaster, not yet a
-lesion-aware encoder trainer. The RANO heads stay in the historical model
+lesion-aware encoder trainer. `anatomy fusion` performs the row-exact,
+train-fold PCA ablation of structured features plus frozen BRAINIAC/JEPA
+representations. The RANO heads stay in the historical model
 temporarily for binary checkpoint compatibility, with zero auxiliary weight in
 active configurations.

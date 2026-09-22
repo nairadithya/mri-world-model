@@ -149,3 +149,35 @@ fails its prespecified improvement gate. P2.3 lesion-aware JEPA training and
 P2.4 uncertainty are not authorized by this result; first determine whether a
 prespecified structured ablation or additional external supervision can make
 the deterministic floor transferable.
+
+## Frozen-representation fusion result (2026-09-22)
+
+The remaining matched ablation joined each anatomy row to the frozen source-
+visit representation, reduced within the outer training cohort to 16 principal
+components, and concatenated it with the 48 structured features. It compared
+direct ridge and the same zero-initialized residual architecture.
+
+| residual branch | LUMIERE relative MAE | SAILOR relative MAE |
+|---|---:|---:|
+| structured only | 0.997 | 1.288 |
+| + current-image BRAINIAC | 1.018 | 1.192 |
+| + JEPA temporal state | 1.040 | 1.426 |
+
+All LUMIERE paired intervals cross zero. All three learned residuals are worse
+than persistence on SAILOR with intervals excluding zero. Direct ridge is
+worse still (relative 1.898, 2.171, and 2.282 respectively). Thus neither the
+frozen image representation nor the current JEPA state supplies incremental
+signal over physical history.
+
+The reporting-only change stratum is fixed as any compartment changing by at
+least `log(1.25)` from source to target. It is not used to select rows or tune
+models. In SAILOR, persistence remains better in both the 219 changing rows
+and 23 stable rows; representation residuals particularly damage stable cases.
+LUMIERE has only two stable rows under this threshold, so no stable-stratum
+claim is made there.
+
+This exhausts the existing frozen-representation ladder. A lesion-aware JEPA
+retrain remains gated: using the same images and current targets after both the
+structured and frozen-fusion gates fail would be an ungrounded compute sweep.
+Further P2 work requires new lesion/change supervision or a newly prespecified
+representation hypothesis before outcomes are inspected.

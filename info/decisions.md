@@ -677,3 +677,14 @@ referenced, not repeated — only session decisions are recorded here in full.
   pipeline now exists. First use prespecified structured ablations or new
   external supervision to establish a transferable deterministic signal. See
   A38 and `info/p2_execution.md`.
+
+- **D51 — Close the existing frozen-representation P2 branch as negative
+  (2026-09-22).** Row-exact fusion of physical history with source-image
+  BRAINIAC or JEPA temporal states does not beat persistence. Residual relative
+  MAE is 1.018/1.192 for vision and 1.040/1.426 for JEPA on
+  LUMIERE/SAILOR; all external differences are harmful with paired intervals
+  excluding zero. Direct ridge is worse. Reporting-only stable/changing strata
+  do not reveal a rescue and are too sparse for a LUMIERE stable claim. The
+  present frozen representations and deterministic heads are exhausted; P2
+  requires new lesion/change supervision or a prespecified new representation
+  mechanism before retraining. See A39.
