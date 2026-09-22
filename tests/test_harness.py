@@ -31,6 +31,12 @@ from src.harness.encode.anatomy import (  # noqa: E402
     history_vector, visit_features,
 )
 from src.harness.analysis.anatomy_residual import ResidualMLP  # noqa: E402
+from src.harness.analysis.lesion_coverage import (  # noqa: E402
+    patch_occupancy, support_stats,
+)
+from src.model.lesion_tokens import (  # noqa: E402
+    lesion_centered_crop, pool_region_tokens, region_patch_weights,
+)
 from src.harness.data.anatomy_representations import representation_rows  # noqa: E402
 from src.data.labels import response_label, response_valid  # noqa: E402
 from src.harness.encode import cache as cache_mod  # noqa: E402
@@ -224,6 +230,36 @@ def test_residual_model_starts_at_persistence():
     assert torch.equal(delta, torch.zeros_like(delta))
 
 
+def test_lesion_patch_coverage_support():
+    import numpy as np
+
+    mask = np.zeros((96, 96, 96), dtype=np.uint8)
+    mask[:16, :16, :16] = 1
+    occupancy = patch_occupancy(mask)
+    stats = support_stats(occupancy)
+    assert occupancy.shape == (6, 6, 6)
+    assert stats["nonzero_patches"] == 1
+    assert stats["effective_patches"] == 1.0
+    assert stats["max_patch_fraction"] == 1.0
+
+
+def test_lesion_crop_and_region_pooling():
+    images = torch.zeros(1, 2, 80, 80, 80)
+    masks = torch.zeros(1, 3, 80, 80, 80, dtype=torch.bool)
+    masks[:, 1, 60:64, 60:64, 60:64] = True
+    images[:, :, 60:64, 60:64, 60:64] = 2
+    crop_images, crop_masks = lesion_centered_crop(images, masks)
+    assert crop_images.shape == (1, 2, 96, 96, 96)
+    assert crop_masks.shape == (1, 3, 96, 96, 96)
+    assert bool(crop_masks[:, 1].any())
+    weights = region_patch_weights(crop_masks)
+    assert weights.shape == (1, 4, 216)
+    tokens = torch.arange(216, dtype=torch.float32)[None, None, :, None]
+    pooled, contrast = pool_region_tokens(tokens, weights)
+    assert pooled.shape == (1, 1, 4, 1)
+    assert contrast.shape == (1, 1, 3, 1)
+
+
 def test_anatomy_representation_join_is_row_exact():
     import json
 
@@ -405,6 +441,8 @@ def main():
           test_physical_anatomy_features_are_history_only)
     check("residual_model_starts_at_persistence",
           test_residual_model_starts_at_persistence)
+    check("lesion_patch_coverage_support", test_lesion_patch_coverage_support)
+    check("lesion_crop_and_region_pooling", test_lesion_crop_and_region_pooling)
     check("anatomy_representation_join_is_row_exact",
           test_anatomy_representation_join_is_row_exact)
     check("latent_metrics", test_latent_metrics)

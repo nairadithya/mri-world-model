@@ -47,6 +47,7 @@ ANATOMY_MODULES = {
     "baseline": "src.harness.analysis.anatomy_baselines:main",
     "residual": "src.harness.analysis.anatomy_residual:main",
     "fusion": "src.harness.analysis.anatomy_fusion:main",
+    "coverage": "src.harness.analysis.lesion_coverage:main",
 }
 
 # Historical bespoke analyses / feature builders, imported lazily.
@@ -99,7 +100,7 @@ def _log(msg: str) -> None:
 
 def cmd_list(_args) -> None:
     _log("harness:    anatomy-v2")
-    _log("anatomy:    manifest, features, baseline, residual, fusion")
+    _log("anatomy:    manifest, features, baseline, residual, fusion, coverage")
     _log("checkpoint: inspect")
     _log("legacy:     list, encode, eval, train, run")
 

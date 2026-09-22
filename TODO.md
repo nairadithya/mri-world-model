@@ -170,8 +170,33 @@ the cross-cohort endpoint.
   - [x] keep uncertain gap timing out of the primary model
   - [x] keep frozen BRAINIAC and JEPA states as separate matched branches
 - [x] Evaluate volume/measurement forecast error with locked patient CV and unchanged SAILOR transfer.
+- [ ] Establish whether the frozen BRAINIAC token grid can resolve the lesion:
+  - [x] measure per-compartment occupancy and effective support on the 6×6×6
+    patch grid in both cohorts
+  - [x] measure an adjacent peritumoral ring separately from tumor tissue
+  - [x] freeze an operational threshold for when sparse support forces a
+    lesion-centred crop encoder
+- [ ] Build a lesion-specific observation state from existing masks:
+  - [ ] retain separate enhancing, nonenhancing/necrotic, edema, and
+    peritumoral-context tokens instead of one whole-tumor average
+  - [ ] retain modality-specific tokens until after compartment pooling
+  - [ ] compare physical-only, global-image, whole-tumor, compartment, ring,
+    and compartment-minus-ring branches under the same folds
+  - [ ] verify current-anatomy decoding and next-change prediction before
+    training a new longitudinal encoder
+- [ ] Build an explicit longitudinal transition model:
+  - [ ] encode consecutive-visit changes rather than compressing the full
+    history immediately into one vector
+  - [ ] aggregate transition tokens with a small GRU and explicit elapsed time
+  - [ ] decode a zero-initialized residual around persistence
+  - [ ] model total burden, composition, and compartment presence explicitly
+- [ ] Train an anatomically supervised lesion encoder on the 65 encoder-train
+  LUMIERE patients; preserve the 26 encoder-unseen patients for locked model
+  development and SAILOR for unchanged transfer.
 - [ ] Evaluate incident progression risk at fixed horizons.
-- [ ] Add a fixed-teacher lesion-feature prediction objective only after deterministic baselines pass.
+- [ ] Add a fixed-teacher future lesion-feature objective after the lesion-local
+  observation state demonstrates measurable information beyond the current
+  physical state.
 - [ ] Add uncertainty only after the deterministic model beats persistence.
 - [ ] Evaluate proper scores, interval coverage, and sharpness.
 - [ ] Evaluate mask forecasting against no-change mask persistence.
@@ -187,9 +212,25 @@ remain gated rather than being launched after a null deterministic result.
 The matched fusion ablation also failed: adding frozen current-image BRAINIAC
 features gives relative MAE 1.018 in LUMIERE / 1.192 in SAILOR, while adding
 the JEPA state gives 1.040 / 1.426. Neither clears persistence, including in
-the reported stable/changing strata. The existing representation branch is
-therefore closed negative; P2 can advance only through new supervision or a
-new prespecified lesion representation, not further tuning on these outcomes.
+the reported stable/changing strata. This closes global PCA-fusion and the
+existing whole-history JEPA state, but it does **not** test a compartment-aware
+lesion representation: the frozen interface pools the entire tumor on a coarse
+6×6×6 grid and the fusion experiment discards most representation dimensions.
+P2.3 therefore reopens only the prespecified lesion-local branch above. The
+first gate is patch-support coverage; if it is inadequate, the branch moves to
+lesion-centred crops rather than interpreting another global pooling result as
+evidence that images contain no predictive signal.
+
+**P2.3 patch gate:** FAILED for whole-volume tokens. Across 868 mask-bearing
+visits, enhancing disease has fewer than two effective patches in 40.4% of
+LUMIERE and 42.4% of SAILOR visits; necrotic/nonenhancing disease does so in
+31.7% and 64.7%. The operational crop trigger, frozen after this descriptive
+audit for all subsequent comparisons, is >25% of visits below two effective
+patches in either core compartment/cohort. P2.3 therefore moves
+to a lesion-centred crop encoder. Edema and the adjacent ring remain explicit
+context regions; coarse whole-volume pooling is retained only as a control.
+The executable audit is `harness.py anatomy coverage`, producing
+`outputs/p2_lesion_patch_coverage.json`.
 
 ## P2 — Acquire and audit external supervision
 
