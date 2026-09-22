@@ -52,6 +52,7 @@ ANATOMY_MODULES = {
     "lesion-encode": "src.harness.encode.lesion:main",
     "lesion-eval": "src.harness.analysis.lesion_fusion:main",
     "lesion-decode": "src.harness.analysis.lesion_decode:main",
+    "lesion-transfer": "src.harness.analysis.lesion_transfer:main",
 }
 
 # Historical bespoke analyses / feature builders, imported lazily.
@@ -105,7 +106,7 @@ def _log(msg: str) -> None:
 def cmd_list(_args) -> None:
     _log("harness:    anatomy-v2")
     _log("anatomy:    manifest, features, baseline, residual, fusion, coverage, "
-         "lesion-encode, lesion-eval, lesion-decode")
+         "lesion-encode, lesion-eval, lesion-decode, lesion-transfer")
     _log("checkpoint: inspect")
     _log("legacy:     list, encode, eval, train, run")
 

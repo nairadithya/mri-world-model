@@ -116,8 +116,36 @@ The recovered LUMIERE masks were uploaded as the private Kaggle dataset
 content). The local one-patient structural smoke completed both stages and
 confirmed that the initial forecast is persistence. Its score is not evidence.
 
-Kaggle kernel `nairadithya/lesion-transition-leg` version 1 was launched on a
-Tesla T4 allocation from notebook commit `121699c`, cloning trainer commit
-`667b2dc`. The run is private and began in `RUNNING` state. Its scientific
-record will not be completed until the output checkpoint, logs, and locked
-26-patient result are retrieved; unchanged SAILOR evaluation remains local.
+Kaggle kernel `nairadithya/lesion-transition-leg` was deployed privately on a
+Tesla T4. Versions 1–2 were mount-path diagnostics; version 3 is the completed
+scientific run described below. SAILOR data never left the local machine.
+
+## Learned run result
+
+Kernel versions 1 and 2 failed before training because Kaggle exposed the
+private mask dataset first as neither the assumed directory nor archive path.
+The loader was corrected to discover Kaggle's extracted root-level `Patient-*`
+layout and accept its `.nii` files. Version 3 completed on a Tesla T4 using
+trainer commit `18d211d`; no failed-run scores were retained.
+
+Anatomy LoRA ran for eight epochs. Its visit-level training loss was noisy but
+fell from 2.152 at epoch 1 to 0.743 at epoch 6 before rising to 1.420 at epoch
+8. The transition stage selected epoch 28 on the internal development split:
+MAE 1.419 versus persistence 1.768 (relative 0.803). The downloaded checkpoint
+is `outputs/lesion-transition-leg/lesion_learned.pt`.
+
+Local re-evaluation produced paired patient bootstrap uncertainty:
+
+| Cohort | Patients | Learned MAE | Persistence MAE | Relative | Difference 95% CI |
+|---|---:|---:|---:|---:|---:|
+| LUMIERE encoder-unseen, mask-eligible | 23 | 1.183 | 1.559 | 0.759 | [-0.638, -0.154] |
+| SAILOR unchanged transfer | 27 | 0.987 | 0.943 | 1.047 | [-0.082, +0.166] |
+
+This is the first learned lesion architecture to beat persistence with a paired
+CI excluding zero in held-out LUMIERE patients. The result covers 23 rather
+than all 26 encoder-unseen patients because three lack two recovered
+mask-bearing visits; it must not be reported as a complete 26-patient result.
+Unchanged SAILOR transfer is statistically tied with persistence and slightly
+worse in point estimate, so the external-site go condition is not satisfied.
+The next problem is site invariance/adaptation, not additional in-domain
+transition capacity.

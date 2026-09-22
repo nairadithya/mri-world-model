@@ -197,9 +197,9 @@ the cross-cohort endpoint.
   - [x] implement memory-safe anatomy-LoRA → adapted-token cache → transition
     GRU training with persistence initialization
   - [x] publish the LUMIERE mask-only supervision bundle privately to Kaggle
-  - [ ] **RUNNING —** run the T4 training leg and retrieve its selected
-    checkpoint (`nairadithya/lesion-transition-leg`, version 1)
-  - [ ] evaluate the selected checkpoint unchanged on local SAILOR
+  - [x] run the T4 training leg and retrieve its selected checkpoint
+    (`nairadithya/lesion-transition-leg`, version 3)
+  - [x] evaluate the selected checkpoint unchanged on local SAILOR
 - [ ] Evaluate incident progression risk at fixed horizons.
 - [ ] Add a fixed-teacher future lesion-feature objective after the lesion-local
   observation state demonstrates measurable information beyond the current
@@ -261,6 +261,15 @@ CIs cross zero) and all fail unchanged SAILOR transfer (1.368×, 1.288×, and
 1.423×). This closes deterministic manipulation of the frozen crop tokens.
 The remaining architectural branch must learn the lesion observation and
 transition spaces with anatomical supervision on encoder-train patients.
+
+**P2.4 learned-transition result:** the learned model passes the eligible
+locked LUMIERE gate but not cross-site transfer. On 23/26 encoder-unseen
+patients with at least two recovered mask-bearing visits, patient-uniform MAE
+is 1.183 versus persistence 1.559 (relative 0.759; paired patient bootstrap
+difference CI -0.638 to -0.154). Applied unchanged to all 27 SAILOR patients,
+MAE is 0.987 versus persistence 0.943 (relative 1.047; CI -0.082 to +0.166).
+Thus learned anatomical observation/transition training is a real in-domain
+gain, but the P2 external-site go condition remains open.
 
 ## P2 — Acquire and audit external supervision
 
