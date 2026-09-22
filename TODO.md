@@ -17,10 +17,15 @@ Goal: establish a fair response-assessment benchmark, then build a genuinely pro
 - [x] Measure all rows currently mapped to default SD or excluded as invalid. See `info/p0_audit.md`.
 - [x] Remove eventual survival from new prospective dataset inputs.
 - [x] Rebuild existing caches with the survival-free schema; current schema-2 LUMIERE and SAILOR caches are recorded in `info/p0_refresh.md`.
-- [ ] **BLOCKED — Verify SAILOR RANO code mapping independently and report codebook sensitivity; blocked by lack of an independent expert reference/data-owner confirmation.**
-- [ ] **BLOCKED — Reconcile RANO/RANO-2.0 definitions and surgery/radiotherapy timing; blocked by missing aligned radiotherapy-completion/confirmation metadata.**
+- [ ] **DEFERRED — Verify SAILOR RANO code mapping independently.** Published
+  SAILOR work does not use the numeric response labels; the mapping remains
+  unresolved, and SAILOR RANO is excluded from the primary cross-site program.
+- [ ] **DEFERRED — Reconcile RANO/RANO-2.0 definitions and treatment timing.**
+  This still gates clinical response/progression claims, but not the primary
+  RANO-free lesion-measurement tasks.
 - [x] Freeze the historical `final` split as development evidence; stop treating it as untouched.
-- [ ] **BLOCKED — Reserve/run a genuinely new external or hidden test cohort; blocked by access/challenge rules and no locked new cohort assignment.**
+- [ ] **MOVED TO P3 — Reserve/run a genuinely new external or hidden test
+  cohort.** This gates final generalization claims, not P0 benchmark validity.
 
 ## P0 — Repair metrics and statistical protocol
 
@@ -36,28 +41,69 @@ Goal: establish a fair response-assessment benchmark, then build a genuinely pro
 - [x] Freeze the readout policy for development comparisons: MLP, hidden width 256, seed 42, no feature standardization; sensitivity results are retained in `outputs/p0_scorecard.json`.
 - [x] Add cache schema/provenance validation and make unified CLI evaluation reject legacy caches.
 
-**P0 status:** all locally actionable implementation work is complete. The current-schema scorecard and readout policy are frozen. The remaining P0 items are explicitly `BLOCKED` above and require independent label/timing confirmation or a new external/hidden cohort.
+## P0 — Harmonize the RANO-free anatomy endpoint
 
-**Exit condition:** a row-matched evaluation table can be regenerated from scratch, with no ambiguous labels or invalid AUCs.
+- [x] Define `lesion-state-v1`: necrotic/nonenhancing, enhancing, and
+  edema/FLAIR volumes in mm3; these are measurements, not response classes.
+- [x] Add an executable cross-cohort inventory with immutable visit/pair IDs,
+  target provenance, exclusions, modality availability, and timing status.
+- [x] Recompute SAILOR ONCO volumes from native mask affines and validate mask
+  finiteness, geometry, and compartment shape agreement.
+- [x] Record that the local LUMIERE autoseg artifact has volume JSON only, so
+  its physical geometry cannot yet be independently recomputed.
+- [x] Recover LUMIERE segmentation masks with affines and verify all 599
+  reported DeepBraTumIA measurements from source masks (1,797/1,797 exact
+  compartment matches).
+- [x] Quantify SAILOR ONCO-versus-CL enhancing/edema measurement disagreement;
+  the first full-tree sensitivity audit is recorded in
+  `info/anatomy_harmonization.md`.
+- [x] Audit timing provenance: LUMIERE publishes rounded week bins with
+  within-week ordering; SAILOR intervals mix DICOM/Excel-derived values with
+  documented estimates. Freeze the primary horizon to next observed visit;
+  exact fixed-horizon claims remain out of scope until better dates exist.
+- [x] Freeze pair eligibility and the continuous metric contract for the
+  next-observed-visit task.
+
+**P0 status: CLOSED for the RANO-free next-observed-visit benchmark.** RANO is
+excluded; all available lesion measurements are geometry-audited; row and
+metric contracts are frozen; and timing uncertainty is represented by task
+scope rather than hidden. Exact fixed-horizon forecasting and a new external
+cohort remain later-stage requirements, not P0 blockers.
+
+**Exit condition:** satisfied for next-observed-visit evaluation—a row-matched
+anatomy table regenerates from source masks, preserves the documented timing
+precision, and has harmonized physical-unit targets, explicit exclusions, and
+paired patient-level metrics.
 
 ## P1 — Establish the real prospective floor
 
-- [x] Implement training-majority and per-class prevalence baselines.
-- [x] Implement last-observed-RANO baseline.
-- [x] Implement a smoothed patient-level RANO transition model.
-- [x] Implement demographics/pathology-only baseline; current survival-free result is recorded in `info/p1_baselines.md`.
-- [x] Implement past lesion-volume baseline.
-- [x] Implement past log-growth/trend baseline.
-- [x] Implement current-image-only readout on the same forecast rows.
-- [ ] **BLOCKED — Restrict incident-progression analysis to patients not already PD at the index visit; blocked by finalized prospective endpoint/confirmation definitions.**
-- [ ] **BLOCKED — Handle censoring, death, and loss to follow-up explicitly; blocked by finalized outcome/censoring metadata.**
-- [ ] **BLOCKED — Compare fixed-horizon prediction with next-appointment prediction; blocked by verified date/horizon metadata.**
+- [x] Evaluate persistence, mean change, and patient-level linear trend.
+- [x] Evaluate current lesion-volume and volume-history ridge baselines.
+- [x] Evaluate current-image, mean-history, and JEPA-state readouts on the
+  identical immutable `lesion-state-v1` rows.
+- [x] Use five-fold patient-separated CV restricted to the 26 encoder-unseen
+  LUMIERE patients, including patient-grouped inner ridge selection.
+- [x] Fit on encoder-unseen LUMIERE only and transfer unchanged to SAILOR.
+- [x] Report pooled/patient-uniform MAE, signed bias, compartment Spearman,
+  persistence-relative MAE, and paired patient-cluster confidence intervals.
 
-**Status:** baseline implementations are complete and an exploratory legacy-cache run is recorded in `info/p1_baselines.md`. The authoritative JEPA comparison is blocked until the Kaggle survival-free retrain and current-schema cache rebuild finish.
+**P1 status: CLOSED, with a negative JEPA result.** On LUMIERE held-out-patient
+CV, the current-volume ridge is statistically tied with persistence (relative
+patient-uniform MAE 0.973; paired 95% CI crosses zero), while JEPA is worse
+(1.393; paired difference 95% CI 0.226–1.002 log-volume units). On unchanged
+SAILOR transfer, persistence is best and JEPA is 2.873× worse. Results and
+limitations are recorded in `info/p1_anatomy_baselines.md`; the executable
+artifact is `outputs/p1_anatomy_baselines.json`.
 
-**Exit condition:** identify whether the current JEPA state beats simple history and growth baselines on the same prospective task.
+**Exit condition:** satisfied—the current JEPA state does not beat simple
+history/volume baselines on the frozen prospective task, so there is no basis
+for a JEPA superiority claim or a broad GPU sweep.
 
-## P1 — Reproduce a competitive observed-scan SOTA baseline
+## Retired RANO assessment workstream (not a P1 blocker)
+
+The following work is retained as historical planning context. It is no longer
+on the critical path because D45 excludes unverifiable SAILOR RANO classes from
+the cross-cohort endpoint.
 
 - [ ] **BLOCKED — Audit Tikhonov's full protocol, pair inclusion, preprocessing, masks, classifier, and metric aggregation; headline audit is recorded in `info/p1_sota_audit.md`, but full primary-method details are unavailable.**
 - [ ] **BLOCKED — Audit TRACE's supplied versus predicted concepts, masks, metadata, and fold protocol; headline audit is recorded in `info/p1_sota_audit.md`, but the full implementation/protocol is unavailable.**
@@ -86,7 +132,7 @@ Goal: establish a fair response-assessment benchmark, then build a genuinely pro
 
 **Stop condition:** if radiomics wins and JEPA adds nothing, keep the radiomics model and report the negative JEPA result.
 
-## P1 — Test whether temporal dynamics add value
+## Legacy RANO dynamics evidence (not a P1 blocker)
 
 - [x] Ensure assessment features include the observed assessment scan when appropriate; the refreshed observed-pair tabular baseline uses follow-up radiomics/features.
 - [x] Compare frozen BRAINIAC current-image features; current-image-only prospective baseline is recorded in `info/p1_baselines.md`.

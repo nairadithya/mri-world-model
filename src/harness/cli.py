@@ -62,6 +62,8 @@ RUN_MODULES = {
     "freeze": "src.harness.analysis.freeze:main",
     "lock": "src.harness.data.lock:main",
     "manifest": "src.harness.data.manifest:main",
+    "anatomy-manifest": "src.harness.data.anatomy_manifest:main",
+    "anatomy-baselines": "src.harness.analysis.anatomy_baselines:main",
 }
 
 USAGE = """\

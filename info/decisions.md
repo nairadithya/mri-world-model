@@ -582,3 +582,59 @@ referenced, not repeated — only session decisions are recorded here in full.
   development evidence; this policy does not create a new holdout. Status:
   decided for P0, while independent SAILOR labels, aligned treatment timing,
   and a new external/hidden cohort remain blocked.
+
+- **D45 — Make RANO-free lesion state the cross-site endpoint (2026-09-22).**
+  No located SAILOR paper or public implementation independently documents
+  the supplied numeric RANO codebook; published SAILOR work instead evaluates
+  image, mask, volume, or deformation endpoints. SAILOR RANO is therefore
+  excluded from primary LUMIERE-to-SAILOR claims. The shared target contract
+  `lesion-state-v1` is `{necrotic/nonenhancing, enhancing, edema/FLAIR}` in
+  physical mm3, with continuous future log-volume and delta-log-volume as the
+  primary tasks. `harness.py run anatomy-manifest` now produces immutable
+  visit/pair IDs, native target provenance, modality/timing status, and
+  explicit exclusions. First audit: LUMIERE 91 patients / 638 visits / 599
+  measured visits / 496 usable consecutive pairs; SAILOR 27 / 270 / 269 / 242.
+  All 269 complete SAILOR measurements were recomputed from finite,
+  geometry-consistent ONCO NIfTIs. The local LUMIERE artifact contains only
+  DeepBraTumIA mm3 JSONs, not source masks/affines, so zero LUMIERE targets are
+  independently geometry-verified. No timing pair is independently verified:
+  LUMIERE uses directory week labels and SAILOR cumulative
+  `intervals-days.txt`. Thus next-visit development can begin, but fixed-
+  horizon and final cross-site claims remain gated on masks and timestamp QA.
+  SAILOR CL-vs-ONCO sensitivity is substantial despite similar median volumes:
+  enhancing Dice median 0.650 (n=239) and edema Dice 0.656 (n=251); CL:ONCO
+  median volume ratios are 0.911 and 0.906, but enhancing has a 10.55 p90
+  ratio from ONCO-empty/nearly-empty cases. ONCO is primary for completeness;
+  CL is a mandatory sensitivity arm, not interchangeable ground truth.
+
+- **D46 — Close P0 on a next-observed-visit contract (2026-09-22).** The
+  supposedly missing LUMIERE masks were recovered from the local curated
+  `lumiere_autoseg_masks.zip` extraction: 599 DeepBraTumIA atlas label maps.
+  Affine-derived physical volumes reproduce all 1,797 JSON compartment values
+  exactly, establishing label values 1=enhancing, 2=necrotic/nonenhancing,
+  3=edema and raising geometry-verified LUMIERE measurements from 0 to 599.
+  Timing cannot honestly be promoted to exact: the LUMIERE paper defines
+  rounded week bins (with suffix ordering), while SAILOR `history.txt` records
+  DICOM/Excel-derived intervals plus explicit estimates for missing sessions.
+  The primary horizon is therefore frozen to **next observed visit**, for
+  which curated order is available for every pair; `gap_days` is auxiliary and
+  cannot support fixed-horizon/rate claims. Pair eligibility is consecutive
+  order + complete source/target lesion-state + positive gap (496 LUMIERE,
+  242 SAILOR). Metrics are log-volume MAE, delta-log-volume MAE, Spearman, and
+  persistence-relative MAE with pooled/patient-uniform paired patient CIs.
+  With RANO excluded and external confirmation assigned to P3, P0 is closed
+  for this explicitly scoped benchmark.
+
+- **D47 — Close P1 with a negative JEPA forecasting result (2026-09-22).**
+  The frozen `lesion-state-v1` inventory contains 496 LUMIERE and 242 SAILOR
+  next-visit rows. Five-fold patient CV is restricted to the 26 encoder-unseen
+  LUMIERE patients (117 eligible rows from 23 patients); learned
+  hyperparameters are selected with
+  patient-grouped inner CV. Current-volume ridge is statistically tied with
+  persistence (relative patient-uniform MAE 0.973; paired difference 95% CI
+  −0.227 to 0.148), while current-image, mean-history, and JEPA-state readouts
+  all lose. JEPA's relative MAE is 1.393 in LUMIERE (paired difference 95% CI
+  +0.226 to +1.002) and 2.873 under unchanged SAILOR transfer. Persistence is
+  best on SAILOR. P1 is therefore closed with no JEPA gain; the present model
+  does not pass the gate for a broad GPU sweep or a superiority claim. SAILOR
+  remains developmental transfer and the horizon remains next observed visit.

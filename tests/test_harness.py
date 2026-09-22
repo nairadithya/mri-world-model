@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import os
 import sys
+import tempfile
 
 import torch
 
@@ -16,6 +17,13 @@ from src.harness.data.tasks import (  # noqa: E402
     RANO_PROBE_NAMES, patient_rows, rows_for,
 )
 from src.harness.data.manifest import assert_compatible, build_manifest  # noqa: E402
+from src.harness.data.anatomy_manifest import (  # noqa: E402
+    COMPARTMENTS, build_pairs as build_anatomy_pairs, compare_masks,
+    measure_label_map, measure_mask,
+)
+from src.harness.analysis.anatomy_baselines import (  # noqa: E402
+    _metrics as anatomy_metrics,
+)
 from src.data.labels import response_label, response_valid  # noqa: E402
 from src.harness.encode import cache as cache_mod  # noqa: E402
 from src.harness.encode import views  # noqa: E402
@@ -88,6 +96,59 @@ def test_label_contract_and_manifest():
     assert len(b["tasks"]["assessment"]) == 1
     assert b["tasks"]["assessment"][0]["allowed_inputs"] == ["history_through_t", "x_target"]
     assert_compatible({"a": b, "b": b}, "forecast")
+
+
+def test_anatomy_measurement_and_pairs():
+    import nibabel as nib
+    import numpy as np
+
+    with tempfile.TemporaryDirectory() as td:
+        path = os.path.join(td, "mask.nii.gz")
+        data = np.zeros((2, 3, 4), dtype=np.uint8)
+        data[0, 0, :2] = 1
+        nib.save(nib.Nifti1Image(data, np.diag([2.0, 3.0, 4.0, 1.0])), path)
+        got = measure_mask(path)
+        assert got["foreground_voxels"] == 2
+        assert abs(got["voxel_volume_mm3"] - 24.0) < 1e-9
+        assert abs(got["volume_mm3"] - 48.0) < 1e-9
+        assert got["geometry_valid"] and got["finite"]
+        other = os.path.join(td, "other.nii.gz")
+        nib.save(nib.Nifti1Image(data.copy(), np.diag([2.0, 3.0, 4.0, 1.0])), other)
+        comparison = compare_masks(path, other)
+        assert comparison["same_grid"] and comparison["dice"] == 1.0
+        assert comparison["volume_ratio_cl_to_onco"] == 1.0
+        labelled = data.copy()
+        labelled[0, 0, 0] = 2
+        label_path = os.path.join(td, "labels.nii.gz")
+        nib.save(nib.Nifti1Image(labelled, np.diag([2.0, 3.0, 4.0, 1.0])),
+                 label_path)
+        measured = measure_label_map(label_path, {"a": 1, "b": 2})
+        assert all(abs(measured["values_mm3"][k] - 24.0) < 1e-9
+                   for k in ("a", "b"))
+        assert measured["geometry_valid"]
+
+    measurement = {
+        "values_mm3": {k: 1.0 for k in COMPARTMENTS},
+        "geometry_verified": True,
+    }
+    visits = [{"cohort": "x", "patient_id": "p", "visit": f"v{i}",
+               "visit_id": f"id{i}", "day": float(i * 10),
+               "timing_verified": True, "measurement": measurement,
+               "exclusions": []} for i in range(3)]
+    pairs = build_anatomy_pairs(visits)
+    assert len(pairs) == 2 and all(p["usable"] for p in pairs)
+    assert all(p["gap_days"] == 10 for p in pairs)
+
+
+def test_anatomy_metrics_are_patient_uniform():
+    import numpy as np
+
+    y = np.zeros((3, 3))
+    pred = np.array([[1.0] * 3, [1.0] * 3, [3.0] * 3])
+    groups = np.array(["many", "many", "one"])
+    got = anatomy_metrics(y, pred, groups)
+    assert abs(got["log_volume_mae"] - 5 / 3) < 1e-9
+    assert abs(got["patient_uniform_log_volume_mae"] - 2.0) < 1e-9
 
 
 def test_latent_metrics():
@@ -231,6 +292,8 @@ def main():
     check("metric_values", test_metric_values)
     check("auc", test_auc)
     check("label_contract_and_manifest", test_label_contract_and_manifest)
+    check("anatomy_measurement_and_pairs", test_anatomy_measurement_and_pairs)
+    check("anatomy_metrics_are_patient_uniform", test_anatomy_metrics_are_patient_uniform)
     check("latent_metrics", test_latent_metrics)
     check("legacy_task_rows", test_legacy_task_rows)
     check("canonicalize_and_views", test_canonicalize_and_views)
