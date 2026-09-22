@@ -45,11 +45,19 @@ interface cache builder, JEPA resume path, and best-checkpoint reload. Further
 legacy analysis modules may migrate to it as they are touched; their explicit
 legacy namespace already prevents them from being mistaken for P2 commands.
 
-## Next migration slice
+## Anatomy data and residual slice
 
-The CLI boundary and checkpoint reader do not yet constitute the lesion-aware
-trainer. The next slice is a history-only anatomy feature cache and continuous
-residual task API. After that exists, `train anatomy` and `eval anatomy` can
-replace the current dedicated baseline dispatcher. The RANO heads stay in the
-model temporarily for binary checkpoint compatibility, with zero auxiliary
-weight in active configurations.
+The second slice is implemented:
+
+```bash
+python scripts/harness.py anatomy features
+python scripts/harness.py anatomy residual
+```
+
+The first command builds the history-only `lesion-physical-v1` feature cache
+from native masks/affines. The second exposes continuous anatomy rows, runs the
+locked residual gate, and persists the final model plus feature/scaler
+provenance. This remains a deterministic structured forecaster, not yet a
+lesion-aware encoder trainer. The RANO heads stay in the historical model
+temporarily for binary checkpoint compatibility, with zero auxiliary weight in
+active configurations.

@@ -120,3 +120,32 @@ evaluation, and shows credible new-site behavior. P2 may also close with a
 negative result if the structured and lesion-aware models cannot beat the
 floor after the prespecified ablations. Either outcome is scientifically valid;
 latent loss alone is not an exit criterion.
+
+## Execution status — P2.1/P2.2 (2026-09-22)
+
+`harness.py anatomy features` materialized `lesion-physical-v1`: 48 finite,
+history-only features for all 738 eligible pairs (496 LUMIERE, 242 SAILOR).
+Features include audited log-volumes/fractions, native-affine centroids,
+physical extents, principal spatial spread, modality availability, prior
+observed change, nadir-relative change, and history length. Future measurements
+are stored separately from `x`; the cache records manifest SHA-256, source
+paths through the manifest, git SHA, date, and the history-only cutoff.
+
+`harness.py anatomy residual` then evaluated a patient-uniform,
+zero-initialized 48→32→3 residual MLP and grouped-CV structured ridge. The MLP
+starts exactly at persistence and uses only source history. Five locked outer
+folds select stopping epochs without their test patients; the final model is
+fit on all eligible encoder-unseen patients before unchanged SAILOR transfer.
+
+| method | LUMIERE patient-uniform MAE | relative | SAILOR MAE | relative |
+|---|---:|---:|---:|---:|
+| persistence | 1.545 | 1.000 | 0.943 | 1.000 |
+| structured ridge | 1.557 | 1.008 | 1.790 | 1.898 |
+| residual MLP | 1.541 | 0.997 | 1.214 | 1.288 |
+
+The residual difference from persistence is unresolved in LUMIERE (95% CI
+−0.096 to +0.100) and harmful in SAILOR (+0.176 to +0.369). P2.2 therefore
+fails its prespecified improvement gate. P2.3 lesion-aware JEPA training and
+P2.4 uncertainty are not authorized by this result; first determine whether a
+prespecified structured ablation or additional external supervision can make
+the deterministic floor transferable.

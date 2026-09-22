@@ -3,6 +3,8 @@
 
 Usage:
     python scripts/harness.py anatomy manifest
+    python scripts/harness.py anatomy features
+    python scripts/harness.py anatomy residual
     python scripts/harness.py anatomy baseline
     python scripts/harness.py checkpoint inspect checkpoints/best.pt
     python scripts/harness.py legacy eval --task rano4_forecast ...

@@ -153,23 +153,23 @@ the cross-cohort endpoint.
 ## P2 — Build lesion-aware forecasting
 
 - [ ] Define the clinically grounded state `u_t`:
-  - [ ] enhancing burden
-  - [ ] nonenhancing disease
-  - [ ] edema/FLAIR abnormality
+  - [x] enhancing burden
+  - [x] nonenhancing disease
+  - [x] edema/FLAIR abnormality
   - [ ] resection cavity
-  - [ ] shape and spatial extent
-  - [ ] prior growth rate
-  - [ ] current-to-nadir change
-  - [ ] modality availability and segmentation uncertainty
+  - [x] shape and spatial extent
+  - [x] prior observed change
+  - [x] current-to-nadir change
+  - [x] modality availability and segmentation-source provenance
   - [ ] treatment phase and time since intervention
-- [ ] Extract volumes/radiomics in physical/common geometry, not resized identity-affine tensors.
-- [ ] Preserve registration transforms and voxel-volume metadata.
-- [ ] Fit persistence, linear trend, log-growth, site-shrinkage, and scalar gain baselines.
-- [ ] Fit a small zero-initialized residual forecast model:
-  - [ ] `u_hat(t+h) = u_t + g(H_t,h) * delta(H_t,h)`
-  - [ ] condition on explicit horizon and true time gap
+- [x] Extract volumes and shape features from native masks/affines, not resized identity-affine tensors.
+- [x] Preserve source paths, affine-derived physical geometry, manifest checksum, and provenance.
+- [x] Fit persistence, mean-change, linear-trend, current-volume ridge, and structured-feature ridge baselines.
+- [x] Fit a small zero-initialized residual forecast model:
+  - [x] `u_hat(t+1) = u_t + delta(H_t)` for the frozen next-visit task
+  - [x] keep uncertain gap timing out of the primary model
   - [ ] keep global BRAINIAC state as a separate branch
-- [ ] Evaluate volume/measurement forecast error.
+- [x] Evaluate volume/measurement forecast error with locked patient CV and unchanged SAILOR transfer.
 - [ ] Evaluate incident progression risk at fixed horizons.
 - [ ] Add a fixed-teacher lesion-feature prediction objective only after deterministic baselines pass.
 - [ ] Add uncertainty only after the deterministic model beats persistence.
@@ -178,6 +178,12 @@ the cross-cohort endpoint.
 - [ ] Report stable versus changing strata without selecting the test set by change status.
 
 **Go condition:** improve clinical lesion outputs and calibrated progression risk on a new site, not merely latent cosine loss.
+
+**Current status:** P2.1 is complete. P2.2 ran but did not pass its go gate:
+the structured residual model tied persistence on locked LUMIERE CV (relative
+MAE 0.997; paired CI crosses zero) and lost on SAILOR transfer (1.288; paired
+difference CI +0.176 to +0.369). Lesion-aware JEPA retraining and uncertainty
+remain gated rather than being launched after a null deterministic result.
 
 ## P2 — Acquire and audit external supervision
 

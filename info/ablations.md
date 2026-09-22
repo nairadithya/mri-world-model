@@ -1422,3 +1422,30 @@ Logged inferences (evidence-backed; see A9/A10/A12 for numbers):
   wins). The next scientific question is calibration and lesion-aware clinical
   forecasting, not another cosine-loss sweep.
 
+## A38 — Physical lesion features and zero-initialized residual forecasting do not beat persistence (2026-09-22, local CPU)
+
+- **Question.** Does an explicitly physical, history-only lesion state repair
+  the negative P1 result before lesion-aware encoder training?
+- **Contract.** `lesion-physical-v1`, generated from the P0 manifest and native
+  mask affines: 48 features, 496 LUMIERE pairs and 242 SAILOR pairs. Target
+  tensors are separate from inputs. Evaluation uses five locked patient folds
+  over encoder-unseen LUMIERE patients; SAILOR outcomes are not used for fit,
+  tuning, or stopping.
+- **Models.** Persistence; grouped-CV structured ridge; and a patient-weighted
+  48→32→3 residual MLP with a zero-initialized final layer. The MLP predicts a
+  change from the current log-volumes, so its initialization is exactly
+  persistence. Inner patient separation selects stopping epochs; the final
+  transfer model uses the median selected epoch (68).
+- **LUMIERE.** Patient-uniform log-volume MAE: persistence **1.5446**;
+  structured ridge **1.5573** (relative 1.008; paired difference 95% CI
+  −0.183 to +0.212); residual MLP **1.5405** (relative 0.997; CI −0.096 to
+  +0.100).
+- **SAILOR transfer.** Persistence **0.9430**; ridge **1.7895** (relative
+  1.898; CI +0.639 to +1.060); residual MLP **1.2143** (relative 1.288; CI
+  +0.176 to +0.369).
+- **Inference.** The physical feature pipeline is operational, but neither
+  deterministic learned model passes the prespecified persistence gate. The
+  tiny in-domain MLP difference is unresolved and reverses externally. Do not
+  launch uncertainty or call a lesion-aware JEPA retrain validated from this
+  base. Next work must be a prespecified structured ablation or genuinely new
+  supervision, not selection on SAILOR transfer outcomes.

@@ -665,3 +665,15 @@ referenced, not repeated — only session decisions are recorded here in full.
   rewrite. This preserves reproducibility while preventing the old task
   registry from defining the active research interface. See
   `info/harness_v2.md`.
+
+- **D50 — Hold lesion-aware JEPA retraining after the structured P2 gate fails
+  (2026-09-22).** The native-affine `lesion-physical-v1` cache covers all 738
+  eligible pairs with a strict history-only cutoff. A zero-initialized residual
+  MLP is tied with persistence in locked LUMIERE CV (relative MAE 0.997; paired
+  difference 95% CI −0.096 to +0.100) and worse in unchanged SAILOR transfer
+  (1.288; +0.176 to +0.369). Structured ridge also loses. Thus P2.1 is
+  complete but P2.2 does not pass the prespecified improvement gate. Do not
+  add uncertainty or launch a lesion-aware JEPA run merely because the
+  pipeline now exists. First use prespecified structured ablations or new
+  external supervision to establish a transferable deterministic signal. See
+  A38 and `info/p2_execution.md`.

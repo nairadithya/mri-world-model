@@ -26,6 +26,11 @@ from src.harness.analysis.anatomy_baselines import (  # noqa: E402
 )
 from src.harness.checkpoints import inspect as inspect_checkpoint, load_model  # noqa: E402
 from src.harness.cli import main as harness_main  # noqa: E402
+from src.harness.encode.anatomy import (  # noqa: E402
+    feature_names as anatomy_feature_names, history_feature_names,
+    history_vector, visit_features,
+)
+from src.harness.analysis.anatomy_residual import ResidualMLP  # noqa: E402
 from src.data.labels import response_label, response_valid  # noqa: E402
 from src.harness.encode import cache as cache_mod  # noqa: E402
 from src.harness.encode import views  # noqa: E402
@@ -178,6 +183,46 @@ def test_anatomy_first_cli_routes():
     harness_main(["legacy", "--help"])
 
 
+def test_physical_anatomy_features_are_history_only():
+    import nibabel as nib
+    import numpy as np
+
+    with tempfile.TemporaryDirectory() as td:
+        path = os.path.join(td, "labels.nii.gz")
+        data = np.zeros((4, 5, 6), dtype=np.uint8)
+        data[0, 0, 0] = 1
+        data[1:3, 1, 1] = 2
+        data[1:3, 2:4, 2] = 3
+        affine = np.diag([2.0, 3.0, 4.0, 1.0])
+        nib.save(nib.Nifti1Image(data, affine), path)
+        visit = {
+            "visit_id": "v0", "modalities": {"CT1": True, "T1": False,
+                                                  "T2": True, "FLAIR": True},
+            "measurement": {
+                "values_mm3": {"necrotic_non_enhancing": 48.0,
+                               "enhancing": 24.0, "edema_flair": 96.0},
+                "mask": {"path": path, "labels": {
+                    "necrotic_non_enhancing": 2, "enhancing": 1,
+                    "edema_flair": 3}},
+            },
+        }
+        current = visit_features(visit)
+    assert len(current) == len(anatomy_feature_names())
+    assert np.isfinite(current).all()
+    x1 = history_vector([current])
+    changed_target = current.copy(); changed_target[:3] += 100
+    x2 = history_vector([current])  # target is intentionally not an argument
+    assert np.array_equal(x1, x2)
+    assert len(x1) == len(history_feature_names())
+    assert not np.array_equal(x1[:3], changed_target[:3])
+
+
+def test_residual_model_starts_at_persistence():
+    model = ResidualMLP(7, hidden=4)
+    delta = model(torch.randn(5, 7))
+    assert torch.equal(delta, torch.zeros_like(delta))
+
+
 def test_latent_metrics():
     a = torch.tensor([[1.0, 0.0], [0.0, 1.0]])
     b = torch.tensor([[1.0, 0.0], [1.0, 0.0]])
@@ -323,6 +368,10 @@ def main():
     check("anatomy_metrics_are_patient_uniform", test_anatomy_metrics_are_patient_uniform)
     check("checkpoint_compatibility_loader", test_checkpoint_compatibility_loader)
     check("anatomy_first_cli_routes", test_anatomy_first_cli_routes)
+    check("physical_anatomy_features_are_history_only",
+          test_physical_anatomy_features_are_history_only)
+    check("residual_model_starts_at_persistence",
+          test_residual_model_starts_at_persistence)
     check("latent_metrics", test_latent_metrics)
     check("legacy_task_rows", test_legacy_task_rows)
     check("canonicalize_and_views", test_canonicalize_and_views)
