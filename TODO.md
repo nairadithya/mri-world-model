@@ -195,8 +195,8 @@ new prespecified lesion representation, not further tuning on these outcomes.
 
 ### UCSF-ALPTDG
 
-- [ ] Confirm access and licensing.
-- [ ] Inventory usable GBM patients, labels, masks, modalities, and intervals.
+- [x] Audit access and licensing: noncommercial DUA required; not yet accepted locally.
+- [x] Inventory published cohort/labels: 298 two-timepoint patients with ET, NETC, SNFH, cavity, and change masks; local row-level audit awaits access.
 - [ ] Check overlap with any preoperative datasets and segmentation-model training data.
 - [ ] Audit whether registration/preprocessing uses the second scan.
 - [ ] Split patients into pretraining, development, and external test roles before training.
@@ -206,7 +206,7 @@ new prespecified lesion representation, not further tuning on these outcomes.
 
 ### Burdenko-GBM-Progression
 
-- [ ] Confirm access, labels, treatment-response definitions, and follow-up completeness.
+- [x] Audit published access/content: 180 patients, 1–8 follow-ups, progression/pseudoprogression/response, subset follow-up GTV; restricted imaging access.
 - [ ] Audit registration and scanner/protocol variation.
 - [ ] Inventory RT plans, dose, molecular data, and longitudinal masks.
 - [ ] Reserve a temporal/external test role before inspecting outcomes.
@@ -214,8 +214,8 @@ new prespecified lesion representation, not further tuning on these outcomes.
 
 ### UCSD-PTGBM
 
-- [ ] Confirm access and licensing.
-- [ ] Inventory tumor-positive versus treatment-change-only cases.
+- [x] Audit access/licensing: version 3, CC BY 4.0, 44.98 GB; corrected clinical IDs dated 2026-03-13.
+- [ ] Inventory tumor-positive versus treatment-change-only cases after acquiring the corrected version-3 clinical table and images.
 - [ ] Use diffusion/perfusion and expert masks for tumor-versus-treatment-effect auxiliary learning.
 - [ ] Keep enriched sampling separate from natural-prevalence calibration.
 - [ ] Do not convert its labels into fabricated four-class RANO labels.

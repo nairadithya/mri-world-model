@@ -20,6 +20,8 @@ world-model program. Code is the primary artifact; these docs exist to record
   RANO-free endpoint and what remains reusable.
 - [`harness_v2.md`](harness_v2.md) — anatomy-first CLI and historical
   checkpoint compatibility contract.
+- [`external_supervision_audit.md`](external_supervision_audit.md) — P2 cohort
+  roles, current access/storage blockers, and acquisition order.
 - [`p0_audit.md`](p0_audit.md) and [`p1_baselines.md`](p1_baselines.md) —
   superseded RANO-era validity/baseline records retained for provenance.
 - [`eval_protocol.md`](eval_protocol.md) — the historical locked RANO readout

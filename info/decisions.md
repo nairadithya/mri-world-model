@@ -688,3 +688,16 @@ referenced, not repeated — only session decisions are recorded here in full.
   present frozen representations and deterministic heads are exhausted; P2
   requires new lesion/change supervision or a prespecified new representation
   mechanism before retraining. See A39.
+
+- **D52 — Prefer UCSF change supervision; do not acquire large P2 cohorts on
+  the current disk (2026-09-22).** UCSF-ALPTDG is the closest supervision fit:
+  298 paired post-treatment patients with enhancing, nonenhancing/FLAIR,
+  cavity, and longitudinal-change masks, but it requires a noncommercial DUA.
+  Burdenko offers 180 patients with 1–8 follow-ups and RT/treatment-response
+  data, but its 131.23-GB imaging release is restricted and follow-up GTV is
+  only a subset. UCSD-PTGBM v3 is public CC BY and supplies advanced imaging
+  plus treatment-effect labels, but is 44.98 GB and explicitly corrected
+  patient IDs on 2026-03-13. Only 75 GB is free locally, so either acquisition
+  would leave inadequate processing headroom. Do not download implicitly or
+  substitute SAILOR outcomes. Resolve UCSF authorization and external storage
+  first. See `info/external_supervision_audit.md`.
