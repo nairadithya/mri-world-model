@@ -194,6 +194,11 @@ the cross-cohort endpoint.
 - [ ] Train an anatomically supervised lesion encoder on the 65 encoder-train
   LUMIERE patients; preserve the 26 encoder-unseen patients for locked model
   development and SAILOR for unchanged transfer.
+  - [x] implement memory-safe anatomy-LoRA → adapted-token cache → transition
+    GRU training with persistence initialization
+  - [x] publish the LUMIERE mask-only supervision bundle privately to Kaggle
+  - [ ] run the T4 training leg and retrieve its selected checkpoint
+  - [ ] evaluate the selected checkpoint unchanged on local SAILOR
 - [ ] Evaluate incident progression risk at fixed horizons.
 - [ ] Add a fixed-teacher future lesion-feature objective after the lesion-local
   observation state demonstrates measurable information beyond the current

@@ -99,3 +99,19 @@ lesion observation space on the 65 encoder-train patients, learn transition
 tokens over consecutive visits, aggregate them with a small elapsed-time-aware
 GRU, and retain the persistence-centred residual decoder. The 26 encoder-unseen
 patients remain outside representation training.
+
+## Learned run deployment
+
+The learned branch is implemented as a two-stage training procedure that fits
+within a 16 GB T4. Stage 1 anatomy-supervises BRAINIAC LoRA plus a 256-d lesion
+observation projection one mask-bearing visit at a time. Stage 2 freezes that
+encoder, materializes adapted tokens, and trains a learned transition MLP,
+elapsed-time-conditioned 256-d GRU, current-anatomy auxiliary head, and
+zero-initialized persistence residual decoder. The 65-patient encoder-training
+pool is split internally for selection; all 26 encoder-unseen patients remain
+untouched until the final locked Kaggle evaluation.
+
+The recovered LUMIERE masks were uploaded as the private Kaggle dataset
+`nairadithya/lumiere-lesion-supervision` (mask supervision only; no SAILOR
+content). The local one-patient structural smoke completed both stages and
+confirmed that the initial forecast is persistence. Its score is not evidence.

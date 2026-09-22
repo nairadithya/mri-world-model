@@ -37,6 +37,7 @@ from src.harness.analysis.lesion_coverage import (  # noqa: E402
 from src.model.lesion_tokens import (  # noqa: E402
     lesion_centered_crop, pool_region_tokens, region_patch_weights,
 )
+from src.model.lesion_forecaster import LesionTransitionForecaster  # noqa: E402
 from src.harness.data.anatomy_representations import representation_rows  # noqa: E402
 from src.data.labels import response_label, response_valid  # noqa: E402
 from src.harness.encode import cache as cache_mod  # noqa: E402
@@ -260,6 +261,13 @@ def test_lesion_crop_and_region_pooling():
     assert contrast.shape == (1, 1, 3, 1)
 
 
+def test_lesion_forecaster_starts_at_persistence():
+    model = LesionTransitionForecaster(input_dim=14, observation_dim=8, hidden_dim=8)
+    source = torch.randn(4, 3)
+    result = model(torch.randn(4, 14), torch.tensor([0.0, 7.0, 14.0, 21.0]), source)
+    assert torch.equal(result["prediction"], source[:-1])
+
+
 def test_anatomy_representation_join_is_row_exact():
     import json
 
@@ -443,6 +451,8 @@ def main():
           test_residual_model_starts_at_persistence)
     check("lesion_patch_coverage_support", test_lesion_patch_coverage_support)
     check("lesion_crop_and_region_pooling", test_lesion_crop_and_region_pooling)
+    check("lesion_forecaster_starts_at_persistence",
+          test_lesion_forecaster_starts_at_persistence)
     check("anatomy_representation_join_is_row_exact",
           test_anatomy_representation_join_is_row_exact)
     check("latent_metrics", test_latent_metrics)

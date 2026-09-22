@@ -38,6 +38,7 @@ TRAIN_MODULES = {
     "lora": "src.harness.train.lora:main",
     "cnn3d": "src.harness.train.cnn3d:main",
     "cnn2d": "src.harness.train.cnn2d:main",
+    "lesion": "src.harness.train.lesion:main",
 }
 
 # Active anatomy workflows.
