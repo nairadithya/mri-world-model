@@ -638,3 +638,30 @@ referenced, not repeated — only session decisions are recorded here in full.
   best on SAILOR. P1 is therefore closed with no JEPA gain; the present model
   does not pass the gate for a broad GPU sweep or a superiority claim. SAILOR
   remains developmental transfer and the horizon remains next observed visit.
+
+- **D48 — Make P2 a gated lesion-aware repair, not an unchanged JEPA rerun
+  (2026-09-22).** Harmonization changed the endpoint and exposed physical
+  masks; it did not place lesion supervision inside the current self-supervised
+  objective. Repeating that objective on the same MRI inputs would not test
+  whether anatomy repairs the P1 failure. P2 therefore begins with a versioned
+  physical lesion state and a zero-initialized residual forecaster whose
+  starting behavior is persistence. A lesion-aware encoder/objective is added
+  only after the deterministic pipeline is valid, and its value is the paired
+  increment beyond the best structured model. The primary task remains next
+  observed visit: current timing cannot support fixed-horizon or growth-rate
+  claims. RANO response is excluded as a primary target and must not substitute
+  for a treatment action. SAILOR remains developmental transfer; a new site is
+  required for final validation. See `info/p2_execution.md` and
+  `info/stale_code_audit.md`.
+
+- **D49 — Migrate to an anatomy-first harness behind an explicit compatibility
+  boundary (2026-09-22).** The default CLI now exposes anatomy manifest,
+  anatomy baseline, and checkpoint inspection workflows. Historical RANO
+  list/encode/eval/train/run commands remain available under `legacy`; their
+  former top-level forms are temporary deprecated aliases. A centralized v2
+  checkpoint loader accepts old `model`, `state_dict`, `weights`, raw-state,
+  and data-parallel containers, audits every missing/unexpected/legacy tensor,
+  and fails on shape conflicts. Existing checkpoints are inputs, not files to
+  rewrite. This preserves reproducibility while preventing the old task
+  registry from defining the active research interface. See
+  `info/harness_v2.md`.

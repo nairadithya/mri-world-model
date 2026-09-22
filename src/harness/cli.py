@@ -1,10 +1,10 @@
-"""Unified harness CLI.
+"""Anatomy-first harness CLI (v2) with explicit legacy compatibility.
 
 Subcommands:
-  list                       show registered metrics/tasks/protocols/methods
-  encode                     frozen representation pass -> feature cache
-  eval                       task x protocol x readout x metrics (pluggable)
-  train <method> [args...]   train a representation method (native or legacy)
+  anatomy manifest           build the frozen lesion-state manifest
+  anatomy baseline           run the continuous anatomy gate
+  checkpoint inspect PATH    audit old/current checkpoint containers
+  legacy <command> ...       reproduce the historical RANO harness
 
 Train methods live under :mod:`src.harness.train`; the CLI preserves every
 artifact path in :mod:`src.harness.paths`.
@@ -13,10 +13,12 @@ from __future__ import annotations
 
 import argparse
 import importlib
+import json
 import os
 import sys
 
 from . import METHODS, METRICS, PROTOCOLS, TASKS
+from .checkpoints import inspect as inspect_checkpoint
 from .config import load_config
 from .data.protocols import HeroSplit, LockedProtocol
 from .encode.cache import load as load_cache
@@ -38,8 +40,14 @@ TRAIN_MODULES = {
     "cnn2d": "src.harness.train.cnn2d:main",
 }
 
-# Bespoke frozen-model analyses / feature builders, imported lazily.
-RUN_MODULES = {
+# Active anatomy workflows.
+ANATOMY_MODULES = {
+    "manifest": "src.harness.data.anatomy_manifest:main",
+    "baseline": "src.harness.analysis.anatomy_baselines:main",
+}
+
+# Historical bespoke analyses / feature builders, imported lazily.
+LEGACY_RUN_MODULES = {
     "interface": "src.harness.encode.interface:main",
     "radiomics-features": "src.harness.encode.radiomics:main",
     "surprise": "src.harness.analysis.surprise:main",
@@ -62,21 +70,23 @@ RUN_MODULES = {
     "freeze": "src.harness.analysis.freeze:main",
     "lock": "src.harness.data.lock:main",
     "manifest": "src.harness.data.manifest:main",
-    "anatomy-manifest": "src.harness.data.anatomy_manifest:main",
-    "anatomy-baselines": "src.harness.analysis.anatomy_baselines:main",
 }
+
+# Temporary top-level ``run`` alias accepts both namespaces.
+RUN_MODULES = {**LEGACY_RUN_MODULES,
+               "anatomy-manifest": ANATOMY_MODULES["manifest"],
+               "anatomy-baselines": ANATOMY_MODULES["baseline"]}
 
 USAGE = """\
 usage: harness.py <command> [options]
 
-  list                          registered metrics / tasks / protocols / methods
-  encode --champion C --cache P [--views ...] [--patients ...]
-  eval --cache P --task rano4_forecast --view states_forecast \\
-       [--protocol locked_unseen|hero_split|path.json] [--cohort unseen] \\
-       [--train-pool unseen|train] [--readout linear|mlp|ridge] [--metrics ...] \\
-       [--compare VIEW] [--out results.json]
-  train <jepa|field|head|lora|cnn3d|cnn2d|readout> [native args ...]
-  run <name> [args ...]         bespoke analyses / feature builders (see `list`)
+  anatomy manifest [options]    build/audit lesion-state-v1 rows
+  anatomy baseline [options]    run the continuous prospective floor
+  checkpoint inspect PATH       inspect checkpoint format and legacy contents
+  list                          show active anatomy workflows
+  legacy <command> [options]    old list/encode/eval/train/run interface
+
+Compatibility aliases remain temporarily available: encode, eval, train, run.
 """
 
 
@@ -85,11 +95,50 @@ def _log(msg: str) -> None:
 
 
 def cmd_list(_args) -> None:
-    _log("metrics:   " + ", ".join(METRICS.names()))
-    _log("tasks:     " + ", ".join(TASKS.names()))
-    _log("protocols: " + ", ".join(PROTOCOLS.names()))
-    _log("methods:   " + ", ".join(sorted(set(METHODS.names()) | set(TRAIN_MODULES))))
-    _log("run:       " + ", ".join(sorted(RUN_MODULES)))
+    _log("harness:    anatomy-v2")
+    _log("anatomy:    manifest, baseline")
+    _log("checkpoint: inspect")
+    _log("legacy:     list, encode, eval, train, run")
+
+
+def cmd_legacy_list(_args=None) -> None:
+    _log("legacy metrics:   " + ", ".join(METRICS.names()))
+    _log("legacy tasks:     " + ", ".join(TASKS.names()))
+    _log("legacy protocols: " + ", ".join(PROTOCOLS.names()))
+    _log("legacy methods:   " + ", ".join(
+        sorted(set(METHODS.names()) | set(TRAIN_MODULES))))
+    _log("legacy run:       " + ", ".join(sorted(LEGACY_RUN_MODULES)))
+
+
+def _dispatch_entry(spec: str, argv: list[str]) -> None:
+    mod_name, fn_name = spec.split(":")
+    getattr(importlib.import_module(mod_name), fn_name)(argv)
+
+
+def cmd_anatomy(rest: list[str]) -> None:
+    if not rest or rest[0] in ("-h", "--help", "help"):
+        print("usage: harness.py anatomy <manifest|baseline> [options]")
+        return
+    name, argv = rest[0], rest[1:]
+    if name not in ANATOMY_MODULES:
+        raise SystemExit(
+            f"unknown anatomy command {name!r}; known: {sorted(ANATOMY_MODULES)}")
+    _dispatch_entry(ANATOMY_MODULES[name], argv)
+
+
+def cmd_checkpoint(rest: list[str]) -> None:
+    ap = argparse.ArgumentParser(prog="harness.py checkpoint")
+    sub = ap.add_subparsers(dest="operation", required=True)
+    inspect_p = sub.add_parser("inspect")
+    inspect_p.add_argument("path")
+    inspect_p.add_argument("--json", action="store_true")
+    args = ap.parse_args(rest)
+    result = inspect_checkpoint(args.path)
+    if args.json:
+        print(json.dumps(result, indent=2, sort_keys=True))
+    else:
+        for key, value in result.items():
+            print(f"{key}: {value}")
 
 
 def _resolve_protocol(spec: str, cfg: dict):
@@ -246,6 +295,32 @@ def cmd_run(args) -> None:
     getattr(importlib.import_module(mod_name), fn_name)(rest)
 
 
+def cmd_legacy(rest: list[str]) -> None:
+    if not rest or rest[0] in ("-h", "--help", "help"):
+        print("usage: harness.py legacy <list|encode|eval|train|run> [options]")
+        return
+    command, argv = rest[0], rest[1:]
+    if command == "list":
+        cmd_legacy_list(argv)
+    elif command == "encode":
+        cmd_encode(_encode_parser().parse_args(argv))
+    elif command == "eval":
+        cmd_eval(_eval_parser().parse_args(argv))
+    elif command == "train":
+        cmd_train(argparse.Namespace(rest=argv))
+    elif command == "run":
+        if not argv:
+            raise SystemExit("usage: harness.py legacy run <name> [args...]")
+        name, module_argv = argv[0], argv[1:]
+        if name not in LEGACY_RUN_MODULES:
+            raise SystemExit(
+                f"unknown legacy run target {name!r}; "
+                f"known: {sorted(LEGACY_RUN_MODULES)}")
+        _dispatch_entry(LEGACY_RUN_MODULES[name], module_argv)
+    else:
+        raise SystemExit(f"unknown legacy command {command!r}")
+
+
 # ---------------------------------------------------------------- parsers --
 def _encode_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="harness.py encode")
@@ -290,13 +365,23 @@ def main(argv=None) -> None:
     cmd, rest = argv[0], argv[1:]
     if cmd == "list":
         cmd_list(rest)
+    elif cmd == "anatomy":
+        cmd_anatomy(rest)
+    elif cmd == "checkpoint":
+        cmd_checkpoint(rest)
+    elif cmd == "legacy":
+        cmd_legacy(rest)
     elif cmd == "encode":
+        _log("DEPRECATED: use `harness.py legacy encode`; compatibility alias active")
         cmd_encode(_encode_parser().parse_args(rest))
     elif cmd == "eval":
+        _log("DEPRECATED: use `harness.py legacy eval`; compatibility alias active")
         cmd_eval(_eval_parser().parse_args(rest))
     elif cmd == "train":
+        _log("DEPRECATED: use `harness.py legacy train`; compatibility alias active")
         cmd_train(argparse.Namespace(rest=rest))
     elif cmd == "run":
+        _log("DEPRECATED: prefer `harness.py anatomy ...` or `harness.py legacy run ...`")
         cmd_run(argparse.Namespace(rest=rest))
     else:
         raise SystemExit(f"unknown command {cmd!r}\n\n{USAGE}")

@@ -13,6 +13,7 @@ import torch
 from torch.utils.data import DataLoader
 
 from .. import provenance as prov_mod
+from ..checkpoints import format_report, load_model
 from ..paths import DEFAULT_CONFIG
 from ..data.builder import build_datasets
 from ..data.tasks import RANO_PROBE_MAP
@@ -24,8 +25,11 @@ ALL_VIEWS = ("vision", "fused", "states", "clinical", "ema_z", "z")
 
 def load_champion(cfg: dict, champion_path: str):
     model = JEPAWorldModel(cfg)
-    ckpt = torch.load(champion_path, map_location="cpu", weights_only=False)
-    model.load_state_dict(ckpt["model"], strict=False)
+    ckpt, report = load_model(model, champion_path)
+    print(format_report(report), flush=True)
+    if report.missing or report.unexpected:
+        print(f"  compatibility missing={report.missing[:8]} "
+              f"unexpected={report.unexpected[:8]}", flush=True)
     model.eval()
     for p in model.parameters():
         p.requires_grad = False

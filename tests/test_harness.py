@@ -24,6 +24,8 @@ from src.harness.data.anatomy_manifest import (  # noqa: E402
 from src.harness.analysis.anatomy_baselines import (  # noqa: E402
     _metrics as anatomy_metrics,
 )
+from src.harness.checkpoints import inspect as inspect_checkpoint, load_model  # noqa: E402
+from src.harness.cli import main as harness_main  # noqa: E402
 from src.data.labels import response_label, response_valid  # noqa: E402
 from src.harness.encode import cache as cache_mod  # noqa: E402
 from src.harness.encode import views  # noqa: E402
@@ -149,6 +151,31 @@ def test_anatomy_metrics_are_patient_uniform():
     got = anatomy_metrics(y, pred, groups)
     assert abs(got["log_volume_mae"] - 5 / 3) < 1e-9
     assert abs(got["patient_uniform_log_volume_mae"] - 2.0) < 1e-9
+
+
+def test_checkpoint_compatibility_loader():
+    model = torch.nn.Linear(3, 2)
+    expected = {k: v.detach().clone() for k, v in model.state_dict().items()}
+    payload = {"model": {**{f"module.{k}": v + 1 for k, v in expected.items()},
+                         "module.rano_heads.flat.weight": torch.ones(4, 4)},
+               "epoch": 7, "val_loss": 0.25}
+    _, report = load_model(model, payload)
+    assert report.loaded == 2 and report.epoch == 7
+    assert report.ignored_legacy == ["rano_heads.flat.weight"]
+    assert not report.missing and not report.unexpected
+    for key, value in model.state_dict().items():
+        assert torch.equal(value, expected[key] + 1)
+    with tempfile.TemporaryDirectory() as td:
+        path = os.path.join(td, "legacy.pt")
+        torch.save(payload, path)
+        got = inspect_checkpoint(path)
+        assert got["container"] == "model" and got["legacy_tensor_count"] == 1
+
+
+def test_anatomy_first_cli_routes():
+    harness_main(["list"])
+    harness_main(["anatomy", "--help"])
+    harness_main(["legacy", "--help"])
 
 
 def test_latent_metrics():
@@ -294,6 +321,8 @@ def main():
     check("label_contract_and_manifest", test_label_contract_and_manifest)
     check("anatomy_measurement_and_pairs", test_anatomy_measurement_and_pairs)
     check("anatomy_metrics_are_patient_uniform", test_anatomy_metrics_are_patient_uniform)
+    check("checkpoint_compatibility_loader", test_checkpoint_compatibility_loader)
+    check("anatomy_first_cli_routes", test_anatomy_first_cli_routes)
     check("latent_metrics", test_latent_metrics)
     check("legacy_task_rows", test_legacy_task_rows)
     check("canonicalize_and_views", test_canonicalize_and_views)

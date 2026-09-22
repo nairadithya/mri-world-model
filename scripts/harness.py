@@ -1,11 +1,11 @@
 #!/usr/bin/env python
-"""Unified train/eval harness entry point.
+"""Anatomy-first harness entry point with an explicit legacy namespace.
 
 Usage:
-    python scripts/harness.py list
-    python scripts/harness.py encode --cache checkpoints/interface_cache.pt
-    python scripts/harness.py eval --task rano4_forecast --view states_forecast
-    python scripts/harness.py train jepa --config kaggle.yaml --epochs 30 ...
+    python scripts/harness.py anatomy manifest
+    python scripts/harness.py anatomy baseline
+    python scripts/harness.py checkpoint inspect checkpoints/best.pt
+    python scripts/harness.py legacy eval --task rano4_forecast ...
 """
 from __future__ import annotations
 

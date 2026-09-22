@@ -426,3 +426,26 @@ zero-shot transfer as separate regimes.
 - No claim that ROI, concepts, radiomics, or “data-limited ceiling” is
   universal: A26/A35/A36 tested narrow frozen interfaces, not all lesion-aware
   supervision or all radiomics.
+
+---
+
+## Part 6 — RANO-free P2 reset (2026-09-22)
+
+P0 and P1 have now resolved the blockers assumed by Part 5, but changed the
+task. D45–D47 supersede E0–E3 as an execution order: SAILOR RANO is not a
+primary endpoint, `lesion-state-v1` is frozen to the next observed visit, and
+the current JEPA state loses to persistence. The active sequence is therefore:
+
+1. Build physical, history-only lesion features from the audited masks.
+2. Fit a zero-initialized residual model that starts at persistence.
+3. Establish an improvement on locked LUMIERE patient CV.
+4. Only then retrain with lesion-aware image/JEPA objectives and measure their
+   incremental contribution.
+5. Lock the model before developmental SAILOR transfer; reserve final external
+   validation for P3.
+
+Do not rerun the unchanged JEPA objective as if harmonized targets would enter
+an unsupervised loss automatically. Do not use RANO response as a treatment
+action, and do not promote rounded/estimated gaps into fixed-horizon claims.
+The detailed active contract is `info/p2_execution.md`; affected code paths
+are inventoried in `info/stale_code_audit.md`.

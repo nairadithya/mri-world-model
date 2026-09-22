@@ -14,6 +14,7 @@ import yaml
 from torch.utils.data import DataLoader
 
 from ..config import find_meta
+from ..checkpoints import format_report, load_model
 from .base import Method, register_method
 from ...data.collate import make_collate
 from ...data.dataset import LUMIEREDataset
@@ -189,13 +190,15 @@ def main(argv=None) -> None:
     model = JEPAWorldModel(cfg)
     resume_opt_state = None
     if args.resume_from:
-        ckpt = torch.load(args.resume_from, map_location="cpu")
-        missing, unexpected = model.load_state_dict(ckpt["model"], strict=False)
+        ckpt, report = load_model(model, args.resume_from)
         print(f"resumed weights from {args.resume_from} "
               f"(epoch {ckpt.get('epoch', '?')}, "
               f"{'loaded' if args.resume_opt else 'fresh'} optimizer/schedule)")
-        if missing:
-            print(f"  randomly initialized (absent in ckpt): {sorted(missing)}")
+        print("  " + format_report(report))
+        if report.missing:
+            print(f"  randomly initialized (absent in ckpt): {report.missing}")
+        if report.unexpected:
+            print(f"  unexpected checkpoint tensors: {report.unexpected}")
         if args.resume_opt:
             if "opt" not in ckpt or not ckpt["opt"]:
                 raise ValueError(
@@ -222,7 +225,9 @@ def main(argv=None) -> None:
                                  num_workers=2, collate_fn=collate)
         best_path = os.path.join(cfg["training"].get("checkpoint_dir", "checkpoints/"), "best.pt")
         if os.path.exists(best_path):
-            model.load_state_dict(torch.load(best_path, map_location=device)["model"])
+            _, report = load_model(model, best_path)
+            print("  " + format_report(report))
+            model.to(device)
             test_stats = evaluate(model, test_loader, device)
             print(f"test: loss={test_stats['loss']:.4f} "
                   f"std={test_stats['target_std']:.4f} rank={test_stats['target_eff_rank']:.1f}")

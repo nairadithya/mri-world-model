@@ -1,4 +1,4 @@
-"""Train/eval harness: composable representation methods, tasks, metrics.
+"""Anatomy-first train/eval harness with legacy RANO compatibility.
 
 Two symmetric halves:
 
@@ -16,6 +16,8 @@ from __future__ import annotations
 from . import paths  # noqa: F401
 from .registry import METHODS, METRICS, PROTOCOLS, TASKS, VIEWS, Registry
 
+HARNESS_API_VERSION = 2
+
 __all__ = [
     "METHODS",
     "METRICS",
@@ -24,4 +26,5 @@ __all__ = [
     "VIEWS",
     "Registry",
     "paths",
+    "HARNESS_API_VERSION",
 ]

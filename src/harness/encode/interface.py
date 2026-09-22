@@ -139,9 +139,10 @@ def main(argv=None):
                                       min_visits=cfg["data"].get("min_visits", 2))
                     for k in datasets}
 
+    from src.harness.checkpoints import format_report, load_model
     model = JEPAWorldModel(cfg)
-    ckpt = torch.load(args.champion, map_location="cpu", weights_only=False)
-    model.load_state_dict(ckpt["model"], strict=False)
+    ckpt, report = load_model(model, args.champion)
+    print(format_report(report))
     model.eval()
     for p in model.parameters():
         p.requires_grad = False
