@@ -177,15 +177,16 @@ the cross-cohort endpoint.
   - [x] freeze an operational threshold for when sparse support forces a
     lesion-centred crop encoder
 - [ ] Build a lesion-specific observation state from existing masks:
-  - [ ] retain separate enhancing, nonenhancing/necrotic, edema, and
+  - [x] implement separate enhancing, nonenhancing/necrotic, edema, and
     peritumoral-context tokens instead of one whole-tumor average
-  - [ ] retain modality-specific tokens until after compartment pooling
+  - [x] retain modality-specific tokens until after compartment pooling
   - [ ] compare physical-only, global-image, whole-tumor, compartment, ring,
     and compartment-minus-ring branches under the same folds
-  - [ ] verify current-anatomy decoding and next-change prediction before
-    training a new longitudinal encoder
+  - [x] verify next-change prediction
+  - [x] verify current-anatomy decoding before training a new longitudinal
+    encoder
 - [ ] Build an explicit longitudinal transition model:
-  - [ ] encode consecutive-visit changes rather than compressing the full
+  - [x] test consecutive-visit token changes rather than compressing the full
     history immediately into one vector
   - [ ] aggregate transition tokens with a small GRU and explicit elapsed time
   - [ ] decode a zero-initialized residual around persistence
@@ -231,6 +232,29 @@ to a lesion-centred crop encoder. Edema and the adjacent ring remain explicit
 context regions; coarse whole-volume pooling is retained only as a control.
 The executable audit is `harness.py anatomy coverage`, producing
 `outputs/p2_lesion_patch_coverage.json`.
+
+**P2.3 frozen-crop result:** negative. The best locked LUMIERE branch is the
+lesion-minus-ring residual at 0.971× persistence, but its paired patient CI
+crosses zero. It fails unchanged SAILOR transfer at 1.867× persistence.
+Compartment-only residuals are 1.001× in LUMIERE and 1.263× in SAILOR. Thus
+spatial zoom alone does not rescue the frozen champion representation. Current
+anatomy decoding remains the final diagnostic before deciding the supervision
+target for the new lesion encoder.
+
+**P2.3 anatomy diagnostic:** the combined compartment/contrast tokens decode
+current anatomy in locked LUMIERE folds (variance-weighted R² 0.691), but the
+unchanged decoder is not site-stable on SAILOR (R² -0.155). The representation
+contains anatomy in-domain, yet a single current observation does not forecast
+change. This advances the explicit transition-token test; it does not justify
+claiming external anatomical invariance.
+
+**P2.3 frozen-transition result:** negative. Last-transition, mean-history
+transition, and observation-plus-transition residuals are all tied with
+persistence in locked LUMIERE folds (0.994×, 0.991×, and 0.987×; all paired
+CIs cross zero) and all fail unchanged SAILOR transfer (1.368×, 1.288×, and
+1.423×). This closes deterministic manipulation of the frozen crop tokens.
+The remaining architectural branch must learn the lesion observation and
+transition spaces with anatomical supervision on encoder-train patients.
 
 ## P2 — Acquire and audit external supervision
 
