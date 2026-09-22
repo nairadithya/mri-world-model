@@ -115,3 +115,9 @@ The recovered LUMIERE masks were uploaded as the private Kaggle dataset
 `nairadithya/lumiere-lesion-supervision` (mask supervision only; no SAILOR
 content). The local one-patient structural smoke completed both stages and
 confirmed that the initial forecast is persistence. Its score is not evidence.
+
+Kaggle kernel `nairadithya/lesion-transition-leg` version 1 was launched on a
+Tesla T4 allocation from notebook commit `121699c`, cloning trainer commit
+`667b2dc`. The run is private and began in `RUNNING` state. Its scientific
+record will not be completed until the output checkpoint, logs, and locked
+26-patient result are retrieved; unchanged SAILOR evaluation remains local.

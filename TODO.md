@@ -197,7 +197,8 @@ the cross-cohort endpoint.
   - [x] implement memory-safe anatomy-LoRA → adapted-token cache → transition
     GRU training with persistence initialization
   - [x] publish the LUMIERE mask-only supervision bundle privately to Kaggle
-  - [ ] run the T4 training leg and retrieve its selected checkpoint
+  - [ ] **RUNNING —** run the T4 training leg and retrieve its selected
+    checkpoint (`nairadithya/lesion-transition-leg`, version 1)
   - [ ] evaluate the selected checkpoint unchanged on local SAILOR
 - [ ] Evaluate incident progression risk at fixed horizons.
 - [ ] Add a fixed-teacher future lesion-feature objective after the lesion-local
