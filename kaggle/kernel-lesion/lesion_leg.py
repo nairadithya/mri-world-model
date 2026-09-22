@@ -41,6 +41,7 @@ assert transformers.__version__.startswith('4')
 
 # %%
 import glob, os, shutil, yaml, torch as _torch
+import zipfile
 
 os.makedirs('/kaggle/working/checkpoints', exist_ok=True)
 previous = sorted(glob.glob('/kaggle/input/**/prev-checkpoints/*.pt', recursive=True))
@@ -57,6 +58,16 @@ assert roots, 'preprocessed LUMIERE missing'
 input_root = os.path.dirname(roots[0])
 mask_roots = [path for path in glob.glob('/kaggle/input/**/Imaging', recursive=True)
               if os.path.isdir(path) and glob.glob(path + '/Patient-*/week-*/DeepBraTumIA-segmentation')]
+if not mask_roots:
+    archives = glob.glob('/kaggle/input/**/Imaging.zip', recursive=True)
+    assert archives, 'lesion supervision Imaging directory/archive missing'
+    extracted = '/kaggle/working/lesion-supervision'
+    with zipfile.ZipFile(archives[0]) as archive:
+        archive.extractall(extracted)
+    mask_roots = [path for path in glob.glob(extracted + '/**/Imaging', recursive=True)
+                  if os.path.isdir(path)]
+    if glob.glob(extracted + '/Patient-*/week-*/DeepBraTumIA-segmentation'):
+        mask_roots.append(extracted)
 assert mask_roots, 'lesion supervision masks missing'
 mask_root = mask_roots[0]
 print('images', input_root, 'masks', mask_root)
