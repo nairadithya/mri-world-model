@@ -36,7 +36,7 @@ assert transformers.__version__.startswith('4')
 !rm -rf world-model
 !git clone https://github.com/nairadithya/mri-world-model.git world-model
 %cd world-model
-!git checkout 667b2dc
+!git checkout 18d211d
 !git rev-parse --short HEAD
 
 # %%
@@ -58,6 +58,12 @@ assert roots, 'preprocessed LUMIERE missing'
 input_root = os.path.dirname(roots[0])
 mask_roots = [path for path in glob.glob('/kaggle/input/**/Imaging', recursive=True)
               if os.path.isdir(path) and glob.glob(path + '/Patient-*/week-*/DeepBraTumIA-segmentation')]
+direct_masks = glob.glob(
+    '/kaggle/input/**/Patient-*/week-*/DeepBraTumIA-segmentation/atlas/segmentation/seg_mask.nii*',
+    recursive=True)
+if direct_masks:
+    marker = '/Patient-'
+    mask_roots.append(direct_masks[0].split(marker, 1)[0])
 if not mask_roots:
     archives = glob.glob('/kaggle/input/**/Imaging.zip', recursive=True)
     assert archives, 'lesion supervision Imaging directory/archive missing'
