@@ -26,8 +26,13 @@ LABELS = (2, 1, 3)  # necrotic/nonenhancing, enhancing, edema
 
 
 def _mask_path(root: str, patient: str, visit: str) -> Path:
-    return (Path(root) / patient / visit / "DeepBraTumIA-segmentation" /
-            "atlas/segmentation/seg_mask.nii.gz")
+    base = (Path(root) / patient / visit / "DeepBraTumIA-segmentation" /
+            "atlas/segmentation/seg_mask")
+    for suffix in (".nii.gz", ".nii"):
+        candidate = Path(str(base) + suffix)
+        if candidate.exists():
+            return candidate
+    return Path(str(base) + ".nii.gz")
 
 
 def load_masks(root: str, patient: str, visits: list[str]) -> tuple[torch.Tensor, torch.Tensor]:
@@ -143,7 +148,7 @@ def main(argv=None):
     cfg = yaml.safe_load(Path(args.config).read_text())
     protocol = load_protocol(args.protocol)
     eligible = lambda patient: len(list(Path(args.mask_root).glob(
-        f"{patient}/week-*/DeepBraTumIA-segmentation/atlas/segmentation/seg_mask.nii.gz"))) >= 2
+        f"{patient}/week-*/DeepBraTumIA-segmentation/atlas/segmentation/seg_mask.nii*"))) >= 2
     pool = [p for p in sorted(protocol["encoder_train"]) if eligible(p)]
     internal_dev, train_ids = pool[::5], [p for p in pool if p not in set(pool[::5])]
     unseen = [p for p in sorted(protocol["encoder_unseen"]) if eligible(p)]
