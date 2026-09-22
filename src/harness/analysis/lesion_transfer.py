@@ -103,6 +103,8 @@ def main(argv=None):
     ap.add_argument("--sailor-root", default="data/sailor/sailor_ebrains_pseud/derivatives/mni2009c-n-s")
     ap.add_argument("--protocol", default="info/eval_folds.json")
     ap.add_argument("--out", default="outputs/p2_learned_lesion_transfer.json")
+    ap.add_argument("--cache-out", default="checkpoints/learned_lesion_eval_cache.pt")
+    ap.add_argument("--reuse-cache", action="store_true")
     ap.add_argument("--boot", type=int, default=10000)
     ap.add_argument("--seed", type=int, default=42)
     args = ap.parse_args(argv)
@@ -112,16 +114,24 @@ def main(argv=None):
     world.backbone.load_state_dict(learned["backbone"]); world.to(device).eval()
     forecaster = LesionTransitionForecaster().to(device)
     forecaster.load_state_dict(learned["forecaster"])
-    protocol = load_protocol(args.protocol)
-    eligible = [p for p in protocol["encoder_unseen"]
-                if len(list(Path(args.mask_root).glob(
-                    f"{p}/week-*/DeepBraTumIA-segmentation/atlas/segmentation/seg_mask.nii*"))) >= 2]
-    lum_ds = datasets(cfg, eligible)
-    lum_loader = DataLoader(lum_ds, batch_size=1, shuffle=False, num_workers=0,
-                            collate_fn=make_collate(tuple(cfg["preprocessing"]["target_size"])))
-    lum = build_feature_cache(world.backbone, lum_loader, args.mask_root, device)
-    sailor = sailor_cache(world.backbone, cfg, args.sailor_root, device)
+    if args.reuse_cache:
+        cached = torch.load(args.cache_out, map_location="cpu", weights_only=False)
+        lum, sailor = cached["lumiere"], cached["sailor"]
+    else:
+        protocol = load_protocol(args.protocol)
+        eligible = [p for p in protocol["encoder_unseen"]
+                    if len(list(Path(args.mask_root).glob(
+                        f"{p}/week-*/DeepBraTumIA-segmentation/atlas/segmentation/seg_mask.nii*"))) >= 2]
+        lum_ds = datasets(cfg, eligible)
+        lum_loader = DataLoader(lum_ds, batch_size=1, shuffle=False, num_workers=0,
+                                collate_fn=make_collate(tuple(cfg["preprocessing"]["target_size"])))
+        lum = build_feature_cache(world.backbone, lum_loader, args.mask_root, device)
+        sailor = sailor_cache(world.backbone, cfg, args.sailor_root, device)
+        Path(args.cache_out).parent.mkdir(parents=True, exist_ok=True)
+        torch.save({"schema_version": 1, "checkpoint": str(Path(args.checkpoint).resolve()),
+                    "lumiere": lum, "sailor": sailor}, args.cache_out)
     result = {"schema_version": 1, "checkpoint": str(Path(args.checkpoint).resolve()),
+              "feature_cache": str(Path(args.cache_out).resolve()),
               "lumiere_locked": evaluate(lum, forecaster, device, args.boot, args.seed),
               "sailor_transfer": evaluate(sailor, forecaster, device, args.boot, args.seed + 1)}
     Path(args.out).write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")

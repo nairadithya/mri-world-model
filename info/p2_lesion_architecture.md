@@ -149,3 +149,24 @@ Unchanged SAILOR transfer is statistically tied with persistence and slightly
 worse in point estimate, so the external-site go condition is not satisfied.
 The next problem is site invariance/adaptation, not additional in-domain
 transition capacity.
+
+## SAILOR support-only adaptation
+
+Zero-shot transfer remains frozen at relative MAE 1.047 on all 27 SAILOR
+patients. A separate adaptation experiment fixed seven query patients
+(`sub-01`, `05`, `09`, `13`, `17`, `21`, `25`) and used the other 20 only as
+support. For each of 20 seeds, support order was randomized once and K=1, 3,
+5, 10, and 20 sets were nested. No query target entered calibration.
+
+Simple compartment-wise bias correction approaches persistence only at large
+K (median relative MAE 0.992 at K=10 and 0.987 at K=20). A ridge calibrator of
+predicted change using raw predicted delta, current anatomy, and elapsed gap is
+more useful: median relative MAE is 0.968 at K=5, 0.901 at K=10, and 0.863 at
+K=20. K=10 varies from 0.881 to 0.934 across the central 80% of support
+orderings.
+
+The full-support K=20 query result is MAE 0.764 versus persistence 0.885, but
+the paired seven-patient bootstrap difference CI is -0.306 to +0.054 and still
+crosses zero. Therefore support calibration identifies a correctable site
+shift but does not satisfy the external gate. It is reported separately from
+zero-shot and must not be described as site-generalization success.

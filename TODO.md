@@ -305,7 +305,9 @@ gain, but the P2 external-site go condition remains open.
 - [ ] Reverify content-filtered inputs and timestamps.
 - [ ] Recheck treatment labels and numeric RANO codebook.
 - [ ] Keep SAILOR as developmental transfer data, not a pristine final test.
-- [ ] Evaluate support-only adaptation separately from zero-shot transfer.
+- [x] Evaluate support-only adaptation separately from zero-shot transfer;
+  fixed-query nested-support ridge calibration is promising at K=10–20 but
+  the seven-query paired CI still crosses zero.
 
 ## P2 — Treatment effect and progression mechanism
 
