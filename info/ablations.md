@@ -1474,3 +1474,26 @@ Logged inferences (evidence-backed; see A9/A10/A12 for numbers):
   The existing-representation P2 ladder is exhausted. Do not launch a
   lesion-aware retrain without a new supervision source or prespecified
   representation hypothesis.
+
+## A40 — Learned lesion forecasting exposed its target visit (2026-10-02)
+
+- During R33 clean-rescue setup, `LesionTransitionForecaster.forward` was found
+  to use observations `[t,t+1]` and `gaps[t+1]` for its prediction of volume
+  at `t+1`. Target-image and target-mask features entered every forecast.
+- Checkpoint perturbation: repeating the current feature at the next visit
+  changes the first forecast in 23/23 LUMIERE patients for each of seeds
+  42/43/44. Median largest-compartment prediction change is 0.474/0.492/0.463
+  log-volume; maxima are 4.701/3.682/5.579. Changing only the future gap also
+  changes outputs. See `info/clean_rescues.md` for the exact diagnostic.
+- The old learned cache contains 123 LUMIERE rows rather than the audited
+  117: mask selection bridges missing visits. Adjacency and positive-gap
+  masks are now retained and applied to training and evaluation.
+- **Withdrawn:** the learned P2.4 LUMIERE gain, three-seed stability claim,
+  SAILOR forecasting/transfer verdicts, and its support-adaptation forecasts.
+  The historical numbers remain recorded, but cannot support past-only
+  forecasting. Frozen P1/P2.2/P2.3 results are unaffected by this model bug.
+- Repair: `history-only-lesion-v2` conditions each prediction on its source
+  observation, historical transition and elapsed gap. Contract tests perturb
+  every future suffix and verify zero future-input gradients with a nonzero
+  residual head. Legacy checkpoints are rejected for new forecast scoring;
+  retraining is required. No causal replacement score is claimed yet.

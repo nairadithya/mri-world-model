@@ -159,6 +159,10 @@ def lumiere_visits(processed_root: str, volume_root: str,
                            "atlas/segmentation/measured_volumes_in_mm3.json")
             mask_path = (masks / patient / visit / "DeepBraTumIA-segmentation" /
                          "atlas/segmentation/seg_mask.nii.gz")
+            if not mask_path.exists():
+                uncompressed = mask_path.with_suffix("")
+                if uncompressed.exists():
+                    mask_path = uncompressed
             measurement = None
             exclusions = []
             json_values = None

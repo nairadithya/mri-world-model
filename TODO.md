@@ -348,3 +348,21 @@ If resources are limited:
 1. [ ] Repair the task, label, cache, and metric contracts.
 2. [ ] Reproduce paired-scan radiomics + pretrained-image assessment and test history/JEPA as an incremental feature.
 3. [ ] Obtain independent expert lesion-change supervision and evaluate on a new institution.
+
+## R33/A40 reset — clean rescues and source-only lesion forecast (2026-10-02)
+
+This supersedes the learned P2.4 pass and its adaptation interpretation above.
+
+- [x] Reproduce target-visit leakage on all three saved lesion checkpoints.
+- [x] Correct the source-history transition/gap cutoff and add perturbation,
+  prefix-invariance, and future-gradient contract tests.
+- [x] Prevent missing-mask visit bridges from changing the frozen endpoint.
+- [ ] Run the corrected lesion model from the clean champion; report unchanged
+  SAILOR transfer only after its causal checkpoint is selected internally.
+- [ ] Rerun gap-conditioned and velocity-head rescues on the clean EMA space.
+- [ ] Rerun support-only gain/alignment and treatment field diagnostics.
+- [ ] Execute complete optimizer × accumulation basin-hold matrix.
+- [ ] Execute separate full-budget augmentation, surgery and weighting arms.
+
+Protocol and statuses: `info/clean_rescues.md`. Historical P2.4 numbers are
+withdrawn as forecasting evidence; they must not select a rescue arm.

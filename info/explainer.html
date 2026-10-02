@@ -14,6 +14,8 @@
 <body>
 <main>
 <h1>From P0 to lesion forecasting</h1>
+<div class="scope"><b>2026-10-02 validity update:</b> the learned P2.4 model used the follow-up image/mask and future interval to predict that follow-up. Its forecasting gains, seed repeats, and support adaptation are withdrawn (A40). The figures below retain historical numbers; the learned-model row is not valid forecasting evidence. A corrected source-history model and clean-data rescue reruns are in progress. <a href="clean_rescues.md">Audit and rerun protocol</a>.</div>
+
 <p class="lede">We first made the comparison trustworthy, then measured how hard the forecasting task really is, and finally taught a model to look directly at lesion anatomy.</p>
 
 <div class="scope"><b>The question:</b> given a patient's MRI (magnetic resonance imaging) history, can we predict how the measured lesion burden will change by the next scan? The primary target is three physical measurements in mm³ (cubic millimeters)—enhancing tumor (contrast-bright tumor), nonenhancing/necrotic tumor (tumor tissue that does not brighten with contrast), and edema/FLAIR abnormality (fluid-attenuated inversion recovery: an MRI sequence that highlights fluid-related abnormalities)—rather than a RANO (Response Assessment in Neuro-Oncology) category.</div>
@@ -77,15 +79,15 @@
 <thead><tr><th>Stage</th><th class="num">LUMIERE</th><th class="num">SAILOR</th></tr></thead>
 <tbody><tr><td>P1 · existing JEPA</td><td class="num">1.393</td><td class="num">2.873</td></tr><tr><td>P2.2 · physical history</td><td class="num">0.997</td><td class="num">1.288</td></tr><tr><td>P2.3 · frozen lesion crop</td><td class="num">0.971</td><td class="num">1.867</td></tr><tr><td>P2.4 · learned lesion model</td><td class="num">0.759</td><td class="num">1.047</td></tr></tbody>
 </table>
-<figcaption id="forecast-chart-caption">The new model makes a clear LUMIERE gain. On SAILOR, the score is close to persistence and uncertainty includes no difference.</figcaption>
+<figcaption id="forecast-chart-caption">Historical scores: the learned P2.4 row is withdrawn because its inputs included the target visit. Earlier frozen-model rows remain valid.</figcaption>
 </figure>
 <p>On eligible locked LUMIERE patients, the learned model's patient-uniform log-volume MAE was 1.183 versus 1.559 for persistence: relative MAE 0.759, with the paired patient-bootstrap 95% confidence interval (range of plausible paired error differences after resampling patients) below zero. Three of the 26 encoder-unseen patients lacked enough recovered masks for this evaluation, so this is a 23-patient result.</p>
 <p>Applied unchanged to all 27 SAILOR patients, it scored 0.987 versus persistence at 0.943 (relative MAE 1.047). The uncertainty interval crosses zero, so we cannot say it is better or worse there. A separate support-only calibration (fit a small correction using labeled SAILOR support patients, then score different query patients) reached median relative MAE 0.863 at 20 support patients, but the query set had only seven patients and its confidence interval still crossed zero.</p>
-<p class="result"><b>Where we are now:</b> anatomy supervision and a learned transition model solve part of the in-domain problem. Cross-site generalization remains the blocker; support calibration is a lead to test, not a result we can claim as success.</p>
+<p class="result"><b>Where we are now:</b> the learned forecast violated the information cutoff. A causal retrain is required before claiming an in-domain gain or diagnosing transfer. Clean gap and velocity-head rescues are being repeated alongside it.</p>
 
 <h2>What comes next</h2>
 <ol>
-<li><b>Explain the site gap.</b> Check measurement, scanner, preprocessing (image-processing steps), and lesion-state differences that could make learned LUMIERE changes mis-scale on SAILOR.</li>
+<li><b>Repair and rerun the causal forecast.</b> Use only source-history images and elapsed gaps, retain the same consecutive rows, and repeat the clean-data gap and velocity-head tests. Then <b>explain the site gap.</b> Check measurement, scanner, preprocessing (image-processing steps), and lesion-state differences that could make learned LUMIERE changes mis-scale on SAILOR.</li>
 <li><b>Bring in independent lesion supervision.</b> Audit available cohorts (including UCSF-ALPTDG, UCSD-PTGBM, and Burdenko) for usable scans, masks, dates, licensing, and overlap before assigning training and test roles.</li>
 <li><b>Test calibration on enough patients.</b> Keep support patients (used to fit the correction) separate from query patients (used only to score it) and report uncertainty; today's seven-query result is too small to settle the question.</li>
 <li><b>Then run a genuinely untouched external test.</b> Keep the model and thresholds fixed before evaluation. Fixed-day forecasts and clinical progression claims also need reliable dates and adjudicated outcomes (clinically reviewed labels).</li>

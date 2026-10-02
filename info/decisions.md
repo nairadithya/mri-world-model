@@ -701,3 +701,15 @@ referenced, not repeated — only session decisions are recorded here in full.
   would leave inadequate processing headroom. Do not download implicitly or
   substitute SAILOR outcomes. Resolve UCSF authorization and external storage
   first. See `info/external_supervision_audit.md`.
+
+- **D53 — Reopen bounded clean-data rescues and repair the discovered lesion
+  cutoff violation (2026-10-02).** The user explicitly requested pre-audit
+  rescues again, including GPU training and the gap-conditioned/velocity heads.
+  R33 therefore repeats A15/A16/A17/A33/A34/A37 with survival-free,
+  provenance-checked targets, single-intervention training arms, unchanged
+  anatomy rows, patient-held-out calibration, and persisted weights. During
+  setup, A40 found the learned lesion forecast consumed target-visit features
+  and future gaps; its reported gains and adaptations are withdrawn. Causal
+  `history-only-lesion-v2` retraining now precedes interpreting that model's
+  site rescue. The repaired loss/evaluation also forbids bridges over missing
+  measurement visits. See `info/clean_rescues.md`.

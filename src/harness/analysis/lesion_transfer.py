@@ -16,9 +16,12 @@ from src.data.eval_protocol import load_protocol
 from src.data.sailor import SAILORDataset
 from src.harness.checkpoints import load_model
 from src.harness.train.lesion import (build_feature_cache, datasets, load_masks,
-                                      mask_indices, selected_gaps, visit_features)
+                                      mask_indices, pair_validity, selected_gaps, visit_features)
+from src.harness.data.anatomy_manifest import _stable_id
+from src.harness.provenance import git_sha, make_provenance
+from src.harness.analysis.clean_rescues import sha256
 from src.model.jepa_model import JEPAWorldModel
-from src.model.lesion_forecaster import LesionTransitionForecaster
+from src.model.lesion_forecaster import FORECAST_INPUT_CONTRACT, LesionTransitionForecaster
 
 SAILOR_MASKS = ("NecrosisMask-ONCO", "ContrastEnhancedMask-ONCO", "EdemaMask-ONCO")
 
@@ -66,8 +69,14 @@ def sailor_cache(backbone, cfg, root, device):
             present = batch["mri_mask"][0, t]
             values.append(visit_features(backbone, batch["mri"][0, t, :, 0].to(device),
                                          present.to(device), masks[j].to(device)).cpu())
+        gaps = selected_gaps(batch["time_deltas"][0], indices)
+        valid = pair_validity(indices, gaps)
+        if not bool(valid.any()): continue
+        selected = [visits[i] for i in indices]
         cache[pid] = {"features": torch.stack(values), "volumes": volumes,
-                      "gaps": selected_gaps(batch["time_deltas"][0], indices)}
+                      "gaps": gaps, "visits": selected, "pair_valid": valid,
+                      "row_ids": [_stable_id("SAILOR", pid, a, b)
+                                  for a, b in zip(selected[:-1], selected[1:])]}
         print(f"SAILOR learned encode {len(cache)}/{len(ds)}", flush=True)
     return cache
 
@@ -80,8 +89,9 @@ def evaluate(cache, model, device, boot, seed):
             prediction = model(row["features"].to(device), row["gaps"].to(device),
                                source)["prediction"]
             target = source[1:]
-            per[patient] = float((prediction - target).abs().mean())
-            persistence[patient] = float((source[:-1] - target).abs().mean())
+            valid = row["pair_valid"].to(device)
+            per[patient] = float((prediction[valid] - target[valid]).abs().mean())
+            persistence[patient] = float((source[:-1][valid] - target[valid]).abs().mean())
     patients = np.array(sorted(per)); diff = np.array([per[p] - persistence[p] for p in patients])
     rng = np.random.default_rng(seed)
     draws = rng.choice(diff, (boot, len(diff)), replace=True).mean(1)
@@ -90,7 +100,8 @@ def evaluate(cache, model, device, boot, seed):
             "persistence_mae": float(baseline), "persistence_relative_mae": float(mae / baseline),
             "mae_difference": float(diff.mean()),
             "mae_difference_95ci": [float(x) for x in np.quantile(draws, [0.025, 0.975])],
-            "n_patients": len(per), "per_patient_mae": per,
+            "n_patients": len(per), "n_rows": sum(int(r["pair_valid"].sum()) for r in cache.values()),
+            "per_patient_mae": per,
             "per_patient_persistence_mae": persistence}
 
 
@@ -110,12 +121,16 @@ def main(argv=None):
     args = ap.parse_args(argv)
     cfg = yaml.safe_load(Path(args.config).read_text()); device = torch.device("cpu")
     learned = torch.load(args.checkpoint, map_location="cpu", weights_only=False)
+    if learned.get("forecast_input_contract") != FORECAST_INPUT_CONTRACT:
+        raise ValueError("legacy lesion checkpoint used target-visit inputs; retrain with history-only-lesion-v2")
     world = JEPAWorldModel(cfg); load_model(world, args.champion)
     world.backbone.load_state_dict(learned["backbone"]); world.to(device).eval()
     forecaster = LesionTransitionForecaster().to(device)
     forecaster.load_state_dict(learned["forecaster"])
     if args.reuse_cache:
         cached = torch.load(args.cache_out, map_location="cpu", weights_only=False)
+        if cached.get("provenance", {}).get("champion_sha256") != sha256(args.checkpoint):
+            raise ValueError("feature cache checkpoint hash mismatch; rebuild the causal cache")
         lum, sailor = cached["lumiere"], cached["sailor"]
     else:
         protocol = load_protocol(args.protocol)
@@ -128,9 +143,15 @@ def main(argv=None):
         lum = build_feature_cache(world.backbone, lum_loader, args.mask_root, device)
         sailor = sailor_cache(world.backbone, cfg, args.sailor_root, device)
         Path(args.cache_out).parent.mkdir(parents=True, exist_ok=True)
-        torch.save({"schema_version": 1, "checkpoint": str(Path(args.checkpoint).resolve()),
+        torch.save({"schema_version": 2,
+                    "provenance": make_provenance(args.checkpoint, args.config,
+                        champion_sha256=sha256(args.checkpoint), forecast_input_contract=FORECAST_INPUT_CONTRACT),
+                    "checkpoint": str(Path(args.checkpoint).resolve()),
                     "lumiere": lum, "sailor": sailor}, args.cache_out)
-    result = {"schema_version": 1, "checkpoint": str(Path(args.checkpoint).resolve()),
+    result = {"schema_version": 1, "git_sha": git_sha(),
+              "checkpoint_sha256": sha256(args.checkpoint),
+              "forecast_input_contract": FORECAST_INPUT_CONTRACT,
+              "checkpoint": str(Path(args.checkpoint).resolve()),
               "feature_cache": str(Path(args.cache_out).resolve()),
               "lumiere_locked": evaluate(lum, forecaster, device, args.boot, args.seed),
               "sailor_transfer": evaluate(sailor, forecaster, device, args.boot, args.seed + 1)}

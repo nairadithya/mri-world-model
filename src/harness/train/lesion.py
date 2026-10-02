@@ -18,8 +18,10 @@ from src.data.collate import make_collate
 from src.data.dataset import LUMIEREDataset
 from src.data.eval_protocol import load_protocol
 from src.harness.checkpoints import load_model
+from src.harness.data.anatomy_manifest import _stable_id
+from src.harness.provenance import make_provenance
 from src.model.jepa_model import JEPAWorldModel
-from src.model.lesion_forecaster import LesionTransitionForecaster
+from src.model.lesion_forecaster import FORECAST_INPUT_CONTRACT, LesionTransitionForecaster
 from src.model.lesion_tokens import lesion_centered_crop, pool_region_tokens, region_patch_weights
 
 LABELS = (2, 1, 3)  # necrotic/nonenhancing, enhancing, edema
@@ -58,6 +60,12 @@ def selected_gaps(deltas: torch.Tensor, indices: list[int]) -> torch.Tensor:
     days = torch.cumsum(deltas.float(), 0)
     selected = days[indices]
     return torch.cat([selected.new_zeros(1), selected[1:] - selected[:-1]])
+
+
+def pair_validity(indices: list[int], gaps: torch.Tensor) -> torch.Tensor:
+    """Measured visits may not bridge a missing next-observed target."""
+    adjacent = torch.tensor([b == a + 1 for a, b in zip(indices[:-1], indices[1:])])
+    return adjacent & torch.isfinite(gaps[1:]) & (gaps[1:] > 0)
 
 
 def configure_lora(backbone):
@@ -112,9 +120,13 @@ def build_feature_cache(backbone, loader, mask_root, device):
             present = batch["mri_mask"][0, t]
             values.append(visit_features(backbone, batch["mri"][0, t, :, 0].to(device),
                                          present.to(device), masks[j].to(device)).cpu())
+        gaps = selected_gaps(batch["time_deltas"][0], indices)
+        valid = pair_validity(indices, gaps)
+        if not bool(valid.any()): continue
         cache[pid] = {"features": torch.stack(values), "volumes": volumes,
-                      "gaps": selected_gaps(batch["time_deltas"][0], indices),
-                      "visits": visits}
+                      "gaps": gaps, "visits": visits, "pair_valid": valid,
+                      "row_ids": [_stable_id("LUMIERE", pid, a, b)
+                                  for a, b in zip(visits[:-1], visits[1:])]}
     return cache
 
 
@@ -125,8 +137,9 @@ def patient_mae(cache, model, device):
             source = row["volumes"].to(device)
             out = model(row["features"].to(device), row["gaps"].to(device), source)
             target = source[1:]
-            values.append(float((out["prediction"] - target).abs().mean()))
-            persistence.append(float((source[:-1] - target).abs().mean()))
+            valid = row["pair_valid"].to(device)
+            values.append(float((out["prediction"][valid] - target[valid]).abs().mean()))
+            persistence.append(float((source[:-1][valid] - target[valid]).abs().mean()))
     return float(np.mean(values)), float(np.mean(persistence))
 
 
@@ -208,7 +221,8 @@ def main(argv=None):
             row = train_cache[pid]; source = row["volumes"].to(device)
             out = forecaster(row["features"].to(device), row["gaps"].to(device), source)
             anatomy = F.smooth_l1_loss(out["current_anatomy"], source)
-            forecast = F.smooth_l1_loss(out["prediction"], source[1:])
+            valid = row["pair_valid"].to(device)
+            forecast = F.smooth_l1_loss(out["prediction"][valid], source[1:][valid])
             loss = forecast + 0.25 * anatomy
             optimizer.zero_grad(); loss.backward(); optimizer.step(); losses.append(float(loss))
         dev, persist = patient_mae(dev_cache, forecaster, device)
@@ -221,14 +235,25 @@ def main(argv=None):
             if bad >= 20: break
     forecaster.load_state_dict(best_state)
     locked, locked_persist = patient_mae(locked_cache, forecaster, device)
-    result = {"internal_dev_mae": best, "locked_unseen_mae": locked,
+    result = {"forecast_input_contract": FORECAST_INPUT_CONTRACT,
+              "internal_dev_mae": best, "locked_unseen_mae": locked,
               "locked_unseen_persistence": locked_persist,
               "locked_unseen_relative": locked / locked_persist,
               "representation_train": train_ids, "internal_dev": internal_dev,
-              "locked_unseen": unseen}
+              "locked_unseen": sorted(locked_cache),
+              "locked_n_rows": sum(int(row["pair_valid"].sum()) for row in locked_cache.values())}
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
-    torch.save({"checkpoint_format_version": 2, "backbone": world.backbone.state_dict(),
+    torch.save({"checkpoint_format_version": 2,
+                "forecast_input_contract": FORECAST_INPUT_CONTRACT,
+                "backbone": world.backbone.state_dict(),
                 "forecaster": best_state, "result": result, "args": vars(args)}, args.out)
+    # Retain adapted train/dev/locked inputs so causal head follow-ups do not
+    # require another backbone pass. The checkpoint content anchors the cache.
+    from src.harness.analysis.clean_rescues import sha256
+    torch.save({"schema_version": 2, "patients": cache,
+                "provenance": make_provenance(args.out, args.config,
+                    champion_sha256=sha256(args.out), forecast_input_contract=FORECAST_INPUT_CONTRACT)},
+               str(args.out) + ".features.pt")
     Path(str(args.out) + ".json").write_text(json.dumps(result, indent=2) + "\n")
     print("RESULT " + json.dumps(result, sort_keys=True))
     print(f"wrote {args.out}")
