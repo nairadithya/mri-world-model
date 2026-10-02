@@ -79,17 +79,33 @@ They are separate runs. The earlier bundled A32 recipe cannot identify an
 individual rescue, and a null short resume cannot replace this scratch test.
 
 The run code is `src/harness/train/rescues.py`. Pushable notebook sources
-live in `kaggle/kernel-clean-*`; each pins the trainer commit, checks for T4,
+live in `kaggle/kernel-clean-*`; each pins the trainer snapshot, checks for T4,
 mounts the completed `nairadithya/p0-clean-jepa-retrain` as an input, validates
 the baseline content hash and optimizer, records full configs and environment,
 recomputes physical measurements from existing private LUMIERE masks, and
 fails on mismatched anatomy rows. No new MRI or SAILOR upload is needed.
 
+The user required private Kaggle delivery and no GitHub publication. The
+notebooks clone the already-published base `768cd7e`, then apply an embedded
+10-file code/test overlay from local commit `36b7078`; it contains no data,
+weights, credentials or research notes. Overlay SHA-256 is
+`fbb4d928bdb73717accc16b33214b3698950058ecb5794aa1c04fbd4c76170e8`.
+Its digest is recorded in the run config, and a local Kaggle Git commit
+records the applied files for cache provenance. All five kernels have
+`is_private: true`; the experiment branch remains local.
+
 ## Status
 
-Implementation and scientific-contract tests passed; SAILOR re-encoding and
-training smoke are running locally. GPU results are pending. No old rescue
-verdict is reinstated until its cleaned rerun finishes.
+Implementation, cutoff tests and real one-epoch training smoke passed;
+all 91 clinical vectors are finite and survival-free. SAILOR re-encoding
+finished (27 patients, 270 visits, 243 next-visit image pairs). Gap/velocity
+head reruns finished (A41); alignment/site-field reruns are in progress.
+Private causal-lesion and basin kernels launched on 2026-10-02. Kaggle allows
+two simultaneous batch GPU sessions; augmentation, surgery filtering and
+transition weighting are queued in that order. A one-shot local coordinator
+under `outputs/clean-rescues/` launches queued runs and saves logs, metrics,
+configs and weights as slots free up. No old GPU rescue verdict is reinstated
+until its cleaned rerun finishes and its gates are checked.
 
 ## Added representation-head reproductions
 
@@ -142,3 +158,47 @@ image, gap, and volume at every cutoff, with a nonzero residual head. Old
 checkpoint tensors stay intact, but forecast/adaptation entry points reject
 them until causal retraining. A new clean-initialized causal lesion run takes
 priority over interpreting further lesion-model rescues.
+
+## A41 — Clean gap/velocity representation-head reruns (2026-10-02)
+
+Both heads fit only the 65 LUMIERE encoder-training patients. The gap head
+uses 300 fixed epochs; the unconditional velocity field uses 400. Neither
+uses test/SAILOR scores to select an epoch. Ratios below are patient-uniform
+cosine error divided by unchanged same-space persistence; 1.0 is the floor.
+Intervals bootstrap the paired error difference over patients (10,000 draws).
+The historical 13-patient test split is repeatedly used development evidence,
+not a fresh confirmation set.
+
+| Cohort / horizon | Champion | Gap head | Velocity field |
+|---|---:|---:|---:|
+| LUMIERE historical test, 1 visit | 0.449 | 0.358 | 0.913 |
+| LUMIERE historical test, 2 visits | 0.780 | 0.518 | 0.718 |
+| LUMIERE historical test, 3 visits | 1.075 | 0.579 | 0.694 |
+| SAILOR zero-shot, 1 visit | 7.409 | 6.056 | 1.051 |
+| SAILOR zero-shot, 2 visits | 5.062 | 4.147 | 1.109 |
+| SAILOR zero-shot, 3 visits | 3.939 | 3.213 | 1.156 |
+
+At horizons above one visit, the champion column reuses its one-step output
+as a reference; it is not a rollout or a fitted multi-horizon head. Patient
+counts vary with available trajectory length (LUMIERE test 13/10/8 and
+SAILOR 27/27/26 at horizons 1/2/3).
+
+The gap head improves the historical in-domain one-step error (paired
+patient-uniform difference CI [-0.021754, -0.002870], 12/13 patients), but
+its SAILOR error stays far above persistence. The velocity head reduces the
+SAILOR one-step error from 0.035023 to 0.004968, near the persistence error
+0.004727, without demonstrating a win: paired patient-uniform CI
+[-0.000117, +0.000550]; pooled CI [+0.000094, +0.000650] indicates pooled harm.
+Both two- and three-step velocity patient-uniform intervals include zero.
+
+The separately patient-held-out SAILOR gap refit gives ratios 1.127, 0.838
+and 0.696 at horizons 1/2/3; all three paired patient-uniform intervals include
+zero. This is developmental adaptation, not zero-shot transfer. The reported
+target gaps are retrospective conditioning metadata, not verified prospective
+horizons. No physical lesion-volume result follows from these latent metrics.
+
+Weights, train-only normalizers, loss curves, fold support/query lists and
+row-wise predictions are retained in `outputs/p0_head_rescue_models.pt`;
+all horizons and both bootstrap aggregations are in
+`outputs/p0_head_rescues.json`, copied to the main workspace's ignored
+`outputs/clean-rescues/` for durable access.

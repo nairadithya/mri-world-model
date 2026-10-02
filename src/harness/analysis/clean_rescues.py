@@ -226,7 +226,23 @@ def run(args):
                    ("raw", "support_gain", "mean", "diagonal", "coral")}
     if args.field:
         predictions.update({name: torch.empty_like(all_rows["target"]) for name in ("field_cond", "field_uncond")})
+    partial_path = Path(args.models + ".partial")
+    run_contract = {"champion_sha256": result["champion_sha256"],
+                    "row_ids": all_rows["row_ids"], "fold_of": fold_of,
+                    "field": args.field, "field_epochs": args.field_epochs,
+                    "hidden": args.hidden, "seed": args.seed,
+                    "cache_provenance": result["cache_provenance"]}
+    if args.resume and partial_path.exists():
+        partial = torch.load(partial_path, map_location="cpu", weights_only=False)
+        if partial["contract"] != run_contract:
+            raise ValueError("partial rescue run has a different input/config contract")
+        predictions = partial["predictions"]
+        saved = partial["saved"]
+        result["folds"] = partial["folds"]
     for fold in range(5):
+        if fold in saved["folds"]:
+            print(f"clean rescues fold {fold}: restored completed fit", flush=True)
+            continue
         support = sorted(p for p in sailor if fold_of[p] != fold)
         query = sorted(p for p in sailor if fold_of[p] == fold)
         tr = pair_tensors(sailor, support, predictor); te = pair_tensors(sailor, query, predictor)
@@ -257,6 +273,11 @@ def run(args):
                 fitted[name] = {"field": field.state_dict(), "tempo": tempo.state_dict(), "curve": curve}
         saved["folds"][fold] = fitted
         result["folds"].append(fold_record)
+        partial_path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = Path(str(partial_path) + ".tmp")
+        torch.save({"contract": run_contract, "predictions": predictions,
+                    "saved": saved, "folds": result["folds"]}, temporary)
+        temporary.replace(partial_path)
         print(f"clean rescues fold {fold}: support={len(support)} query={len(query)} gain={gain:.2f}", flush=True)
     result["sailor"]["decomposition"] = decomposition(all_rows)
     for name, pred in predictions.items():
@@ -281,6 +302,7 @@ def main(argv=None):
     ap.add_argument("--protocol", default="info/eval_folds.json")
     ap.add_argument("--encode-sailor", action="store_true")
     ap.add_argument("--field", action="store_true")
+    ap.add_argument("--resume", action="store_true", help="reuse completed folds after interruption")
     ap.add_argument("--field-epochs", type=int, default=400)
     ap.add_argument("--hidden", type=int, default=256)
     ap.add_argument("--boot", type=int, default=10000)
