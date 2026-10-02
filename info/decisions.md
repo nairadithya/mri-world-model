@@ -713,3 +713,18 @@ referenced, not repeated — only session decisions are recorded here in full.
   `history-only-lesion-v2` retraining now precedes interpreting that model's
   site rescue. The repaired loss/evaluation also forbids bridges over missing
   measurement visits. See `info/clean_rescues.md`.
+
+- **D33b — basin loaded_accum1 device crash + fix (2026-10-02).** Kernel
+  `clean-rescue-basin` died in the first Adam step of the `loaded_accum1`
+  arm (`torch._foreach_lerp_`: tensors on cuda:0 and cpu). Root cause: the
+  trainer moved resumed optimizer-state tensors to CUDA *before*
+  `opt.load_state_dict`, but torch re-casts state to the *param's* device at
+  load time — params were still on CPU there (`model.to(device)` runs later),
+  so the pre-load move was silently undone and momentum stayed on CPU while
+  grads/params were CUDA. Fix (local commit `19ef2a3`, exp/clean-data-rescues):
+  load first, then move every optimizer-state tensor to the training device
+  and log the count. Overlay re-cut to 11 files
+  (sha256 e2c16db18ad4d958284ac441cbd2c7df29afecc7a4be802e2ddcec8af333f4c7);
+  basin, surgery and transition-weighting notebooks regenerated and re-pushed.
+  Control and fresh_accum1 arm results from the crashed run are valid and were
+  fetched; loaded arms and fresh_accum8 re-run in the v2 basin kernel.

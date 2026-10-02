@@ -91,7 +91,10 @@ notebooks clone the already-published base `768cd7e`, then apply an embedded
 weights, credentials or research notes. Overlay SHA-256 is
 `fbb4d928bdb73717accc16b33214b3698950058ecb5794aa1c04fbd4c76170e8`.
 Its digest is recorded in the run config, and a local Kaggle Git commit
-records the applied files for cache provenance. All five kernels have
+records the applied files for cache provenance. The overlay also carries
+`src/train/trainer.py` (the optimizer-resume device fix below; the pinned
+public base commit has the pre-load move that Kaggle's torch undoes).
+All five kernels have
 `is_private: true`; the experiment branch remains local.
 
 ## Status
