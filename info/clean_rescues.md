@@ -205,3 +205,28 @@ row-wise predictions are retained in `outputs/p0_head_rescue_models.pt`;
 all horizons and both bootstrap aggregations are in
 `outputs/p0_head_rescues.json`, copied to the main workspace's ignored
 `outputs/clean-rescues/` for durable access.
+
+## Clean GPU rerun outcomes (2026-10-03)
+
+The v2 basin kernel completed after the trainer device fix (D33b). All four
+basin arms trained and evaluated; augmentation, surgery and transition
+weighting each ran their scratch arm to completion. Primary endpoint is
+pooled anatomy persistence-relative MAE for the JEPA state readout (1.0 =
+persistence; below 1 = beats persistence).
+
+| Run | jepa_state rel-MAE | control rel-MAE |
+|---|---|---|
+| basin fresh_accum1 | 1.3517 | 1.3932 |
+| basin fresh_accum8 | 1.3791 | 1.3932 |
+| basin loaded_accum1 | 1.3878 | 1.3932 |
+| basin loaded_accum8 | 1.3925 | 1.3932 |
+| augmentation | 1.3864 | 1.3932 |
+| surgery filtering | 1.3963 | 1.3932 |
+| transition weighting | 1.3912 | 1.3932 |
+
+Every arm sits above 1.0: none of the rescues reaches the persistence floor
+on pooled anatomy MAE, so the pre-audit GPU verdicts stand as nulls on the
+clean data. Fresh momentum at accumulation 1 is the closest (1.3517), and
+loaded momentum is consistently equal or slightly worse than fresh at the
+same accumulation — momentum state is not rescuing the narrow basin. Full
+per-arm JSONs and train logs live under `outputs/clean-rescues/`.
