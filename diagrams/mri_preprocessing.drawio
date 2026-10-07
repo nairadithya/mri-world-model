@@ -1,0 +1,47 @@
+<mxfile host="app.diagrams.net" modified="2026-09-30T12:30:00.000Z" agent="Codex" version="24.7.17" type="device">
+  <diagram id="mri-preprocessing" name="MRI Preprocessing">
+    <mxGraphModel dx="1280" dy="720" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1280" pageHeight="720" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="MRI Preprocessing" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=28;fontStyle=1;fontColor=#183153;" vertex="1" parent="1">
+          <mxGeometry x="340" y="22" width="600" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="raw" value="&lt;b&gt;Raw MRI&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=14;fillColor=#EAF2F8;strokeColor=#5B7C99;strokeWidth=2;fontSize=20;fontColor=#183153;align=center;verticalAlign=middle;spacing=14;" vertex="1" parent="1">
+          <mxGeometry x="30" y="120" width="260" height="145" as="geometry" />
+        </mxCell>
+        <mxCell id="n4" value="&lt;b&gt;N4 bias correction&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font style=&quot;font-size:15px&quot;&gt;Reduces intensity inhomogeneity&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#FFFFFF;strokeColor=#7A9E7E;strokeWidth=2;fontSize=18;fontColor=#183153;align=center;verticalAlign=middle;spacing=12;" vertex="1" parent="1">
+          <mxGeometry x="350" y="120" width="260" height="145" as="geometry" />
+        </mxCell>
+        <mxCell id="resample" value="&lt;b&gt;Resample to 1 mm&lt;br&gt;isotropic spacing&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font style=&quot;font-size:15px&quot;&gt;Standardizes voxel spacing&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#FFFFFF;strokeColor=#7A9E7E;strokeWidth=2;fontSize=18;fontColor=#183153;align=center;verticalAlign=middle;spacing=12;" vertex="1" parent="1">
+          <mxGeometry x="670" y="120" width="260" height="145" as="geometry" />
+        </mxCell>
+        <mxCell id="register" value="&lt;b&gt;Rigid registration&lt;br&gt;to MNI space&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font style=&quot;font-size:15px&quot;&gt;Aligns scans spatially&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#FFFFFF;strokeColor=#7A9E7E;strokeWidth=2;fontSize=18;fontColor=#183153;align=center;verticalAlign=middle;spacing=12;" vertex="1" parent="1">
+          <mxGeometry x="990" y="120" width="260" height="145" as="geometry" />
+        </mxCell>
+        <mxCell id="bet" value="&lt;b&gt;HD-BET skull stripping&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font style=&quot;font-size:15px&quot;&gt;Removes non-brain tissue&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#FFFFFF;strokeColor=#7A9E7E;strokeWidth=2;fontSize=18;fontColor=#183153;align=center;verticalAlign=middle;spacing=12;" vertex="1" parent="1">
+          <mxGeometry x="990" y="395" width="260" height="145" as="geometry" />
+        </mxCell>
+        <mxCell id="resize" value="&lt;b&gt;Resize to&lt;br&gt;96 × 96 × 96 voxels&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font style=&quot;font-size:15px&quot;&gt;Matches BRAINIAC input size&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#FFFFFF;strokeColor=#7A9E7E;strokeWidth=2;fontSize=18;fontColor=#183153;align=center;verticalAlign=middle;spacing=12;" vertex="1" parent="1">
+          <mxGeometry x="670" y="395" width="260" height="145" as="geometry" />
+        </mxCell>
+        <mxCell id="normalize" value="&lt;b&gt;Nonzero-voxel&lt;br&gt;z-score normalization&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font style=&quot;font-size:15px&quot;&gt;Standardizes image intensities&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#FFFFFF;strokeColor=#7A9E7E;strokeWidth=2;fontSize=18;fontColor=#183153;align=center;verticalAlign=middle;spacing=12;" vertex="1" parent="1">
+          <mxGeometry x="350" y="395" width="260" height="145" as="geometry" />
+        </mxCell>
+        <mxCell id="brainiac" value="&lt;b&gt;BRAINIAC input&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=14;fillColor=#DCEFE2;strokeColor=#3D8060;strokeWidth=2;fontSize=20;fontColor=#183153;align=center;verticalAlign=middle;spacing=14;" vertex="1" parent="1">
+          <mxGeometry x="30" y="395" width="260" height="145" as="geometry" />
+        </mxCell>
+        <mxCell id="purpose" value="&lt;b&gt;Purpose:&lt;/b&gt; Standardizes spatial alignment, dimensions, and intensity scale. Preprocessing does not guarantee removal of scanner or site differences." style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#F4F7FA;strokeColor=#AAB8C2;fontSize=15;fontColor=#334E68;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="75" y="605" width="1130" height="62" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#5B7C99;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="raw" target="n4"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#5B7C99;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="n4" target="resample"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#5B7C99;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="resample" target="register"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#5B7C99;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="register" target="bet"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1120" y="330" /></Array></mxGeometry></mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#5B7C99;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="bet" target="resize"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#5B7C99;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="resize" target="normalize"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#5B7C99;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="normalize" target="brainiac"><mxGeometry relative="1" as="geometry" /></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
