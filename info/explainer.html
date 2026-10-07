@@ -45,6 +45,21 @@
 <p><b>How to read these values:</b> relative log-volume MAE (mean absolute error on log-transformed volumes, divided by persistence error, with equal weight for each patient); below 1 is better than copying the current measurement, and above 1 is worse. The volume model's small LUMIERE gain was uncertain; JEPA was clearly worse there and much worse on SAILOR.</p>
 <p class="result"><b>What P1 gives us:</b> a firm negative answer about the old representation: it does not add useful next-visit anatomy forecasts. That ruled out simply scaling up the same JEPA training recipe.</p>
 
+<h3>What the initial JEPA runs established</h3>
+<p>The official-weight pilot reduced validation cosine loss from 0.4256 to 0.0564 while target standard deviation and effective rank stayed healthy (0.079 and 2.2). Yet the pilot's mean latent prediction error (0.0576) remained above persistence (0.0043). At full cohort scale, validation loss reached 0.0081 at epoch 7, then rose as training continued; the best checkpoint's held-out test loss was 0.0074. These curves show the training behavior, while the anatomy benchmark above tests whether those learned states help forecast measured lesions.</p>
+<figure>
+<img src="plots/jepa_pilot_gate.png" width="968" alt="Official-weight five-patient pilot: validation cosine loss falls, embeddings remain healthy, but JEPA error exceeds persistence">
+<figcaption>Official-weight pilot. Loss fell and collapse monitors stayed healthy, but JEPA did not beat persistence.</figcaption>
+</figure>
+<figure>
+<img src="plots/hero_leg1_val.png" width="570" alt="Full-cohort JEPA validation loss reaches its best value at epoch 7 and rises afterward">
+<figcaption>Full-cohort training. Best validation loss occurred early; the best checkpoint had held-out test loss 0.0074.</figcaption>
+</figure>
+<figure>
+<img src="plots/jepa_anatomy_forecast.png" width="899" alt="Original JEPA state has higher next-visit lesion-volume forecast error than persistence on LUMIERE and SAILOR">
+<figcaption>Prospective anatomy benchmark. The original JEPA state underperformed persistence in both cohorts.</figcaption>
+</figure>
+
 <h2>P2 — Build a lesion-aware forecaster</h2>
 <p>P2 changes what the model sees and how it predicts. The image encoder (network that turns an MRI into numbers) first pools image information inside enhancing, nonenhancing, edema, and nearby-context regions. A transition model (network that learns changes from one visit to the next) then predicts a correction to persistence. The final output remains the three physical lesion measurements.</p>
 
@@ -81,6 +96,10 @@
 </figure>
 <p>On eligible locked LUMIERE patients, the learned model's patient-uniform log-volume MAE was 1.183 versus 1.559 for persistence: relative MAE 0.759, with the paired patient-bootstrap 95% confidence interval (range of plausible paired error differences after resampling patients) below zero. Three of the 26 encoder-unseen patients lacked enough recovered masks for this evaluation, so this is a 23-patient result.</p>
 <p>Applied unchanged to all 27 SAILOR patients, it scored 0.987 versus persistence at 0.943 (relative MAE 1.047). The uncertainty interval crosses zero, so we cannot say it is better or worse there. A separate support-only calibration (fit a small correction using labeled SAILOR support patients, then score different query patients) reached median relative MAE 0.863 at 20 support patients, but the query set had only seven patients and its confidence interval still crossed zero.</p>
+<h4>Seed sensitivity</h4>
+<p>Across three training seeds on the same evaluation cohorts, all LUMIERE paired 95% confidence intervals favored the learned model. SAILOR did not show a stable gain: seed 43 was worse than persistence, while seeds 42 and 44 were unresolved. These are repeat fits on previously examined cohorts, not independent validation.</p>
+<figure><img src="plots/lesion_seed_relative_mae.png" width="916" alt="Relative patient-uniform log-volume MAE by training seed for LUMIERE and SAILOR; one is persistence parity."><figcaption>Relative error by seed. Values below 1 favor the learned model over persistence.</figcaption></figure>
+<figure><img src="plots/lesion_seed_delta_ci.png" width="916" alt="Paired patient-bootstrap confidence intervals for learned minus persistence MAE, by cohort and seed."><figcaption>Paired error differences and 95% patient-bootstrap confidence intervals. Negative values favor the learned model; intervals crossing zero do not resolve a difference.</figcaption></figure>
 <p class="result"><b>Where we are now:</b> anatomy supervision and a learned transition model solve part of the in-domain problem. Cross-site generalization remains the blocker; support calibration is a lead to test, not a result we can claim as success.</p>
 
 <h2>What comes next</h2>

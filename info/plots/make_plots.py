@@ -13,7 +13,11 @@ numbers there, not here); every ratio/percentage stated in a title or
 annotation is computed from it, never hardcoded.
 
 Reads info/plots/metrics.json and writes, per plot, a .png and a .pdf:
-    hero_leg1_val          Hero Run Leg 1 val curve (best at epoch 7)
+    jepa_pilot_gate        Official-weight pilot: training signal, monitors, persistence gate
+    hero_leg1_val          Full-cohort JEPA validation curve and test loss
+    jepa_anatomy_forecast  Original JEPA-state forecast vs persistence on anatomy targets
+    lesion_seed_relative_mae  Three-seed lesion-model error relative to persistence
+    lesion_seed_delta_ci      Three-seed paired error differences with patient CIs
     hero_leg2_val          Hero Run Leg 2 val drift (champion never touched)
     run6_tradeoff          Aux fine-tune: dynamics cost vs honest-F1 flat
     sailor_transfer        Cross-site summary: dynamics fail, readouts transfer
@@ -114,10 +118,164 @@ def plot_hero_leg1(m, name):
             color=PALETTE["green_3"], fontsize=ANNO, va="top", weight="bold")
     ax.set_xlabel("epoch")
     ax.set_ylabel("val loss")
-    ax.set_title("Hero Run Leg 1 — val loss (best at epoch 7)")
+    ax.set_title(f"Full-cohort JEPA — validation loss (best at epoch {m['best_epoch']})")
     ax.set_xticks(ep)
     ax.set_ylim(0, max(val) * 1.18)
-    save(fig, name)
+    fig.text(0.5, 0.025,
+             f"Held-out test loss on the best checkpoint: {m['test_val']:.4f}",
+             ha="center", fontsize=10.5, style="italic")
+    save(fig, name, rect=[0, 0.08, 1, 1])
+
+
+def plot_jepa_pilot(m, name):
+    """Show pilot objective learning and the mandatory persistence gate."""
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11.2, 4.5))
+    epochs, vals = m["epochs"], m["validation_loss"]
+    ax1.plot(epochs, vals, "o-", color=PALETTE["blue_main"], lw=2.5, ms=6,
+             markeredgecolor=BAR_EDGE, markeredgewidth=1.0)
+    ax1.scatter([epochs[-1]], [vals[-1]], s=140, zorder=5,
+                color=PALETTE["green_3"], edgecolor=BAR_EDGE, linewidth=1.2)
+    ax1.set_xlabel("epoch")
+    ax1.set_ylabel("validation cosine loss")
+    ax1.set_title("Pilot objective learned")
+    ax1.set_xticks(epochs)
+    ax1.set_ylim(0, max(vals) * 1.2)
+    ax1.text(0.04, 0.95,
+             f"Target std {m['target_std']:.3f}; effective rank "
+             f"{m['target_effective_rank']:.1f} throughout",
+             transform=ax1.transAxes, va="top", fontsize=10.5,
+             bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="0.8"))
+
+    labels = [f"JEPA (n={m['evaluation_patients']})",
+              f"persistence (n={m['evaluation_patients']})"]
+    values = [m["jepa_eval_error"], m["persistence_error"]]
+    ax2.bar([0, 1], values,
+            color=[PALETTE["red_strong"], PALETTE["neutral"]], width=0.56,
+            edgecolor=BAR_EDGE, linewidth=BAR_LW)
+    for x, v in enumerate(values):
+        ax2.text(x, v + max(values) * 0.03, f"{v:.4f}", ha="center",
+                 fontsize=ANNO)
+    ax2.set_xticks([0, 1], labels)
+    ax2.set_ylabel("mean latent prediction error")
+    ax2.set_title("Mean pilot error: persistence gate not met")
+    ax2.set_ylim(0, max(values) * 1.3)
+    fig.suptitle("Official-weight pilot: training worked, forecasting did not beat persistence",
+                 fontsize=14)
+    save(fig, name, rect=[0, 0, 1, 0.91])
+
+
+def plot_jepa_anatomy_forecast(m, name):
+    """Compare the original JEPA state with persistence on measured anatomy."""
+    cohorts = m["cohorts"]
+    fig, axes = plt.subplots(1, len(cohorts), figsize=(10.4, 4.6), squeeze=False)
+    for ax, cohort in zip(axes[0], cohorts):
+        vals = [cohort["persistence_mae"], cohort["jepa_state_mae"]]
+        bars = ax.bar([0, 1], vals,
+                      color=[PALETTE["neutral"], PALETTE["red_strong"]],
+                      width=0.58, edgecolor=BAR_EDGE, linewidth=BAR_LW)
+        for bar, value, color in zip(bars, vals,
+                                     [PALETTE["neutral"], PALETTE["red_strong"]]):
+            ax.text(bar.get_x() + bar.get_width() / 2,
+                    value - max(vals) * 0.07, f"{value:.3f}",
+                    ha="center", va="top", fontsize=ANNO,
+                    color="white" if color != PALETTE["neutral"] else "black",
+                    weight="bold")
+        ratio = cohort["jepa_state_mae"] / cohort["persistence_mae"]
+        lo, hi = cohort["paired_difference_ci"]
+        delta = cohort["paired_difference"]
+        ax.text(0.5, 0.94,
+                f"JEPA / persistence = {ratio:.2f}×\n"
+                f"paired Δ = +{delta:.3f} [{lo:+.3f}, {hi:+.3f}]",
+                transform=ax.transAxes, ha="center", va="top", fontsize=9.5,
+                bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="0.8"))
+        ax.set_xticks([0, 1], ["persistence", "JEPA state"])
+        ax.set_ylabel("patient-uniform log-volume MAE")
+        ax.set_title(f"{cohort['name']}\n{cohort['patients']} patients, "
+                     f"{cohort['eligible_pairs']} pairs", fontsize=12)
+        ax.set_ylim(0, max(vals) * 1.55)
+    fig.suptitle("Original JEPA state: next-visit anatomy forecast vs persistence",
+                 fontsize=14)
+    fig.text(0.5, 0.015,
+             "Lower is better. Paired Δ is JEPA minus persistence; intervals are "
+             "patient-cluster bootstrap 95% CIs.",
+             ha="center", fontsize=9.5, style="italic")
+    save(fig, name, rect=[0, 0.06, 1, 0.90])
+
+
+def plot_lesion_seed_relative(m, name):
+    """Compare each learned seed with persistence on both cohorts."""
+    cohorts = m["cohorts"]
+    fig, axes = plt.subplots(1, len(cohorts), figsize=(10.6, 4.8), sharey=True)
+    for ax, cohort in zip(axes, cohorts):
+        seeds = cohort["seeds"]
+        x = np.arange(len(seeds))
+        vals = [seed["relative_mae"] for seed in seeds]
+        color = PALETTE["blue_main"] if cohort["name"] == "LUMIERE" \
+            else PALETTE["red_strong"]
+        ax.axhline(1.0, color=PALETTE["neutral"], ls="--", lw=1.8,
+                   label="persistence parity")
+        ax.plot(x, vals, "o-", color=color, lw=2.2, ms=8,
+                markeredgecolor=BAR_EDGE, markeredgewidth=1)
+        for idx, (xi, value) in enumerate(zip(x, vals)):
+            # Keep the first/last labels inside their panel boundaries.
+            if idx == 0:
+                offset, align = (7, 10), "left"
+            elif idx == len(vals) - 1:
+                offset, align = (-7, 10), "right"
+            else:
+                offset, align = (0, 10), "center"
+            ax.annotate(f"{value:.3f}", (xi, value), xytext=offset,
+                        textcoords="offset points", ha=align, fontsize=10)
+        ax.set_xticks(x, [str(seed["seed"]) for seed in seeds])
+        ax.set_xlabel("training seed")
+        ax.set_title(f"{cohort['name']} (n={cohort['patients']} patients)")
+        ax.set_ylim(m["ratio_ylim"][0], m["ratio_ylim"][1])
+        ax.grid(axis="y", color="0.88", lw=0.8)
+    axes[0].set_ylabel("relative patient-uniform log-volume MAE\n(1.0 = persistence; lower is better)")
+    axes[-1].legend(fontsize=10, loc="upper right")
+    fig.suptitle("Lesion-aware forecaster: all training seeds", fontsize=14)
+    fig.text(0.5, 0.015,
+             "Seed repeats use the same examined evaluation cohort; they are "
+             "not independent validation.",
+             ha="center", fontsize=9.5, style="italic")
+    save(fig, name, rect=[0, 0.06, 1, 0.90])
+
+
+def plot_lesion_seed_differences(m, name):
+    """Show paired patient-bootstrap CIs for learned-minus-persistence MAE."""
+    cohorts = m["cohorts"]
+    fig, axes = plt.subplots(1, len(cohorts), figsize=(10.6, 4.8), sharex=True)
+    for ax, cohort in zip(axes, cohorts):
+        seeds = cohort["seeds"]
+        y = np.arange(len(seeds))
+        color = PALETTE["blue_main"] if cohort["name"] == "LUMIERE" \
+            else PALETTE["red_strong"]
+        ax.axvline(0, color=PALETTE["neutral"], ls="--", lw=1.8)
+        for yi, seed in zip(y, seeds):
+            lo, hi = seed["difference_ci"]
+            delta = seed["difference"]
+            ax.errorbar(delta, yi,
+                        xerr=[[delta - lo], [hi - delta]],
+                        fmt="o", color=color, ecolor=color,
+                        markersize=7, capsize=4, elinewidth=1.8,
+                        markeredgecolor=BAR_EDGE, markeredgewidth=0.8)
+            ax.annotate(f"{delta:+.3f} [{lo:+.3f}, {hi:+.3f}]",
+                        (hi, yi), xytext=(7, 0), textcoords="offset points",
+                        va="center", fontsize=9)
+        ax.set_yticks(y, [f"seed {seed['seed']}" for seed in seeds])
+        ax.invert_yaxis()
+        ax.set_title(f"{cohort['name']} (n={cohort['patients']} patients)")
+        ax.grid(axis="x", color="0.88", lw=0.8)
+    axes[0].set_xlim(m["difference_xlim"])
+    axes[0].set_xlabel("Learned MAE − persistence MAE")
+    axes[1].set_xlabel("Learned MAE − persistence MAE")
+    fig.supylabel("training seed")
+    fig.suptitle("Paired patient-bootstrap differences (95% CI)", fontsize=14)
+    fig.text(0.5, 0.015,
+             "Negative values favor the learned model. Intervals crossing zero "
+             "do not resolve a difference.",
+             ha="center", fontsize=9.5, style="italic")
+    save(fig, name, rect=[0.04, 0.06, 1, 0.90])
 
 
 def plot_hero_leg2(m, name):
@@ -719,7 +877,14 @@ def plot_cross_site_adapt(g, name):
 def main():
     m = load_metrics()
     plots = [
+        (plot_jepa_pilot, m["jepa_pilot"], "jepa_pilot_gate"),
         (plot_hero_leg1, m["hero_leg1"], "hero_leg1_val"),
+        (plot_jepa_anatomy_forecast, m["jepa_anatomy_forecast"],
+         "jepa_anatomy_forecast"),
+        (plot_lesion_seed_relative, m["lesion_seed_sensitivity"],
+         "lesion_seed_relative_mae"),
+        (plot_lesion_seed_differences, m["lesion_seed_sensitivity"],
+         "lesion_seed_delta_ci"),
         (plot_hero_leg2, m["hero_leg2"], "hero_leg2_val"),
         (plot_run6, m["run6"], "run6_tradeoff"),
         (plot_sailor_transfer, m["sailor_transfer"], "sailor_transfer"),

@@ -1,8 +1,8 @@
 {
  "_readme": "Single source of truth for every number plotted by make_plots.py in this folder. Edit values here, rerun:  python3 info/plots/make_plots.py",
- "_revision": "2026-09-13: A33-A35. cross_site_adapt gains the radiomics/growth comparator (RAD). Earlier: A25-A32 locked protocol + SOTA push.",
+ "_revision": "2026-09-30: Added initial JEPA and P2 three-seed lesion-model figures from info/pilot.md, info/p1_anatomy_baselines.md, and info/p2_seed_sensitivity.md.",
  "hero_leg1": {
-  "source": "info/pilot.md Run 4 — hero leg 1, full cohort on Kaggle T4 (reported epochs only; no full per-epoch log was kept)",
+  "source": "info/pilot.md Run 4 \u2014 hero leg 1, full cohort on Kaggle T4 (reported epochs only; no full per-epoch log was kept)",
   "epochs": [
    1,
    5,
@@ -28,7 +28,7 @@
   "test_val": 0.0074
  },
  "hero_leg2": {
-  "source": "info/pilot.md Run 5 — resume best.pt at LR 2e-5, 30 epochs (reported epochs)",
+  "source": "info/pilot.md Run 5 \u2014 resume best.pt at LR 2e-5, 30 epochs (reported epochs)",
   "epochs": [
    1,
    5,
@@ -66,7 +66,7 @@
   "sota_source": "Tikhonov et al. arXiv:2509.06511 (ResNet-18 + radiomics -> CatBoost, patient-wise 5-fold CV)"
  },
  "sailor_transfer": {
-  "source": "A23 rebuild + A24 K3-2 same-space fix of A12 — frozen champion, zero SAILOR training; 243 valid pairs / 240 RANO-labelled. (a)-row is EMA-target space on both sides (scripts/sailor_eval.py --pairs).",
+  "source": "A23 rebuild + A24 K3-2 same-space fix of A12 \u2014 frozen champion, zero SAILOR training; 243 valid pairs / 240 RANO-labelled. (a)-row is EMA-target space on both sides (scripts/sailor_eval.py --pairs).",
   "dynamics_jepa": 0.0294,
   "dynamics_persist": 0.0041,
   "f1_lumiere_cv": 0.33,
@@ -18423,5 +18423,147 @@
   },
   "majority_f1": 0.479,
   "note": "JEPA leads at every K; from-scratch CNNs collapse in-domain (0.18-0.22); the reduced volumetry+growth comparator (RAD) also trails JEPA everywhere. Not faithful reproductions of Matoso/Tikhonov (A32/A35)."
+ },
+ "jepa_pilot": {
+  "source": "info/pilot.md Run 2 and info/ablations.md A6; official BrainIAC.ckpt, 5-patient CPU pilot, best validation epoch 5. Monitors remained constant and healthy.",
+  "epochs": [
+   1,
+   2,
+   3,
+   4,
+   5
+  ],
+  "validation_loss": [
+   0.4256,
+   0.1868,
+   0.0889,
+   0.0614,
+   0.0564
+  ],
+  "target_std": 0.0791,
+  "target_effective_rank": 2.2,
+  "jepa_eval_error": 0.0576,
+  "persistence_error": 0.0043,
+  "evaluation_patients": 5
+ },
+ "jepa_anatomy_forecast": {
+  "source": "info/p1_anatomy_baselines.md Result; frozen existing JEPA state, five-fold patient CV over encoder-unseen LUMIERE patients and unchanged SAILOR transfer. Patient-uniform log-volume MAE and paired patient bootstrap.",
+  "cohorts": [
+   {
+    "name": "LUMIERE",
+    "patients": 23,
+    "eligible_pairs": 117,
+    "persistence_mae": 1.545,
+    "jepa_state_mae": 2.152,
+    "paired_difference": 0.607,
+    "paired_difference_ci": [
+     0.226,
+     1.002
+    ]
+   },
+   {
+    "name": "SAILOR",
+    "patients": 27,
+    "eligible_pairs": 242,
+    "persistence_mae": 0.943,
+    "jepa_state_mae": 2.719,
+    "paired_difference": 1.776,
+    "paired_difference_ci": [
+     1.444,
+     2.171
+    ]
+   }
+  ]
+ },
+ "lesion_seed_sensitivity": {
+  "source": "info/p2_seed_sensitivity.md, fixed three-seed protocol; patient-uniform log-volume MAE and paired 10,000-draw patient bootstrap. Seed repeats use the same previously examined evaluation cohorts, not independent validation.",
+  "ratio_ylim": [
+   0.65,
+   1.3
+  ],
+  "difference_xlim": [
+   -0.72,
+   0.36
+  ],
+  "cohorts": [
+   {
+    "name": "LUMIERE",
+    "patients": 23,
+    "seeds": [
+     {
+      "seed": 42,
+      "learned_mae": 1.1833,
+      "persistence_mae": 1.559,
+      "relative_mae": 0.759,
+      "difference": -0.3757,
+      "difference_ci": [
+       -0.638,
+       -0.154
+      ]
+     },
+     {
+      "seed": 43,
+      "learned_mae": 1.2125,
+      "persistence_mae": 1.559,
+      "relative_mae": 0.778,
+      "difference": -0.3465,
+      "difference_ci": [
+       -0.608,
+       -0.13
+      ]
+     },
+     {
+      "seed": 44,
+      "learned_mae": 1.2375,
+      "persistence_mae": 1.559,
+      "relative_mae": 0.794,
+      "difference": -0.3215,
+      "difference_ci": [
+       -0.552,
+       -0.12
+      ]
+     }
+    ]
+   },
+   {
+    "name": "SAILOR",
+    "patients": 27,
+    "seeds": [
+     {
+      "seed": 42,
+      "learned_mae": 0.9872,
+      "persistence_mae": 0.943,
+      "relative_mae": 1.047,
+      "difference": 0.0442,
+      "difference_ci": [
+       -0.082,
+       0.166
+      ]
+     },
+     {
+      "seed": 43,
+      "learned_mae": 1.1132,
+      "persistence_mae": 0.943,
+      "relative_mae": 1.181,
+      "difference": 0.1702,
+      "difference_ci": [
+       0.047,
+       0.288
+      ]
+     },
+     {
+      "seed": 44,
+      "learned_mae": 0.9997,
+      "persistence_mae": 0.943,
+      "relative_mae": 1.06,
+      "difference": 0.0567,
+      "difference_ci": [
+       -0.058,
+       0.165
+      ]
+     }
+    ]
+   }
+  ]
  }
 }
