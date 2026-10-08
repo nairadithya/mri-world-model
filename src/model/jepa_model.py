@@ -59,6 +59,7 @@ class JEPAWorldModel(nn.Module):
             dim_feedforward=t.get("dim_feedforward", 2048),
             dropout=t.get("dropout", 0.1),
             max_days=t.get("max_time_delta_days", 3000.0),
+            time_basis=t.get("time_basis", "previous_gap"),
         )
         p = m["predictor"]
         self.predictor = Predictor(
