@@ -296,3 +296,9 @@ Rules, all earned:
 - Plot/HTML changes: regenerate (`make_plots.py`) and review the rendered png
   or page with an image-aware read (see Figure review) — code review alone is
   not evidence that a figure fits.
+
+## Enforced agent rules
+
+| Rule | Enforcement |
+|---|---|
+| Kaggle `.py` notebook sources and executable `.ipynb` pairs must stay synchronized; `.py` is the source of truth. | `python scripts/check_notebook_pairs.py` (also run in `.github/workflows/notebook-pairs.yml`); regression fixture: `tests/test_notebook_pair_check.py`. |
