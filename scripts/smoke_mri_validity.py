@@ -91,6 +91,8 @@ def main():
     train_finite = all(torch.isfinite(p.grad).all().item() for p in model.parameters() if p.grad is not None)
     report = {"scope": "one optimizer/EMA step on four real CT1 visits; not trained forecasting evidence",
               "git_sha": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
+              "tracked_dirty": bool(subprocess.check_output(["git", "diff", "HEAD"])),
+              "mri_sha256": {path: file_sha256(path) for path in sample["paths"]["CT1"]},
               "config_sha256": file_sha256(args.config),
               "brainiac_sha256": file_sha256(cfg["model"]["brainiac"]["checkpoint"]),
               "source_sha256": file_sha256(__file__),

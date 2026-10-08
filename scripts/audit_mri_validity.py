@@ -184,13 +184,20 @@ def geometry_audit(manifest, args, out):
             native = torch.tensor([visit["measurement"]["values_mm3"][c] for c in COMPARTMENTS])
             if not torch.allclose(native, aligned.native_volumes_mm3, atol=1e-4):
                 raise ValueError("native volumes disagree with the frozen target manifest")
+            image_tensor = runtime_transform(str(present[0]))[0]
+            zero_overlap = {}
+            for i, name in enumerate(COMPARTMENTS):
+                count = int(aligned.masks[i].sum())
+                zero_overlap[name] = float(((image_tensor == 0) & aligned.masks[i]).sum()) / count if count else None
             png = out / f'geometry_{visit["cohort"]}_{visit["patient_id"]}_{visit["visit"]}.png'
-            render_overlay(runtime_transform(str(present[0]))[0], old, aligned.masks, png,
+            render_overlay(image_tensor, old, aligned.masks, png,
                            f'{visit["cohort"]} {visit["patient_id"]}/{visit["visit"]}')
             records.append({"visit_id": visit["visit_id"], "cohort": visit["cohort"],
                             "patient_id": visit["patient_id"], "visit": visit["visit"],
                             "verdict": "VERIFIED", "legacy_vs_aligned_union_dice": dice,
                             "native_volumes_preserved": True, "overlay": str(png),
+                            "aligned_mask_fraction_on_zero_mri": zero_overlap,
+                            "zero_mri_overlap_scope": "exact-zero MRI is a QA proxy, not an anatomical brain mask",
                             "geometry": aligned.provenance})
             if visit["cohort"] == "LUMIERE":
                 portable_paths.extend(present)
@@ -218,9 +225,11 @@ def main():
     out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
     manifest = json.loads(Path(args.manifest).read_text())
     protocol = json.loads(Path(args.protocol).read_text())
+    tracked_diff = subprocess.check_output(["git", "diff", "HEAD"])
     report = {"schema_version": 1, "geometry_contract": GEOMETRY_CONTRACT,
               "git_sha": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
-              "tracked_diff_sha256": hashlib.sha256(subprocess.check_output(["git", "diff", "HEAD"])).hexdigest(),
+              "tracked_dirty": bool(tracked_diff),
+              "tracked_diff_sha256": hashlib.sha256(tracked_diff).hexdigest(),
               "manifest_sha256": hashlib.sha256(Path(args.manifest).read_bytes()).hexdigest(),
               "seed": args.seed, "structural": structural_audit(),
               "clinical": clinical_audit(args.meta_dir, args.lumiere_root),
