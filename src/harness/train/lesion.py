@@ -7,7 +7,6 @@ import os
 import random
 from pathlib import Path
 
-import nibabel as nib
 import numpy as np
 import torch
 import torch.nn.functional as F
@@ -23,8 +22,10 @@ from src.harness.provenance import make_provenance
 from src.model.jepa_model import JEPAWorldModel
 from src.model.lesion_forecaster import FORECAST_INPUT_CONTRACT, LesionTransitionForecaster
 from src.model.lesion_tokens import lesion_centered_crop, pool_region_tokens, region_patch_weights
+from src.preprocessing.geometry import (GEOMETRY_CONTRACT, align_masks,
+                                        load_geometry_manifest)
 
-LABELS = (2, 1, 3)  # necrotic/nonenhancing, enhancing, edema
+LABELS = (2, 1, 3)
 
 
 def _mask_path(root: str, patient: str, visit: str) -> Path:
@@ -37,18 +38,22 @@ def _mask_path(root: str, patient: str, visit: str) -> Path:
     return Path(str(base) + ".nii.gz")
 
 
-def load_masks(root: str, patient: str, visits: list[str]) -> tuple[torch.Tensor, torch.Tensor]:
-    masks, volumes = [], []
-    for visit in visits:
-        image = nib.load(str(_mask_path(root, patient, visit)))
-        data = np.asanyarray(image.dataobj)
-        voxel = float(abs(np.linalg.det(image.affine[:3, :3])))
-        masks.append(torch.from_numpy(np.stack([data == label for label in LABELS])))
-        volumes.append(torch.tensor([np.count_nonzero(data == label) * voxel
-                                     for label in LABELS]).log1p())
-    tensor = torch.stack(masks).float()
-    tensor = F.interpolate(tensor, size=(96, 96, 96), mode="nearest") > 0
-    return tensor, torch.stack(volumes).float()
+def selected_image_paths(sample: dict, indices: list[int], present: torch.Tensor) -> list[list[str]]:
+    return [[paths[t] for mi, paths in enumerate(sample["paths"].values())
+             if bool(present[t, mi]) and paths[t] is not None] for t in indices]
+
+
+def load_masks(root: str, patient: str, visits: list[str],
+               image_paths: list[list[str]], geometry_manifest: dict | None = None
+               ) -> tuple[torch.Tensor, torch.Tensor, list[dict]]:
+    if len(visits) != len(image_paths):
+        raise ValueError("visit and image geometry rows must match")
+    aligned = [align_masks([(_mask_path(root, patient, visit), label) for label in LABELS],
+                           paths, manifest=geometry_manifest)
+               for visit, paths in zip(visits, image_paths)]
+    return (torch.stack([row.masks for row in aligned]),
+            torch.stack([row.native_volumes_mm3.log1p() for row in aligned]),
+            [row.provenance for row in aligned])
 
 
 def mask_indices(root: str, patient: str, visits: list[str]) -> list[int]:
@@ -105,16 +110,19 @@ def batches(ds, cfg, shuffle):
 
 
 @torch.no_grad()
-def build_feature_cache(backbone, loader, mask_root, device):
+def build_feature_cache(backbone, loader, mask_root, device, geometry_manifest=None):
     backbone.eval(); cache = {}
     for batch in loader:
         pid = batch["patient_id"][0]
-        all_visits = loader.dataset[loader.dataset.patients.index(pid)]["visits"]
+        sample = loader.dataset[loader.dataset.patients.index(pid)]
+        all_visits = sample["visits"]
         indices = mask_indices(mask_root, pid, all_visits)
         visits = [all_visits[i] for i in indices]
         if len(visits) < 2:
             continue
-        masks, volumes = load_masks(mask_root, pid, visits)
+        masks, volumes, geometry = load_masks(
+            mask_root, pid, visits, selected_image_paths(sample, indices, batch["mri_mask"][0]),
+            geometry_manifest)
         values = []
         for j, t in enumerate(indices):
             present = batch["mri_mask"][0, t]
@@ -125,6 +133,7 @@ def build_feature_cache(backbone, loader, mask_root, device):
         if not bool(valid.any()): continue
         cache[pid] = {"features": torch.stack(values), "volumes": volumes,
                       "gaps": gaps, "visits": visits, "pair_valid": valid,
+                      "geometry_contract": GEOMETRY_CONTRACT, "geometry": geometry,
                       "row_ids": [_stable_id("LUMIERE", pid, a, b)
                                   for a, b in zip(visits[:-1], visits[1:])]}
     return cache
@@ -149,6 +158,7 @@ def main(argv=None):
     ap.add_argument("--champion", default="checkpoints/champion_0.0081.pt")
     ap.add_argument("--protocol", default="info/eval_folds.json")
     ap.add_argument("--mask-root", required=True)
+    ap.add_argument("--geometry-manifest", help="verified pre-resize image geometry for portable tensors")
     ap.add_argument("--out", default="checkpoints/lesion_learned.pt")
     ap.add_argument("--anatomy-epochs", type=int, default=8)
     ap.add_argument("--forecast-epochs", type=int, default=200)
@@ -159,6 +169,7 @@ def main(argv=None):
     args = ap.parse_args(argv)
     torch.manual_seed(args.seed); random.seed(args.seed)
     cfg = yaml.safe_load(Path(args.config).read_text())
+    geometry_manifest = load_geometry_manifest(args.geometry_manifest)
     protocol = load_protocol(args.protocol)
     eligible = lambda patient: len(list(Path(args.mask_root).glob(
         f"{patient}/week-*/DeepBraTumIA-segmentation/atlas/segmentation/seg_mask.nii*"))) >= 2
@@ -183,12 +194,15 @@ def main(argv=None):
         step = 0
         for batch in train_loader:
             pid = batch["patient_id"][0]
-            all_visits = train_loader.dataset[train_loader.dataset.patients.index(pid)]["visits"]
+            sample = train_loader.dataset[train_loader.dataset.patients.index(pid)]
+            all_visits = sample["visits"]
             indices = mask_indices(args.mask_root, pid, all_visits)
             visits = [all_visits[i] for i in indices]
             if not visits:
                 continue
-            masks, volumes = load_masks(args.mask_root, pid, visits)
+            masks, volumes, _ = load_masks(
+                args.mask_root, pid, visits,
+                selected_image_paths(sample, indices, batch["mri_mask"][0]), geometry_manifest)
             for j, t in enumerate(indices):
                 present = batch["mri_mask"][0, t]
                 if not bool(present.any()): continue
@@ -206,7 +220,7 @@ def main(argv=None):
     for parameter in world.backbone.parameters(): parameter.requires_grad = False
     all_ids = sorted(set(train_ids + internal_dev + unseen))
     cache = build_feature_cache(world.backbone, batches(datasets(cfg, all_ids), cfg, False),
-                                args.mask_root, device)
+                                args.mask_root, device, geometry_manifest)
     train_cache = {p: cache[p] for p in train_ids if p in cache}
     dev_cache = {p: cache[p] for p in internal_dev if p in cache}
     locked_cache = {p: cache[p] for p in unseen if p in cache}
@@ -236,6 +250,7 @@ def main(argv=None):
     forecaster.load_state_dict(best_state)
     locked, locked_persist = patient_mae(locked_cache, forecaster, device)
     result = {"forecast_input_contract": FORECAST_INPUT_CONTRACT,
+              "geometry_contract": GEOMETRY_CONTRACT,
               "internal_dev_mae": best, "locked_unseen_mae": locked,
               "locked_unseen_persistence": locked_persist,
               "locked_unseen_relative": locked / locked_persist,
@@ -245,6 +260,7 @@ def main(argv=None):
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     torch.save({"checkpoint_format_version": 2,
                 "forecast_input_contract": FORECAST_INPUT_CONTRACT,
+                "geometry_contract": GEOMETRY_CONTRACT,
                 "backbone": world.backbone.state_dict(),
                 "forecaster": best_state, "result": result, "args": vars(args)}, args.out)
     # Retain adapted train/dev/locked inputs so causal head follow-ups do not
@@ -252,7 +268,8 @@ def main(argv=None):
     from src.harness.analysis.clean_rescues import sha256
     torch.save({"schema_version": 2, "patients": cache,
                 "provenance": make_provenance(args.out, args.config,
-                    champion_sha256=sha256(args.out), forecast_input_contract=FORECAST_INPUT_CONTRACT)},
+                    champion_sha256=sha256(args.out), forecast_input_contract=FORECAST_INPUT_CONTRACT,
+                    geometry_contract=GEOMETRY_CONTRACT)},
                str(args.out) + ".features.pt")
     Path(str(args.out) + ".json").write_text(json.dumps(result, indent=2) + "\n")
     print("RESULT " + json.dumps(result, sort_keys=True))

@@ -14,6 +14,7 @@ import torch
 from sklearn.linear_model import Ridge
 
 from src.model.lesion_forecaster import FORECAST_INPUT_CONTRACT, LesionTransitionForecaster
+from src.preprocessing.geometry import GEOMETRY_CONTRACT, require_geometry_contract
 
 
 def patient_rows(cache, model):
@@ -78,6 +79,8 @@ def main(argv=None):
     if checkpoint.get("forecast_input_contract") != FORECAST_INPUT_CONTRACT:
         raise ValueError("legacy lesion checkpoint used target-visit inputs; causal retraining is required")
     payload = torch.load(args.cache, map_location="cpu", weights_only=False)
+    require_geometry_contract(checkpoint)
+    require_geometry_contract(payload)
     from src.harness.analysis.clean_rescues import sha256
     if payload.get("provenance", {}).get("champion_sha256") != sha256(args.checkpoint):
         raise ValueError("feature cache checkpoint hash mismatch")
@@ -86,7 +89,8 @@ def main(argv=None):
     query = patients[::4]
     support_pool = [patient for patient in patients if patient not in set(query)]
     sizes = [size for size in (1, 3, 5, 10, 20) if size <= len(support_pool)]
-    result = {"schema_version": 1, "query_patients": query,
+    result = {"schema_version": 2, "geometry_contract": GEOMETRY_CONTRACT,
+              "query_patients": query,
               "support_pool": support_pool, "nested_support_sizes": sizes,
               "zero_shot_query": metric(rows, query), "methods": {}}
     collected = {method: {size: [] for size in sizes} for method in ("bias", "ridge")}

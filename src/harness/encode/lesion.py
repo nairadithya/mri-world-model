@@ -7,8 +7,6 @@ import json
 import time
 from pathlib import Path
 
-import nibabel as nib
-import numpy as np
 import torch
 import yaml
 
@@ -21,9 +19,11 @@ from src.model.jepa_model import JEPAWorldModel
 from src.model.lesion_tokens import (REGIONS, lesion_centered_crop,
                                      pool_region_tokens, region_patch_weights)
 from src.preprocessing.transforms import runtime_transform
+from src.preprocessing.geometry import (GEOMETRY_CONTRACT, align_masks,
+                                        load_geometry_manifest)
 
-SCHEMA_VERSION = 1
-FEATURE_VERSION = "lesion-crop-brainiac-v1"
+SCHEMA_VERSION = 2
+FEATURE_VERSION = "lesion-crop-brainiac-affine-v2"
 MODALITIES = ("CT1", "T1", "T2", "FLAIR")
 SAILOR_ROOT = Path("data/sailor/sailor_ebrains_pseud/derivatives/mni2009c-n-s")
 
@@ -57,32 +57,27 @@ def image_paths(visit: dict, lumiere_root: Path,
     return {name: _find_sailor(directory, stems[name]) for name in MODALITIES}
 
 
-def compartment_masks(visit: dict, size: int = 96) -> torch.Tensor:
+def mask_specs(visit: dict) -> list[tuple[str, int | None]]:
     measurement = visit["measurement"]
     if "mask" in measurement:
         spec = measurement["mask"]
-        data = np.asanyarray(nib.load(spec["path"]).dataobj)
-        masks = np.stack([data == spec["labels"][name] for name in COMPARTMENTS])
-    else:
-        masks = np.stack([
-            np.asanyarray(nib.load(measurement["masks"][name]["path"]).dataobj) > 0
-            for name in COMPARTMENTS
-        ])
-    tensor = torch.from_numpy(masks.astype(np.float32))[None]
-    return torch.nn.functional.interpolate(
-        tensor, size=(size, size, size), mode="nearest")[0] > 0
+        return [(spec["path"], spec["labels"][name]) for name in COMPARTMENTS]
+    return [(measurement["masks"][name]["path"], None) for name in COMPARTMENTS]
 
 
 @torch.no_grad()
 def encode_visit(model: JEPAWorldModel, visit: dict, *, lumiere_root: Path,
-                 sailor_root: Path, crop_size: int = 64) -> dict:
+                 sailor_root: Path, crop_size: int = 64,
+                 geometry_manifest: dict | None = None) -> dict:
     paths = image_paths(visit, lumiere_root, sailor_root)
     present = torch.tensor([paths[name] is not None for name in MODALITIES])
     images = torch.zeros(len(MODALITIES), 96, 96, 96)
     for index, name in enumerate(MODALITIES):
         if paths[name] is not None:
             images[index] = runtime_transform(str(paths[name]), (96, 96, 96))[0]
-    masks = compartment_masks(visit)
+    aligned = align_masks(mask_specs(visit), [p for p in paths.values() if p is not None],
+                          manifest=geometry_manifest)
+    masks = aligned.masks
     crop_images, crop_masks = lesion_centered_crop(
         images[None], masks[None], crop_size=crop_size, output_size=96)
     tokens = torch.zeros(len(MODALITIES), 216, 768)
@@ -98,7 +93,7 @@ def encode_visit(model: JEPAWorldModel, visit: dict, *, lumiere_root: Path,
     pooled, contrast = pool_region_tokens(tokens[None], weights)
     return {"modalities": present, "regions": pooled[0].half(),
             "contrasts": contrast[0].half(), "region_weights": weights[0].half(),
-            "crop_size": crop_size,
+            "crop_size": crop_size, "geometry": aligned.provenance,
             "paths": {name: str(path) if path else None for name, path in paths.items()}}
 
 
@@ -111,10 +106,12 @@ def main(argv=None) -> None:
     ap.add_argument("--lumiere-root", default="data/lumiere_preprocessed")
     ap.add_argument("--sailor-root", default=str(SAILOR_ROOT))
     ap.add_argument("--crop-size", type=int, default=64)
+    ap.add_argument("--geometry-manifest", help="verified pre-resize image geometry for portable tensors")
     ap.add_argument("--limit", type=int)
     args = ap.parse_args(argv)
     cfg = yaml.safe_load(Path(args.config).read_text())
     manifest = json.loads(Path(args.manifest).read_text())
+    geometry_manifest = load_geometry_manifest(args.geometry_manifest)
     model = JEPAWorldModel(cfg)
     checkpoint, report = load_model(model, args.champion)
     print(format_report(report))
@@ -130,13 +127,15 @@ def main(argv=None) -> None:
     for index, visit in enumerate(visits, 1):
         encoded[visit["visit_id"]] = encode_visit(
             model, visit, lumiere_root=Path(args.lumiere_root),
-            sailor_root=Path(args.sailor_root), crop_size=args.crop_size)
+            sailor_root=Path(args.sailor_root), crop_size=args.crop_size,
+            geometry_manifest=geometry_manifest)
         elapsed = time.time() - started
         print(f"lesion crop {index}/{len(visits)} "
               f"({elapsed / index:.1f}s/visit, ETA "
               f"{elapsed / index * (len(visits) - index) / 60:.0f}min)", flush=True)
     artifact = {
         "schema_version": SCHEMA_VERSION, "feature_version": FEATURE_VERSION,
+        "geometry_contract": GEOMETRY_CONTRACT,
         "target_version": manifest["target_version"], "modalities": MODALITIES,
         "regions": REGIONS, "visits": encoded,
         "provenance": {
@@ -150,6 +149,9 @@ def main(argv=None) -> None:
             "git_sha": git_sha(), "date": time.strftime("%Y-%m-%d"),
             "information_cutoff": "current/source visit image and mask only",
             "crop_size": args.crop_size, "output_size": 96,
+            "geometry_contract": GEOMETRY_CONTRACT,
+            "geometry_manifest_sha256": (hashlib.sha256(Path(args.geometry_manifest).read_bytes()).hexdigest()
+                                           if args.geometry_manifest else None),
         },
     }
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
