@@ -170,3 +170,15 @@ the paired seven-patient bootstrap difference CI is -0.306 to +0.054 and still
 crosses zero. Therefore support calibration identifies a correctable site
 shift but does not satisfy the external gate. It is reported separately from
 zero-shot and must not be described as site-generalization success.
+
+## A40 supersession — forecasting result withdrawn (2026-10-02)
+
+The learned run and support-adaptation sections above used the target visit's
+image/mask token and ending gap when predicting that visit's volume. All three
+training-seed checkpoints fail a direct future-input perturbation test. Those
+results are invalid as past-only forecasts; the claimed in-domain gain and
+site-invariance localization are withdrawn. The old cache also bridged missing
+mask visits (123 LUMIERE pairs versus the frozen 117). The frozen crop and
+frozen transition diagnostics remain unaffected. The corrected
+`history-only-lesion-v2` model and matched-row causal rerun are described in
+`clean_rescues.md`; replacement scores are pending.

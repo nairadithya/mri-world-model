@@ -27,6 +27,7 @@ import yaml
 
 from ...data.dataset import parse_week_to_days
 from ...model.jepa_model import JEPAWorldModel
+from ...harness.checkpoints import validate_temporal_semantics
 
 RANO_NAMES = ["PD", "SD", "PR", "CR"]
 
@@ -118,6 +119,7 @@ def main(argv=None):
 
     model = JEPAWorldModel(cfg)
     ckpt = torch.load(args.champion, map_location="cpu", weights_only=False)
+    validate_temporal_semantics(model, ckpt)
     model.load_state_dict(ckpt["model"], strict=False)
     for p in model.parameters():
         p.requires_grad = False

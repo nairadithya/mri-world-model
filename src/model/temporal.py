@@ -1,4 +1,4 @@
-"""Fusion (LayerNorm + concat) and temporal transformer with time-delta encodings."""
+"""Fusion and temporal transformer with configurable day coordinates."""
 from __future__ import annotations
 
 import math
@@ -22,9 +22,9 @@ class Fusion(nn.Module):
 
 
 class TimeDeltaEncoding(nn.Module):
-    """Sinusoidal encoding of days-since-previous-visit + learned residual.
+    """Sinusoidal encoding of a nonnegative day coordinate plus learned residual.
 
-    Maps scalar delta_d (days) -> (d_model,) vector added to the token.
+    Maps scalar days to a (d_model,) vector added to the token.
     """
 
     def __init__(self, d_model: int, max_days: float = 3000.0):
@@ -37,7 +37,7 @@ class TimeDeltaEncoding(nn.Module):
 
     def forward(self, deltas: torch.Tensor) -> torch.Tensor:
         """deltas: (B, T) days -> (B, T, d_model)."""
-        x = deltas.clamp_min(0).unsqueeze(-1) / self.max_days  # (B,T,1) in [0,1]
+        x = deltas.clamp_min(0).unsqueeze(-1) / self.max_days
         half = self.d_model // 2
         freqs = torch.exp(
             -math.log(10000.0) * torch.arange(half, device=deltas.device) / half
@@ -60,8 +60,12 @@ class TemporalTransformer(nn.Module):
         dim_feedforward: int = 2048,
         dropout: float = 0.1,
         max_days: float = 3000.0,
+        time_basis: str = "previous_gap",
     ):
         super().__init__()
+        if time_basis not in {"previous_gap", "elapsed"}:
+            raise ValueError(f"time_basis must be 'previous_gap' or 'elapsed', got {time_basis!r}")
+        self.time_basis = time_basis
         self.time_enc = TimeDeltaEncoding(d_model, max_days)
         layer = nn.TransformerEncoderLayer(
             d_model=d_model, nhead=nhead,
@@ -72,13 +76,19 @@ class TemporalTransformer(nn.Module):
             layer, num_layers=num_layers, enable_nested_tensor=False)
         self.norm = nn.LayerNorm(d_model)
 
+    def _time_coordinates(self, time_deltas: torch.Tensor) -> torch.Tensor:
+        if self.time_basis == "previous_gap":
+            return time_deltas
+        return torch.cumsum(time_deltas, dim=1)
+
     def forward(
         self,
         tokens: torch.Tensor,      # (B, T, d_model) fused visit tokens
         time_deltas: torch.Tensor,  # (B, T) days
         visit_mask: torch.Tensor,   # (B, T) bool, True = real visit
     ) -> torch.Tensor:
-        h = tokens + self.time_enc(time_deltas)
+        coordinates = self._time_coordinates(time_deltas)
+        h = tokens + self.time_enc(coordinates)
         h = self.encoder(h, src_key_padding_mask=~visit_mask)
         h = self.norm(h)
         # gather last real visit per patient
@@ -93,7 +103,8 @@ class TemporalTransformer(nn.Module):
         mask_slice: torch.Tensor,     # (B, t+1) bool
     ) -> torch.Tensor:
         """Single-prefix encode, factored out for gradient checkpointing."""
-        h = tok_slice + self.time_enc(dt_slice)
+        coordinates = self._time_coordinates(dt_slice)
+        h = tok_slice + self.time_enc(coordinates)
         h = self.encoder(h, src_key_padding_mask=~mask_slice)
         return self.norm(h)
 

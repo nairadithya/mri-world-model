@@ -13,7 +13,8 @@ import numpy as np
 import torch
 from sklearn.linear_model import Ridge
 
-from src.model.lesion_forecaster import LesionTransitionForecaster
+from src.model.lesion_forecaster import FORECAST_INPUT_CONTRACT, LesionTransitionForecaster
+from src.preprocessing.geometry import GEOMETRY_CONTRACT, require_geometry_contract
 
 
 def patient_rows(cache, model):
@@ -24,11 +25,14 @@ def patient_rows(cache, model):
             source = item["volumes"].float()
             out = model(item["features"].float(), item["gaps"].float(), source)
             target = source[1:]
-            gap = torch.log1p(item["gaps"][1:].float()).unsqueeze(1) / 8.0
-            rows[patient] = {"source": source[:-1].numpy(),
-                             "target": target.numpy(),
-                             "raw": out["prediction"].numpy(),
-                             "gap": gap.numpy()}
+            valid = item["pair_valid"]
+            # Calibrators also obey the forecast cutoff: last elapsed gap,
+            # never the interval ending at the target visit.
+            gap = torch.log1p(item["gaps"][:-1].float()).unsqueeze(1) / 8.0
+            rows[patient] = {"source": source[:-1][valid].numpy(),
+                             "target": target[valid].numpy(),
+                             "raw": out["prediction"][valid].numpy(),
+                             "gap": gap[valid].numpy()}
     return rows
 
 
@@ -72,12 +76,21 @@ def main(argv=None):
     args = ap.parse_args(argv)
     cache = torch.load(args.cache, map_location="cpu", weights_only=False)["sailor"]
     checkpoint = torch.load(args.checkpoint, map_location="cpu", weights_only=False)
+    if checkpoint.get("forecast_input_contract") != FORECAST_INPUT_CONTRACT:
+        raise ValueError("legacy lesion checkpoint used target-visit inputs; causal retraining is required")
+    payload = torch.load(args.cache, map_location="cpu", weights_only=False)
+    require_geometry_contract(checkpoint)
+    require_geometry_contract(payload)
+    from src.harness.analysis.clean_rescues import sha256
+    if payload.get("provenance", {}).get("champion_sha256") != sha256(args.checkpoint):
+        raise ValueError("feature cache checkpoint hash mismatch")
     model = LesionTransitionForecaster(); model.load_state_dict(checkpoint["forecaster"])
     rows = patient_rows(cache, model); patients = sorted(rows)
     query = patients[::4]
     support_pool = [patient for patient in patients if patient not in set(query)]
     sizes = [size for size in (1, 3, 5, 10, 20) if size <= len(support_pool)]
-    result = {"schema_version": 1, "query_patients": query,
+    result = {"schema_version": 2, "geometry_contract": GEOMETRY_CONTRACT,
+              "query_patients": query,
               "support_pool": support_pool, "nested_support_sizes": sizes,
               "zero_shot_query": metric(rows, query), "methods": {}}
     collected = {method: {size: [] for size in sizes} for method in ("bias", "ridge")}

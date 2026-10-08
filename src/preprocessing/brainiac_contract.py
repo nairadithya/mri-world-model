@@ -16,6 +16,7 @@ import torch.nn.functional as F
 from .n4_bias import n4_bias_correct
 from .registration import resample_to_iso, rigid_register_to_template
 from .skull_strip import hd_bet_skull_strip
+from .geometry import export_image_geometry
 
 
 def preprocess_sequence(
@@ -78,4 +79,5 @@ def preprocess_sequence(
         t[mask] = (t[mask] - vals.mean()) / vals.std().clamp_min(1e-6)
     out = nib.Nifti1Image(t.squeeze(0).numpy().astype(np.float32), np.eye(4))
     nib.save(out, output_path)
+    export_image_geometry(output_path, p4)
     return output_path

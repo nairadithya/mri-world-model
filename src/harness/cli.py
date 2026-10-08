@@ -39,6 +39,7 @@ TRAIN_MODULES = {
     "cnn3d": "src.harness.train.cnn3d:main",
     "cnn2d": "src.harness.train.cnn2d:main",
     "lesion": "src.harness.train.lesion:main",
+    "rescues": "src.harness.train.rescues:main",
 }
 
 # Active anatomy workflows.
@@ -78,6 +79,8 @@ LEGACY_RUN_MODULES = {
     "sailor-gap": "src.harness.analysis.sailor_gap:main",
     "sailor-interval": "src.harness.analysis.sailor_interval:main",
     "freeze": "src.harness.analysis.freeze:main",
+    "clean-rescues": "src.harness.analysis.clean_rescues:main",
+    "head-rescues": "src.harness.analysis.head_rescues:main",
     "lock": "src.harness.data.lock:main",
     "manifest": "src.harness.data.manifest:main",
 }

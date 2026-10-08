@@ -4,6 +4,8 @@ from __future__ import annotations
 import torch
 import torch.nn as nn
 
+FORECAST_INPUT_CONTRACT = "history-only-lesion-v2"
+
 
 class LesionTransitionForecaster(nn.Module):
     def __init__(self, input_dim: int = 7 * 768, observation_dim: int = 256,
@@ -35,12 +37,18 @@ class LesionTransitionForecaster(nn.Module):
         """Forecast every next visit in one patient trajectory.
 
         features: ``(T,F)``, gaps: ``(T,)`` with gaps[0]=0, source: ``(T,3)``.
+        prediction[t] uses observations and elapsed gaps through t only.
         """
+        if len(features) < 2 or len(gaps) != len(features) or len(source) != len(features):
+            raise ValueError("matching trajectories with at least two visits are required")
         observation = self.encode_observation(features)
-        previous, current = observation[:-1], observation[1:]
+        # Each output forecasts t+1 from the transition ending AT t. The old
+        # [t, t+1] transition exposed the target image/mask and future gap.
+        current = observation[:-1]
+        previous = torch.cat([observation[:1], observation[:-2]], dim=0)
         transition = self.transition(torch.cat(
             [previous, current, current - previous,
-             torch.log1p(gaps[1:].clamp_min(0))[:, None] / 8.0], dim=-1))
+             torch.log1p(gaps[:-1].clamp_min(0))[:, None] / 8.0], dim=-1))
         state, _ = self.gru(transition[None])
         prediction = source[:-1] + self.delta(state[0])
         return {"observation": observation, "current_anatomy": self.anatomy(observation),

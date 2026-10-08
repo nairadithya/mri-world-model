@@ -5,7 +5,6 @@ import argparse
 import json
 from pathlib import Path
 
-import nibabel as nib
 import numpy as np
 import torch
 import yaml
@@ -15,10 +14,15 @@ from src.data.collate import make_collate
 from src.data.eval_protocol import load_protocol
 from src.data.sailor import SAILORDataset
 from src.harness.checkpoints import load_model
-from src.harness.train.lesion import (build_feature_cache, datasets, load_masks,
-                                      mask_indices, selected_gaps, visit_features)
+from src.harness.train.lesion import (build_feature_cache, datasets,
+                                      pair_validity, selected_gaps, selected_image_paths, visit_features)
+from src.harness.data.anatomy_manifest import _stable_id
+from src.harness.provenance import git_sha, make_provenance
+from src.harness.analysis.clean_rescues import sha256
 from src.model.jepa_model import JEPAWorldModel
-from src.model.lesion_forecaster import LesionTransitionForecaster
+from src.model.lesion_forecaster import FORECAST_INPUT_CONTRACT, LesionTransitionForecaster
+from src.preprocessing.geometry import (GEOMETRY_CONTRACT, align_masks,
+                                        load_geometry_manifest, require_geometry_contract)
 
 SAILOR_MASKS = ("NecrosisMask-ONCO", "ContrastEnhancedMask-ONCO", "EdemaMask-ONCO")
 
@@ -30,24 +34,18 @@ def _find(directory: Path, stem: str):
     return None
 
 
-def sailor_masks(root: str, patient: str, visits: list[str]):
-    all_masks, volumes, keep = [], [], []
+def sailor_masks(root: str, patient: str, visits: list[str], image_paths: list[list[str]]):
+    aligned, keep = [], []
     for i, visit in enumerate(visits):
         directory = Path(root) / patient / visit
         paths = [_find(directory, stem) for stem in SAILOR_MASKS]
         if any(path is None for path in paths): continue
-        current, current_volumes = [], []
-        for path in paths:
-            image = nib.load(str(path)); data = np.asanyarray(image.dataobj)
-            current.append(data > 0)
-            current_volumes.append(np.count_nonzero(data > 0) *
-                                   abs(np.linalg.det(image.affine[:3, :3])))
-        all_masks.append(torch.from_numpy(np.stack(current)).float())
-        volumes.append(torch.tensor(current_volumes).log1p()); keep.append(i)
-    if not keep: return None, None, []
-    masks = torch.nn.functional.interpolate(torch.stack(all_masks),
-                                             size=(96, 96, 96), mode="nearest") > 0
-    return masks, torch.stack(volumes).float(), keep
+        aligned.append(align_masks([(path, None) for path in paths], image_paths[i]))
+        keep.append(i)
+    if not keep: return None, None, [], []
+    return (torch.stack([row.masks for row in aligned]),
+            torch.stack([row.native_volumes_mm3.log1p() for row in aligned]),
+            keep, [row.provenance for row in aligned])
 
 
 @torch.no_grad()
@@ -58,16 +56,25 @@ def sailor_cache(backbone, cfg, root, device):
     cache = {}; backbone.eval()
     for batch in loader:
         pid = batch["patient_id"][0]
-        visits = ds[ds.subjects.index(pid)]["visits"]
-        masks, volumes, indices = sailor_masks(root, pid, visits)
+        sample = ds[ds.subjects.index(pid)]
+        visits = sample["visits"]
+        masks, volumes, indices, geometry = sailor_masks(
+            root, pid, visits, selected_image_paths(sample, list(range(len(visits))), batch["mri_mask"][0]))
         if len(indices) < 2: continue
         values = []
         for j, t in enumerate(indices):
             present = batch["mri_mask"][0, t]
             values.append(visit_features(backbone, batch["mri"][0, t, :, 0].to(device),
                                          present.to(device), masks[j].to(device)).cpu())
+        gaps = selected_gaps(batch["time_deltas"][0], indices)
+        valid = pair_validity(indices, gaps)
+        if not bool(valid.any()): continue
+        selected = [visits[i] for i in indices]
         cache[pid] = {"features": torch.stack(values), "volumes": volumes,
-                      "gaps": selected_gaps(batch["time_deltas"][0], indices)}
+                      "gaps": gaps, "visits": selected, "pair_valid": valid,
+                      "geometry_contract": GEOMETRY_CONTRACT, "geometry": geometry,
+                      "row_ids": [_stable_id("SAILOR", pid, a, b)
+                                  for a, b in zip(selected[:-1], selected[1:])]}
         print(f"SAILOR learned encode {len(cache)}/{len(ds)}", flush=True)
     return cache
 
@@ -80,8 +87,9 @@ def evaluate(cache, model, device, boot, seed):
             prediction = model(row["features"].to(device), row["gaps"].to(device),
                                source)["prediction"]
             target = source[1:]
-            per[patient] = float((prediction - target).abs().mean())
-            persistence[patient] = float((source[:-1] - target).abs().mean())
+            valid = row["pair_valid"].to(device)
+            per[patient] = float((prediction[valid] - target[valid]).abs().mean())
+            persistence[patient] = float((source[:-1][valid] - target[valid]).abs().mean())
     patients = np.array(sorted(per)); diff = np.array([per[p] - persistence[p] for p in patients])
     rng = np.random.default_rng(seed)
     draws = rng.choice(diff, (boot, len(diff)), replace=True).mean(1)
@@ -90,7 +98,8 @@ def evaluate(cache, model, device, boot, seed):
             "persistence_mae": float(baseline), "persistence_relative_mae": float(mae / baseline),
             "mae_difference": float(diff.mean()),
             "mae_difference_95ci": [float(x) for x in np.quantile(draws, [0.025, 0.975])],
-            "n_patients": len(per), "per_patient_mae": per,
+            "n_patients": len(per), "n_rows": sum(int(r["pair_valid"].sum()) for r in cache.values()),
+            "per_patient_mae": per,
             "per_patient_persistence_mae": persistence}
 
 
@@ -100,6 +109,7 @@ def main(argv=None):
     ap.add_argument("--champion", default="checkpoints/champion_0.0081.pt")
     ap.add_argument("--checkpoint", required=True)
     ap.add_argument("--mask-root", default="data/autoseg/extracted/Imaging")
+    ap.add_argument("--geometry-manifest", help="verified pre-resize image geometry for portable tensors")
     ap.add_argument("--sailor-root", default="data/sailor/sailor_ebrains_pseud/derivatives/mni2009c-n-s")
     ap.add_argument("--protocol", default="info/eval_folds.json")
     ap.add_argument("--out", default="outputs/p2_learned_lesion_transfer.json")
@@ -109,13 +119,20 @@ def main(argv=None):
     ap.add_argument("--seed", type=int, default=42)
     args = ap.parse_args(argv)
     cfg = yaml.safe_load(Path(args.config).read_text()); device = torch.device("cpu")
+    geometry_manifest = load_geometry_manifest(args.geometry_manifest)
     learned = torch.load(args.checkpoint, map_location="cpu", weights_only=False)
+    if learned.get("forecast_input_contract") != FORECAST_INPUT_CONTRACT:
+        raise ValueError("legacy lesion checkpoint used target-visit inputs; retrain with history-only-lesion-v2")
+    require_geometry_contract(learned)
     world = JEPAWorldModel(cfg); load_model(world, args.champion)
     world.backbone.load_state_dict(learned["backbone"]); world.to(device).eval()
     forecaster = LesionTransitionForecaster().to(device)
     forecaster.load_state_dict(learned["forecaster"])
     if args.reuse_cache:
         cached = torch.load(args.cache_out, map_location="cpu", weights_only=False)
+        require_geometry_contract(cached)
+        if cached.get("provenance", {}).get("champion_sha256") != sha256(args.checkpoint):
+            raise ValueError("feature cache checkpoint hash mismatch; rebuild the causal cache")
         lum, sailor = cached["lumiere"], cached["sailor"]
     else:
         protocol = load_protocol(args.protocol)
@@ -125,12 +142,20 @@ def main(argv=None):
         lum_ds = datasets(cfg, eligible)
         lum_loader = DataLoader(lum_ds, batch_size=1, shuffle=False, num_workers=0,
                                 collate_fn=make_collate(tuple(cfg["preprocessing"]["target_size"])))
-        lum = build_feature_cache(world.backbone, lum_loader, args.mask_root, device)
+        lum = build_feature_cache(world.backbone, lum_loader, args.mask_root, device, geometry_manifest)
         sailor = sailor_cache(world.backbone, cfg, args.sailor_root, device)
         Path(args.cache_out).parent.mkdir(parents=True, exist_ok=True)
-        torch.save({"schema_version": 1, "checkpoint": str(Path(args.checkpoint).resolve()),
+        torch.save({"schema_version": 3, "geometry_contract": GEOMETRY_CONTRACT,
+                    "provenance": make_provenance(args.checkpoint, args.config,
+                        champion_sha256=sha256(args.checkpoint), forecast_input_contract=FORECAST_INPUT_CONTRACT,
+                        geometry_contract=GEOMETRY_CONTRACT),
+                    "checkpoint": str(Path(args.checkpoint).resolve()),
                     "lumiere": lum, "sailor": sailor}, args.cache_out)
-    result = {"schema_version": 1, "checkpoint": str(Path(args.checkpoint).resolve()),
+    result = {"schema_version": 2, "git_sha": git_sha(),
+              "geometry_contract": GEOMETRY_CONTRACT,
+              "checkpoint_sha256": sha256(args.checkpoint),
+              "forecast_input_contract": FORECAST_INPUT_CONTRACT,
+              "checkpoint": str(Path(args.checkpoint).resolve()),
               "feature_cache": str(Path(args.cache_out).resolve()),
               "lumiere_locked": evaluate(lum, forecaster, device, args.boot, args.seed),
               "sailor_transfer": evaluate(sailor, forecaster, device, args.boot, args.seed + 1)}

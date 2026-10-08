@@ -1,0 +1,20 @@
+{
+  "id": "nairadithya/clean-rescue-surgery",
+  "title": "clean-rescue-surgery",
+  "code_file": "rescue_leg.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "machine_shape": "NvidiaTeslaT4",
+  "dataset_sources": [
+    "nairadithya/preprocessed-mri-data",
+    "nairadithya/lumiere-lesion-supervision"
+  ],
+  "kernel_sources": [
+    "nairadithya/p0-clean-jepa-retrain"
+  ],
+  "competition_sources": [],
+  "model_sources": []
+}

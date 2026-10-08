@@ -20,6 +20,7 @@ from torch.utils.data import DataLoader
 from src.harness.data.builder import build_datasets
 from src.data.collate import make_collate
 from src.model.jepa_model import JEPAWorldModel
+from src.harness.checkpoints import validate_temporal_semantics
 
 
 def main(argv=None):
@@ -36,6 +37,7 @@ def main(argv=None):
 
     model = JEPAWorldModel(cfg)
     ckpt = torch.load(args.ckpt, map_location="cpu", weights_only=False)
+    validate_temporal_semantics(model, ckpt)
     model.load_state_dict(ckpt["model"], strict=False)
     print(f"ckpt epoch {ckpt.get('epoch')}, val {ckpt.get('val_loss')}")
     model.eval()

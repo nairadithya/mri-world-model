@@ -701,3 +701,43 @@ referenced, not repeated — only session decisions are recorded here in full.
   would leave inadequate processing headroom. Do not download implicitly or
   substitute SAILOR outcomes. Resolve UCSF authorization and external storage
   first. See `info/external_supervision_audit.md`.
+
+- **D53 — Reopen bounded clean-data rescues and repair the discovered lesion
+  cutoff violation (2026-10-02).** The user explicitly requested pre-audit
+  rescues again, including GPU training and the gap-conditioned/velocity heads.
+  R33 therefore repeats A15/A16/A17/A33/A34/A37 with survival-free,
+  provenance-checked targets, single-intervention training arms, unchanged
+  anatomy rows, patient-held-out calibration, and persisted weights. During
+  setup, A40 found the learned lesion forecast consumed target-visit features
+  and future gaps; its reported gains and adaptations are withdrawn. Causal
+  `history-only-lesion-v2` retraining now precedes interpreting that model's
+  site rescue. The repaired loss/evaluation also forbids bridges over missing
+  measurement visits. See `info/clean_rescues.md`.
+
+- **D33b — basin loaded_accum1 device crash + fix (2026-10-02).** Kernel
+  `clean-rescue-basin` died in the first Adam step of the `loaded_accum1`
+  arm (`torch._foreach_lerp_`: tensors on cuda:0 and cpu). Root cause: the
+  trainer moved resumed optimizer-state tensors to CUDA *before*
+  `opt.load_state_dict`, but torch re-casts state to the *param's* device at
+  load time — params were still on CPU there (`model.to(device)` runs later),
+  so the pre-load move was silently undone and momentum stayed on CPU while
+  grads/params were CUDA. Fix (local commit `19ef2a3`, exp/clean-data-rescues):
+  load first, then move every optimizer-state tensor to the training device
+  and log the count. Overlay re-cut to 11 files
+  (sha256 e2c16db18ad4d958284ac441cbd2c7df29afecc7a4be802e2ddcec8af333f4c7);
+  basin, surgery and transition-weighting notebooks regenerated and re-pushed.
+  Control and fresh_accum1 arm results from the crashed run are valid and were
+  fetched; loaded arms and fresh_accum8 re-run in the v2 basin kernel.
+
+- **D54. Verify observations and chronology before another forecasting run.**
+  R34 confirms that independent array resizing puts sampled LUMIERE lesion
+  masks in the wrong MRI coordinates. Use a shared affine-alignment boundary
+  with verified pre-resize image provenance. Preserve native volume targets.
+  Version aligned features and reject old geometry checkpoints and caches.
+  Keep previous-gap temporal behavior as the legacy default. Elapsed-time
+  encoding is opt-in and must match checkpoint configuration. The online
+  projector's absent gradient is documented, not repaired with an invented
+  objective. Sampled overlays and a real CPU smoke pass structural checks.
+  Apparent extracranial labels and differing templates still require QA.
+  Coordinate repair does not establish forecasting gains or measurement
+  repeatability. See `info/methodology_validity.md` and the decision TSV.
