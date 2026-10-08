@@ -17,6 +17,7 @@ import torch
 import torch.nn.functional as F
 
 from src.harness.data.anatomy_manifest import COMPARTMENTS
+from src.data.dataset import LUMIEREDataset
 from src.harness.encode.lesion import image_paths, mask_specs
 from src.model.lesion_forecaster import LesionTransitionForecaster
 from src.model.temporal import TemporalTransformer
@@ -60,6 +61,15 @@ def target_audit(manifest: dict, unseen: set[str]) -> dict:
         result[cohort] = {"n_rows": len(pairs), "n_patients": len({p["patient_id"] for p in pairs}),
                           "compartments": compartments}
     return result
+
+
+def clinical_audit(meta_dir: str, image_root: str) -> dict:
+    dataset = LUMIEREDataset(meta_dir, image_root, min_visits=1)
+    vectors = torch.stack([dataset._clinical_vector(row) for row in dataset.demographics.values()])
+    return {"n_patients": len(vectors), "nonfinite_values": int((~torch.isfinite(vectors)).sum()),
+            "eventual_survival_values_nonzero": int(torch.count_nonzero(vectors[:, -1])),
+            "verdict": "VERIFIED" if torch.isfinite(vectors).all() and not vectors[:, -1].any()
+                       else "NOT VERIFIED"}
 
 
 def structural_audit() -> dict:
@@ -129,9 +139,10 @@ def render_overlay(image, legacy, aligned, path, title):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    position = torch.nonzero(aligned.any(0)).float().mean(0).round().long().tolist()
-    if not all(np.isfinite(position)):
+    foreground = torch.nonzero(aligned.any(0))
+    if not len(foreground):
         raise ValueError("cannot render an empty aligned lesion")
+    position = foreground.float().mean(0).round().long().tolist()
     labels = torch.arange(1, 4)[:, None, None, None]
     fig, axes = plt.subplots(3, 2, figsize=(8, 10), layout="constrained")
     for dimension, coordinate in enumerate(position):
@@ -154,6 +165,10 @@ def geometry_audit(manifest, args, out):
     for cohort in ("LUMIERE", "SAILOR"):
         candidates = [v for v in manifest["visits"] if v["cohort"] == cohort and v.get("measurement")
                       and not v.get("exclusions") and v["measurement"]["total_mm3"] > 0]
+        if not candidates:
+            records.append({"cohort": cohort, "verdict": "NOT VERIFIED",
+                            "error": "no eligible visits available for geometry QA"})
+            continue
         selected = rng.choice(len(candidates), min(args.visits_per_cohort, len(candidates)), replace=False)
         chosen.extend(candidates[int(i)] for i in selected)
     for visit in chosen:
@@ -191,6 +206,7 @@ def main():
     parser.add_argument("--manifest", default="outputs/anatomy_harmonization.json")
     parser.add_argument("--protocol", default="info/eval_folds.json")
     parser.add_argument("--lumiere-root", default="data/lumiere_preprocessed")
+    parser.add_argument("--meta-dir", default="data/lumiere_meta")
     parser.add_argument("--sailor-root", default="data/sailor/sailor_ebrains_pseud/derivatives/mni2009c-n-s")
     parser.add_argument("--out", default="outputs/validity")
     parser.add_argument("--visits-per-cohort", type=int, default=3)
@@ -207,13 +223,16 @@ def main():
               "tracked_diff_sha256": hashlib.sha256(subprocess.check_output(["git", "diff", "HEAD"])).hexdigest(),
               "manifest_sha256": hashlib.sha256(Path(args.manifest).read_bytes()).hexdigest(),
               "seed": args.seed, "structural": structural_audit(),
+              "clinical": clinical_audit(args.meta_dir, args.lumiere_root),
               "targets": target_audit(manifest, set(protocol["encoder_unseen"])),
               "geometry": geometry_audit(manifest, args, out),
               "limitations": ["sampled geometry QA; not full-cohort certification",
                               "affine alignment does not prove template equivalence",
                               "target discontinuity is descriptive; no expert truth or noise ceiling",
                               "no trained forecasting gain or independent confirmation"]}
-    passed = report["structural"]["verdict"] == "VERIFIED" and all(r["verdict"] == "VERIFIED" for r in report["geometry"])
+    passed = (report["structural"]["verdict"] == "VERIFIED"
+              and report["clinical"]["verdict"] == "VERIFIED"
+              and all(r["verdict"] == "VERIFIED" for r in report["geometry"]))
     report["verdict"] = "VERIFIED" if passed else "NOT VERIFIED"
     (out / "audit.json").write_text(json.dumps(report, indent=2, sort_keys=True, allow_nan=False) + "\n")
     print(f'{report["verdict"]}: structural checks and {len(report["geometry"])} sampled geometry visits')

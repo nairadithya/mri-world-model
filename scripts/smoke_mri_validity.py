@@ -15,12 +15,22 @@ from src.data.collate import collate_fn
 from src.data.dataset import LUMIEREDataset
 from src.model.jepa_model import JEPAWorldModel
 from src.model.jepa import jepa_loss
+from src.harness.encode.lesion import encode_visit
+
+
+def file_sha256(path):
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", default="config/pilot.yaml")
     parser.add_argument("--patient", default="Patient-067")
+    parser.add_argument("--manifest", default="outputs/anatomy_harmonization.json")
     parser.add_argument("--out", default="outputs/validity/cpu_smoke.json")
     args = parser.parse_args()
     torch.set_num_threads(2)
@@ -63,17 +73,45 @@ def main():
     teacher_changed = not torch.equal(teacher_before, teacher)
     with torch.no_grad():
         after = model(batch)
+        real = batch["mri"][0, 0, :1]
+        real_latent = model.backbone(real)
+        noise_latent = model.backbone(torch.randn_like(real))
+        drift = float((real_latent - noise_latent).norm() / real_latent.norm().clamp_min(1e-9))
+    manifest = json.loads(Path(args.manifest).read_text())
+    visit = next(v for v in manifest["visits"] if v["cohort"] == "LUMIERE"
+                 and v["patient_id"] == args.patient and v["visit"] in sample["visits"]
+                 and v.get("measurement") and not v.get("exclusions"))
+    crop = encode_visit(model, visit, lumiere_root=Path(cfg["data"]["root"]), sailor_root=Path("unused"))
+    crop_finite = all(torch.isfinite(crop[key]).all().item()
+                      for key in ("regions", "contrasts", "region_weights"))
+    optimizer.zero_grad(set_to_none=True)
+    model.train()
+    training = model(batch)
+    training["loss"].backward()
+    train_finite = all(torch.isfinite(p.grad).all().item() for p in model.parameters() if p.grad is not None)
     report = {"scope": "one optimizer/EMA step on four real CT1 visits; not trained forecasting evidence",
               "git_sha": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
-              "config_sha256": hashlib.sha256(Path(args.config).read_bytes()).hexdigest(),
+              "config_sha256": file_sha256(args.config),
+              "brainiac_sha256": file_sha256(cfg["model"]["brainiac"]["checkpoint"]),
+              "source_sha256": file_sha256(__file__),
+              "manifest_sha256": file_sha256(args.manifest),
               "seed": 42, "patient_id": args.patient, "visits": sample["visits"],
               "device": "cpu", "time_basis": model.temporal.time_basis,
               "loss_before": before, "loss_after": float(after["loss"]),
               "gradient_routing": routing, "gradients_finite": gradients_finite,
               "teacher_parameter_changed": teacher_changed, "baselines": baseline,
               "ema_checked_parameter": changed_name,
+              "training_mode_loss": float(training["loss"].detach()),
+              "training_mode_gradients_finite": train_finite,
+              "teacher_remains_eval_in_training_mode": not model.target.training,
+              "real_vs_noise_encoder_relative_l2": drift,
+              "real_crop_encoding": {"visit_id": visit["visit_id"], "regions_shape": list(crop["regions"].shape),
+                                     "contrasts_shape": list(crop["contrasts"].shape), "finite": crop_finite,
+                                     "geometry_contract": crop["geometry"]["geometry_contract"]},
               "target_std": float(out["target_std"]), "target_eff_rank": float(out["target_eff_rank"])}
-    passed = (gradients_finite and teacher_changed and torch.isfinite(after["loss"]).item()
+    passed = (gradients_finite and teacher_changed and train_finite and crop_finite
+              and not model.target.training and drift > 1e-3 and torch.isfinite(training["loss"]).item()
+              and torch.isfinite(after["loss"]).item()
               and all(torch.isfinite(torch.tensor(value)).item() for value in baseline.values())
               and routing == {"backbone": True, "projector": False, "predictor": True}
               and report["target_std"] > 0 and report["target_eff_rank"] > 1)
