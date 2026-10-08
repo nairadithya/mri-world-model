@@ -12,7 +12,7 @@ The repaired audit sampled three additional visits per cohort with seed 42. LUMI
 
 All six three-plane overlays were rendered and inspected. Alignment changed the LUMIERE hemisphere and placement. It left the sampled SAILOR observations unchanged. Patient-068/week-010 retained an apparent extracranial segmentation label. That visual observation is a reason for further QA. It is not an expert adjudication.
 
-Synthetic cutoff checks used nonzero residual weights. Future image-feature, time-gap, and volume gradients were zero at every lesion forecast cutoff. Equal-gap historical token swaps left the legacy temporal state unchanged. They changed the opt-in elapsed-time state. Both temporal modes passed prefix-causality tests. Default and explicit legacy outputs were exactly equal. Both modes share state-dictionary keys. The checkpoint loader rejects a time-basis mismatch even when weight shapes match. Eleven older raw JEPA load paths in nine analysis/training consumers also apply the shared semantic guard.
+Synthetic cutoff checks used nonzero residual weights. Future image-feature, time-gap, and volume gradients were zero at every lesion forecast cutoff. Equal-gap historical token swaps left the legacy temporal state unchanged. They changed the opt-in elapsed-time state. Both temporal modes passed prefix-causality tests. Default and explicit legacy outputs were exactly equal. Both modes share state-dictionary keys. The checkpoint loader rejects a time-basis mismatch even when weight shapes match. Thirteen raw JEPA load paths in ten analysis/training consumers also apply the shared semantic guard. Three notebook evaluation cells apply it before loading their checkpoint payloads.
 
 The online projector received no gradient under the default JEPA loss. Backbone LoRA and predictor parameters did receive gradients. No projector objective was added. A fixed projection is the current behavior, not a new finding that the projector was trained.
 
@@ -64,7 +64,7 @@ Run from the validity worktree with the repository environment.
 
 The audit writes `outputs/validity/audit.json`, overlays, and `sample_geometry_manifest.json`. The sample manifest covers only the sampled LUMIERE images. Full portable training needs an aggregate manifest for every image it will load. Export one with `src.preprocessing.geometry.export_geometry_manifest` over the selected final MRI paths. Pass it through `--geometry-manifest` to lesion encode, train, and transfer commands. Do not interpret sample coverage as whole-cohort certification.
 
-The tests cover synthetic flips, translated grids, physical volumes, missing/stale geometry, portable manifests, sidecars without retained intermediates, modality-grid conflicts, modality ordering, old artifact rejection, chronology, causal prefixes, legacy outputs, and checkpoint semantics. They exercise an evaluation entry point, distinguish pooled from patient-uniform estimands, preserve row identities, and reject vacuous empty-cohort QA. The 9 geometry, 7 temporal, 3 checkpoint-consumer, and 2 audit tests pass. Existing 25 harness checks and clean-rescue contracts pass. All 24 changed Python files compile. Independent review is pending at this record's creation. Review addenda below record closure.
+The tests cover synthetic flips, translated grids, physical volumes, missing/stale geometry, portable manifests, sidecars without retained intermediates, modality-grid conflicts, modality ordering, old artifact rejection, chronology, causal prefixes, legacy outputs, and checkpoint semantics. They exercise an evaluation entry point, distinguish pooled from patient-uniform estimands, preserve row identities, and reject vacuous empty-cohort QA. The 9 geometry, 7 temporal, 6 checkpoint-consumer, and 2 audit tests pass. Existing 25 harness checks and clean-rescue contracts pass. All 25 changed non-notebook Python files compile. The two changed notebook sources were regenerated with jupytext and checked for cell parity. Their evaluation guards are parsed by tests. No notebook cells were executed. Independent review was pending at this record's creation. The review addendum below records closure.
 
 The smoke harness initially used an incorrect collator import, an incomplete modality dictionary, and an incorrect crop-call signature. These were harness mistakes. It now uses the repository interfaces and marks non-CT1 smoke images absent. These failures were not model results.
 
@@ -74,9 +74,19 @@ An isolated loader worker initially introduced a pytest dependency and reported 
 
 Coordinate handling is structurally repaired. Full spatial/anatomical validity remains INCONCLUSIVE. The audit samples geometry and does not prove template equivalence, correct registration, or accurate segmentation.
 
-No learned forecasting gain is established. The corrected historical causal-lesion result remains relative MAE 1.00595 with a paired difference interval spanning zero on 117 rows. Historical leaked gains remain invalid. Aligned features and elapsed temporal semantics need retraining before comparison.
+No learned forecasting gain is established. The corrected historical causal-lesion result remains relative MAE 1.00595 with a paired difference interval spanning zero on 117 rows. Its source is `outputs/clean-rescues/clean-causal-lesion/causal_lesion_eval.json` in the main checkout. Historical leaked gains remain invalid. Aligned features and elapsed temporal semantics need retraining before comparison.
 
 Next gates are whole-cohort geometry QA, review of the largest zero-endpoint transitions and visible segmentation failures, a measurement-repeatability estimate, and a prespecified matched history-only experiment. Independent confirmation needs a genuinely unexamined cohort. These gates precede any renewed forecasting-success claim.
+
+## Independent review closure
+
+The first two-model review independently found the raw-checkpoint bypass and the modality-order defect. Parent reproductions confirmed both. The next fresh review found an omitted LoRA caller. The worker had incorrectly classified that caller as vision-only. Parent reproduced the bypass, guarded both LoRA loads, and extended the inventory to discover whole-world receivers across the harness. Matching and mismatched LoRA entry points now have behavioral tests. Notebook evaluation loads were guarded in the same unit.
+
+The final fresh review returned VERIFIED for both incremental repair and the overall bounded pass. Its source snapshot is `32310c166d79e892be629e977c6ab5e33a126df4`. All numerical evidence was regenerated at that commit with `tracked_dirty: false`. The final reports fingerprint the frozen manifest, configured weights, script, and smoke MRI files. The review identified no remaining implementation blocker. Its scientific limitations remain open.
+
+Review copies are under `outputs/validity/reviews/`. The final report is `closure.md`. Test logs use `test_*.log`; compilation evidence is `compile.log`. A compact evidence summary is `review_evidence_summary.json`. Generated evidence stays local and ignored. The source commit and rerun commands identify how to regenerate it.
+
+The exact-zero MRI proxy is now quantified. Patient-068/week-010 has enhancing and necrotic/nonenhancing fractions of 0.71127 and 0.56872. This is overlap with zero-valued MRI, not a validated anatomical brain mask. It cannot distinguish segmentation error, registration error, a resection cavity, or excessive skull stripping. Mask headers remain trusted source metadata. The lesion pipeline supports the BRAINIAC 96-cubed input contract, not arbitrary tensor sizes. These are QA and scope limits, not forecasting evidence.
 
 ## Decision principles
 
