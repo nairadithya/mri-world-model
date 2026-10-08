@@ -12,6 +12,10 @@ from src.model.temporal import TemporalTransformer
 
 
 class TemporalValidityTests(unittest.TestCase):
+    def setUp(self):
+        torch.manual_seed(42)
+        torch.set_num_threads(2)
+
     def test_elapsed_coordinates_are_cumulative_and_swap_changes_state(self):
         model = TemporalTransformer(d_model=8, nhead=2, num_layers=1, dropout=0,
                                     time_basis="elapsed").eval()
@@ -23,6 +27,11 @@ class TemporalValidityTests(unittest.TestCase):
         swapped = torch.tensor([[0., 20., 10.]])
         self.assertFalse(torch.allclose(model(tokens, gaps, mask),
                                         model(tokens, swapped, mask)))
+        history = torch.randn(1, 4, 8)
+        equal_gaps = torch.tensor([[0., 30., 30., 30.]])
+        valid = torch.ones(1, 4, dtype=torch.bool)
+        self.assertFalse(torch.allclose(model(history, equal_gaps, valid),
+                                        model(history[:, [0, 2, 1, 3]], equal_gaps, valid)))
 
     def test_legacy_equal_gap_swaps_remain_equal(self):
         model = TemporalTransformer(d_model=8, nhead=2, num_layers=1, dropout=0,
@@ -63,6 +72,32 @@ class TemporalValidityTests(unittest.TestCase):
                             for k, v in state.items()))
         self.assertTrue(all(torch.equal(v, legacy.state_dict()[k])
                             for k, v in state.items()))
+
+    def test_default_output_is_exactly_explicit_legacy(self):
+        default = TemporalTransformer(d_model=8, nhead=2, num_layers=1, dropout=0).eval()
+        explicit = TemporalTransformer(d_model=8, nhead=2, num_layers=1, dropout=0,
+                                       time_basis="previous_gap").eval()
+        explicit.load_state_dict(default.state_dict(), strict=True)
+        tokens = torch.randn(2, 4, 8)
+        gaps = torch.tensor([[0., 10., 20., 30.], [0., 7., 0., 0.]])
+        mask = torch.tensor([[True, True, True, True], [True, True, False, False]])
+        self.assertTrue(torch.equal(default(tokens, gaps, mask), explicit(tokens, gaps, mask)))
+        for a, b in zip(default.forward_prefixes(tokens, gaps, mask),
+                        explicit.forward_prefixes(tokens, gaps, mask)):
+            self.assertTrue(torch.equal(a, b))
+
+    def test_checkpoint_loader_rejects_same_shape_semantic_mismatch(self):
+        from src.harness.checkpoints import load_model
+        legacy = TemporalTransformer(d_model=8, nhead=2, num_layers=1)
+        elapsed = TemporalTransformer(d_model=8, nhead=2, num_layers=1, time_basis="elapsed")
+        payload = {"model": legacy.state_dict()}
+        load_model(legacy, payload)
+        with self.assertRaisesRegex(ValueError, "temporal time_basis"):
+            load_model(elapsed, payload)
+        payload["config"] = {"model": {"temporal": {"time_basis": "elapsed"}}}
+        load_model(elapsed, payload)
+        with self.assertRaisesRegex(ValueError, "temporal time_basis"):
+            load_model(legacy, payload)
 
     def test_invalid_basis_fails_and_jepa_config_is_wired(self):
         with self.assertRaises(ValueError):
