@@ -728,3 +728,16 @@ referenced, not repeated — only session decisions are recorded here in full.
   basin, surgery and transition-weighting notebooks regenerated and re-pushed.
   Control and fresh_accum1 arm results from the crashed run are valid and were
   fetched; loaded arms and fresh_accum8 re-run in the v2 basin kernel.
+
+- **D54. Verify observations and chronology before another forecasting run.**
+  R34 confirms that independent array resizing puts sampled LUMIERE lesion
+  masks in the wrong MRI coordinates. Use a shared affine-alignment boundary
+  with verified pre-resize image provenance. Preserve native volume targets.
+  Version aligned features and reject old geometry checkpoints and caches.
+  Keep previous-gap temporal behavior as the legacy default. Elapsed-time
+  encoding is opt-in and must match checkpoint configuration. The online
+  projector's absent gradient is documented, not repaired with an invented
+  objective. Sampled overlays and a real CPU smoke pass structural checks.
+  Apparent extracranial labels and differing templates still require QA.
+  Coordinate repair does not establish forecasting gains or measurement
+  repeatability. See `info/methodology_validity.md` and the decision TSV.

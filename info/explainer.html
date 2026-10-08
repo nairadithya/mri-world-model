@@ -14,7 +14,8 @@
 <body>
 <main>
 <h1>From P0 to lesion forecasting</h1>
-<div class="scope"><b>2026-10-02 validity update:</b> the learned P2.4 model used the follow-up image/mask and future interval to predict that follow-up. Its forecasting gains, seed repeats, and support adaptation are withdrawn (A40). The figures below retain historical numbers; the learned-model row is not valid forecasting evidence. A corrected source-history model and clean-data rescue reruns are in progress. <a href="clean_rescues.md">Audit and rerun protocol</a>.</div>
+<div class="scope"><b>Forecasting validity update.</b> The learned P2.4 model used follow-up images, masks, and intervals. Its forecasting gains and adaptations are withdrawn (A40). The corrected history-only model shows no supported improvement over persistence on 117 matched rows. The figures below retain historical numbers. The learned-model row is not valid forecasting evidence. <a href="clean_rescues.md">Causal audit and rescue protocol</a>.</div>
+<div class="scope"><b>R34. Observation and chronology audit.</b> Sampled LUMIERE lesion masks were in the wrong MRI coordinates. A verified affine-alignment boundary now replaces independent array resizing. Native volume targets are unchanged. Old crop findings need aligned re-evaluation. Elapsed-time encoding is opt-in and untrained. Structural checks and a real CPU smoke passed, but registration and segmentation validity remain unresolved. No new forecasting gain is established. <a href="methodology_validity.md">Evidence, limitations, and rerun commands</a>.</div>
 
 <p class="lede">We first made the comparison trustworthy, then measured how hard the forecasting task really is, and finally taught a model to look directly at lesion anatomy.</p>
 
@@ -31,7 +32,7 @@
 <h2>P0 — Make the experiment fair</h2>
 <p>Before judging a model, we needed every method to answer the same question on the same patient pairs. P0 gave each pair a fixed identity, separated past-only forecasts from tasks that can use the follow-up scan, removed eventual survival from prediction inputs, and corrected the metric and patient-level uncertainty code.</p>
 <p>We also recovered the LUMIERE lesion masks (voxel maps labeling tumor regions), checked their physical geometry, and aligned the compartment definitions with SAILOR's ONCO masks (its automated tumor segmentation), while recording where mask measurements differ. Volumes are recorded in mm³; errors are scored after a log transform (taking the logarithm, which makes proportional size changes comparable). The primary horizon is “the next observed visit”: dates are not precise enough across both cohorts to claim a fixed number of days.</p>
-<p class="result"><b>What P0 gives us:</b> a reproducible, RANO-free anatomy benchmark with explicit exclusions, physical-volume targets, and patient-paired comparisons. P0 is closed for this task.</p>
+<p class="result"><b>What P0 gives us.</b> A reproducible, RANO-free measurement benchmark with explicit exclusions, native physical-volume targets, and patient-paired comparisons. Image-mask localization and segmentation quality remain open validity gates.</p>
 <p class="caution"><b>Still outside that closure:</b> the SAILOR numeric RANO code mapping is unverified, treatment timing is incomplete, and no new untouched external cohort has been reserved. So P0 does not validate clinical response labels or fixed-horizon risk.</p>
 
 <h2>P1 — Establish the honest baseline</h2>
