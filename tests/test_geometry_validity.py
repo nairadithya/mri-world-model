@@ -15,7 +15,7 @@ from src.preprocessing.geometry import (GEOMETRY_CONTRACT, Grid, align_masks,
                                         export_geometry_manifest, export_image_geometry, image_grid,
                                         require_geometry_contract)
 from src.preprocessing.transforms import resize_to, zscore_nonzero
-from src.harness.train.lesion import load_masks
+from src.harness.train.lesion import load_masks, selected_image_paths
 from src.harness.encode.lesion import mask_specs
 
 
@@ -124,6 +124,11 @@ class GeometryTests(unittest.TestCase):
             align_masks([(bad, None)], [image])
         with self.assertRaises(ValueError):
             Grid((5, 5, 5), np.zeros((4, 4)))
+
+    def test_image_paths_follow_collator_columns_not_dictionary_order(self):
+        sample = {"paths": {"T1": [None], "CT1": ["ct1.nii"], "T2": [None], "FLAIR": [None]}}
+        actual = selected_image_paths(sample, [0], torch.tensor([[True, False, False, False]]))
+        self.assertEqual(actual, [["ct1.nii"]])
 
     def test_training_uses_the_shared_boundary(self):
         image, mask = self.phantom()

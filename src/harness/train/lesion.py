@@ -14,7 +14,7 @@ import yaml
 from torch.utils.data import DataLoader
 
 from src.data.collate import make_collate
-from src.data.dataset import LUMIEREDataset
+from src.data.dataset import LUMIEREDataset, MODALITIES
 from src.data.eval_protocol import load_protocol
 from src.harness.checkpoints import load_model
 from src.harness.data.anatomy_manifest import _stable_id
@@ -39,8 +39,9 @@ def _mask_path(root: str, patient: str, visit: str) -> Path:
 
 
 def selected_image_paths(sample: dict, indices: list[int], present: torch.Tensor) -> list[list[str]]:
-    return [[paths[t] for mi, paths in enumerate(sample["paths"].values())
-             if bool(present[t, mi]) and paths[t] is not None] for t in indices]
+    return [[sample["paths"][modality][t] for mi, modality in enumerate(MODALITIES)
+             if bool(present[t, mi]) and sample["paths"][modality][t] is not None]
+            for t in indices]
 
 
 def load_masks(root: str, patient: str, visits: list[str],
