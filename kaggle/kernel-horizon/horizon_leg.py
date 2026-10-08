@@ -110,7 +110,11 @@ common = dict(meta_dir=cfg['data']['meta_dir'], processed_root=cfg['data']['root
               min_visits=cfg['data'].get('min_visits', 2))
 collate = make_collate(size)
 model = JEPAWorldModel(cfg)
-model.load_state_dict(torch.load('/kaggle/working/checkpoints/best.pt', map_location='cpu')['model'], strict=False)
+from src.harness.checkpoints import validate_temporal_semantics
+checkpoint = torch.load('/kaggle/working/checkpoints/best.pt', map_location='cpu', weights_only=False)
+validate_temporal_semantics(model, checkpoint)
+model.load_state_dict(checkpoint['model'], strict=False)
+del checkpoint
 model.eval().to(device)
 by_n = {}
 pats = sorted(os.listdir(cfg['data']['root']))

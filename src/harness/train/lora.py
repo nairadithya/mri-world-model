@@ -42,6 +42,7 @@ from ...data.eval_protocol import load_protocol
 from ...model.heads import ACTION_TO_FLAT, CLEAN_ACTIONS
 from ...model.jepa import jepa_loss
 from ...model.jepa_model import JEPAWorldModel
+from ..checkpoints import validate_temporal_semantics
 from ..eval.aggregate import percentile_ci as _ci
 from ..eval.aggregate import patient_bootstrap
 from ..eval.metrics import macro_f1  # noqa: F401
@@ -187,6 +188,7 @@ def main(argv=None):
     model = JEPAWorldModel(cfg)
     if not args.random_init:
         ckpt = torch.load(args.champion, map_location="cpu", weights_only=False)
+        validate_temporal_semantics(model, ckpt)
         model.load_state_dict(ckpt["model"], strict=False)
         print(f"champion {args.champion} (epoch {ckpt.get('epoch')}, val {ckpt.get('val_loss')})")
     rep_params, head_params = configure_trainable(model)
@@ -294,6 +296,7 @@ def main(argv=None):
         # touch the reserved final slice exactly once
         best = torch.load(os.path.join(args.checkpoint_dir, "best.pt"),
                           map_location=device, weights_only=False)
+        validate_temporal_semantics(model, best)
         model.load_state_dict(best["model"])
         final_ds = LUMIEREDataset(patients=proto["final"], **common)
         final_loader = DataLoader(final_ds, batch_size=1, shuffle=False, num_workers=0,

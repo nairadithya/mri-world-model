@@ -1,4 +1,4 @@
-"""Fusion (LayerNorm + concat) and temporal transformer with time-delta encodings."""
+"""Fusion and temporal transformer with configurable day coordinates."""
 from __future__ import annotations
 
 import math
@@ -22,9 +22,9 @@ class Fusion(nn.Module):
 
 
 class TimeDeltaEncoding(nn.Module):
-    """Sinusoidal encoding of days-since-previous-visit + learned residual.
+    """Sinusoidal encoding of a nonnegative day coordinate plus learned residual.
 
-    Maps scalar delta_d (days) -> (d_model,) vector added to the token.
+    Maps scalar days to a (d_model,) vector added to the token.
     """
 
     def __init__(self, d_model: int, max_days: float = 3000.0):
@@ -37,7 +37,7 @@ class TimeDeltaEncoding(nn.Module):
 
     def forward(self, deltas: torch.Tensor) -> torch.Tensor:
         """deltas: (B, T) days -> (B, T, d_model)."""
-        x = deltas.clamp_min(0).unsqueeze(-1) / self.max_days  # (B,T,1) in [0,1]
+        x = deltas.clamp_min(0).unsqueeze(-1) / self.max_days
         half = self.d_model // 2
         freqs = torch.exp(
             -math.log(10000.0) * torch.arange(half, device=deltas.device) / half
