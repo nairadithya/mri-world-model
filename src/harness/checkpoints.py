@@ -85,6 +85,18 @@ def inspect(source: str | Path | Mapping[str, Any]) -> dict:
     }
 
 
+def validate_temporal_semantics(model: torch.nn.Module, payload: Mapping[str, Any]) -> None:
+    """Reject checkpoint/model time-basis mismatches before loading raw weights."""
+    temporal = getattr(model, "temporal", model)
+    basis = getattr(temporal, "time_basis", None)
+    if basis is not None:
+        saved = payload.get("config", {}).get("model", {}).get("temporal", {}).get(
+            "time_basis", "previous_gap")
+        if saved != basis:
+            raise ValueError(f"checkpoint temporal time_basis={saved!r} != model time_basis={basis!r}; "
+                             "state-dict shape compatibility does not establish temporal compatibility")
+
+
 def load_model(model: torch.nn.Module, source: str | Path | Mapping[str, Any], *,
                optional_missing_prefixes: tuple[str, ...] = (),
                legacy_prefixes: tuple[str, ...] = LEGACY_OPTIONAL_PREFIXES,
@@ -97,14 +109,7 @@ def load_model(model: torch.nn.Module, source: str | Path | Mapping[str, Any], *
     temporal semantics mean previous_gap. Changed time bases require new training.
     """
     payload, path = read(source)
-    temporal = getattr(model, "temporal", model)
-    basis = getattr(temporal, "time_basis", None)
-    if basis is not None:
-        saved = payload.get("config", {}).get("model", {}).get("temporal", {}).get(
-            "time_basis", "previous_gap")
-        if saved != basis:
-            raise ValueError(f"checkpoint temporal time_basis={saved!r} != model time_basis={basis!r}; "
-                             "state-dict shape compatibility does not establish temporal compatibility")
+    validate_temporal_semantics(model, payload)
     incoming, container = state_dict(payload)
     expected = model.state_dict()
     compatible, unexpected, ignored, mismatched = {}, [], [], []

@@ -26,6 +26,7 @@ from torch.utils.data import DataLoader
 from src.data.collate import make_collate
 from src.data.sailor import SAILORDataset
 from src.model.jepa_model import JEPAWorldModel
+from src.harness.checkpoints import validate_temporal_semantics
 
 SAILOR_ROOT = "data/sailor/sailor_ebrains_pseud/derivatives/mni2009c-n-s"
 BINS = [0, 21, 60, 180, float("inf")]
@@ -54,6 +55,7 @@ def main(argv=None):
                         collate_fn=make_collate(size))
     model = JEPAWorldModel(cfg)
     ckpt = torch.load(args.champion, map_location="cpu", weights_only=False)
+    validate_temporal_semantics(model, ckpt)
     model.load_state_dict(ckpt["model"], strict=False)
     model.eval()
     for p in model.parameters():
