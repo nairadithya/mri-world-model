@@ -1,6 +1,6 @@
 # R35. State, observed change, and nuisance comparison
 
-Status: authorized implementation and execution. No scientific result yet.
+Status: control diagnostics complete. First GPU candidate run is invalid. Corrected run is being prepared. No valid trained candidate result yet.
 
 ## Question and capability tested
 
@@ -53,3 +53,33 @@ Two shapes were considered by the parent. Extending the legacy RANO trainers exp
 `src/data/representation.py` owns portable inventories and tensor preparation. `src/model/representation.py` owns the shared spatial state and observed-pair models. `src/harness/analysis/representation.py` owns fixed training, nested probes, nuisance tests, and artifact records. The unified CLI dispatches `representation` commands to that package.
 
 The local decision trail is `.audit/representation-comparison.tsv`. Numerical artifacts are under the ignored `outputs/representation-comparison` directory in the original checkout, exposed as `outputs` in this isolated worktree.
+
+## Control diagnostics, 2026-10-09
+
+Artifact: `outputs/frozen_controls.json`. On 149 measured visits from 26 encoder-unseen patients, cached MRI-only ridge gave patient-uniform state MAE 1.6008 versus 1.8359 for the fold-trained mean. Learned minus mean was -0.2351, with paired patient 95% interval [-0.4280, -0.0423]. On 117 observed pairs from 23 patients, feature differences gave change MAE 1.5272 versus 1.5446 for zero change. The difference interval [-0.0893, 0.0519] crossed zero. These are native automated-compartment log-volume proxies, not expert-change or forecast outcomes.
+
+A post-hoc within-patient permutation diagnostic increased state MAE to 1.7543. Original minus shuffled MAE was -0.1535, with patient bootstrap interval [-0.2230, -0.0879]. Artifact: `outputs/frozen-state-shuffle.json`. This suggests visit-specific information beyond a patient's average burden. It does not distinguish biological change from visit-specific acquisition effects. It is not a prespecified success gate.
+
+A scalar-supervision control uses the same 52 training patients as the spatial model, rather than fitting readouts on unseen-patient folds. Artifact: `outputs/frozen-supervised-controls.json`. State MAE was 1.5000 versus 1.7051 for the source-training mean, with difference interval [-0.3792, -0.0361]. Pair concatenation MAE was 1.4882 versus 1.5446 for zero change. All change intervals and the incremental source controls must be inspected before interpreting that point estimate. This control has no dense-mask objective. Spatial-model comparisons cannot isolate architecture from additional dense supervision.
+
+The cached reference records its creation checkpoint path, epoch, and validation loss, but not checkpoint bytes. Those metadata match the current clean checkpoint. Fresh GPU reference extraction is still required before attributing these cache-backed diagnostics definitively to that checkpoint.
+
+The existing `p0_sailor_cache.pt` has no visit identifiers. It cannot support a safe new state join by guessing session order. The new cache join rejects it. Fresh local MRI encoding will be used instead. This is an artifact limitation, not a transfer score.
+
+## Execution receipt
+
+Private kernel: `nairadithya/r35-representation-comparison`, version 1. Server metadata confirms `is_private: true` and `machine_shape: NvidiaTeslaT4`. Source commit: `e28340827527237476b4713a9cd278da4ad313bd`. Snapshot SHA256: `971b1f1c6a649da36938e569d542da50b5bf0e1d767f30e56e24d4126470ff2c`. Only LUMIERE metadata and existing private LUMIERE inputs are in that session.
+
+Nine representation contract tests, the existing 25 harness tests, geometry and temporal-validity regressions, Python compilation, notebook-pair synchronization, and the real CLI listing passed before launch. A real aligned 96-cubed visit passed forward, finite backward, and one optimizer step. Its loss changed from 11.6868 to 10.7578. That is a runtime check, not model quality evidence.
+
+Local SAILOR preparation completed with 269 visits and 242 pairs. Native volume agreement and pair grid identity passed. Independent review is still unavailable. GPU completion, fresh-reference agreement, matched controls, and transfer remain pending.
+
+## Numerical repair and fixed rerun
+
+The first GPU candidate run is INVALID for model claims. A later 96-cubed mixed-precision fixture exposed overflow in the Dice probability sum. The first loss accumulated the sigmoid map in float16. The synthetic all-one-mask fixture produced loss 1.693359 in half precision versus 1.026480 in float32. No candidate test scores had been inspected when this defect was found. The repair converts dense logits and masks to float32 before loss and reduction. A regression now checks loss agreement and finite, nonzero half-input gradients.
+
+The corrected checkpoint contract records `dense_loss_contract: float32-reductions-v1`. Transfer rejects pre-repair checkpoints. Corrected artifacts bind features to checkpoint digests and include split, source-data, normalization, and training details. Direct trained heads are saved separately from nested unseen-cohort readouts. The scalar-volume frozen control is their relevant simple comparator. Dense-supervision and pretraining differences remain explicit.
+
+The installed Kaggle CLI supports `kernels logs --follow`; the live log confirmed Tesla T4. The batch cancellation API needs a session ID that this client does not expose for the launched batch. No ID was guessed and no unrelated session was touched. The first run remains capped at nine hours and will not be graded. Quota was rechecked at 0.94 used and 29.06 remaining hours. A distinct corrected private session also has a nine-hour ceiling, keeping worst-case total reservation below 30 hours.
+
+Generated notebook pairs contain a private LUMIERE data inventory. They live under ignored `outputs/private-kernel*`, not in committed `kaggle/`. Commit only the packaging source, tests, and aggregate research record. Verify the generated pair with Jupytext before every push.

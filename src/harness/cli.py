@@ -113,7 +113,7 @@ def cmd_list(_args) -> None:
     _log("anatomy:    manifest, features, baseline, residual, fusion, coverage, "
          "lesion-encode, lesion-eval, lesion-decode, lesion-transfer, lesion-adapt")
     _log("checkpoint: inspect")
-    _log("representation: export, prepare, controls, reference, train")
+    _log("representation: export, prepare, controls, supervised-controls, smoke, reference, train, cached-transfer, transfer")
     _log("legacy:     list, encode, eval, train, run")
 
 

@@ -38,15 +38,16 @@ def save_json(path: str | Path, payload: dict) -> None:
     temporary.replace(path)
 
 
-def patient_relative(path: str) -> str:
+def patient_relative(path: str, patient: str) -> str:
     parts = Path(path).parts
-    indexes = [i for i, part in enumerate(parts) if part.startswith("Patient-")]
+    indexes = [i for i, part in enumerate(parts) if part == patient]
     if len(indexes) != 1:
-        raise ValueError("expected one LUMIERE patient directory")
+        raise ValueError("expected one exact patient directory")
     return str(Path(*parts[indexes[0]:]))
 
 
-def export_inventory(manifest_path: str, geometry_path: str, protocol_path: str, out: str) -> dict:
+def export_inventory(manifest_path: str, geometry_path: str, protocol_path: str, out: str,
+                     cohort: str = "LUMIERE") -> dict:
     manifest = json.loads(Path(manifest_path).read_text())
     geometry = json.loads(Path(geometry_path).read_text())
     protocol = json.loads(Path(protocol_path).read_text())
@@ -54,28 +55,37 @@ def export_inventory(manifest_path: str, geometry_path: str, protocol_path: str,
     unseen = set(protocol["encoder_unseen"])
     if train & unseen or set(protocol["folds"]) != unseen:
         raise ValueError("invalid encoder/probe patient partition")
+    if cohort not in {"LUMIERE", "SAILOR"}:
+        raise ValueError("unknown cohort")
     visits = []
     for visit in manifest["visits"]:
-        if visit["cohort"] != "LUMIERE" or not visit.get("measurement") or visit.get("exclusions"):
+        if visit["cohort"] != cohort or not visit.get("measurement") or visit.get("exclusions"):
             continue
         measurement = visit["measurement"]
-        spec = measurement["mask"]
+        if "mask" in measurement:
+            spec = measurement["mask"]
+            mask_specs = [{"relative": patient_relative(spec["path"], visit["patient_id"]),
+                           "label": spec["labels"][name]} for name in COMPARTMENTS]
+        else:
+            mask_specs = [{"relative": patient_relative(measurement["masks"][name]["path"], visit["patient_id"]),
+                           "label": None} for name in COMPARTMENTS]
         visits.append({"visit_id": visit["visit_id"], "patient_id": visit["patient_id"],
-                       "visit": visit["visit"], "mask_relative": patient_relative(spec["path"]),
-                       "labels": spec["labels"], "values_mm3": measurement["values_mm3"]})
+                       "visit": visit["visit"], "cohort": cohort, "mask_specs": mask_specs,
+                       "values_mm3": measurement["values_mm3"]})
     identifiers = {v["visit_id"] for v in visits}
     if len(identifiers) != len(visits):
         raise ValueError("duplicate visit identity")
-    pairs = [p for p in manifest["pairs"] if p["cohort"] == "LUMIERE" and p["usable"]]
+    pairs = [p for p in manifest["pairs"] if p["cohort"] == cohort and p["usable"]]
     if any(p["source_visit_id"] not in identifiers or p["target_visit_id"] not in identifiers for p in pairs):
         raise ValueError("usable pair has no measured endpoint")
     patients = {v["patient_id"] for v in visits}
-    if not patients <= train | unseen:
+    if cohort == "LUMIERE" and not patients <= train | unseen:
         raise ValueError("visit outside frozen patient partition")
     payload = {"contract": CONTRACT, "schema_version": 1, "target_version": manifest["target_version"],
                "visits": visits, "pairs": pairs, "protocol": protocol,
+               "cohort": cohort,
                "geometry": {**geometry, "images": {k: v for k, v in geometry["images"].items()
-                                                     if k.startswith("Patient-")}},
+                                                     if k.split("/")[0] in patients}},
                "source_hashes": {"manifest": digest(manifest_path), "geometry": digest(geometry_path),
                                   "protocol": digest(protocol_path)}}
     save_json(out, payload)
@@ -106,16 +116,31 @@ def prepare(inventory_path: str, mri_root: str, mask_root: str, out: str, limit:
     selected = inventory["visits"][:limit] if limit is not None else inventory["visits"]
     for index, visit in enumerate(selected, 1):
         directory = Path(mri_root) / visit["patient_id"] / visit["visit"]
-        paths = [find_image(directory, name) for name in SEQUENCES]
+        if inventory.get("cohort", "LUMIERE") == "SAILOR":
+            from src.data.sailor import SAILOR_MODALITIES, _central_nzfrac, EMPTY_NZ_THRESHOLD
+            paths = []
+            for _, stems in SAILOR_MODALITIES:
+                candidates = [find_image(directory, stem) for stem in stems]
+                path = next((p for p in candidates if p is not None and _central_nzfrac(str(p)) >= EMPTY_NZ_THRESHOLD), None)
+                paths.append(path)
+        else:
+            paths = [find_image(directory, name) for name in SEQUENCES]
         present = np.asarray([p is not None for p in paths], dtype=bool)
         if not present.any():
             raise ValueError(f"measured visit has no MRI: {visit['visit_id']}")
-        mask_path = Path(mask_root) / visit["mask_relative"]
-        if not mask_path.exists():
-            alternate = mask_path.with_suffix("") if mask_path.suffix == ".gz" else Path(str(mask_path) + ".gz")
-            mask_path = alternate if alternate.exists() else mask_path
-        aligned = align_masks([(mask_path, visit["labels"][name]) for name in COMPARTMENTS],
-                              [p for p in paths if p is not None], manifest=inventory["geometry"])
+        declared_masks = visit.get("mask_specs")
+        if declared_masks is None and inventory.get("cohort", "LUMIERE") == "LUMIERE":
+            declared_masks = [{"relative": visit["mask_relative"], "label": visit["labels"][c]} for c in COMPARTMENTS]
+        if declared_masks is None or len(declared_masks) != len(COMPARTMENTS):
+            raise ValueError("visit must declare exactly three compartment masks")
+        mask_specs = []
+        for spec in declared_masks:
+            mask_path = Path(mask_root) / spec["relative"]
+            if not mask_path.exists():
+                alternate = mask_path.with_suffix("") if mask_path.suffix == ".gz" else Path(str(mask_path) + ".gz")
+                mask_path = alternate if alternate.exists() else mask_path
+            mask_specs.append((mask_path, spec["label"]))
+        aligned = align_masks(mask_specs, [p for p in paths if p is not None], manifest=inventory["geometry"])
         native = aligned.native_volumes_mm3.numpy()
         expected = np.asarray([visit["values_mm3"][name] for name in COMPARTMENTS])
         if not np.allclose(native, expected, rtol=1e-6, atol=1):
@@ -149,7 +174,7 @@ def prepare(inventory_path: str, mri_root: str, mask_root: str, out: str, limit:
         pairs.append(pair)
     payload = {"contract": CONTRACT, "schema_version": 1, "inventory_sha256": inventory_hash,
                "source_hashes": inventory["source_hashes"], "visits": visits, "pairs": pairs,
-               "protocol": inventory["protocol"], "limit": limit,
+               "protocol": inventory["protocol"], "cohort": inventory.get("cohort", "LUMIERE"), "limit": limit,
                "geometry_contract": inventory["geometry"]["geometry_contract"],
                "image_shape": [4, 96, 96, 96], "targets": "automated native log1p compartment volumes"}
     save_json(metadata_path, payload)

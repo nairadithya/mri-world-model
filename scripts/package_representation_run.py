@@ -1,4 +1,4 @@
-"""Build a private executable notebook from a pinned local source snapshot."""
+"""Build a private source-and-data notebook under ignored outputs; never commit it."""
 from __future__ import annotations
 
 import argparse
@@ -117,6 +117,8 @@ prepared = json.loads(Path("prepared/prepared.json").read_text())
 assert len(prepared["visits"]) == 599 and len(prepared["pairs"]) == 496
 
 # %%
+subprocess.run(["python", "-u", "-m", "src.harness.analysis.representation", "smoke",
+                "--prepared", "prepared", "--out", "results/real-gpu-smoke.json"], check=True)
 subprocess.run(["python", "-u", "-m", "src.harness.analysis.representation", "reference",
                 "--prepared", "prepared", "--checkpoint", str(checkpoints[0]),
                 "--out", "results/reference"], check=True)
@@ -128,12 +130,12 @@ subprocess.run(["python", "-u", "-m", "src.harness.analysis.representation", "tr
 run = json.loads(Path("results/comparison/run.json").read_text())
 print("run status", run.get("status", "UNKNOWN"))
 print(json.dumps(run["runs"], indent=2))
-subprocess.run(["tar", "-czf", "/kaggle/working/r35-results.tar.gz", "results", "source_snapshot.json", "environment.txt"], check=True)
+subprocess.run(["tar", "-czf", "/kaggle/working/r35-results.tar.gz", "results", "source_snapshot.json", "environment.txt", "prepared/prepared.json"], check=True)
 '''
     directory = Path(out)
     directory.mkdir(parents=True, exist_ok=True)
     (directory / "representation_leg.py").write_text(notebook)
-    metadata = {"id": "nairadithya/r35-representation-comparison", "title": "R35 representation comparison",
+    metadata = {"id": "nairadithya/r35-representation-comparison-fixed", "title": "R35 representation comparison fixed",
                 "code_file": "representation_leg.ipynb", "language": "python", "kernel_type": "notebook",
                 "is_private": True, "enable_gpu": True, "enable_internet": True,
                 "machine_shape": "NvidiaTeslaT4",
@@ -150,6 +152,6 @@ subprocess.run(["tar", "-czf", "/kaggle/working/r35-results.tar.gz", "results", 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--inventory", required=True)
-    parser.add_argument("--out", default="kaggle/kernel-representation")
+    parser.add_argument("--out", default="outputs/private-kernel")
     args = parser.parse_args()
     package(args.inventory, args.out)

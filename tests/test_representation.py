@@ -10,7 +10,8 @@ import numpy as np
 import torch
 
 from src.data.representation import CONTRACT, ObservedPairs, Visits, prepare, save_json
-from src.harness.analysis.representation import metrics, nested_predictions, paired_interval, state_loss
+from src.harness.analysis.representation import (cache_features, metrics, nested_predictions,
+                                                paired_interval, state_loss, transfer_features)
 from src.model.representation import ObservedChange, SpatialState, nuisance
 
 
@@ -39,6 +40,18 @@ class RepresentationTests(unittest.TestCase):
         self.assertTrue(torch.isfinite(loss))
         self.assertTrue(all(torch.isfinite(p.grad).all() for p in model.parameters() if p.grad is not None))
         self.assertGreater(float(model.blocks[0].body[0].weight.grad.norm()), 0)
+
+    def test_half_precision_dense_reductions_match_float(self):
+        shape = (1, 3, 96, 96, 96)
+        half = {"mask_logits": torch.zeros(shape, dtype=torch.float16, requires_grad=True), "volume": torch.zeros(1, 3)}
+        full = {**half, "mask_logits": half["mask_logits"].detach().float()}
+        batch = {"masks": torch.ones(shape), "volume": torch.zeros(1, 3)}
+        actual = state_loss(half, batch, torch.zeros(3), torch.ones(3))
+        expected = state_loss(full, batch, torch.zeros(3), torch.ones(3))
+        torch.testing.assert_close(actual, expected, rtol=0, atol=1e-6)
+        actual.backward()
+        self.assertTrue(torch.isfinite(half["mask_logits"].grad).all())
+        self.assertGreater(float(half["mask_logits"].grad.abs().sum()), 0)
 
     def test_later_only_ignores_source_exactly(self):
         image, availability = self.inputs()
@@ -98,6 +111,19 @@ class RepresentationTests(unittest.TestCase):
         for patient in set(groups):
             self.assertTrue(np.all(mean[groups == patient] == mean[groups == patient][0]))
 
+    def test_cache_without_visit_ids_is_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "cache.pt"
+            torch.save({"schema_version": 2, "provenance": {"clinical_schema": "survival_free_v1"},
+                        "patients": {"p": {"vision": torch.ones(1, 2)}}}, path)
+            with self.assertRaisesRegex(ValueError, "visit identifiers"):
+                cache_features({"visits": []}, str(path))
+
+    def test_transfer_rejects_overlapping_patients(self):
+        metadata = {"protocol": {"encoder_unseen": ["p"]}, "visits": [{"patient_id": "p"}]}
+        with self.assertRaisesRegex(ValueError, "overlap"):
+            transfer_features(metadata, {}, metadata, {}, "unused.json", provenance={})
+
     def test_real_geometry_preparation_fixture_is_idempotent(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -114,8 +140,8 @@ class RepresentationTests(unittest.TestCase):
                 mask[4:8, 4:8, 4:8] = 1
                 nib.save(nib.Nifti1Image(mask, affine), mask_dir / "mask.nii.gz")
                 visits.append({"visit_id": f"v{index}", "patient_id": "Patient-001", "visit": f"week-00{index}",
-                               "mask_relative": f"Patient-001/week-00{index}/mask.nii.gz",
-                               "labels": {"necrotic_non_enhancing": 2, "enhancing": 1, "edema_flair": 3},
+                               "mask_specs": [{"relative": f"Patient-001/week-00{index}/mask.nii.gz", "label": label}
+                                              for label in (2, 1, 3)],
                                "values_mm3": {"necrotic_non_enhancing": 0, "enhancing": 512, "edema_flair": 0}})
             inventory = {"contract": CONTRACT, "visits": visits, "pairs": [{"row_id": "r", "patient_id": "Patient-001",
                          "source_visit_id": "v0", "target_visit_id": "v1"}], "protocol": {}, "source_hashes": {},

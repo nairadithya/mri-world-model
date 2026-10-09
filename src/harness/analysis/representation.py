@@ -156,14 +156,15 @@ def probe_features(metadata: dict, features: dict[str, np.ndarray], out: str, *,
     return output
 
 
-def cached_controls(inventory: str, cache: str, out: str) -> dict:
-    metadata = json.loads(Path(inventory).read_text())
+def cache_features(metadata: dict, cache: str) -> tuple[dict, dict]:
     artifact = torch.load(cache, map_location="cpu", weights_only=False)
     if artifact.get("schema_version") != 2 or artifact.get("provenance", {}).get("clinical_schema") != "survival_free_v1":
         raise ValueError("controls require schema-2 survival-free features")
     features = {}
     records = {(v["patient_id"], v["visit"]): v["visit_id"] for v in metadata["visits"]}
     for patient, item in artifact["patients"].items():
+        if "visits" not in item:
+            raise ValueError("cache omits visit identifiers; cannot rejoin by inferred row order")
         if len(item["visits"]) != len(item["vision"]):
             raise ValueError("cached visits and image features differ")
         for index, visit in enumerate(item["visits"]):
@@ -172,9 +173,27 @@ def cached_controls(inventory: str, cache: str, out: str) -> dict:
                 if not item["has_img"][index] or not torch.isfinite(item["vision"][index]).all():
                     raise ValueError("invalid MRI feature at a measured visit")
                 features[identifier] = item["vision"][index].numpy()
-    return probe_features(metadata, features, out, provenance={**source_record(),
-                          "inventory_sha256": digest(inventory), "cache_sha256": digest(cache),
-                          "feature_source": "clean frozen global BRAINIAC vision; no clinical or mask inputs"})
+    if set(features) != set(records.values()):
+        raise ValueError("cache does not cover every measured visit")
+    return features, {**source_record(), "cache_sha256": digest(cache), "cache_provenance": artifact["provenance"],
+                      "feature_source": "cached global BRAINIAC vision; no clinical or mask inputs",
+                      "checkpoint_identity": "creation records path, epoch and validation loss, not checkpoint digest"}
+
+
+def cached_controls(inventory: str, cache: str, out: str) -> dict:
+    metadata = json.loads(Path(inventory).read_text())
+    features, provenance = cache_features(metadata, cache)
+    return probe_features(metadata, features, out, provenance={**provenance, "inventory_sha256": digest(inventory)})
+
+
+def cached_transfer(training_inventory: str, training_cache: str, query_inventory: str,
+                    query_cache: str, out: str) -> dict:
+    training_metadata = json.loads(Path(training_inventory).read_text())
+    query_metadata = json.loads(Path(query_inventory).read_text())
+    training_features, training_provenance = cache_features(training_metadata, training_cache)
+    query_features, query_provenance = cache_features(query_metadata, query_cache)
+    return transfer_features(training_metadata, training_features, query_metadata, query_features, out,
+                             provenance={"training": training_provenance, "query": query_provenance})
 
 
 @torch.no_grad()
@@ -259,13 +278,119 @@ def frozen_reference(prepared: str, checkpoint_path: str, out: str) -> dict:
     provenance = {**source_record(), "checkpoint_sha256": expected_hash,
                   "prepared_sha256": digest(Path(prepared) / "prepared.json")}
     torch.save({"features": features, "provenance": provenance, "contract": CONTRACT}, output / "features.pt")
+    if visits.metadata.get("cohort") == "SAILOR":
+        return {"status": "encoded_for_developmental_transfer", "n_visits": len(features), "provenance": provenance}
     result = probe_features(visits.metadata, features, str(output / "probes.json"), provenance=provenance)
     save_json(output / "nuisance.json", probe_nuisance(visits.metadata, features, visits, encode, device=device))
     return result
 
 
+def transfer_features(training_metadata: dict, training_features: dict, query_metadata: dict, query_features: dict,
+                      out: str, *, training_pair_features: dict | None = None,
+                      query_pair_features: dict | None = None, provenance: dict,
+                      training_patients: list[str] | None = None) -> dict:
+    unseen = set(training_patients or training_metadata["protocol"]["encoder_unseen"])
+    train_visits = [v for v in training_metadata["visits"] if v["patient_id"] in unseen]
+    query_visits = query_metadata["visits"]
+    if unseen & {v["patient_id"] for v in query_visits}:
+        raise ValueError("training and query patients overlap")
+    def arrays(records, features):
+        return (np.stack([features[v["visit_id"]] for v in records]),
+                np.stack([np.log1p([v["values_mm3"][c] for c in COMPARTMENTS]) for v in records]),
+                np.asarray([v["patient_id"] for v in records]))
+    xa, ya, ga = arrays(train_visits, training_features)
+    xb, yb, gb = arrays(query_visits, query_features)
+    scaler, model, alpha = fit_ridge(xa, ya, ga)
+    state_prediction = model.predict(scaler.transform(xb))
+    state_mean = np.broadcast_to(ya.mean(0), yb.shape)
+    def pairs(records, pairs, x, y, allowed=None):
+        lookup = {v["visit_id"]: i for i, v in enumerate(records)}
+        eligible = [p for p in pairs if allowed is None or p["patient_id"] in allowed]
+        a = np.asarray([lookup[p["source_visit_id"]] for p in eligible])
+        b = np.asarray([lookup[p["target_visit_id"]] for p in eligible])
+        return eligible, a, b, y[b] - y[a], np.asarray([p["patient_id"] for p in eligible])
+    pa, sa, ta, da, groups = pairs(train_visits, training_metadata["pairs"], xa, ya, unseen)
+    pb, sb, tb, db, query_groups = pairs(query_visits, query_metadata["pairs"], xb, yb)
+    predictions = {"zero": np.zeros_like(db), "train_mean_change": np.broadcast_to(da.mean(0), db.shape),
+                   "independent_state_difference": state_prediction[tb] - state_prediction[sb]}
+    views = {"later_only": (xa[ta], xb[tb]), "difference": (xa[ta] - xa[sa], xb[tb] - xb[sb]),
+             "concatenation": (np.concatenate([xa[sa], xa[ta]], 1), np.concatenate([xb[sb], xb[tb]], 1))}
+    if training_pair_features is not None:
+        if query_pair_features is None:
+            raise ValueError("query pair embeddings missing")
+        views["learned_pair"] = (np.stack([training_pair_features[p["row_id"]] for p in pa]),
+                                 np.stack([query_pair_features[p["row_id"]] for p in pb]))
+    selected = {}
+    for name, (a, b) in views.items():
+        pair_scaler, pair_model, chosen = fit_ridge(a, da, groups)
+        predictions[name] = pair_model.predict(pair_scaler.transform(b))
+        selected[name] = chosen
+    result = {"contract": CONTRACT, "provenance": provenance, "cohort_status": "patient-disjoint fixed source readouts; no query fitting",
+              "state": {"ridge": metrics(yb, state_prediction, gb), "train_mean": metrics(yb, state_mean, gb),
+                        "comparison": paired_interval(yb, state_prediction, state_mean, gb), "alpha": alpha},
+              "observed_change": {"methods": {name: metrics(db, value, query_groups) for name, value in predictions.items()},
+                                  "comparisons": {name: paired_interval(db, predictions[name], predictions["zero"],
+                                                                        query_groups, family_size=len(views)) for name in views},
+                                  "alphas": selected}}
+    save_json(out, result)
+    np.savez_compressed(Path(out).with_suffix(".predictions.npz"), state_truth=yb, state_prediction=state_prediction,
+                        state_mean=state_mean, state_patients=gb, visit_ids=np.asarray([v["visit_id"] for v in query_visits]),
+                        change_truth=db, pair_patients=query_groups, row_ids=np.asarray([p["row_id"] for p in pb]), **predictions)
+    return result
+
+
+def supervised_controls(inventory_path: str, cache: str, out: str) -> dict:
+    metadata = json.loads(Path(inventory_path).read_text())
+    patients = sorted(metadata["protocol"]["encoder_train"])
+    random.Random(2026).shuffle(patients)
+    training = sorted(patients[13:])
+    features, provenance = cache_features(metadata, cache)
+    query_patients = set(metadata["protocol"]["encoder_unseen"])
+    query = {**metadata, "visits": [v for v in metadata["visits"] if v["patient_id"] in query_patients],
+             "pairs": [p for p in metadata["pairs"] if p["patient_id"] in query_patients]}
+    return transfer_features(metadata, features, query, features, out, training_patients=training,
+                             provenance={**provenance, "training_patients": training,
+                                         "supervision_budget": "52 patient scalar-volume labels; no dense-mask objective"})
+
+
+def evaluate_transfer(prepared: str, checkpoint_path: str, training_metadata_path: str,
+                      training_features_path: str, out: str) -> dict:
+    checkpoint = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
+    if checkpoint.get("contract") != CONTRACT:
+        raise ValueError("checkpoint has wrong representation task contract")
+    if checkpoint["provenance"].get("dense_loss_contract") != "float32-reductions-v1":
+        raise ValueError("checkpoint predates the verified mixed-precision loss contract")
+    expected = checkpoint["provenance"]["source_hashes"]["src/model/representation.py"]
+    if expected != digest("src/model/representation.py"):
+        raise ValueError("model implementation differs from training snapshot")
+    encoder = SpatialState()
+    kind = checkpoint["kind"]
+    model = encoder if kind == "state" else ObservedChange(encoder, kind)
+    model.load_state_dict(checkpoint["state_dict"], strict=True)
+    visits = Visits(prepared)
+    if visits.metadata.get("cohort") != "SAILOR" or visits.metadata.get("limit") is not None:
+        raise ValueError("transfer requires the full local SAILOR tensor inventory")
+    features, pair_features = extract(model, visits, None if kind == "state" else ObservedPairs(visits), torch.device("cpu"))
+    trained = torch.load(training_features_path, map_location="cpu", weights_only=False)
+    training_metadata = json.loads(Path(training_metadata_path).read_text())
+    checkpoint_hash = digest(checkpoint_path)
+    checkpoint_directory = Path(checkpoint_path).resolve().parent
+    probe = json.loads((checkpoint_directory / "probes.json").read_text())
+    run = json.loads((checkpoint_directory.parent.parent / "run.json").read_text())
+    if (Path(training_features_path).resolve() != checkpoint_directory / "features.pt"
+            or probe["provenance"]["checkpoint_sha256"] != checkpoint_hash
+            or trained["provenance"]["source_hashes"] != checkpoint["provenance"]["source_hashes"]
+            or run["prepared_sha256"] != digest(training_metadata_path)):
+        raise ValueError("training labels, features, and checkpoint provenance disagree")
+    provenance = {**source_record(), "training_provenance": checkpoint["provenance"],
+                  "checkpoint_sha256": digest(checkpoint_path), "training_features_sha256": digest(training_features_path)}
+    return transfer_features(training_metadata, trained["features"], visits.metadata, features, out,
+                             training_pair_features=trained.get("pair_features"), query_pair_features=pair_features,
+                             provenance=provenance)
+
+
 def state_loss(output: dict, batch: dict, mean: torch.Tensor, scale: torch.Tensor) -> torch.Tensor:
-    logits, masks = output["mask_logits"], batch["masks"]
+    logits, masks = output["mask_logits"].float(), batch["masks"].float()
     probability = logits.sigmoid()
     axes = (-3, -2, -1)
     dice = 1 - ((2 * (probability * masks).sum(axes) + 1) /
@@ -281,7 +406,7 @@ def device_batch(batch: dict, device: torch.device) -> dict:
 
 
 def train_one(model, train_data, valid_data, normalization: dict, out: Path, *, epochs: int,
-              seed: int, device: torch.device, deadline: float, kind: str) -> dict:
+              seed: int, device: torch.device, deadline: float, kind: str, artifact_context: dict) -> dict:
     model.to(device)
     mean = torch.tensor(normalization["mean"], device=device)
     scale = torch.tensor(normalization["scale"], device=device)
@@ -349,7 +474,7 @@ def train_one(model, train_data, valid_data, normalization: dict, out: Path, *, 
             best = score
             torch.save({"state_dict": model.state_dict(), "normalization": normalization,
                         "kind": kind, "seed": seed, "epoch": epoch + 1, "validation_mae": best,
-                        "contract": CONTRACT, "provenance": source_record()}, out / "best.pt")
+                        "contract": CONTRACT, "provenance": {**source_record(), **artifact_context}}, out / "best.pt")
         save_json(out / "training.json", {"history": history, "status": "running", "kind": kind})
         print(f"seed={seed} arm={kind} epoch={epoch + 1} train={row['training_loss']:.5f} val={score:.5f}", flush=True)
     status = "complete" if complete and len(history) == epochs else "incomplete_runtime_ceiling"
@@ -358,6 +483,41 @@ def train_one(model, train_data, valid_data, normalization: dict, out: Path, *, 
         raise RuntimeError("no complete epoch before runtime ceiling")
     model.load_state_dict(torch.load(out / "best.pt", map_location=device, weights_only=False)["state_dict"])
     return {"status": status, "best_validation_mae": best, "completed_epochs": len(history)}
+
+
+@torch.no_grad()
+def direct_scores(model, metadata: dict, features: dict, pair_features: dict | None,
+                  normalization: dict, device: torch.device, out: Path) -> dict:
+    unseen = set(metadata["protocol"]["encoder_unseen"])
+    visits = [v for v in metadata["visits"] if v["patient_id"] in unseen]
+    groups = np.asarray([v["patient_id"] for v in visits])
+    truth = np.stack([np.log1p([v["values_mm3"][c] for c in COMPARTMENTS]) for v in visits])
+    encoder = model.encoder if isinstance(model, ObservedChange) else model
+    embedding = torch.as_tensor(np.stack([features[v["visit_id"]] for v in visits]), device=device)
+    scale = torch.tensor(normalization["scale"], device=device)
+    mean = torch.tensor(normalization["mean"], device=device)
+    prediction = (encoder.volume_head(embedding) * scale + mean).cpu().numpy()
+    train_mean = np.broadcast_to(normalization["mean"], truth.shape)
+    lookup = {v["visit_id"]: i for i, v in enumerate(visits)}
+    pairs = [p for p in metadata["pairs"] if p["patient_id"] in unseen]
+    source = np.asarray([lookup[p["source_visit_id"]] for p in pairs])
+    target = np.asarray([lookup[p["target_visit_id"]] for p in pairs])
+    delta = truth[target] - truth[source]
+    pair_groups = np.asarray([p["patient_id"] for p in pairs])
+    predictions = {"zero": np.zeros_like(delta), "independent_decoder_difference": prediction[target] - prediction[source]}
+    if pair_features is not None:
+        pair_embedding = torch.as_tensor(np.stack([pair_features[p["row_id"]] for p in pairs]), device=device)
+        change_scale = torch.tensor(normalization["change_scale"], device=device)
+        predictions["pair_head"] = (model.change_head(pair_embedding) * change_scale).cpu().numpy()
+    result = {"readout_contract": "direct 52-patient-trained heads; no unseen readout fitting",
+              "state": {"model": metrics(truth, prediction, groups), "train_mean": metrics(truth, train_mean, groups),
+                        "comparison": paired_interval(truth, prediction, train_mean, groups)},
+              "observed_change": {name: metrics(delta, value, pair_groups) for name, value in predictions.items()}}
+    save_json(out, result)
+    np.savez_compressed(out.with_suffix(".predictions.npz"), state_truth=truth, state_prediction=prediction,
+                        state_mean=train_mean, state_patients=groups, visit_ids=np.asarray([v["visit_id"] for v in visits]),
+                        change_truth=delta, pair_patients=pair_groups, row_ids=np.asarray([p["row_id"] for p in pairs]), **predictions)
+    return result
 
 
 @torch.no_grad()
@@ -378,6 +538,40 @@ def extract(model, visits: Visits, pairs: ObservedPairs | None, device: torch.de
             feature = model(a["image"], a["availability"], b["image"], b["availability"], dense=False)["embedding"]
             pair_features[raw["row_id"][0]] = feature[0].cpu().numpy()
     return features, pair_features
+
+
+def smoke(prepared: str, out: str) -> dict:
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if device.type == "cuda" and "T4" not in torch.cuda.get_device_name(0):
+        raise ValueError("unexpected GPU")
+    visits = Visits(prepared)
+    pair = next(iter(DataLoader(ObservedPairs(visits), batch_size=1)))
+    batch = device_batch(pair, device)
+    results = {}
+    for kind in ("state", "paired"):
+        torch.manual_seed(42)
+        model = SpatialState() if kind == "state" else ObservedChange(SpatialState(), "paired")
+        model.to(device)
+        optimizer = torch.optim.AdamW(model.parameters(), lr=3e-4)
+        scaler = torch.amp.GradScaler("cuda", enabled=device.type == "cuda")
+        with torch.autocast(device_type=device.type, enabled=device.type == "cuda"):
+            a, b = batch["source"], batch["target"]
+            output = (model(b["image"], b["availability"]) if kind == "state" else
+                      model(a["image"], a["availability"], b["image"], b["availability"]))
+            loss = state_loss(output, b, torch.zeros(3, device=device), torch.ones(3, device=device))
+            if kind == "paired":
+                loss = loss + F.l1_loss(output["change"], batch["change"])
+                loss = loss + F.l1_loss(output["mask_change"], batch["mask_change"])
+        if not torch.isfinite(loss):
+            raise ValueError("nonfinite real MRI smoke loss")
+        scaler.scale(loss).backward(); scaler.unscale_(optimizer)
+        gradient = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0, error_if_nonfinite=True)
+        scaler.step(optimizer); scaler.update()
+        results[kind] = {"loss": float(loss.detach()), "gradient_norm": float(gradient)}
+    result = {"device": str(device), "rows": len(pair["row_id"]), "arms": results,
+              "interpretation": "real MRI optimizer check, not model quality", "provenance": source_record()}
+    save_json(out, result)
+    return result
 
 
 def run_training(prepared: str, out: str, *, seeds: list[int], epochs: int, hours: float) -> dict:
@@ -417,9 +611,14 @@ def run_training(prepared: str, out: str, *, seeds: list[int], epochs: int, hour
             return result
         random.seed(seed); np.random.seed(seed); torch.manual_seed(seed); torch.cuda.manual_seed_all(seed)
         state = SpatialState()
+        artifact_context = {"prepared_sha256": result["prepared_sha256"], "source_data_hashes": metadata["source_hashes"],
+                            "training_patients": training, "validation_patients": validation,
+                            "epochs": epochs, "seed": seed, "widths": [16, 32, 64, 128],
+                            "dense_loss_contract": "float32-reductions-v1"}
         state_out = output / f"seed{seed}" / "state"
         status = train_one(state, train_visits, valid_visits, normalization, state_out,
-                           epochs=epochs, seed=seed, device=device, deadline=deadline - 900, kind="state")
+                           epochs=epochs, seed=seed, device=device, deadline=deadline - 900, kind="state",
+                           artifact_context={**artifact_context, "arm": "state"})
         state_weights = copy.deepcopy({k: v.cpu() for k, v in state.state_dict().items()})
         for arm in ("state", *ARMS):
             if arm == "state":
@@ -433,11 +632,18 @@ def run_training(prepared: str, out: str, *, seeds: list[int], epochs: int, hour
                 torch.manual_seed(seed)
                 model = ObservedChange(encoder, mode=arm)
                 status = train_one(model, train_pairs, valid_pairs, normalization, output / f"seed{seed}" / arm,
-                                   epochs=epochs, seed=seed, device=device, deadline=deadline - 900, kind=arm)
+                                   epochs=epochs, seed=seed, device=device, deadline=deadline - 900, kind=arm,
+                                   artifact_context={**artifact_context, "arm": arm,
+                                                     "initial_state_checkpoint_sha256": digest(state_out / "best.pt")})
             arm_out = output / f"seed{seed}" / arm
             features, pair_features = extract(model, all_visits, None if arm == "state" else all_pairs, device)
-            torch.save({"features": features, "pair_features": pair_features, "provenance": source_record(),
-                        "normalization": normalization, "contract": CONTRACT}, arm_out / "features.pt")
+            checkpoint = torch.load(arm_out / "best.pt", map_location="cpu", weights_only=False)
+            checkpoint_hash = digest(arm_out / "best.pt")
+            torch.save({"features": features, "pair_features": pair_features, "provenance": checkpoint["provenance"],
+                        "normalization": normalization, "contract": CONTRACT, "checkpoint": checkpoint_hash},
+                       arm_out / "features.pt")
+            del checkpoint
+            direct_scores(model, metadata, features, pair_features, normalization, device, arm_out / "direct.json")
             probe = probe_features(metadata, features, str(arm_out / "probes.json"),
                                    provenance={**source_record(), "seed": seed, "arm": arm,
                                                "checkpoint_sha256": digest(arm_out / "best.pt")}, pair_features=pair_features)
@@ -471,6 +677,7 @@ def main(argv=None):
     export = sub.add_parser("export")
     export.add_argument("--manifest", required=True); export.add_argument("--geometry", required=True)
     export.add_argument("--protocol", default="info/eval_folds.json"); export.add_argument("--out", required=True)
+    export.add_argument("--cohort", choices=("LUMIERE", "SAILOR"), default="LUMIERE")
     prep = sub.add_parser("prepare")
     prep.add_argument("--inventory", required=True); prep.add_argument("--mri-root", required=True)
     prep.add_argument("--mask-root", required=True); prep.add_argument("--out", required=True)
@@ -478,6 +685,19 @@ def main(argv=None):
     controls = sub.add_parser("controls")
     controls.add_argument("--inventory", required=True); controls.add_argument("--cache", required=True)
     controls.add_argument("--out", required=True)
+    smoke_parser = sub.add_parser("smoke")
+    smoke_parser.add_argument("--prepared", required=True); smoke_parser.add_argument("--out", required=True)
+    supervised = sub.add_parser("supervised-controls")
+    supervised.add_argument("--inventory", required=True); supervised.add_argument("--cache", required=True)
+    supervised.add_argument("--out", required=True)
+    cached = sub.add_parser("cached-transfer")
+    cached.add_argument("--training-inventory", required=True); cached.add_argument("--training-cache", required=True)
+    cached.add_argument("--query-inventory", required=True); cached.add_argument("--query-cache", required=True)
+    cached.add_argument("--out", required=True)
+    transfer = sub.add_parser("transfer")
+    transfer.add_argument("--prepared", required=True); transfer.add_argument("--checkpoint", required=True)
+    transfer.add_argument("--training-metadata", required=True); transfer.add_argument("--training-features", required=True)
+    transfer.add_argument("--out", required=True)
     reference = sub.add_parser("reference")
     reference.add_argument("--prepared", required=True); reference.add_argument("--checkpoint", required=True)
     reference.add_argument("--out", required=True)
@@ -488,7 +708,7 @@ def main(argv=None):
     args = parser.parse_args(argv)
     torch.set_num_threads(4)
     if args.command == "export":
-        result = export_inventory(args.manifest, args.geometry, args.protocol, args.out)
+        result = export_inventory(args.manifest, args.geometry, args.protocol, args.out, args.cohort)
         print(f"exported {len(result['visits'])} visits and {len(result['pairs'])} pairs")
     elif args.command == "prepare":
         result = prepare(args.inventory, args.mri_root, args.mask_root, args.out, args.limit)
@@ -497,9 +717,20 @@ def main(argv=None):
         result = cached_controls(args.inventory, args.cache, args.out)
         print(json.dumps({"state": result["state"]["ridge"]["patient_uniform_mae"],
                           "change": {k: v["patient_uniform_mae"] for k, v in result["observed_change"]["methods"].items()}}, sort_keys=True))
+    elif args.command == "smoke":
+        print(json.dumps(smoke(args.prepared, args.out), sort_keys=True))
+    elif args.command == "supervised-controls":
+        result = supervised_controls(args.inventory, args.cache, args.out)
+        print(json.dumps(result["state"]["ridge"], sort_keys=True))
+    elif args.command == "cached-transfer":
+        result = cached_transfer(args.training_inventory, args.training_cache, args.query_inventory, args.query_cache, args.out)
+        print(json.dumps(result["state"]["ridge"], sort_keys=True))
+    elif args.command == "transfer":
+        result = evaluate_transfer(args.prepared, args.checkpoint, args.training_metadata, args.training_features, args.out)
+        print(json.dumps(result["state"]["ridge"], sort_keys=True))
     elif args.command == "reference":
         result = frozen_reference(args.prepared, args.checkpoint, args.out)
-        print(json.dumps(result["state"]["ridge"], sort_keys=True))
+        print(json.dumps(result.get("state", {}).get("ridge", result), sort_keys=True))
     else:
         result = run_training(args.prepared, args.out, seeds=args.seeds, epochs=args.epochs, hours=args.hours)
         print(json.dumps(result["runs"], sort_keys=True))
