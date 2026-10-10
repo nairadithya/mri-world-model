@@ -141,6 +141,30 @@ try:
             break
     else:
         capacity["status"] = "capacity_training_complete"
+        capacity["probes"] = {{}}
+        for view in ("difference", "target_only"):
+            remaining = 8.5 - (time.monotonic() - started) / 3600
+            if remaining <= 0:
+                capacity["status"] = "incomplete_probe_capacity"
+                break
+            probe_started = time.monotonic()
+            subprocess.run(["python", "-u", "-m", "src.harness.analysis.delta_representation", "probe",
+                            "--prepared", str(prepared), "--checkpoint", str(checkpoint),
+                            "--contract", str(qa / "r36_contract.json"), "--audit", str(qa / "audit.json"),
+                            "--seed", "42", "--view", view, "--hours", str(remaining),
+                            "--out", f"results/seed42/R35/{{view}}"], check=True)
+            receipt = json.loads(Path(f"results/seed42/R35/{{view}}/training.json").read_text())
+            capacity["probes"][view] = {{"status": receipt["status"], "epochs": len(receipt["history"]),
+                                        "seconds": time.monotonic() - probe_started}}
+            if receipt["status"] != "complete":
+                capacity["status"] = "incomplete_probe_capacity"
+                break
+        else:
+            capacity["status"] = "capacity_complete"
+except Exception as error:
+    capacity["status"] = "failed"
+    capacity["error"] = str(error)
+    raise
 finally:
     capacity["seconds"] = time.monotonic() - started
     Path("results/capacity.json").write_text(json.dumps(capacity, indent=2))
@@ -157,7 +181,8 @@ print(json.dumps(capacity, indent=2))
         "competition_sources": [], "model_sources": []})
     receipt = {"archive_sha256": sha, "source_files": list(files), "private": True, "cohort": "LUMIERE",
                "arms": ["42/A", "42/B"], "epochs": 20, "max_session_hours": 9,
-               "query_evaluation": False, "notebook_source": str(directory / "capacity_leg.py")}
+               "query_evaluation": False, "source_only_probe_capacity": ["difference", "target_only"],
+               "notebook_source": str(directory / "capacity_leg.py")}
     save_json(directory / "package_receipt.json", receipt)
     return receipt
 
