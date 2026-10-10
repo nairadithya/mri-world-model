@@ -47,7 +47,7 @@ def audit(predictions_path: str, out: str, trials: int = 100) -> dict:
             a = patient_errors(truth[mask, index:index + 1], prediction[mask, index:index + 1], groups)
             b = patient_errors(truth[mask, index:index + 1], mean[mask, index:index + 1], groups)
             strata[name][label] = {"n_rows": int(mask.sum()), "n_patients": len(a),
-                                   "ridge_patient_uniform_mae": float(np.mean(list(a.values()))),
+                                   "prediction_patient_uniform_mae": float(np.mean(list(a.values()))),
                                    "mean_patient_uniform_mae": float(np.mean(list(b.values())))}
     result = {"predictions_sha256": digest(predictions_path), "shuffle_trials": trials, "seed": 2026,
               "state_patient_uniform_mae": float(np.mean(list(original.values()))),

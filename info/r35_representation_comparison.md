@@ -1,6 +1,6 @@
 # R35. State, observed change, and nuisance comparison
 
-Status: corrected private retry COMPLETE. All 12 arms finished 20 epochs. Trained-model developmental transfer and independent review remain pending.
+Status: all runnable R35 experiments COMPLETE. All 12 trained arms, both fixed-source transfer readout budgets, direct heads, nuisance conditions, and state audits are verified. Biological validation, independent review, and untouched external validation remain blocked by missing prerequisites.
 
 ## Question and capability tested
 
@@ -117,3 +117,57 @@ The following are means of patient-level errors across the three seeds, not erro
 - Synthetic resolution degradation still produced false-change scores. In the spatial-state difference probe, these ranged 0.2458 to 0.3827 versus identity scores 0.0343 to 0.0501. Nuisance separation is incomplete. These are declared synthetic perturbations, not measured biological changes.
 
 Interpretation: supervised spatial state learning improved the scoped in-domain volume proxy. Useful state readouts also support observed-change estimates. A more elaborate paired network has not earned its place over independent state differences. This is not future forecasting, biological-change validation, or a claim of general architectural superiority. Trained-model SAILOR transfer has not yet been run. The negative frozen-reference transfer result above remains in the record. Independent review is still unavailable.
+
+## Completed local transfer and remaining diagnostics
+
+The fixed local matrix completed for all 12 trained arms. No checkpoint, architecture, regularizer, or target was selected using SAILOR. Each arm saved all 269 query visit embeddings and, where applicable, all 242 pair embeddings. It received three separate evaluations: direct source-52 trained heads, grouped-ridge readouts fitted on the 26 LUMIERE encoder-unseen patients, and grouped-ridge readouts fitted on the 52 source-training patients. The fresh frozen reference received matching source-only readout fits. SAILOR remained local throughout.
+
+Artifacts are `outputs/sailor-matrix/` and `outputs/r35-final/summary.json`. Source scalers and fitted ridge weights are saved as `*.readouts.pt`. A cached replay persisted these readouts without changing any of the 36 prediction artifacts. Saved readouts reproduced the query predictions. Every arm passed visit and pair identity checks, finite-feature checks, checkpoint binding, and source/query patient disjointness checks. An original-forward comparison on a real SAILOR pair gave exactly identical embeddings for the cached extraction in paired, later-only, and frozen modes.
+
+The tensor audit records completion-time hashes for every query tensor. It does not retroactively supply a creation-time MRI-byte fingerprint for the earlier reference cache. Model and prepared-metadata digests and the checked row identities remain explicit.
+
+### Developmental transfer results
+
+These values average patient errors across all three seeds. They are not an ensemble and do not treat seeds as independent patients.
+
+- The direct spatial-state model gave SAILOR MAE 2.2401 versus 4.6876 for the matched frozen scalar-source52 readout. It did not establish a gain over the source-trained mean of 2.1105. Model minus mean was +0.1296, with descriptive patient interval [-0.2571, 0.5098]. Lower error than a weak frozen reference is not sufficient transfer evidence.
+- Source-26 ridge on spatial-state embeddings gave MAE 1.9715 versus mean 2.2391. Its difference interval [-0.6190, 0.0760] crossed zero. Source-52 ridge gave 1.9525 versus mean 2.1105, with interval [-0.4966, 0.1759]. Neither readout budget resolves superiority over the simple mean.
+- Direct independent state differences gave SAILOR observed-change MAE 0.9665 versus zero change 0.9430. Difference +0.0235, interval [-0.0368, 0.1052]. The direct paired head gave 1.0508. Its excess over independent state differences was +0.0843, with family-12 interval [0.0295, 0.1440]. The dedicated paired head is worse than that simple control on this transfer proxy.
+- The paired head beat the later-only head at the point estimate, 1.0508 versus 1.1954. Its family-12 difference interval [-0.3001, 0.0224] crossed zero. Even a resolved later-only contrast would not override failure against zero change and independent state differences.
+- All calibrated feature views are retained in the report. For example, source-26 difference probes in the paired arm gave 0.9422 versus zero 0.9430. This near tie is not a positive transfer verdict and does not justify choosing that view after inspection.
+
+### Nuisance and state specificity
+
+All five perturbation conditions are complete for all four candidate arms and the frozen reference. Noise uses seed 2026 and foreground standard deviation 0.1. Resolution halves each image dimension and restores it with trilinear interpolation. The smooth bias multiplies one axis by exp of coordinates from -0.4 to 0.4. Affine intensity uses scale 1.5 and offset 0.3. Nonidentity variants are standardized per present sequence on the original foreground. Identity is an exact clone. In the spatial-state difference probe, identity false-change MAE was 0.0445. Noise gave 0.0433, affine intensity 0.0445, smooth bias 0.0845, and resolution degradation 0.3275. Resolution exceeded identity by 0.2831, with descriptive patient interval [0.1986, 0.3747]. State-readout drift under resolution degradation was 0.6228. Acquisition separation is not established. Blur removes image detail, so this controlled physical-invariance test does not prove that the lost information was only nuisance. Affine intensity stability largely follows explicit standardization and is not a learned robustness claim.
+
+Post-hoc within-patient shuffling raised direct spatial-state MAE from 1.1145 to 1.5162 on LUMIERE and from 2.2401 to 2.3361 on SAILOR. All three seed-specific original-minus-shuffle intervals were below zero in each cohort. This supports visit-specific information, not biological attribution or a new prespecified success gate.
+
+Empty-compartment errors remain large. For the direct state model, source empty-target patient-uniform MAEs were 7.0523 for core on 7 visits, 5.7072 for enhancement on 22 visits, and 9.5619 for edema on 5 visits. SAILOR empty-target errors were also large. The headline mean must not hide absent-compartment failures. Compartment definitions and automated measurement sources differ across cohorts, so biological interpretation still needs expert annotation and repeatability analysis.
+
+### Closure and limits
+
+The finite R35 experiment matrix is complete. The exit condition covered all trained arms, matched transfer budgets, nuisance conditions, saved predictions and readouts, and permutation and empty-target audits. Code verification includes 16 representation tests, four report tests, the 25 existing harness tests, real CLI execution, real-pair extraction equivalence, and notebook-pair synchronization.
+
+The current finding remains scoped. Dense-supervised MRI state learning lowered in-domain automated-volume error. Dedicated pair modeling did not add a resolved advantage over useful independent state differences and transferred worse than that control. Neither developmental transfer nor nuisance separation was established. No forecasting experiment was reopened.
+
+Three prerequisites remain unavailable. Biological-change validation requires expert labels and segmentation repeatability. Independent review requires native delegation or another operator-approved review path. Untouched external validation requires a newly reserved cohort and its access approval. These are blocked evidence requirements, not unfinished CPU runs and not claims of completion.
+
+The complete aggregate report is `info/r35_representation_results.html`. `info/explainer.html` links it and warns that older lesion forecasting and unaligned crop claims below are withdrawn. Both pages were rendered locally and reviewed as images. No legacy plot numbers were regenerated or promoted as new evidence.
+
+Reproduce from the preserved private artifacts in this worktree:
+
+```bash
+.venv/bin/python scripts/finish_representation_run.py \
+  --prepared outputs/sailor-tensors \
+  --results outputs/retry-complete/unpacked/results/comparison \
+  --training-metadata outputs/retry-complete/unpacked/training_prepared.json \
+  --out outputs/sailor-matrix
+.venv/bin/python scripts/report_representation_run.py \
+  --results outputs/retry-complete/unpacked/results/comparison \
+  --transfer outputs/sailor-matrix \
+  --reference-source outputs/retry-complete/fresh-frozen-source52.predictions.npz \
+  --prepared outputs/sailor-tensors --out outputs/r35-final
+.venv/bin/python scripts/render_representation_report.py \
+  --source outputs/r35-final/summary.json \
+  --out info/r35_representation_results.html
+```
