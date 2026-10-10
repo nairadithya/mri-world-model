@@ -110,37 +110,48 @@ assert masks, "Native masks missing"
 mask_root = str(masks[0]).split("/Patient-", 1)[0]
 checkpoints = sorted(Path("/kaggle/input").glob("**/p0_clean_best.pt"))
 assert len(checkpoints) == 1, "Clean checkpoint mount missing or ambiguous"
-subprocess.run(["python", "-u", "-m", "src.harness.analysis.representation", "prepare",
-                "--inventory", "inventory.json", "--mri-root", str(mri_roots[0]),
-                "--mask-root", mask_root, "--out", "prepared"], check=True)
-prepared = json.loads(Path("prepared/prepared.json").read_text())
+inventory_hash = hashlib.sha256(Path("inventory.json").read_bytes()).hexdigest()
+reusable = [p.parent for p in Path("/kaggle/input").glob("**/prepared/prepared.json")
+            if json.loads(p.read_text()).get("inventory_sha256") == inventory_hash]
+assert len(reusable) <= 1, "Prepared input mount ambiguous"
+if reusable:
+    prepared_path = reusable[0]
+    print("Reusing hash-matched prepared inputs", prepared_path)
+else:
+    prepared_path = Path("prepared")
+    subprocess.run(["python", "-u", "-m", "src.harness.analysis.representation", "prepare",
+                    "--inventory", "inventory.json", "--mri-root", str(mri_roots[0]),
+                    "--mask-root", mask_root, "--out", str(prepared_path)], check=True)
+prepared = json.loads((prepared_path / "prepared.json").read_text())
 assert len(prepared["visits"]) == 599 and len(prepared["pairs"]) == 496
+assert prepared.get("limit") is None
+Path("training_prepared.json").write_bytes((prepared_path / "prepared.json").read_bytes())
 
 # %%
 subprocess.run(["python", "-u", "-m", "src.harness.analysis.representation", "smoke",
-                "--prepared", "prepared", "--out", "results/real-gpu-smoke.json"], check=True)
+                "--prepared", str(prepared_path), "--out", "results/real-gpu-smoke.json"], check=True)
 subprocess.run(["python", "-u", "-m", "src.harness.analysis.representation", "reference",
-                "--prepared", "prepared", "--checkpoint", str(checkpoints[0]),
+                "--prepared", str(prepared_path), "--checkpoint", str(checkpoints[0]),
                 "--out", "results/reference"], check=True)
 subprocess.run(["python", "-u", "-m", "src.harness.analysis.representation", "train",
-                "--prepared", "prepared", "--out", "results/comparison",
+                "--prepared", str(prepared_path), "--out", "results/comparison",
                 "--epochs", "20", "--hours", "6", "--seeds", "42", "43", "44"], check=True)
 
 # %%
 run = json.loads(Path("results/comparison/run.json").read_text())
 print("run status", run.get("status", "UNKNOWN"))
 print(json.dumps(run["runs"], indent=2))
-subprocess.run(["tar", "-czf", "/kaggle/working/r35-results.tar.gz", "results", "source_snapshot.json", "environment.txt", "prepared/prepared.json"], check=True)
+subprocess.run(["tar", "-czf", "/kaggle/working/r35-results.tar.gz", "results", "source_snapshot.json", "environment.txt", "training_prepared.json"], check=True)
 '''
     directory = Path(out)
     directory.mkdir(parents=True, exist_ok=True)
     (directory / "representation_leg.py").write_text(notebook)
-    metadata = {"id": "nairadithya/r35-representation-comparison-fixed", "title": "R35 representation comparison fixed",
+    metadata = {"id": "nairadithya/r35-representation-retry", "title": "R35 representation retry",
                 "code_file": "representation_leg.ipynb", "language": "python", "kernel_type": "notebook",
                 "is_private": True, "enable_gpu": True, "enable_internet": True,
                 "machine_shape": "NvidiaTeslaT4",
                 "dataset_sources": ["nairadithya/preprocessed-mri-data", "nairadithya/lumiere-lesion-supervision"],
-                "kernel_sources": ["nairadithya/p0-clean-jepa-retrain"], "competition_sources": [], "model_sources": []}
+                "kernel_sources": ["nairadithya/p0-clean-jepa-retrain", "nairadithya/r35-representation-comparison-fixed"], "competition_sources": [], "model_sources": []}
     (directory / "kernel-metadata.json").write_text(json.dumps(metadata, indent=2) + "\n")
     receipt = {"source_commit": commit, "archive_sha256": digest, "archive_bytes": len(payload),
                "visits": len(inventory["visits"]), "pairs": len(inventory["pairs"]), "private": True,

@@ -11,7 +11,7 @@ import torch
 
 from src.data.representation import CONTRACT, ObservedPairs, Visits, prepare, save_json
 from src.harness.analysis.representation import (cache_features, metrics, nested_predictions,
-                                                paired_interval, state_loss, transfer_features)
+                                                optimizer_step, paired_interval, state_loss, transfer_features)
 from src.model.representation import ObservedChange, SpatialState, nuisance
 
 
@@ -40,6 +40,34 @@ class RepresentationTests(unittest.TestCase):
         self.assertTrue(torch.isfinite(loss))
         self.assertTrue(all(torch.isfinite(p.grad).all() for p in model.parameters() if p.grad is not None))
         self.assertGreater(float(model.blocks[0].body[0].weight.grad.norm()), 0)
+
+    def test_amp_overflow_backs_off_without_changing_weights(self):
+        model = torch.nn.Linear(1, 1, bias=False)
+        with torch.no_grad():
+            model.weight.fill_(1)
+        optimizer = torch.optim.SGD(model.parameters(), lr=0.1)
+        scaler = torch.amp.GradScaler("cpu", init_scale=65536)
+        for _ in range(5):
+            optimizer.zero_grad(set_to_none=True)
+            loss = (model.weight * 10).half().float().sum()
+            step = optimizer_step(loss, model, optimizer, scaler)
+            if step["updated"]:
+                break
+            self.assertEqual(float(model.weight.detach()), 1)
+            self.assertEqual(step["scale_after"], step["scale_before"] / 2)
+        self.assertTrue(step["updated"])
+        self.assertAlmostEqual(float(model.weight.detach()), 0.9, places=5)
+        self.assertEqual(scaler.get_scale(), 32768)
+
+    def test_full_precision_nonfinite_gradient_remains_fatal(self):
+        model = torch.nn.Linear(1, 1, bias=False)
+        with torch.no_grad():
+            model.weight.zero_()
+        optimizer = torch.optim.SGD(model.parameters(), lr=0.1)
+        scaler = torch.amp.GradScaler("cpu", enabled=False)
+        with self.assertRaisesRegex(ValueError, "full-precision gradients"):
+            optimizer_step(model.weight.sqrt().sum(), model, optimizer, scaler)
+        self.assertEqual(float(model.weight.detach()), 0)
 
     def test_half_precision_dense_reductions_match_float(self):
         shape = (1, 3, 96, 96, 96)

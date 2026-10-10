@@ -405,6 +405,26 @@ def device_batch(batch: dict, device: torch.device) -> dict:
             for key, value in batch.items()}
 
 
+def optimizer_step(loss: torch.Tensor, model, optimizer, scaler) -> dict:
+    if not torch.isfinite(loss):
+        raise ValueError("nonfinite training loss")
+    scaler.scale(loss).backward()
+    scaler.unscale_(optimizer)
+    parameters = [p for p in model.parameters() if p.grad is not None]
+    if not parameters:
+        raise ValueError("training loss produced no parameter gradients")
+    finite = all(torch.isfinite(p.grad).all() for p in parameters)
+    if not finite and not scaler.is_enabled():
+        raise ValueError("nonfinite unscaled full-precision gradients")
+    scale_before = scaler.get_scale()
+    norm = (torch.nn.utils.clip_grad_norm_(parameters, 1.0, error_if_nonfinite=True)
+            if finite else None)
+    scaler.step(optimizer)
+    scaler.update()
+    return {"updated": finite, "gradient_norm": None if norm is None else float(norm),
+            "scale_before": scale_before, "scale_after": scaler.get_scale()}
+
+
 def train_one(model, train_data, valid_data, normalization: dict, out: Path, *, epochs: int,
               seed: int, device: torch.device, deadline: float, kind: str, artifact_context: dict) -> dict:
     model.to(device)
@@ -425,6 +445,7 @@ def train_one(model, train_data, valid_data, normalization: dict, out: Path, *, 
             break
         model.train()
         losses = []
+        overflows, consecutive_overflows = 0, 0
         for raw_batch in train_loader:
             if time.monotonic() >= deadline:
                 complete = False
@@ -442,16 +463,20 @@ def train_one(model, train_data, valid_data, normalization: dict, out: Path, *, 
                     loss = loss + 0.5 * state_loss(prediction, b, mean, scale)
                     weights = 1 + 4 * torch.maximum(a["masks"], b["masks"])
                     loss = loss + 0.5 * (weights * (prediction["mask_change"] - batch["mask_change"]).abs()).mean()
-            if not torch.isfinite(loss):
-                raise ValueError("nonfinite training loss")
-            scaler.scale(loss).backward()
-            scaler.unscale_(optimizer)
-            torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0, error_if_nonfinite=True)
-            scaler.step(optimizer)
-            scaler.update()
+            step = optimizer_step(loss, model, optimizer, scaler)
+            if not step["updated"]:
+                overflows += 1; consecutive_overflows += 1
+                print(f"AMP backoff seed={seed} arm={kind} epoch={epoch + 1} "
+                      f"scale={step['scale_before']}->{step['scale_after']}", flush=True)
+                if consecutive_overflows >= 16:
+                    raise ValueError("persistent nonfinite gradients after 16 AMP backoffs")
+                continue
+            consecutive_overflows = 0
             losses.append(float(loss.detach()))
         if not complete:
             break
+        if not losses:
+            raise ValueError("epoch completed without a finite optimizer update")
         model.eval()
         truths, predictions, patients = [], [], []
         with torch.no_grad():
@@ -468,7 +493,7 @@ def train_one(model, train_data, valid_data, normalization: dict, out: Path, *, 
                 patients += raw_batch["patient_id"]
         score = metrics(np.concatenate(truths), np.concatenate(predictions), np.asarray(patients))["patient_uniform_mae"]
         row = {"epoch": epoch + 1, "training_loss": float(np.mean(losses)), "validation_mae": score,
-               "training_steps": len(losses)}
+               "training_steps": len(losses), "amp_backoffs": overflows, "loss_scale": scaler.get_scale()}
         history.append(row)
         if score < best:
             best = score
@@ -562,12 +587,10 @@ def smoke(prepared: str, out: str) -> dict:
             if kind == "paired":
                 loss = loss + F.l1_loss(output["change"], batch["change"])
                 loss = loss + F.l1_loss(output["mask_change"], batch["mask_change"])
-        if not torch.isfinite(loss):
-            raise ValueError("nonfinite real MRI smoke loss")
-        scaler.scale(loss).backward(); scaler.unscale_(optimizer)
-        gradient = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0, error_if_nonfinite=True)
-        scaler.step(optimizer); scaler.update()
-        results[kind] = {"loss": float(loss.detach()), "gradient_norm": float(gradient)}
+        step = optimizer_step(loss, model, optimizer, scaler)
+        if not step["updated"]:
+            raise ValueError("real MRI smoke requires a finite optimizer step")
+        results[kind] = {"loss": float(loss.detach()), **step}
     result = {"device": str(device), "rows": len(pair["row_id"]), "arms": results,
               "interpretation": "real MRI optimizer check, not model quality", "provenance": source_record()}
     save_json(out, result)
@@ -614,7 +637,8 @@ def run_training(prepared: str, out: str, *, seeds: list[int], epochs: int, hour
         artifact_context = {"prepared_sha256": result["prepared_sha256"], "source_data_hashes": metadata["source_hashes"],
                             "training_patients": training, "validation_patients": validation,
                             "epochs": epochs, "seed": seed, "widths": [16, 32, 64, 128],
-                            "dense_loss_contract": "float32-reductions-v1"}
+                            "dense_loss_contract": "float32-reductions-v1",
+                            "optimizer_step_contract": "amp-backoff-before-clipping-v1"}
         state_out = output / f"seed{seed}" / "state"
         status = train_one(state, train_visits, valid_visits, normalization, state_out,
                            epochs=epochs, seed=seed, device=device, deadline=deadline - 900, kind="state",

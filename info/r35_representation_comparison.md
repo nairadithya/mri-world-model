@@ -1,6 +1,6 @@
 # R35. State, observed change, and nuisance comparison
 
-Status: control diagnostics complete. First GPU candidate run is invalid. Corrected run is being prepared. No valid trained candidate result yet.
+Status: controls and fresh frozen-reference transfer complete. Both GPU attempts failed before a completed candidate epoch. AMP lifecycle repair verified locally; restart pending. No valid trained candidate result yet.
 
 ## Question and capability tested
 
@@ -83,3 +83,19 @@ The corrected checkpoint contract records `dense_loss_contract: float32-reductio
 The installed Kaggle CLI supports `kernels logs --follow`; the live log confirmed Tesla T4. The batch cancellation API needs a session ID that this client does not expose for the launched batch. No ID was guessed and no unrelated session was touched. The first run remains capped at nine hours and will not be graded. Quota was rechecked at 0.94 used and 29.06 remaining hours. A distinct corrected private session also has a nine-hour ceiling, keeping worst-case total reservation below 30 hours.
 
 Generated notebook pairs contain a private LUMIERE data inventory. They live under ignored `outputs/private-kernel*`, not in committed `kaggle/`. Commit only the packaging source, tests, and aggregate research record. Verify the generated pair with Jupytext before every push.
+
+## Resume and optimizer repair, 2026-10-10
+
+The laptop interruption affected local execution. After resume, the original local reference process completed and saved all 269 SAILOR visit features. It did not need restarting. The cloud run failed independently, before completing a candidate epoch. Its gradient clip raised on nonfinite scaled gradients before GradScaler could skip the update and reduce the scale.
+
+A controlled half-intermediate fixture reproduced this ordering defect. Its forward loss was finite, its scaled gradient was infinite, and the old clip raised. Native GradScaler left the parameter unchanged and reduced the scale from 65536 to 32768. The shared optimizer-step boundary now lets AMP back off before clipping, clips only finite gradients, and records backoffs and successful update counts. Full-precision nonfinite gradients remain fatal. Sixteen consecutive AMP backoffs or an epoch with no successful update also stop execution. This is a numerical lifecycle repair, not a new scientific target or a relaxation of finite-weight requirements. The cloud mechanism still requires confirmation by the restarted run.
+
+Fourteen representation tests passed, including unchanged weights on AMP overflow, a subsequent finite update, and rejection of full-precision nonfinite gradients. The real aligned-MRI state and paired CPU optimizer checks and the existing 25 harness tests passed. Independent review remains unavailable.
+
+Restart inputs may reuse the failed cloud job's prepared LUMIERE tensors only when their inventory SHA256 matches the current private inventory exactly. The downloaded metadata passed that comparison. Reuse does not alter the cohort, masks, split, targets, or resolution. The rerun keeps seeds 42, 43, 44 and the same 20-epoch schedule, with a nine-hour session ceiling. Available quota was rechecked at 30 hours.
+
+## Fresh-reference confirmation and developmental transfer
+
+The cloud reference recomputed state MAE 1.600834 on the same 149 LUMIERE visits, confirming the earlier cache-backed point estimate. Reference artifacts were recovered from the failed job before any restart. The reference uses no dense training loss, so that candidate-training failure does not invalidate its feature extraction.
+
+Artifact: `outputs/fresh-sailor-transfer.json`. Source-only grouped-ridge fitting on the 26 LUMIERE encoder-unseen patients gave SAILOR state MAE 4.7075 versus 2.2391 for the source-trained mean on 269 visits from 27 patients. Observed feature-difference change MAE was 0.9791 versus 0.9430 for zero change on 242 pairs. This is negative developmental-transfer evidence for the specified readout. Acquisition and automated-label-source differences remain confounded. It is not untouched external validation, a biological-change verdict, or a universal representation-quality gate. No SAILOR data were uploaded or used to select checkpoints.
