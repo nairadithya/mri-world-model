@@ -174,7 +174,7 @@ print(json.dumps(capacity, indent=2))
     directory = Path(out); directory.mkdir(parents=True, exist_ok=True)
     (directory / "capacity_leg.py").write_text(notebook)
     save_json(directory / "kernel-metadata.json", {
-        "id": "nairadithya/r36-delta-capacity", "title": "R36 delta objective capacity",
+        "id": "nairadithya/r36-delta-capacity", "title": "R36 delta capacity",
         "code_file": "capacity_leg.ipynb", "language": "python", "kernel_type": "notebook",
         "is_private": True, "enable_gpu": True, "enable_internet": True, "machine_shape": "NvidiaTeslaT4",
         "dataset_sources": [], "kernel_sources": ["nairadithya/r35-representation-retry", "nairadithya/r35-representation-comparison-fixed"],
