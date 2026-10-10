@@ -10,7 +10,7 @@ import numpy as np
 import torch
 
 from src.data.representation import CONTRACT, ObservedPairs, Visits, prepare, save_json
-from src.harness.analysis.representation import (cache_features, metrics, nested_predictions,
+from src.harness.analysis.representation import (cache_features, direct_scores, extract, metrics, nested_predictions,
                                                 optimizer_step, paired_interval, state_loss, transfer_features)
 from src.model.representation import ObservedChange, SpatialState, nuisance
 
@@ -152,6 +152,23 @@ class RepresentationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "overlap"):
             transfer_features(metadata, {}, metadata, {}, "unused.json", provenance={})
 
+    def test_direct_transfer_scores_all_query_patients_without_fitting(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            model = SpatialState((8, 16))
+            with torch.no_grad():
+                model.volume_head.weight.zero_()
+                model.volume_head.bias.copy_(torch.tensor([1., 2., 3.]))
+            visits = [{"visit_id": f"v{i}", "patient_id": "query",
+                       "values_mm3": {c: 0 for c in ("necrotic_non_enhancing", "enhancing", "edema_flair")}}
+                      for i in (0, 1)]
+            metadata = {"cohort": "SAILOR", "visits": visits, "pairs": [{"row_id": "r", "patient_id": "query",
+                        "source_visit_id": "v0", "target_visit_id": "v1"}], "protocol": {}}
+            result = direct_scores(model, metadata, {v["visit_id"]: np.ones(16, np.float32) for v in visits}, None,
+                                   {"mean": [0., 0., 0.], "scale": [1., 1., 1.]}, torch.device("cpu"), Path(tmp) / "direct.json")
+            self.assertEqual(result["state"]["model"]["n_rows"], 2)
+            self.assertEqual(result["state"]["model"]["patient_uniform_mae"], 2)
+            self.assertEqual(result["observed_change"]["independent_decoder_difference"]["patient_uniform_mae"], 0)
+
     def test_real_geometry_preparation_fixture_is_idempotent(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -160,6 +177,7 @@ class RepresentationTests(unittest.TestCase):
                 directory = root / "mri" / "Patient-001" / f"week-00{index}"
                 directory.mkdir(parents=True)
                 image = np.arange(16 ** 3, dtype=np.float32).reshape(16, 16, 16)
+                image[4:12, 4:12, 4:12] += index * 1000
                 affine = np.diag([2.0, 2.0, 2.0, 1.0])
                 nib.save(nib.Nifti1Image(image, affine), directory / "CT1.nii.gz")
                 mask_dir = root / "masks" / "Patient-001" / f"week-00{index}"
@@ -183,6 +201,16 @@ class RepresentationTests(unittest.TestCase):
             torch.testing.assert_close(pair["change"], torch.zeros(3), rtol=0, atol=0)
             self.assertEqual(tuple(data[0]["image"].shape), (4, 96, 96, 96))
             self.assertAlmostEqual(float(data[0]["volume"][1]), float(np.log1p(512)), places=5)
+            for mode in ("paired", "later_only", "frozen"):
+                model = ObservedChange(SpatialState((8, 16)), mode).eval()
+                with torch.no_grad():
+                    a, b = pair["source"], pair["target"]
+                    expected = model(a["image"][None], a["availability"][None], b["image"][None],
+                                     b["availability"][None], dense=False)["embedding"][0]
+                    features, pair_features = extract(model, data, ObservedPairs(data), torch.device("cpu"))
+                self.assertEqual(set(features), {"v0", "v1"})
+                self.assertEqual(set(pair_features), {"r"})
+                torch.testing.assert_close(torch.from_numpy(pair_features["r"]), expected, rtol=0, atol=1e-6)
 
 
 if __name__ == "__main__":

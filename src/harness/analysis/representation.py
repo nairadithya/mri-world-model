@@ -370,7 +370,6 @@ def evaluate_transfer(prepared: str, checkpoint_path: str, training_metadata_pat
     visits = Visits(prepared)
     if visits.metadata.get("cohort") != "SAILOR" or visits.metadata.get("limit") is not None:
         raise ValueError("transfer requires the full local SAILOR tensor inventory")
-    features, pair_features = extract(model, visits, None if kind == "state" else ObservedPairs(visits), torch.device("cpu"))
     trained = torch.load(training_features_path, map_location="cpu", weights_only=False)
     training_metadata = json.loads(Path(training_metadata_path).read_text())
     checkpoint_hash = digest(checkpoint_path)
@@ -380,13 +379,41 @@ def evaluate_transfer(prepared: str, checkpoint_path: str, training_metadata_pat
     if (Path(training_features_path).resolve() != checkpoint_directory / "features.pt"
             or probe["provenance"]["checkpoint_sha256"] != checkpoint_hash
             or trained["provenance"]["source_hashes"] != checkpoint["provenance"]["source_hashes"]
+            or trained.get("checkpoint") != checkpoint_hash
+            or checkpoint["provenance"]["training_patients"] != run["training_patients"]
             or run["prepared_sha256"] != digest(training_metadata_path)):
         raise ValueError("training labels, features, and checkpoint provenance disagree")
     provenance = {**source_record(), "training_provenance": checkpoint["provenance"],
-                  "checkpoint_sha256": digest(checkpoint_path), "training_features_sha256": digest(training_features_path)}
+                  "checkpoint_sha256": checkpoint_hash, "training_features_sha256": digest(training_features_path),
+                  "training_metadata_sha256": digest(training_metadata_path),
+                  "query_prepared_sha256": digest(Path(prepared) / "prepared.json")}
+    feature_path = Path(out).with_suffix(".features.pt")
+    if feature_path.exists():
+        cached = torch.load(feature_path, map_location="cpu", weights_only=False)
+        if (cached.get("contract") != CONTRACT
+                or cached["provenance"]["checkpoint_sha256"] != checkpoint_hash
+                or cached["provenance"]["query_prepared_sha256"] != provenance["query_prepared_sha256"]):
+            raise ValueError("query feature cache does not match checkpoint and prepared inputs")
+        features, pair_features = cached["features"], cached["pair_features"]
+    else:
+        features, pair_features = extract(model, visits, None if kind == "state" else ObservedPairs(visits), torch.device("cpu"))
+        feature_path.parent.mkdir(parents=True, exist_ok=True)
+        torch.save({"features": features, "pair_features": pair_features,
+                    "provenance": provenance, "contract": CONTRACT}, feature_path)
+    if (set(features) != set(visits.lookup)
+            or (kind != "state" and (pair_features is None or set(pair_features) != {p["row_id"] for p in visits.metadata["pairs"]}))
+            or not all(np.isfinite(v).all() for v in features.values())
+            or (pair_features is not None and not all(np.isfinite(v).all() for v in pair_features.values()))):
+        raise ValueError("query feature coverage or finiteness disagrees with prepared inputs")
+    direct_scores(model, visits.metadata, features, pair_features, checkpoint["normalization"],
+                  torch.device("cpu"), Path(out).with_suffix(".direct.json"))
+    transfer_features(training_metadata, trained["features"], visits.metadata, features,
+                      str(Path(out).with_suffix(".source52.json")), training_patients=run["training_patients"],
+                      training_pair_features=trained.get("pair_features"), query_pair_features=pair_features,
+                      provenance={**provenance, "readout_training_patients": run["training_patients"]})
     return transfer_features(training_metadata, trained["features"], visits.metadata, features, out,
                              training_pair_features=trained.get("pair_features"), query_pair_features=pair_features,
-                             provenance=provenance)
+                             provenance={**provenance, "readout_training_patients": training_metadata["protocol"]["encoder_unseen"]})
 
 
 def state_loss(output: dict, batch: dict, mean: torch.Tensor, scale: torch.Tensor) -> torch.Tensor:
@@ -513,7 +540,8 @@ def train_one(model, train_data, valid_data, normalization: dict, out: Path, *, 
 @torch.no_grad()
 def direct_scores(model, metadata: dict, features: dict, pair_features: dict | None,
                   normalization: dict, device: torch.device, out: Path) -> dict:
-    unseen = set(metadata["protocol"]["encoder_unseen"])
+    unseen = ({v["patient_id"] for v in metadata["visits"]} if metadata.get("cohort") == "SAILOR"
+              else set(metadata["protocol"]["encoder_unseen"]))
     visits = [v for v in metadata["visits"] if v["patient_id"] in unseen]
     groups = np.asarray([v["patient_id"] for v in visits])
     truth = np.stack([np.log1p([v["values_mm3"][c] for c in COMPARTMENTS]) for v in visits])
@@ -549,19 +577,27 @@ def direct_scores(model, metadata: dict, features: dict, pair_features: dict | N
 def extract(model, visits: Visits, pairs: ObservedPairs | None, device: torch.device) -> tuple:
     model.eval().to(device)
     encoder = model.encoder if isinstance(model, ObservedChange) else model
-    features = {}
-    for raw in DataLoader(visits, batch_size=1, num_workers=2):
+    features, spatial = {}, {}
+    for index, raw in enumerate(DataLoader(visits, batch_size=1, num_workers=2)):
         batch = device_batch(raw, device)
-        feature = encoder.summarize(encoder.encode(batch["image"], batch["availability"]))
-        features[raw["visit_id"][0]] = feature[0].cpu().numpy()
+        maps = encoder.encode(batch["image"], batch["availability"])
+        feature = encoder.summarize(maps)
+        identifier = raw["visit_id"][0]
+        features[identifier] = feature[0].cpu().numpy()
+        if pairs is not None:
+            spatial[identifier] = maps[-1].cpu()
+        if (index + 1) % 50 == 0 or index + 1 == len(visits):
+            print(f"extract visits {index + 1}/{len(visits)}", flush=True)
     pair_features = None
     if pairs is not None:
         pair_features = {}
-        for raw in DataLoader(pairs, batch_size=1, num_workers=2):
-            batch = device_batch(raw, device)
-            a, b = batch["source"], batch["target"]
-            feature = model(a["image"], a["availability"], b["image"], b["availability"], dense=False)["embedding"]
-            pair_features[raw["row_id"][0]] = feature[0].cpu().numpy()
+        for record in pairs.records:
+            b = spatial[record["target_visit_id"]].to(device)
+            a = b if model.mode == "later_only" else spatial[record["source_visit_id"]].to(device)
+            compared = model.comparison[-1](torch.cat([a, b, b - a], dim=1))
+            feature = encoder.summarize([compared])
+            pair_features[record["row_id"]] = feature[0].cpu().numpy()
+        print(f"extract pairs {len(pair_features)}/{len(pairs)}", flush=True)
     return features, pair_features
 
 
