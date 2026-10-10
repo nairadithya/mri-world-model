@@ -62,3 +62,17 @@ No follow-up family is selected yet. Present all objective arms and controls bef
 - Obtain an operator decision before Phase 2.
 
 The decision trail is `.audit/r36-delta-objective.tsv` in the execution worktree. The workflow is `.audit/r36-workflow.md`. The current missing-review status also applies to the trail itself.
+
+## Completed capacity and matrix launch, 2026-10-10
+
+The private capacity kernel completed. A and B each made 5,940 real-pair exposures over exactly 20 epochs. A made 5,935 successful updates and five AMP skips. B made 5,936 successful updates and four skips. Their epoch-wise real-pair and nuisance schedules have identical hashes. Both final state dictionaries were downloaded and checked finite. Both original-R35 source-only probes completed 20 epochs. No query outcome was scored.
+
+A training took 2,221.05 seconds and B took 2,532.37 seconds. The original-R35 difference probe took 768.28 seconds and target-only took 754.83 seconds. The complete work block took 6,299.69 seconds. Quota accounting changed from 5.72 to 7.49 GPU-hours used, an observed 1.77-hour cost. The new remaining quota is 22.51 hours; R36's own remaining allowance is 22.23 hours.
+
+Projection scales from completed successful updates and source-probe overhead. It assumes C costs like B and D costs 1.7 times B; D's runtime has not yet been measured. It projects 9.67 hours for all twelve training arms and 6.35 hours for all thirty probes. A 20% cost margin and one setup hour give 20.21 GPU-hours. This is a scheduling estimate, not a measured full-run cost.
+
+Two private matrix jobs now cover the ten remaining arms exactly once. Their work limits are 4.5 and 5.0 hours; API session limits are 5.0 and 5.5 hours. Each remaining probe job has a three-hour work limit and a 3.5-hour API session limit. The five follow-on session ceilings sum to 21 hours. Adding observed capacity spending gives 22.77 hours, below the 24-hour experiment ceiling even if every session reaches its limit. Each incomplete arm remains incomplete rather than receiving a shorter graded recipe.
+
+The matrix kernels are `nairadithya/r36-delta-matrix1` and `nairadithya/r36-delta-matrix2`. Their server metadata confirms private T4 settings. No further dataset source or license was created. Models still run the original private snapshot from `1daf27d`; model, data, and loss module hashes are unchanged. `d6adba7` adds only the orchestration packager.
+
+Evidence is `capacity-complete/unpacked/results/capacity.json`, `capacity-checks.json`, `capacity-projection.json`, the quota receipts, and the server metadata under `outputs/r36-delta-objective/`. Source-only training curves do not establish encoder improvement. The complete matched assessment, nuisance tests, local transfer, independent review, and Phase 2 decision remain open.
