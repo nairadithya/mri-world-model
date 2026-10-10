@@ -1,5 +1,5 @@
 # Data (top-level only — unanchored `data/` would also ignore src/data/)
-/data/
+/data
 *.csv
 *.pdf
 *.parquet
@@ -10,7 +10,7 @@
 
 # Model artifacts / checkpoints / outputs
 checkpoints/
-outputs/
+/outputs
 runs/
 wandb/
 *.pt
@@ -24,7 +24,7 @@ wandb/
 info/plots/*.png
 
 # Environments
-.venv/
+/.venv
 venv/
 env/
 *.egg-info/
