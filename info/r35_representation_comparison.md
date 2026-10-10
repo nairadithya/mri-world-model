@@ -1,6 +1,6 @@
 # R35. State, observed change, and nuisance comparison
 
-Status: controls and fresh frozen-reference transfer complete. Both GPU attempts failed before a completed candidate epoch. AMP lifecycle repair verified locally; restart pending. No valid trained candidate result yet.
+Status: controls and fresh frozen-reference transfer complete. Both GPU attempts failed before a completed candidate epoch. AMP lifecycle repair verified locally; private retry submitted and reports RUNNING. No valid trained candidate result yet.
 
 ## Question and capability tested
 
@@ -99,3 +99,7 @@ Restart inputs may reuse the failed cloud job's prepared LUMIERE tensors only wh
 The cloud reference recomputed state MAE 1.600834 on the same 149 LUMIERE visits, confirming the earlier cache-backed point estimate. Reference artifacts were recovered from the failed job before any restart. The reference uses no dense training loss, so that candidate-training failure does not invalidate its feature extraction.
 
 Artifact: `outputs/fresh-sailor-transfer.json`. Source-only grouped-ridge fitting on the 26 LUMIERE encoder-unseen patients gave SAILOR state MAE 4.7075 versus 2.2391 for the source-trained mean on 269 visits from 27 patients. Observed feature-difference change MAE was 0.9791 versus 0.9430 for zero change on 242 pairs. This is negative developmental-transfer evidence for the specified readout. Acquisition and automated-label-source differences remain confounded. It is not untouched external validation, a biological-change verdict, or a universal representation-quality gate. No SAILOR data were uploaded or used to select checkpoints.
+
+## Restart receipt
+
+Kernel: `nairadithya/r35-representation-retry`, version 1. Source commit: `3349acf`. Server metadata confirms private execution and the requested Tesla T4 machine shape. Status at restart verification was RUNNING; a completed candidate epoch has not yet been observed. Inputs may reuse the hash-matched prepared tensors from the failed fixed run. The original local encoding and failed-cloud reference artifacts are preserved. The decision trail records both the numerical repair and the negative transfer result. No unobserved training progress is claimed.
