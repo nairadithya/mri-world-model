@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What the glioma MRI research run established</title>
+<style>
+:root{color-scheme:light dark;--ink:#20242b;--muted:#596371;--line:#d8dde5;--paper:#fff;--panel:#f4f6f9;--blue:#2864a5;--green:#287750;--orange:#a65216;--red:#a33434}
+@media(prefers-color-scheme:dark){:root{--ink:#edf1f7;--muted:#b1bac8;--line:#414b59;--paper:#171b22;--panel:#202733;--blue:#84b9f3;--green:#83d5a8;--orange:#f1a66d;--red:#ff9292}}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.58 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:1060px;margin:0 auto;padding:38px 24px 70px}h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.08;letter-spacing:-.035em;margin:0 0 14px}h2{font-size:1.55rem;line-height:1.2;margin:44px 0 12px}h3{font-size:1.1rem;margin:25px 0 7px}p{margin:10px 0 14px}.lede{font-size:1.2rem;max-width:75ch;color:var(--muted)}a{color:var(--blue)}.box{padding:15px 18px;background:var(--panel);border-left:4px solid var(--blue);margin:20px 0}.warning{border-left-color:var(--red)}.result{border-left-color:var(--green)}.timeline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:22px 0}.phase{border-top:3px solid var(--blue);padding:10px 12px;background:var(--panel)}.phase strong{display:block}.phase small{color:var(--muted)}.phase p{font-size:.93rem;margin:6px 0 0}.muted{color:var(--muted)}table{border-collapse:collapse;width:100%;margin:12px 0 18px}th,td{text-align:left;border-bottom:1px solid var(--line);padding:8px 9px;vertical-align:top}th{position:sticky;top:0;background:var(--paper);z-index:1}td.id{white-space:nowrap;font-weight:700}td.outcome{min-width:14em}code{font-size:.92em}details{margin:18px 0;border:1px solid var(--line);border-radius:8px;padding:11px 14px}summary{cursor:pointer;font-weight:700}ul{padding-left:24px}li{margin:5px 0}.small{font-size:.9rem}.source{font-size:.9rem}.foot{margin-top:36px;padding-top:14px;border-top:1px solid var(--line);color:var(--muted)}@media(max-width:760px){main{padding:25px 15px 50px}.timeline{grid-template-columns:1fr 1fr}table{font-size:.88rem}th,td{padding:7px 5px}.wide{overflow-x:auto}.phase{min-height:120px}}@media(max-width:470px){.timeline{grid-template-columns:1fr}.wide{margin-right:-8px}}
+</style>
+</head>
+<body>
+<main>
+<h1>What the glioma MRI research run established</h1>
+<p class="lede">The project began as a Joint Embedding Predictive Architecture (JEPA) world model for longitudinal MRI. The results changed the question. Training the latent predictor was possible, but useful next-visit forecasts had to beat copying the current measurement, survive patient-held-out evaluation, and transfer without using future information.</p>
+<p>LUMIERE is the main development cohort. SAILOR is a second-site transfer check, not a pristine final holdout.</p>
+
+<div class="box"><b>Current conclusion.</b> The original JEPA representation did not improve physical lesion-volume forecasting over persistence. The later lesion-aware model appeared to improve LUMIERE results, but audit A40 found that it used target-visit image features, target masks, and future gaps. Those forecast gains, the three-seed claim, SAILOR forecast claims, and support-calibration forecasts are withdrawn. The cleaned GPU rescue arms also remained worse than the persistence floor. No causal forecasting gain has been established.</div>
+
+<h2>R36 is testing change-sensitive MRI features</h2>
+<div class="box"><b>Execution status.</b> Target QA and two real MRI optimizer checks passed. The private seed42 capacity run is active. Phase 1 remains incomplete. No new representation-quality result or future forecast is established.</div>
+<p>R35 found useful supervised per-scan state readouts, but its paired head did not establish an advantage over independent state differences. R36 holds the backbone architecture and initialization fixed and compares whole-grid signed-change supervision with equal weighting of changed and unchanged regions. Matched, source-fitted linear readouts of frozen final encoders will test feature accessibility.</p>
+<p>The target audit preserved 599 visits and 496 pairs. Median changed occupancy was 0.140%, 0.059%, and 0.437% of the grid across the three compartments. One native enhancing-compartment disagreement vanished from the resized masks. Sparse change supports testing region balancing. It does not prove why R35 behaved as it did.</p>
+<p>A known suspect extracranial contour remains in the primary analysis. Registration quality, automated-mask repeatability, empty-compartment errors, and nuisance sensitivity remain limits. SAILOR stays local and developmental. Independent review is unavailable. Phase 2 requires a separate operator decision after the Phase 1 report.</p>
+<p class="source">Read the <a href="r36_delta_representation_results.md">R36 execution record</a> and <a href="r36_delta_representation_handoff.md">locked experiment plan</a>. Implementation is on <code>exp/r36-delta-objective</code> in the isolated R36 worktree. All four objective arms and their controls must be reported before choosing a follow-up.</p>
+
+<div class="timeline" aria-label="Research stages">
+<div class="phase"><strong>Aug 20 to Sep 5 · Build and scale</strong><small>Proposal, BRAINIAC, JEPA</small><p>Verify the weights and train a first full-cohort model.</p></div>
+<div class="phase"><strong>Sep 5 to 14 · Test the claim</strong><small>RANO, SAILOR, locked probes</small><p>Correct split luck, mixed spaces, data defects, and task definitions.</p></div>
+<div class="phase"><strong>Sep 19 to 22 · Change endpoint</strong><small>P0, P1, P2</small><p>Forecast measured lesion anatomy at the next observed visit.</p></div>
+<div class="phase"><strong>Sep 28 to Oct 3 · Re-audit</strong><small>Seeds, causal cutoff, clean rescues</small><p>Withdraw leaked forecasts and repeat bounded controls.</p></div>
+</div>
+
+<h2>The story in five decisions</h2>
+<ol>
+<li><b>Prove that the model and data path are real.</b> A1 to A7 tested the training loop, preprocessing, pretrained weights, collapse monitors, and persistence. The first pilot's falling loss was invalid because its community checkpoint produced nearly constant MRI features. With the official BrainIAC weights, loss fell and collapse monitors stayed healthy, but the five-patient pilot still lost to persistence.</li>
+<li><b>Separate a learned objective from a useful forecast.</b> Hero Run 4 reached validation loss 0.0081 and held-out test loss 0.0074. An early 91-patient comparison looked like a 2.7× gain, but paired same-space evaluation corrected the headline. The test-only result was favorable under one patient-uniform aggregation, while pooled comparisons and the overall cohort did not establish a general win. Continued training in Run 5 drifted away from the best checkpoint.</li>
+<li><b>Recheck every promising probe.</b> RANO probes, surprise AUC, temporal readouts, and SAILOR adaptation produced leads, not final validation. The initial CV score of 0.334 included patients used to train the encoder. A25 later measured 0.309 on 26 encoder-unseen patients, but readout-seed variation and repeated use of the final split weakened that result. The survival-free current-schema score was 0.2718 pooled and 0.2247 patient-uniform for forecast states. Surprise did not lead incident progression. Empty SAILOR modalities and mixed latent spaces also changed earlier comparisons. The clean-schema JEPA-error AUC was 0.4971, near chance.</li>
+<li><b>Use physical anatomy as the endpoint.</b> P0 fixed the target as enhancing, necrotic/nonenhancing, and edema/FLAIR volumes in mm³, predicted at the next observed visit. P1 found that the frozen JEPA state was worse than persistence on LUMIERE and SAILOR. Structured lesion features and frozen-image/JEPA fusion did not pass the same persistence gate.</li>
+<li><b>Withdraw the apparent learned-lesion win after a cutoff audit.</b> The three-seed P2.4 report showed LUMIERE gains, but the model consumed the target visit. A40 invalidated those scores. A41's gap and velocity heads concern latent reconstruction, not physical lesion-volume forecasts. The subsequent clean-data GPU matrix failed to beat persistence in every arm.</li>
+</ol>
+
+<h2>Why the endpoint changed</h2>
+<p>The August proposal asked whether a BRAINIAC-based JEPA could predict future MRI states and clinical response. Its design used an online image encoder, an exponential moving average (EMA) target, temporal history, and a persistence baseline. Early work discovered a silent checkpoint-port failure, label and survival leakage risks, a non-independent probe CV, and a persistence comparison that mixed latent spaces. These were not cosmetic fixes. They changed which conclusions the data could support.</p>
+<p>By September 21 to 22, the team had a cleaner task contract. P0 used explicit patient, visit and pair identities. It removed eventual survival from prospective inputs, repaired ties in the area under the receiver operating characteristic curve (AUROC), recovered LUMIERE masks, and aligned compartment definitions. Incomplete dates supported "next observed visit" as the horizon. They did not support fixed-day predictions or growth rates. Response Assessment in Neuro-Oncology (RANO) was removed from the primary target because the SAILOR codebook had no independent confirmation.</p>
+<p>P1 then tested past-only forecasts of the three physical volumes. It used five patient-separated folds within the 26 LUMIERE patients not used to train the old encoder. Only 23 had eligible consecutive mask-bearing pairs. Current-volume ridge was statistically unresolved against persistence. The JEPA state was decisively worse. SAILOR was an unchanged developmental transfer check, not an untouched external test.</p>
+
+<div class="wide">
+<table aria-label="P1 anatomy forecast result">
+<thead><tr><th>Method</th><th>LUMIERE MAE relative to persistence</th><th>LUMIERE paired result</th><th>SAILOR MAE relative to persistence</th><th>Interpretation</th></tr></thead>
+<tbody>
+<tr><td>Persistence</td><td>1.000</td><td>Reference</td><td>1.000</td><td>Copy the three current compartment measurements.</td></tr>
+<tr><td>Current-volume ridge</td><td>0.973</td><td>Difference −0.042. 95% CI [−0.227, +0.148]</td><td>1.493</td><td>Unresolved in LUMIERE. Worse under unchanged SAILOR transfer.</td></tr>
+<tr><td>JEPA state</td><td>1.393</td><td>Difference +0.607. 95% CI [+0.226, +1.002]</td><td>2.873</td><td>Worse than persistence in both cohorts.</td></tr>
+</tbody>
+</table>
+</div>
+<p class="small">Relative mean absolute error (MAE) is the patient-uniform log-volume MAE divided by persistence MAE. A value below 1 favors the model. The paired interval is computed by resampling patients.</p>
+<p class="small muted">These P1 values use 117 LUMIERE rows from 23 patients and 242 SAILOR rows from 27 subjects. P2's learned model used a different 23-patient evaluation subset and a different row contract. Its historical ratios must not be compared as if the denominators were identical. A40 later found that the learned-model cache also bridged visits, with 123 rows where the frozen manifest allowed 117.</p>
+
+<h2>Experiments, in order</h2>
+<p>Every numbered A experiment in the repository ledger is listed below, including A40 and A41 from the separate clean-rescue branch. "No result" means the entry is an audit or literature review rather than a model comparison. The descriptions state the conclusion that survives later corrections, not every intermediate draft claim. R-numbered directions in <code>info/directions.md</code> are proposals or diagnostic labels. Completed experiments appear under their A IDs or in the R33 clean-rescue record. Follow the linked records for setup, metrics, and caveats.</p>
+
+<details open>
+<summary>A1 to A8 · Validate the pipeline and first JEPA runs</summary>
+<div class="wide"><table><thead><tr><th>ID</th><th>Question and result</th><th>Record</th></tr></thead><tbody>
+<tr><td class="id">A1</td><td>Random initialization produced chance-like loss and valid tensor shapes. It verified the training plumbing, not model learning.</td><td><a href="ablations.md">info/ablations.md, A1</a></td></tr>
+<tr><td class="id">A2</td><td>The community weight port matched all key names but returned almost identical outputs for MRI, noise, and zeros, with 150× activation growth. Official weights behaved correctly. Behavioral checkpoint checks became mandatory.</td><td><a href="ablations.md">A2 and D8</a></td></tr>
+<tr><td class="id">A3</td><td>First-token and mean pooling gave nearly identical longitudinal drift. The official first-token convention remained.</td><td><a href="ablations.md">A3</a></td></tr>
+<tr><td class="id">A4</td><td>Raw resize and z-score preprocessing and the full BRAINIAC pipeline gave similar drift on one patient. This checked pipeline fidelity, not cohort-wide equivalence.</td><td><a href="ablations.md">A4</a></td></tr>
+<tr><td class="id">A5</td><td>Fresh and trained backbone features were identical in the corrupt-weight pilot. Collapse came from constant features and predictor heads, not a broken optimizer.</td><td><a href="ablations.md">A5</a></td></tr>
+<tr><td class="id">A6</td><td>The official-weight five-epoch pilot learned below chance but scored 0.0576 error versus persistence at 0.0043. Training signal did not beat the forecast floor.</td><td><a href="ablations.md">A6 and pilot Runs 1 and 2</a></td></tr>
+<tr><td class="id">A7</td><td>Twenty-five pilot epochs plateaued around epoch 13. Mean error remained 0.0110 versus persistence at 0.0043. The only held-out patient was the worst case.</td><td><a href="ablations.md">A7 and pilot Run 3</a></td></tr>
+<tr><td class="id">A8</td><td>The first 91-patient merit claim mixed EMA-target JEPA error with online-projector persistence. Same-space correction removed the broad 2.7× claim. The test-only patient-uniform result favored JEPA, but pooled and full-cohort evidence did not establish a general win.</td><td><a href="ablations.md">A8 and same-space addendum, plus D28</a></td></tr>
+</tbody></table></div>
+</details>
+
+<details>
+<summary>A9 to A21 · Probe response, dynamics, and site shift</summary>
+<div class="wide"><table><thead><tr><th>ID</th><th>Question and surviving result</th><th>Record</th></tr></thead><tbody>
+<tr><td class="id">A9</td><td>Frozen temporal states showed modest RANO signal. The hero-split F1 of 0.448 fell to 0.334 ± 0.060 in five-fold CV, but those folds included 65 patients used to train the encoder. A25 later reported 0.309 on 26 encoder-unseen patients. A27 found readout seed and width alone spanned 0.335 to 0.448. The survival-free current-schema forecast-state macro-F1 was 0.2718 pooled and 0.2247 patient-uniform. These results use different protocols and should not be combined.</td><td><a href="ablations.md">A9, A25, A27</a> and <a href="p0_refresh.md">P0 refresh</a></td></tr>
+<tr><td class="id">A10</td><td>Historical JEPA surprise had AUC 0.7677 for next-visit PD, but did not distinguish early warning from change detection. The clean-schema refresh later measured 0.4971 for JEPA error and 0.4611 for persistence error. Do not use the historical AUC as a current result.</td><td><a href="ablations.md">A10</a> and <a href="p0_refresh.md">P0 refresh</a></td></tr>
+<tr><td class="id">A11</td><td>Frozen latents had weak current-volume readout signal. CV-tuned ridge reduced R² to 0.15. Next-visit volume forecasts lost to persistence.</td><td><a href="ablations.md">A11 and addendum</a></td></tr>
+<tr><td class="id">A12</td><td>Initial frozen-model SAILOR transfer showed much worse dynamics and some response-readout transfer. Same-space, phantom-input, and cache audits later revised the dynamics ratios and invalidated a skull-out cache claim.</td><td><a href="ablations.md">A12, with corrected rows in A23 and A24</a></td></tr>
+<tr><td class="id">A13</td><td>Lead-time analysis found no JEPA surprise advantage over persistence for incident PD. At two visits ahead, persistence was better.</td><td><a href="ablations.md">A13</a></td></tr>
+<tr><td class="id">A14</td><td>Transition atlas found surgery-related discontinuities and weak performance on some response transitions. Rare cells were too small for broad claims. The nominal interval story was later corrected.</td><td><a href="ablations.md">A14</a></td></tr>
+<tr><td class="id">A15</td><td>Under subject CV, the treatment-conditioned and unconditioned SAILOR fields tied each other. Both had lower recorded error than persistence. A later cache rebuild made these field numbers pre-rebuild, and the clean reproduction remained pending. The experiment did not show that treatment conditioning helped.</td><td><a href="ablations.md">A15, A23, and D30</a></td></tr>
+<tr><td class="id">A16</td><td>Freezing and CORAL diagnostics found strong site separability and partial covariance-alignment recovery, but a residual transfer gap remained. Later same-space and clean-data reruns supersede parts of this analysis.</td><td><a href="ablations.md">A16</a></td></tr>
+<tr><td class="id">A17</td><td>R11 tested whether training noise ejects the checkpoint from a narrow basin. Accumulation delayed drift but did not hold the basin. Short best-tracked legs could improve. Long continuation remained harmful.</td><td><a href="ablations.md">A17 and repair addendum</a></td></tr>
+<tr><td class="id">A18</td><td>Raw-to-MNI preprocessing reduced measured image-space change by about fourfold in the tested SAILOR pairs. This is a pipeline comparison, not evidence that preprocessing alone caused latent transfer failure.</td><td><a href="ablations.md">A18</a></td></tr>
+<tr><td class="id">A19</td><td>Reprocessing SAILOR through the LUMIERE contract did not make JEPA dynamics beat persistence. Skull and image-processing differences remained.</td><td><a href="ablations.md">A19</a></td></tr>
+<tr><td class="id">A20</td><td>Automated preprocessing QA caught known registration defects. NCC was demoted to warning-only after false positives.</td><td><a href="ablations.md">A20</a></td></tr>
+<tr><td class="id">A21</td><td>Skull restoration improved some SAILOR readouts but did not fix dynamics. A later cache rebuild could not reproduce the skull-out readout, so that transfer and ceiling claim was withdrawn.</td><td><a href="ablations.md">A21 and A23 cache correction</a></td></tr>
+</tbody></table></div>
+</details>
+
+<details>
+<summary>A22 to A37 · Correct the protocol and test representation alternatives</summary>
+<div class="wide"><table><thead><tr><th>ID</th><th>Question and surviving result</th><th>Record</th></tr></thead><tbody>
+<tr><td class="id">A22</td><td>Predicted latent probes sometimes carried more response signal than observed latents, but cosine error did not measure representation usefulness. Some field caches needed a rebuild.</td><td><a href="ablations.md">A22</a></td></tr>
+<tr><td class="id">A23</td><td>Finite-content checks found 21 empty SAILOR modalities and rebuilt caches. Dynamics stayed much worse than persistence. The cause of one unreproducible old skull-out cache remained unknown.</td><td><a href="ablations.md">A23</a></td></tr>
+<tr><td class="id">A24</td><td>Same-space SAILOR ratios were 7.11×, 10.5×, and 8.95× worse than persistence across three preprocessing arms. The corrected LUMIERE gate was pooled-nonsignificant overall, with only a fragile patient-uniform test win.</td><td><a href="ablations.md">A24 and D28</a></td></tr>
+<tr><td class="id">A25</td><td>A locked protocol excluded the 65 encoder-training patients from probe CV. It established a patient-wise RANO evaluation but did not create a fresh test set. The historical final split later became development evidence.</td><td><a href="ablations.md">A25</a> and <a href="eval_protocol.md">locked protocol</a></td></tr>
+<tr><td class="id">A26</td><td>ROI pooling, modality concatenation, and volume features did not improve the locked RANO readout over forecast states. Small sample sizes limit claims of equivalence.</td><td><a href="ablations.md">A26</a></td></tr>
+<tr><td class="id">A27</td><td>Task-training the temporal stack did not beat a frozen readout. Readout seed and width alone spanned final F1 from 0.335 to 0.448, showing substantial readout sensitivity.</td><td><a href="ablations.md">A27</a></td></tr>
+<tr><td class="id">A28</td><td>A properly trained supervised LoRA run showed no locked-protocol gain over frozen JEPA. One seed and readout noise limit the comparison.</td><td><a href="ablations.md">A28</a></td></tr>
+<tr><td class="id">A29</td><td>A from-scratch 3D CNN underfit and transferred worse than JEPA. It was not a competitive supervised comparator.</td><td><a href="ablations.md">A29</a></td></tr>
+<tr><td class="id">A30</td><td>A 2D-slice CNN collapsed toward the majority class. Whole-brain slices gave noisy labels.</td><td><a href="ablations.md">A30</a></td></tr>
+<tr><td class="id">A31</td><td>ROI-cropped 2D CNN also failed to learn competitively after correcting a mask-mount error. This still did not reproduce a pretrained supervised baseline.</td><td><a href="ablations.md">A31</a></td></tr>
+<tr><td class="id">A32</td><td>Literature review, not a new model result. It corrected a metric mix-up and found that the local CNN variants did not faithfully reproduce the cited training recipe.</td><td><a href="ablations.md">A32</a> and <a href="frontier_lumiere.md">literature notes</a></td></tr>
+<tr><td class="id">A33</td><td>A short resume with surgery filtering, augmentation, and transition weighting was null. The test was weak because it resumed from the known unstable checkpoint and selected epoch one.</td><td><a href="ablations.md">A33</a></td></tr>
+<tr><td class="id">A34</td><td>A full from-scratch run with those three changes did not improve the RANO probe and significantly worsened the overall latent persistence gate.</td><td><a href="ablations.md">A34</a></td></tr>
+<tr><td class="id">A35</td><td>A 22-feature radiomics and growth model had signal but did not beat JEPA on the locked comparison. It was not the full published high-dimensional radiomics method.</td><td><a href="ablations.md">A35</a></td></tr>
+<tr><td class="id">A36</td><td>Frozen latents did not recover the measurement and growth features well. Adding those concepts did not improve locked CV. One small final-slice result changed with readout width.</td><td><a href="ablations.md">A36</a></td></tr>
+<tr><td class="id">A37</td><td>Validity triage decomposed cross-site dynamics failure into gain overshoot and weak direction. It was a legacy-cache diagnostic, not new training evidence.</td><td><a href="ablations.md">A37</a></td></tr>
+</tbody></table></div>
+</details>
+
+<details>
+<summary>A38 to A41 · Anatomy forecasting, leakage audit, and clean reruns</summary>
+<div class="wide"><table><thead><tr><th>ID</th><th>Question and surviving result</th><th>Record</th></tr></thead><tbody>
+<tr><td class="id">A38</td><td>Forty-eight history-only physical lesion features and a zero-initialized residual model did not beat persistence. LUMIERE difference was unresolved. SAILOR transfer was harmful.</td><td><a href="ablations.md">A38</a> and <a href="p2_execution.md">P2 execution</a></td></tr>
+<tr><td class="id">A39</td><td>Adding frozen BRAINIAC or JEPA states to physical history did not improve the locked anatomy forecast. Both frozen fusion arms lost on SAILOR.</td><td><a href="ablations.md">A39</a></td></tr>
+<tr><td class="id">A40</td><td>Cutoff audit found future observation, target mask/image, and ending gap inside the learned lesion forecast. It also found visit bridges in the cache. Withdraw P2.4 volume gains, seed stability, SAILOR transfer, and support-adaptation forecasts. No causal replacement score exists.</td><td><code>git show 067ed6c:info/clean_rescues.md</code> on local branch <code>exp/clean-data-rescues</code></td></tr>
+<tr><td class="id">A41</td><td>Clean gap/velocity reruns improved some latent-reconstruction metrics, but SAILOR zero-shot did not show a patient-uniform win for the velocity field. These are latent metrics, not lesion-volume forecasts. Target gaps are retrospective metadata.</td><td><code>git show 067ed6c:info/clean_rescues.md</code> on local branch <code>exp/clean-data-rescues</code></td></tr>
+</tbody></table></div>
+</details>
+
+<h2>Training runs behind the experiment IDs</h2>
+<div class="wide"><table><thead><tr><th>Run</th><th>What happened</th><th>What it established</th><th>Record</th></tr></thead><tbody>
+<tr><td>1</td><td>Five-patient pilot with an invalid community checkpoint. Validation loss fell, but target standard deviation was 0.0024 and effective rank 1.1.</td><td>Invalid run. A2 identified silently corrupt weights. The checkpoint was discarded.</td><td><a href="pilot.md">pilot.md</a></td></tr>
+<tr><td>2</td><td>Five epochs with official weights. Validation loss fell from 0.4256 to 0.0564. Target std was 0.079 and rank was 2.2.</td><td>Healthy training signal, but prediction error 0.0576 remained above persistence 0.0043.</td><td><a href="pilot.md">pilot.md</a></td></tr>
+<tr><td>3</td><td>Twenty-five-epoch CPU pilot on the same five patients.</td><td>Validation plateaued around epoch 13. More epochs did not beat persistence. The next test needed more patients.</td><td><a href="pilot.md">pilot.md</a></td></tr>
+<tr><td>4</td><td>Full-cohort Kaggle T4 training. Validation reached 0.0081 near epoch seven, then overfit. Held-out test latent loss was 0.0074.</td><td>One promising representation-learning run, not by itself proof of anatomy forecasting superiority.</td><td><a href="pilot.md">pilot.md</a></td></tr>
+<tr><td>5</td><td>Thirty-epoch lower-rate resume from the best checkpoint.</td><td>Loss drifted upward. Long continuation was stopped. Fresh optimizer state remained a hypothesis.</td><td><a href="pilot.md">pilot.md</a></td></tr>
+<tr><td>6</td><td>Joint JEPA and RANO auxiliary-head fine-tune.</td><td>Hero-split score improved, but CV did not. JEPA error worsened about 2.5×. The original champion remained.</td><td><a href="pilot.md">pilot.md</a></td></tr>
+</tbody></table></div>
+
+<h2>What the clean rescue branch adds</h2>
+<p>The later audit lives on local branch <code>exp/clean-data-rescues</code>, whose result commit is <code>067ed6c</code>. It is not part of pushed <code>main</code> at <code>0bed48b</code>. The branches split at <code>768cd7e</code>. Main has two later commits, while the clean-rescue branch has six. The branch reopens a bounded set of old optimization and representation hypotheses against a survival-free checkpoint with verified provenance. Its versioned record is <code>info/clean_rescues.md</code> on that branch. The run outputs under <code>outputs/clean-rescues/</code> are ignored artifacts.</p>
+<p>A40 is the decisive update. The learned lesion model used both endpoint observations to form a transition while predicting the target volume. Future information changed predictions for all 23 evaluated LUMIERE patients across all three seeds. Since every reported seed shared this defect, the apparent P2.4 result is not a valid past-only forecast. A40 also found that dropping maskless visits created nonconsecutive bridges. The repaired history-only code has perturbation and gradient checks, but the branch records no retrained causal lesion score.</p>
+<p>A41 separates latent reconstruction from physical forecasting. On the historical 13-patient LUMIERE test split, the gap head beat same-space persistence for one-step latent error, but that split is reused development evidence. The velocity head approached persistence on SAILOR without a patient-uniform significant win. Pooled results indicated harm. These numbers do not restore the invalid lesion-volume claim.</p>
+<div class="wide"><table aria-label="Clean GPU rescue runs"><thead><tr><th>Arm</th><th>JEPA state pooled anatomy MAE relative to persistence</th><th>Control pooled relative MAE</th><th>Conclusion</th></tr></thead><tbody>
+<tr><td>Fresh optimizer, accumulation 1</td><td>1.3517</td><td>1.3932</td><td>Closest rescue arm, still worse than persistence at 1.0.</td></tr>
+<tr><td>Fresh optimizer, accumulation 8</td><td>1.3791</td><td>1.3932</td><td>Does not beat persistence.</td></tr>
+<tr><td>Loaded optimizer, accumulation 1</td><td>1.3878</td><td>1.3932</td><td>Does not beat persistence.</td></tr>
+<tr><td>Loaded optimizer, accumulation 8</td><td>1.3925</td><td>1.3932</td><td>Does not beat persistence.</td></tr>
+<tr><td>Augmentation</td><td>1.3864</td><td>1.3932</td><td>Does not beat persistence.</td></tr>
+<tr><td>Surgery filtering</td><td>1.3963</td><td>1.3932</td><td>Does not beat persistence.</td></tr>
+<tr><td>Transition weighting</td><td>1.3912</td><td>1.3932</td><td>Does not beat persistence.</td></tr>
+</tbody></table></div>
+<p class="small muted">The values are pooled JEPA-state relative MAEs. Persistence is 1.0. Each rescue arm remains above that floor. These pooled values do not establish a patient-uniform significance result. The comparison with the control does not change the persistence verdict. Read the experiment record for per-arm protocol, endpoint, and uncertainty details.</p>
+
+<h2>Commit history and research record</h2>
+<p>The repository history contains 165 commits across the inspected refs. The commit list establishes order and identifies implementation milestones. Experiment results below come from research records, not commit subjects. The table groups commits by research shift rather than presenting every code-maintenance commit as a scientific result.</p>
+<div class="wide"><table><thead><tr><th>Period</th><th>Commit evidence</th><th>Research change</th></tr></thead><tbody>
+<tr><td>Aug 20</td><td><code>762e2f8</code>, <code>a5b43d5</code></td><td>Proposal and JEPA design.</td></tr>
+<tr><td>Sep 4 to 5</td><td><code>c44f3f7</code>, <code>236352d</code>, <code>542fe16</code>, <code>e675c21</code>, <code>fa09ace</code></td><td>Training pipeline, decision/ablation/pilot records, and full-cohort hero run. Later same-space review corrects its headline.</td></tr>
+<tr><td>Sep 5 to 7</td><td><code>8ccbd17</code>, <code>9713f67</code>, <code>376e542</code>, <code>acf7503</code>, <code>3a46d72</code></td><td>RANO probes, volume/surprise work, SAILOR transfer, lead-time and dynamics audits.</td></tr>
+<tr><td>Sep 10 to 13</td><td><code>3bfad69</code>, <code>796a42f</code>, <code>7a279d9</code>, <code>a9792c0</code>, <code>d595cd1</code>, <code>2ac3675</code></td><td>K3 validity repairs, locked probe protocol, interface/training/comparator experiments.</td></tr>
+<tr><td>Sep 19 to 22</td><td><code>224f4f2</code>, <code>7ff011c</code>, <code>8fdccc5</code>, <code>c4a653f</code>, <code>26718b1</code>, <code>667b2dc</code>, <code>bd8887d</code></td><td>Provenance and current-schema controls. P0 and P1 anatomy benchmark. P2 lesion model.</td></tr>
+<tr><td>Sep 24 to Oct 7 on main</td><td><code>768cd7e</code>, <code>dd6c358</code>, <code>0bed48b</code></td><td>Focused anatomy explanation and three-seed P2 report. The P2.4 claim is superseded by A40 on the separate local branch.</td></tr>
+<tr><td>Oct 2 to 3, local branch</td><td><code>36b7078</code>, <code>c81f82d</code>, <code>19ef2a3</code>, <code>8991caa</code>, <code>067ed6c</code></td><td>Clean rescue protocol, causal-cutoff correction, optimizer-state device fix, and completed bounded GPU results.</td></tr>
+</tbody></table></div>
+
+<h2>What remains open</h2>
+<ul>
+<li>No causal retraining result replaces the withdrawn P2.4 forecast.</li>
+<li>No new independent external cohort has been evaluated. SAILOR is developmental transfer, and the clean rescue branch keeps its files private.</li>
+<li>The SAILOR RANO codebook lacks independent confirmation. RANO and treatment-timing claims remain limited.</li>
+<li>The date metadata supports next-observed-visit ordering, not fixed-day forecasts or biological growth-rate claims.</li>
+<li>The local clean rescue branch is separate from pushed <code>main</code>. Its tracked note is <code>info/clean_rescues.md</code> at commit <code>067ed6c</code>. Its training artifacts are ignored.</li>
+</ul>
+
+<h2>Source map</h2>
+<ul class="source">
+<li><a href="../PROPOSAL.md">Original proposal</a> for the initial hypothesis and model design.</li>
+<li><a href="pilot.md">Pilot and hero training record</a> for Runs 1 to 6.</li>
+<li><a href="ablations.md">Ablation ledger</a> for A1 to A39 and their corrections.</li>
+<li><a href="decisions.md">Decision log</a> for D0 to D53 and task/protocol changes.</li>
+<li><a href="directions.md">Research directions and audits</a> for the R-series and superseded open-work proposals.</li>
+<li><a href="p0_audit.md">P0 validity audit</a> and <a href="p0_refresh.md">clean-schema refresh</a>.</li>
+<li><a href="p1_anatomy_baselines.md">P1 anatomy forecast result</a> and <a href="p1_baselines.md">classification and temporal controls</a>.</li>
+<li><a href="p2_execution.md">P2 execution</a>, <a href="p2_lesion_architecture.md">lesion-local and learned model</a>, and <a href="p2_seed_sensitivity.md">seed sensitivity</a>.</li>
+<li>Clean rescue branch source: <code>git show 067ed6c:info/clean_rescues.md</code>. This source is on local branch <code>exp/clean-data-rescues</code>, not the mainline checkout.</li>
+<li><a href="eval_protocol.md">Locked evaluation protocol</a> for the RANO probe phase.</li>
+</ul>
+<p class="foot">Scope note. This explainer covers the logged experimental record, including the separate clean-rescue branch. The 165-commit count is a repository-history count, not a count of experiments. Routine code, data-pipeline, and harness commits are grouped under their research milestones. Historical claims explicitly marked withdrawn are preserved as history, not presented as current evidence.</p>
+</main>
+</body>
+</html>
