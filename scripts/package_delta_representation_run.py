@@ -45,7 +45,6 @@ def package(prepared: str, qa: str, out: str) -> dict:
             ["git", "rev-parse", "HEAD"], text=True).strip(), "hashes": {f: digest(f) for f in files}}))
     payload = archive_data.getvalue()
     sha = hashlib.sha256(payload).hexdigest()
-    encoded = base64.b64encode(payload).decode()
     notebook = f'''# ---
 # jupyter:
 #   jupytext:
@@ -77,7 +76,12 @@ print("device", torch.cuda.get_device_name(0))
 # %%
 import base64, hashlib, io, json, os, subprocess, time, zipfile
 from pathlib import Path
-payload = base64.b64decode("{encoded}")
+parts = []
+for index in (1, 2):
+    paths = list(Path("/kaggle/input").glob(f"**/r36-snapshot-part{{index}}.bin"))
+    assert len(paths) == 1, "Private source snapshot part missing or ambiguous"
+    parts.append(paths[0].read_bytes())
+payload = b"".join(parts)
 assert hashlib.sha256(payload).hexdigest() == "{sha}"
 root = Path("/kaggle/working/r36-run")
 root.mkdir(exist_ok=True)
@@ -172,12 +176,26 @@ finally:
 print(json.dumps(capacity, indent=2))
 '''
     directory = Path(out); directory.mkdir(parents=True, exist_ok=True)
+    for index, part in enumerate((payload[:len(payload) // 2], payload[len(payload) // 2:]), 1):
+        staging = directory / f"stage{index}"; staging.mkdir(exist_ok=True)
+        part_hash = hashlib.sha256(part).hexdigest()
+        content = ('import base64, hashlib\nfrom pathlib import Path\n'
+                   f'payload = base64.b64decode("{base64.b64encode(part).decode()}")\n'
+                   f'assert hashlib.sha256(payload).hexdigest() == "{part_hash}"\n'
+                   f'Path("/kaggle/working/r36-snapshot-part{index}.bin").write_bytes(payload)\n'
+                   f'print("private snapshot part {index}", len(payload), "{part_hash}")\n')
+        (staging / "snapshot_part.py").write_text(content)
+        save_json(staging / "kernel-metadata.json", {"id": f"nairadithya/r36-source-part{index}",
+                  "title": f"R36 source part{index}", "code_file": "snapshot_part.py", "language": "python",
+                  "kernel_type": "script", "is_private": True, "enable_gpu": False, "enable_internet": False,
+                  "dataset_sources": [], "kernel_sources": [], "competition_sources": [], "model_sources": []})
     (directory / "capacity_leg.py").write_text(notebook)
     save_json(directory / "kernel-metadata.json", {
         "id": "nairadithya/r36-delta-capacity", "title": "R36 delta capacity",
         "code_file": "capacity_leg.ipynb", "language": "python", "kernel_type": "notebook",
         "is_private": True, "enable_gpu": True, "enable_internet": True, "machine_shape": "NvidiaTeslaT4",
-        "dataset_sources": [], "kernel_sources": ["nairadithya/r35-representation-retry", "nairadithya/r35-representation-comparison-fixed"],
+        "dataset_sources": [], "kernel_sources": ["nairadithya/r35-representation-retry", "nairadithya/r35-representation-comparison-fixed",
+                           "nairadithya/r36-source-part1", "nairadithya/r36-source-part2"],
         "competition_sources": [], "model_sources": []})
     receipt = {"archive_sha256": sha, "source_files": list(files), "private": True, "cohort": "LUMIERE",
                "arms": ["42/A", "42/B"], "epochs": 20, "max_session_hours": 9,
