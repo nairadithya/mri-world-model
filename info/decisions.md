@@ -741,3 +741,15 @@ referenced, not repeated — only session decisions are recorded here in full.
   Apparent extracranial labels and differing templates still require QA.
   Coordinate repair does not establish forecasting gains or measurement
   repeatability. See `info/methodology_validity.md` and the decision TSV.
+- **D57. Execute the matched R36 objective contrast before reopening dynamics
+  (2026-10-10).** The operator authorized Phase 1. The contract retains the
+  R35 split, backbone, and pair rows. C versus B uses identical frozen local
+  probes to distinguish feature accessibility from a stronger decoder.
+  The full target audit preserved 599 visits and 496 pairs. Median changed
+  occupancy is below 0.5% of the grid in each compartment. One native
+  enhancing disagreement vanished at 96 cubed. These observations justify
+  testing changed-region balancing, not a representation-success claim.
+  Two real MRI optimizer updates passed. A private T4 capacity run is active,
+  with no query scoring. Keep all negative and incomplete arms visible.
+  Independent review remains unavailable. Phase 2 needs a separate operator
+  decision after the Phase 1 report. See `info/r36_delta_representation_results.md`.
