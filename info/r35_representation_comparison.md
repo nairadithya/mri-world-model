@@ -1,6 +1,6 @@
 # R35. State, observed change, and nuisance comparison
 
-Status: controls and fresh frozen-reference transfer complete. Both GPU attempts failed before a completed candidate epoch. AMP lifecycle repair verified locally; private retry submitted and reports RUNNING. No valid trained candidate result yet.
+Status: corrected private retry COMPLETE. All 12 arms finished 20 epochs. Trained-model developmental transfer and independent review remain pending.
 
 ## Question and capability tested
 
@@ -103,3 +103,17 @@ Artifact: `outputs/fresh-sailor-transfer.json`. Source-only grouped-ridge fittin
 ## Restart receipt
 
 Kernel: `nairadithya/r35-representation-retry`, version 1. Source commit: `3349acf`. Server metadata confirms private execution and the requested Tesla T4 machine shape. Status at restart verification was RUNNING; a completed candidate epoch has not yet been observed. Inputs may reuse the hash-matched prepared tensors from the failed fixed run. The original local encoding and failed-cloud reference artifacts are preserved. The decision trail records both the numerical repair and the negative transfer result. No unobserved training progress is claimed.
+
+## Completed corrected comparison
+
+The private retry completed all four arms for seeds 42, 43, and 44. Local artifact verification checked all 240 epochs, finite saved weights, matching feature/checkpoint digests, and training split identities. There were 74,592 successful optimizer updates and 48 recorded AMP backoffs. The numerical repair allowed recovery without accepting nonfinite parameter updates. Artifacts: `outputs/retry-complete/verification.json`, `outputs/retry-complete/summary.json`, and the saved weights and predictions in `outputs/retry-complete/unpacked/results/`.
+
+The following are means of patient-level errors across the three seeds, not errors of an ensemble prediction. Summary intervals are descriptive paired patient bootstraps, not new prespecified gates.
+
+- Direct spatial-state volume decoding gave MAE 1.1145 versus 1.5000 for the frozen scalar-supervision control. Difference -0.3855, 95% interval [-0.5185, -0.2481], 149 visits from 26 patients. The point reduction is about 26%. The spatial model also receives dense masks during training, so this does not isolate architecture from supervision.
+- The direct paired head gave observed-change MAE 1.2696 versus 1.5446 for zero change. Difference -0.2750, interval [-0.4953, -0.0957], 117 pairs from 23 patients. Later-only head MAE was 1.4381; paired minus later-only was -0.1685, interval [-0.3438, -0.0155].
+- Independent differences of the state model's decoded volumes gave MAE 1.2589. Paired minus independent difference was +0.0108, interval [-0.0791, 0.1066]. Differences from the paired model's own state decoder gave MAE 1.2348. Thus a dedicated paired head has not established incremental benefit beyond useful per-scan state decoding.
+- The nested-probe results tell the same cautionary story. Paired learned-comparison feature MAE ranged 1.2151 to 1.3006; simple differences of that encoder's scan embeddings ranged 1.1554 to 1.2273. Report all views rather than selecting the favorable one.
+- Synthetic resolution degradation still produced false-change scores. In the spatial-state difference probe, these ranged 0.2458 to 0.3827 versus identity scores 0.0343 to 0.0501. Nuisance separation is incomplete. These are declared synthetic perturbations, not measured biological changes.
+
+Interpretation: supervised spatial state learning improved the scoped in-domain volume proxy. Useful state readouts also support observed-change estimates. A more elaborate paired network has not earned its place over independent state differences. This is not future forecasting, biological-change validation, or a claim of general architectural superiority. Trained-model SAILOR transfer has not yet been run. The negative frozen-reference transfer result above remains in the record. Independent review is still unavailable.
