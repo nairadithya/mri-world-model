@@ -152,6 +152,29 @@ class RepresentationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "overlap"):
             transfer_features(metadata, {}, metadata, {}, "unused.json", provenance={})
 
+    def test_transfer_persists_source_readouts_that_reproduce_predictions(self):
+        compartments = ("necrotic_non_enhancing", "enhancing", "edema_flair")
+        def record(identifier, patient, x):
+            return {"visit_id": identifier, "patient_id": patient, "values_mm3": {c: float(np.expm1(x + 1)) for c in compartments}}
+        visits = [record(f"v{i}", f"p{i // 2}", i) for i in range(12)]
+        pairs = [{"row_id": f"r{i}", "patient_id": f"p{i}", "source_visit_id": f"v{2*i}", "target_visit_id": f"v{2*i+1}"}
+                 for i in range(6)]
+        source = {"visits": visits, "pairs": pairs, "protocol": {"encoder_unseen": [f"p{i}" for i in range(6)]}}
+        query = {"visits": [record("q0", "query", 2.5), record("q1", "query", 7.5)],
+                 "pairs": [{"row_id": "qr", "patient_id": "query", "source_visit_id": "q0", "target_visit_id": "q1"}]}
+        features = {f"v{i}": np.asarray([i], np.float32) for i in range(12)}
+        query_features = {"q0": np.asarray([2.5], np.float32), "q1": np.asarray([7.5], np.float32)}
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "transfer.json"
+            result = transfer_features(source, features, query, query_features, str(path), provenance={"test": True})
+            self.assertAlmostEqual(result["state"]["ridge"]["patient_uniform_mae"], 2.5 / 121, places=5)
+            saved = torch.load(path.with_suffix(".readouts.pt"), weights_only=False)
+            self.assertEqual(set(saved["readouts"]), {"state", "later_only", "difference", "concatenation"})
+            self.assertEqual(saved["training_patients"], [f"p{i}" for i in range(6)])
+            scaler, model, _ = saved["readouts"]["state"]
+            with np.load(path.with_suffix(".predictions.npz")) as predictions:
+                np.testing.assert_array_equal(model.predict(scaler.transform(np.stack(list(query_features.values())))), predictions["state_prediction"])
+
     def test_direct_transfer_scores_all_query_patients_without_fitting(self):
         with tempfile.TemporaryDirectory() as tmp:
             model = SpatialState((8, 16))

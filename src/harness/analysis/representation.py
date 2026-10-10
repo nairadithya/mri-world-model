@@ -320,11 +320,12 @@ def transfer_features(training_metadata: dict, training_features: dict, query_me
             raise ValueError("query pair embeddings missing")
         views["learned_pair"] = (np.stack([training_pair_features[p["row_id"]] for p in pa]),
                                  np.stack([query_pair_features[p["row_id"]] for p in pb]))
-    selected = {}
+    selected, readouts = {}, {"state": (scaler, model, alpha)}
     for name, (a, b) in views.items():
         pair_scaler, pair_model, chosen = fit_ridge(a, da, groups)
         predictions[name] = pair_model.predict(pair_scaler.transform(b))
         selected[name] = chosen
+        readouts[name] = (pair_scaler, pair_model, chosen)
     result = {"contract": CONTRACT, "provenance": provenance, "cohort_status": "patient-disjoint fixed source readouts; no query fitting",
               "state": {"ridge": metrics(yb, state_prediction, gb), "train_mean": metrics(yb, state_mean, gb),
                         "comparison": paired_interval(yb, state_prediction, state_mean, gb), "alpha": alpha},
@@ -336,6 +337,9 @@ def transfer_features(training_metadata: dict, training_features: dict, query_me
     np.savez_compressed(Path(out).with_suffix(".predictions.npz"), state_truth=yb, state_prediction=state_prediction,
                         state_mean=state_mean, state_patients=gb, visit_ids=np.asarray([v["visit_id"] for v in query_visits]),
                         change_truth=db, pair_patients=query_groups, row_ids=np.asarray([p["row_id"] for p in pb]), **predictions)
+    torch.save({"readouts": readouts, "provenance": provenance, "contract": CONTRACT,
+                "training_patients": sorted(unseen), "compartments": COMPARTMENTS},
+               Path(out).with_suffix(".readouts.pt"))
     return result
 
 
