@@ -81,7 +81,8 @@ def run(root: Path, r35_results: Path, sailor: Path) -> None:
             raise ValueError("completed capacity receipt required")
         merge(capacity, aggregate)
         matrices = [f"nairadithya/r36-delta-matrix{i}" for i in (1, 2)]
-        wait(matrices, 6 * 3600, record)
+        # Wall time includes Kaggle scheduling delay; GPU session ceilings stay unchanged.
+        wait(matrices, 12 * 3600, record)
         for index, kernel in enumerate(matrices, 1):
             results = collect(root, f"matrix{index}", kernel, "r36-train-results.tar.gz")
             receipt = json.loads((results / "run.json").read_text())
@@ -107,7 +108,7 @@ def run(root: Path, r35_results: Path, sailor: Path) -> None:
             metadata = json.loads((root / f"server-{job}/kernel-metadata.json").read_text())
             if metadata["is_private"] is not True or metadata.get("machine_shape") != "NvidiaTeslaT4":
                 raise RuntimeError("private T4 server settings required")
-            wait([kernel], 4 * 3600, record)
+            wait([kernel], 10 * 3600, record)
             results = collect(root, job, kernel, "r36-probes-results.tar.gz")
             receipt = json.loads((results / "run.json").read_text())
             if receipt["status"] != "complete" or len(receipt["runs"]) != (8 if seed == 42 else 10):
