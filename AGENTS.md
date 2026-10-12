@@ -1,8 +1,16 @@
 # AGENTS.md — working guide for this repo
 
-Research repo: JEPA world models over longitudinal glioma MRI (LUMIERE
-training corpus, SAILOR held-out eval). Read `PROPOSAL.md` for the science
-and `info/` for why things are the way they are.
+Research repo: longitudinal glioma MRI using LUMIERE for development and
+SAILOR for developmental transfer. The research objective is useful MRI
+representations that preserve anatomical and pathological state and meaningful
+longitudinal change while separating acquisition nuisance. The active RANO-free
+task in `info/p2_execution.md` is one scoped experiment, not a universal
+definition or gate for representation quality. Lesion awareness, JEPA, forecast
+heads, and whole-brain methods are hypotheses, not the objective. See
+[`info/research_guardrails.md`](info/research_guardrails.md) before substantial
+research implementation. It sets binding decision and reporting requirements.
+`PROPOSAL.md` records the original JEPA hypothesis. See `info/README.md` for
+the documentation map.
 
 ## Layout
 

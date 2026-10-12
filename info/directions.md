@@ -229,11 +229,13 @@ comparator is run (R28) — the from-scratch CNNs were not the field's setup.
 
 ---
 
-## Note formalization — `info/notes.md` (2026-09-13)
+## Formalized research notes (2026-09-13)
 
-`notes.md` carried four unformalized bullets. Each is mapped below to what the
-record already answers (so it is not re-run) and the next executable step. IDs
-continue the R-series; `notes.md` now points here.
+The four suggestions are mapped below to what the record already answers and
+the next executable step. The duplicate source file has been removed. The
+suggestions were to compare training and validation loss, test class-imbalance
+methods, test cross-domain adaptation through model loss or preprocessing, and
+compare pretrained models with our results.
 
 ### R29 — Train/val generalization-gap monitor (note 1)
 
@@ -449,3 +451,16 @@ an unsupervised loss automatically. Do not use RANO response as a treatment
 action, and do not promote rounded/estimated gaps into fixed-horizon claims.
 The detailed active contract is `info/p2_execution.md`; affected code paths
 are inventoried in `info/stale_code_audit.md`.
+
+---
+
+## Part 7 — R36 representation-objective contrast (2026-10-10)
+
+This is the current bounded experiment, not a replacement definition of representation quality. The objective remains MRI representations that preserve anatomical and pathological state, useful longitudinal change, and separation from acquisition nuisance. Phase 1 is authorized. Phase 2 is not.
+
+1. Complete the matched C-versus-B objective contrast with source-fitted linear readouts of frozen final encoders. Retain original R35, continued state-only A, and target-only controls. No new encoder family or readout-capacity sweep is justified by a falling decoder loss.
+2. Keep target correspondence and repeatability as active uncertainty. The audit retained all 599 visits and 496 pairs. Median changed occupancy is below 0.5% of the whole grid. Exactly unchanged compartment targets occurred only when both resized masks were empty. Clinically stable disease can still have noisy mask differences. The known suspect extracranial contour persists.
+3. Test C versus D without claiming that synthetic stress establishes real scanner invariance. Report state retention, empty-compartment errors, and native-volume change alongside local access. One native enhancing disagreement disappears at 96 cubed, but widespread complete erasure is not supported by this audit. Partial boundary-detail loss remains open.
+4. Inspect the complete arm table before choosing a follow-up. A decoder-only gain does not establish better encoder information. A useful observed-change feature does not establish future predictability. Source validation and a separate operator decision must precede conditional-field training.
+
+Execution artifacts are private. SAILOR remains local and developmental. A genuinely independent validation set and expert target adjudication remain unavailable. Read `info/r36_delta_representation_results.md` for verified units, incomplete gates, and the decision trail.

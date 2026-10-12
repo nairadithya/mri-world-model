@@ -741,3 +741,36 @@ referenced, not repeated — only session decisions are recorded here in full.
   Apparent extracranial labels and differing templates still require QA.
   Coordinate repair does not establish forecasting gains or measurement
   repeatability. See `info/methodology_validity.md` and the decision TSV.
+- **D55 — Separate the research objective from the current method (2026-09-22).**
+  The project objective is useful longitudinal MRI representations that retain
+  anatomical and pathological state and meaningful change while separating
+  acquisition nuisance. Lesion forecasting remains a valid scoped experiment,
+  not a universal definition or quality gate. Before substantial research
+  implementation, compare the current candidate with a materially different
+  approach and a simple baseline, and state capabilities, assumptions, matched
+  comparisons, costs, independent checks, and falsifiers. Keep evidence,
+  interpretation, and unknowns distinct. This decision governs research
+  practice and reports no measured scientific result. See
+  `info/research_guardrails.md`.
+- **D56. Close the whole-cohort source-grid QA gate (2026-10-08).** All 868
+  measured visits have MRI geometry records and consistent within-visit
+  modality grids. All 2,604 masks are finite, and their native volumes match
+  the frozen manifest. This verifies source-grid and target-volume integrity.
+  It does not establish template equivalence, segmentation accuracy,
+  repeatability, biological change, or forecasting benefit. The largest
+  discontinuities and selected aligned overlays still need clinical or
+  segmentation review. See the whole-cohort addendum in
+  `info/methodology_validity.md`; local evidence is in
+  `outputs/validity/full-cohort-20261008/`.
+- **D57. Execute the matched R36 objective contrast before reopening dynamics
+  (2026-10-10).** The operator authorized Phase 1. The contract retains the
+  R35 split, backbone, and pair rows. C versus B uses identical frozen local
+  probes to distinguish feature accessibility from a stronger decoder.
+  The full target audit preserved 599 visits and 496 pairs. Median changed
+  occupancy is below 0.5% of the grid in each compartment. One native
+  enhancing disagreement vanished at 96 cubed. These observations justify
+  testing changed-region balancing, not a representation-success claim.
+  Two real MRI optimizer updates passed. A private T4 capacity run is active,
+  with no query scoring. Keep all negative and incomplete arms visible.
+  Independent review remains unavailable. Phase 2 needs a separate operator
+  decision after the Phase 1 report. See `info/r36_delta_representation_results.md`.

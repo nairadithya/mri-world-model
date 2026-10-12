@@ -1,8 +1,8 @@
 # Acquisition toolkit (`scripts/`)
 
-Tools to fetch Tier-0 datasets programmatically. Everything here was tested
-live from this machine unless noted. See `../DATASET_ACQUISITION_PLAN.md` for
-the full per-dataset runbook.
+Tools to fetch datasets programmatically. See
+[`../info/external_supervision_audit.md`](../info/external_supervision_audit.md)
+for research-cohort roles and access constraints.
 
 ## What already works, right now (no accounts, no sign-up)
 
@@ -51,6 +51,25 @@ with zero further downloads.
 | PhysioNet (MIMIC-IV, eICU) | CITI "Data or Specimens Only" certificate + PhysioNet DUA (1–5 days). Challenge-2019 is also gated behind login. |
 | CT-RATE | HuggingFace account, accept gated terms, `huggingface-cli download ibrahimhamamci/CT-RATE`. |
 | OASIS-3 / LUMIERE-XNAT | Free portal accounts (LUMIERE's Figshare zip above skips XNAT entirely). |
+
+## SAILOR controlled-access data
+
+SAILOR is hosted on EBRAINS. Request access before fetching if your account is
+not authorized:
+
+```bash
+uv run python scripts/sailor_request_access.py
+uv run python scripts/sailor_fetch.py --list
+uv run python scripts/sailor_fetch.py --all --out data/sailor
+uv run python scripts/sailor_fetch.py --match 'rawdata_BIDS*' --out data/sailor
+```
+
+The fetcher uses `KG_TOKEN` when no refresh token is set. If
+`KG_REFRESH_TOKEN` is set, it refreshes that token first. Otherwise, it tries
+`KG_CLIENT_ID` and `KG_CLIENT_SECRET`, then starts an interactive device flow.
+Successful grants are cached in the gitignored `.env` file with mode `0600`.
+Refresh tokens rotate, so run one authenticated fetch process at a time.
+SAILOR is controlled-access data. Keep it local and follow its terms.
 
 ## Network reality check for this machine
 
