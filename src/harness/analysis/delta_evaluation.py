@@ -33,6 +33,49 @@ def seed_mean(values: list[dict]) -> dict:
     return {p: float(np.mean([v[p] for v in values])) for p in values[0]}
 
 
+def validate_nuisance(artifact: dict, evaluation: dict, directory: Path, contract: dict,
+                      arm: str, seed: int) -> None:
+    kinds = (*contract["nuisance_training"], contract["held_out_nuisance"])
+    provenance = artifact.get("provenance", {})
+    reference = evaluation["provenance"]
+    expected_visits = {}
+    for row in evaluation["states"]:
+        expected_visits.setdefault(row["patient_id"], row["visit_id"])
+    if set(expected_visits) != set(contract["evaluation_patients"]):
+        raise ValueError("nuisance reference patient coverage mismatch")
+    expected = {(patient, visit, kind) for patient, visit in expected_visits.items() for kind in kinds}
+    rows = artifact.get("rows", [])
+    observed = [(r.get("patient_id"), r.get("visit_id"), r.get("kind")) for r in rows]
+    checkpoint_hash = digest(directory / "final.pt")
+    probe_hash = digest(directory / "difference/probe.pt")
+    manifest = {"prepared_sha256": contract["prepared_sha256"], "tensors": reference["tensor_hashes"]}
+    if (artifact.get("status") != "complete" or artifact.get("arm") != arm or artifact.get("seed") != seed
+            or len(observed) != len(expected) or set(observed) != expected
+            or provenance.get("contract_sha256") != json_hash(contract)
+            or provenance.get("prepared_sha256") != contract["prepared_sha256"]
+            or provenance.get("tensor_manifest_sha256") != json_hash(manifest)
+            or provenance.get("checkpoint_sha256") != checkpoint_hash
+            or reference.get("checkpoint_sha256") != checkpoint_hash
+            or provenance.get("probe_sha256") != probe_hash or reference.get("probe_sha256") != probe_hash
+            or reference.get("prepared_sha256") != contract["prepared_sha256"]):
+        raise ValueError("nuisance artifact identity or coverage mismatch")
+    fields = ("false_change", "state_drift", "excess_false_change")
+    if not all(np.isfinite(r.get(field, np.nan)) for r in rows for field in fields):
+        raise ValueError("nonfinite nuisance measure")
+    identities = {r["patient_id"]: r["false_change"] for r in rows if r["kind"] == "identity"}
+    if any(r["false_change"] < 0 or r["state_drift"] < 0 or not np.isclose(
+            r["excess_false_change"], r["false_change"] - identities[r["patient_id"]], rtol=0, atol=1e-12)
+           for r in rows):
+        raise ValueError("inconsistent nuisance excess or negative error")
+    if set(artifact.get("conditions", {})) != set(kinds):
+        raise ValueError("nuisance condition summary coverage mismatch")
+    for kind in kinds:
+        for field in fields:
+            expected_mean = np.mean([r[field] for r in rows if r["kind"] == kind])
+            if not np.isclose(artifact["conditions"][kind].get(field, np.nan), expected_mean, rtol=0, atol=1e-12):
+                raise ValueError("nuisance summary differs from rows")
+
+
 def aggregate_matrix(root: Path, contract: dict) -> dict:
     evaluation = {}
     missing = []
@@ -81,13 +124,13 @@ def aggregate_matrix(root: Path, contract: dict) -> dict:
     nuisance = {}
     for arm in ("C", "D"):
         artifacts = []
-        for seed in contract["seeds"]:
-            path = root / f"seed{seed}" / arm / "nuisance.json"
+        for index, seed in enumerate(contract["seeds"]):
+            directory = root / f"seed{seed}" / arm
+            path = directory / "nuisance.json"
             if not path.exists():
-                break
+                continue
             artifact = json.loads(path.read_text())
-            if artifact["provenance"]["contract_sha256"] != json_hash(contract):
-                raise ValueError("nuisance artifact contract mismatch")
+            validate_nuisance(artifact, evaluation[arm][index], directory, contract, arm, seed)
             artifacts.append(artifact)
         if len(artifacts) == 3:
             nuisance[arm] = {kind: seed_mean([{r["patient_id"]: r["excess_false_change"] for r in e["rows"] if r["kind"] == kind}
@@ -101,9 +144,15 @@ def aggregate_matrix(root: Path, contract: dict) -> dict:
                           for p in nuisance[arm]["noise"]} for arm in nuisance}
         trained = paired_patients(combined["D"], combined["C"])
         state_d_c = paired_patients(state["D"], state["C"])
-        if (trained["family_adjusted_ci"][1] < 0
-                and comparisons["D-C"]["family_adjusted_ci"][1] < contract["margins"]["change_noninferiority"]
-                and state_d_c["family_adjusted_ci"][1] < contract["margins"]["state_noninferiority"]):
+        change_margin = contract["margins"]["change_noninferiority"]
+        state_margin = contract["margins"]["state_noninferiority"]
+        if (trained["family_adjusted_ci"][0] > 0
+                or comparisons["D-C"]["family_adjusted_ci"][0] >= change_margin
+                or state_d_c["family_adjusted_ci"][0] >= state_margin):
+            hypotheses["D_nuisance_tradeoff"] = "NOT VERIFIED"
+        elif (trained["family_adjusted_ci"][1] < 0
+                and comparisons["D-C"]["family_adjusted_ci"][1] < change_margin
+                and state_d_c["family_adjusted_ci"][1] < state_margin):
             hypotheses["D_nuisance_tradeoff"] = "VERIFIED"
         nuisance_contrasts["trained_mean"] = trained
         nuisance_contrasts["state_D-C"] = state_d_c
