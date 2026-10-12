@@ -1,0 +1,166 @@
+{
+  "recorded_utc": "2026-10-12T15:16:45.078066+00:00",
+  "status": "PASS",
+  "documentation_verdict": "APPROVED_FOR_OPERATOR_REVIEW",
+  "review_scope": "Independent targeted semantic reread and complete disposition-record review, plus fresh independent integrity verification. Not full independent source reread or scientific acceptance.",
+  "workflow_run": "c030b3d6-3a26-4478-8d2f-727dd59f70de",
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_documentation*.py",
+        "-v"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "test_git_optional_locks_are_disabled (test_documentation_protection.DocumentationProtectionTests.test_git_optional_locks_are_disabled) ... ok\ntest_missing_file_and_unexpected_checkout_are_detected (test_documentation_protection.DocumentationProtectionTests.test_missing_file_and_unexpected_checkout_are_detected) ... ok\ntest_unchanged_and_changed_files_are_reported_without_writes (test_documentation_protection.DocumentationProtectionTests.test_unchanged_and_changed_files_are_reported_without_writes) ... ok\ntest_all_four_baseline_identifiers_are_checked (test_documentation_sources.DocumentationSourcesTests.test_all_four_baseline_identifiers_are_checked) ... ok\ntest_broken_targets_and_fragments_fail (test_documentation_sources.DocumentationSourcesTests.test_broken_targets_and_fragments_fail) ... ok\ntest_complete_fixture_passes (test_documentation_sources.DocumentationSourcesTests.test_complete_fixture_passes) ... ok\ntest_destinations_must_match_catalog_or_explain_override (test_documentation_sources.DocumentationSourcesTests.test_destinations_must_match_catalog_or_explain_override) ... ok\ntest_incomplete_comparisons_cannot_pass (test_documentation_sources.DocumentationSourcesTests.test_incomplete_comparisons_cannot_pass) ... ok\ntest_machine_local_and_sibling_targets_fail (test_documentation_sources.DocumentationSourcesTests.test_machine_local_and_sibling_targets_fail) ... ok\ntest_missing_and_duplicate_source_coverage_fail (test_documentation_sources.DocumentationSourcesTests.test_missing_and_duplicate_source_coverage_fail) ... ok\ntest_missing_baseline_fails (test_documentation_sources.DocumentationSourcesTests.test_missing_baseline_fails) ... ok\ntest_missing_coverage_file_fails_without_crashing (test_documentation_sources.DocumentationSourcesTests.test_missing_coverage_file_fails_without_crashing) ... ok\ntest_missing_draft_fails_without_crashing (test_documentation_sources.DocumentationSourcesTests.test_missing_draft_fails_without_crashing) ... ok\ntest_missing_human_coverage_fails (test_documentation_sources.DocumentationSourcesTests.test_missing_human_coverage_fails) ... ok\ntest_missing_or_modified_snapshot_fails (test_documentation_sources.DocumentationSourcesTests.test_missing_or_modified_snapshot_fails) ... ok\ntest_missing_supplementary_manifest_fails (test_documentation_sources.DocumentationSourcesTests.test_missing_supplementary_manifest_fails) ... ok\ntest_read_mode_and_evidence_are_required (test_documentation_sources.DocumentationSourcesTests.test_read_mode_and_evidence_are_required) ... ok\ntest_supplementary_bytes_are_verified (test_documentation_sources.DocumentationSourcesTests.test_supplementary_bytes_are_verified) ... ok\ntest_supplementary_path_must_stay_in_evidence_directory (test_documentation_sources.DocumentationSourcesTests.test_supplementary_path_must_stay_in_evidence_directory) ... ok\n\n----------------------------------------------------------------------\nRan 19 tests in 0.020s\n\nOK\n"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "py_compile",
+        "scripts/documentation_sources.py",
+        "scripts/check_documentation_protection.py",
+        "scripts/portable_documentation_links.py",
+        "scripts/render_documentation_coverage.py",
+        "tests/test_documentation_sources.py",
+        "tests/test_documentation_protection.py"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "scripts/documentation_sources.py",
+        "verify"
+      ],
+      "returncode": 0,
+      "stdout": "{\n  \"status\": \"PASS\",\n  \"source_versions\": 72,\n  \"branch_refs\": 10,\n  \"local_links_checked\": 375,\n  \"supplementary_files_checked\": 3,\n  \"draft_sha256\": {\n    \"TODO.md\": \"61b8f873d72e59bf86482c389a2d3ce6e4c8fc2758fcab6c1290072846ee4a62\",\n    \"EXPERIMENTS.md\": \"905b0b4ddcf83a927b78bfad815e010ac10f606a00546ddd048bf58137e16c2c\",\n    \"METHODS.md\": \"bb00325524ed32f95959dca9195cadbd92153f4f3105b24ea3d491a9e39ec1d6\",\n    \"NOTES_AND_INSIGHTS.md\": \"217e99dfab163eaac30e5a5c3034fba7118fa947b5704f58d13c2e864d99c760\"\n  },\n  \"errors\": [],\n  \"scope\": \"Frozen source and supplementary bytes, checked coverage records, baseline identifier presence, and draft link portability. This is not scientific acceptance or a semantic completeness proof.\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "verification": {
+    "status": "PASS",
+    "source_versions": 72,
+    "branch_refs": 10,
+    "local_links_checked": 375,
+    "supplementary_files_checked": 3,
+    "draft_sha256": {
+      "TODO.md": "61b8f873d72e59bf86482c389a2d3ce6e4c8fc2758fcab6c1290072846ee4a62",
+      "EXPERIMENTS.md": "905b0b4ddcf83a927b78bfad815e010ac10f606a00546ddd048bf58137e16c2c",
+      "METHODS.md": "bb00325524ed32f95959dca9195cadbd92153f4f3105b24ea3d491a9e39ec1d6",
+      "NOTES_AND_INSIGHTS.md": "217e99dfab163eaac30e5a5c3034fba7118fa947b5704f58d13c2e864d99c760"
+    },
+    "errors": [],
+    "scope": "Frozen source and supplementary bytes, checked coverage records, baseline identifier presence, and draft link portability. This is not scientific acceptance or a semantic completeness proof."
+  },
+  "reviewed_drafts_unchanged": [
+    {
+      "path": "info/drafts/EXPERIMENTS.md",
+      "unchanged": true
+    },
+    {
+      "path": "info/drafts/METHODS.md",
+      "unchanged": true
+    },
+    {
+      "path": "info/drafts/NOTES_AND_INSIGHTS.md",
+      "unchanged": true
+    },
+    {
+      "path": "info/drafts/SOURCE_COVERAGE.md",
+      "unchanged": true
+    },
+    {
+      "path": "info/drafts/TODO.md",
+      "unchanged": true
+    }
+  ],
+  "post_review_input_changes": [
+    {
+      "path": "info/documentation_sources/checkpoint.md",
+      "reviewed_sha256": "90061ca17054fac663b699f29bd1135a41db96c34c6cc8bc5d7b63858de14170",
+      "current_sha256": "de0895002536779a66030fe1254b183e11c85be25c0139b5db50c49859b13cd3",
+      "administrative_only": true
+    },
+    {
+      "path": "info/documentation_sources/decisions.tsv",
+      "reviewed_sha256": "5c05a31cbc46d4dc872840374d21cc85cca4c12584b9df39a08ffda5fcd9270a",
+      "current_sha256": "1193d32ca3f31c10d1451af06224a200459b2f3e2c340356cd26d97eaee66745",
+      "administrative_only": true
+    },
+    {
+      "path": "info/documentation_sources/plan.md",
+      "reviewed_sha256": "5734c46326969e82ce7fcddb2261b3ffaff5c0b837d9d3b8b5ee891f4e7e9d09",
+      "current_sha256": "9773cfc4855bc5a5459982c31858e88780d8b37bd39fd063881ba7c72e4c998f",
+      "administrative_only": true
+    },
+    {
+      "path": "info/documentation_sources/protection_check.json",
+      "reviewed_sha256": "58963eb97d97c2d5bc615937b32c65d774799c03c0de12ae7c519c1042102f1d",
+      "current_sha256": "8ecb5e27c17352b937b473f4ddbc1879ec7d9b8b7b0df2508e79c7bd03ca59ff",
+      "administrative_only": true
+    },
+    {
+      "path": "info/documentation_sources/received_reports/manifest.json",
+      "reviewed_sha256": "ceaa9ab8bacd5cd05619970dc7d40f9a7b8bbe441b8bbcefd560ffefe8052cff",
+      "current_sha256": "d50742b6faf70b9261c701ea17b300f9c7c9eb04c5e24f07e05f5ca99970bf61",
+      "administrative_only": true
+    }
+  ],
+  "unchanged_handoff_inputs": 104,
+  "handoff_inputs": 109,
+  "received_report_integrity": [
+    {
+      "path": "info/documentation_sources/received_reports/notes.json",
+      "matches_manifest": true
+    },
+    {
+      "path": "info/documentation_sources/received_reports/experiments.json",
+      "matches_manifest": true
+    },
+    {
+      "path": "info/documentation_sources/received_reports/contracts.json",
+      "matches_manifest": true
+    },
+    {
+      "path": "info/documentation_sources/received_reports/portable-coverage.md",
+      "matches_manifest": true
+    },
+    {
+      "path": "info/documentation_sources/received_reports/post-integration.md",
+      "matches_manifest": true
+    },
+    {
+      "path": "info/documentation_sources/received_reports/read-only-verification.md",
+      "matches_manifest": true
+    }
+  ],
+  "protection_recorded_utc": "2026-10-12T15:15:42.185624+00:00",
+  "protection_status": "UNCHANGED",
+  "protection_scope": "Protected checkout HEAD, Git status, baseline tracked-file bytes, and captured live Markdown. Git optional locks disabled. No process controls or experiment-output traversal. Changes may belong to the concurrent owner; this comparison does not attribute them. Shared outputs and process state are not certified by file equality.",
+  "reviewer_findings": "Stale contracts status corrected with original wording preserved. Advisory count, parser, and assertion limits documented in review_summary.md. No scientific prose, snapshots, coverage decisions, supplementary evidence, code, or tests changed after review.",
+  "publication": "None. No source deletion, promotion, commit, push, merge, or research job."
+}

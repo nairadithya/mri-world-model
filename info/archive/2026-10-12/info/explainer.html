@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>From P0 to lesion forecasting</title>
+<style>
+:root{color-scheme:light dark;--ink:#20242b;--muted:#58616e;--line:#d8dde5;--paper:#fff;--soft:#f3f6f9;--blue:#2864a5;--orange:#b75d17;--green:#287750;--warn:#8b4f11}
+@media(prefers-color-scheme:dark){:root{--ink:#edf1f7;--muted:#b1bac8;--line:#414b59;--paper:#171b22;--soft:#202733;--blue:#84b9f3;--orange:#f1a66d;--green:#83d5a8;--warn:#f1bb71}}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:900px;margin:0 auto;padding:42px 24px 64px}h1{font-size:clamp(2rem,5vw,3rem);line-height:1.08;letter-spacing:-.035em;margin:0 0 14px}h2{font-size:1.45rem;line-height:1.2;margin:42px 0 12px;letter-spacing:-.02em}h3{font-size:1.05rem;margin:24px 0 6px}p{margin:10px 0 14px}.lede{font-size:1.16rem;max-width:72ch;color:var(--muted)}.scope{padding:13px 16px;border-left:3px solid var(--blue);background:var(--soft);margin:22px 0 28px}.muted,figcaption{color:var(--muted)}.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:20px 0}.step{border-top:2px solid var(--line);padding-top:11px}.step strong{display:block;font-size:1.05rem}.step p{margin:6px 0 0;color:var(--muted)}.tag{font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--blue);font-weight:650}table{border-collapse:collapse;width:100%;margin:12px 0 8px}th,td{text-align:left;border-bottom:1px solid var(--line);padding:9px 10px;vertical-align:top}th{font-weight:650}td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}figure{margin:22px 0 16px}figure svg{display:block;width:100%;height:auto;overflow:visible}figcaption{font-size:.9rem;margin-top:8px}.mobile-plot{display:none}.result{padding-left:14px;border-left:3px solid var(--green);margin:14px 0}.caution{padding-left:14px;border-left:3px solid var(--orange);margin:14px 0}.links{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:16px}a{color:var(--blue)}.foot{font-size:.9rem;color:var(--muted);margin-top:34px;border-top:1px solid var(--line);padding-top:14px}
+@media(max-width:640px){main{padding:28px 16px 48px}.steps{grid-template-columns:1fr;gap:14px}table{font-size:.92rem}th,td{padding:8px 6px}.small-hide{display:none}.forecast-svg{display:none!important}.mobile-plot{display:table}}
+</style>
+</head>
+<body>
+<main>
+<h1>From P0 to lesion forecasting</h1>
+<p class="lede">We first made the comparison trustworthy, then measured how hard the forecasting task really is, and finally taught a model to look directly at lesion anatomy.</p>
+
+<div class="scope"><b>The question:</b> given a patient's MRI (magnetic resonance imaging) history, can we predict how the measured lesion burden will change by the next scan? The primary target is three physical measurements in mm³ (cubic millimeters)—enhancing tumor (contrast-bright tumor), nonenhancing/necrotic tumor (tumor tissue that does not brighten with contrast), and edema/FLAIR abnormality (fluid-attenuated inversion recovery: an MRI sequence that highlights fluid-related abnormalities)—rather than a RANO (Response Assessment in Neuro-Oncology) category.</div>
+
+<p><b>LUMIERE</b> is the main training and development cohort. <b>SAILOR</b> is a second-site transfer check; it has helped us find problems, but it is not a fresh, untouched final test. Our simplest yardstick is <b>persistence</b> (predict that each lesion measurement stays at its current value).</p>
+
+<div class="steps" aria-label="Research stages">
+  <div class="step"><span class="tag">P0 · Trust the yardstick</span><strong>Same task, same rows</strong><p>Define the targets, eligible patient-visits, information available at prediction time, and uncertainty calculations.</p></div>
+  <div class="step"><span class="tag">P1 · Find the floor</span><strong>What beats “no change”?</strong><p>Compare persistence with measured volumes, numeric scan summaries, and the existing JEPA representation.</p></div>
+  <div class="step"><span class="tag">P2 · Model the lesion</span><strong>Learn observations and change</strong><p>Build a state from lesion regions, then learn how that state evolves between visits.</p></div>
+</div>
+
+<h2>P0 — Make the experiment fair</h2>
+<p>Before judging a model, we needed every method to answer the same question on the same patient pairs. P0 gave each pair a fixed identity, separated past-only forecasts from tasks that can use the follow-up scan, removed eventual survival from prediction inputs, and corrected the metric and patient-level uncertainty code.</p>
+<p>We also recovered the LUMIERE lesion masks (voxel maps labeling tumor regions), checked their physical geometry, and aligned the compartment definitions with SAILOR's ONCO masks (its automated tumor segmentation), while recording where mask measurements differ. Volumes are recorded in mm³; errors are scored after a log transform (taking the logarithm, which makes proportional size changes comparable). The primary horizon is “the next observed visit”: dates are not precise enough across both cohorts to claim a fixed number of days.</p>
+<p class="result"><b>What P0 gives us:</b> a reproducible, RANO-free anatomy benchmark with explicit exclusions, physical-volume targets, and patient-paired comparisons. P0 is closed for this task.</p>
+<p class="caution"><b>Still outside that closure:</b> the SAILOR numeric RANO code mapping is unverified, treatment timing is incomplete, and no new untouched external cohort has been reserved. So P0 does not validate clinical response labels or fixed-horizon risk.</p>
+
+<h2>P1 — Establish the honest baseline</h2>
+<p>P1 asked whether the existing JEPA (Joint Embedding Predictive Architecture: a model that learns to predict a future scan summary) state predicts next-visit lesion size better than simple physical measurements. We used five-fold patient-separated cross-validation (repeatedly holding out whole patients) on LUMIERE patients not used to train the encoder (network that turns scans into numeric summaries), then applied each fitted model unchanged to SAILOR.</p>
+<table>
+<thead><tr><th>Method</th><th class="num">LUMIERE</th><th class="num">SAILOR</th></tr></thead>
+<tbody>
+<tr><td>Persistence (copy current volume)</td><td class="num">1.000</td><td class="num">1.000</td></tr>
+<tr><td>Current-volume ridge (regularized linear model)</td><td class="num">0.973</td><td class="num">1.493</td></tr>
+<tr><td>Existing JEPA state</td><td class="num">1.393</td><td class="num">2.873</td></tr>
+</tbody>
+</table>
+<p><b>How to read these values:</b> relative log-volume MAE (mean absolute error on log-transformed volumes, divided by persistence error, with equal weight for each patient); below 1 is better than copying the current measurement, and above 1 is worse. The volume model's small LUMIERE gain was uncertain; JEPA was clearly worse there and much worse on SAILOR.</p>
+<p class="result"><b>What P1 gives us:</b> a firm negative answer about the old representation: it does not add useful next-visit anatomy forecasts. That ruled out simply scaling up the same JEPA training recipe.</p>
+
+<h3>What the initial JEPA runs established</h3>
+<p>The official-weight pilot reduced validation cosine loss from 0.4256 to 0.0564 while target standard deviation and effective rank stayed healthy (0.079 and 2.2). Yet the pilot's mean latent prediction error (0.0576) remained above persistence (0.0043). At full cohort scale, validation loss reached 0.0081 at epoch 7, then rose as training continued; the best checkpoint's held-out test loss was 0.0074. These curves show the training behavior, while the anatomy benchmark above tests whether those learned states help forecast measured lesions.</p>
+<figure>
+<img src="plots/jepa_pilot_gate.png" width="968" alt="Official-weight five-patient pilot: validation cosine loss falls, embeddings remain healthy, but JEPA error exceeds persistence">
+<figcaption>Official-weight pilot. Loss fell and collapse monitors stayed healthy, but JEPA did not beat persistence.</figcaption>
+</figure>
+<figure>
+<img src="plots/hero_leg1_val.png" width="570" alt="Full-cohort JEPA validation loss reaches its best value at epoch 7 and rises afterward">
+<figcaption>Full-cohort training. Best validation loss occurred early; the best checkpoint had held-out test loss 0.0074.</figcaption>
+</figure>
+<figure>
+<img src="plots/jepa_anatomy_forecast.png" width="899" alt="Original JEPA state has higher next-visit lesion-volume forecast error than persistence on LUMIERE and SAILOR">
+<figcaption>Prospective anatomy benchmark. The original JEPA state underperformed persistence in both cohorts.</figcaption>
+</figure>
+
+<h2>P2 — Build a lesion-aware forecaster</h2>
+<p>P2 changes what the model sees and how it predicts. The image encoder (network that turns an MRI into numbers) first pools image information inside enhancing, nonenhancing, edema, and nearby-context regions. A transition model (network that learns changes from one visit to the next) then predicts a correction to persistence. The final output remains the three physical lesion measurements.</p>
+
+<h3>P2.1–P2.3 · Measure, test, and localize</h3>
+<p>We built 48 history-only physical features from native masks and scan geometry, including compartment size, shape, prior change, and modality availability. The 48→32 residual MLP (small neural network that adjusts the persistence prediction) tied with persistence on LUMIERE (relative error 0.997) and lost on SAILOR (1.288).</p>
+<p>Next we tested the frozen (weights kept fixed) image model more locally. Its whole-brain patch grid often had too little coverage of small tumor compartments, so we added lesion-centred crops (image regions zoomed around the tumor) and separate region tokens (numeric summaries for each region). Those frozen crop and transition features (numbers distilled from image or visit history) still did not beat persistence. They could describe current anatomy in LUMIERE (variance-weighted R², a measure of how much observed variation the decoder explains: 0.691), but this did not transfer to SAILOR (R² −0.155) and did not predict future change.</p>
+<p><b>Intuition:</b> seeing where the lesion is helps describe today's scan, but that alone does not reveal how the lesion will evolve—or make the description consistent across sites.</p>
+
+<h3>P2.4 · Train the lesion representation and its transitions</h3>
+<p>We used recovered LUMIERE masks to teach the encoder what each lesion compartment looks like, then froze that adapted observation model and trained a GRU (gated recurrent unit: a small network that summarizes an ordered sequence) over visit-to-visit changes. A persistence-centred decoder (starts by predicting no change and must learn a useful correction) forecasts the next measurements. The encoder was trained on 65 patients; the locked LUMIERE evaluation patients were kept out of that training.</p>
+<figure aria-labelledby="forecast-chart-caption">
+<svg class="forecast-svg" viewBox="0 0 820 320" role="img" aria-labelledby="chart-title chart-desc">
+<title id="chart-title">Forecast error relative to persistence through P1 and P2</title>
+<desc id="chart-desc">Lower values are better. The vertical reference at one is the persistence baseline. The learned lesion model is below persistence on eligible LUMIERE patients and near persistence on SAILOR.</desc>
+<style>
+.axis{stroke:var(--line);stroke-width:1}.ref{stroke:var(--ink);stroke-width:1.4;stroke-dasharray:4 4}.grid{stroke:var(--line);stroke-width:1;opacity:.55}.txt{fill:var(--ink);font:13px system-ui,sans-serif}.sub{fill:var(--muted);font:12px system-ui,sans-serif}.lum{fill:var(--blue)}.sai{fill:var(--orange)}
+</style>
+<text class="txt" x="0" y="19">Relative patient-uniform log-volume MAE · lower is better · 1.0 = persistence</text>
+<circle class="lum" cx="590" cy="18" r="6"/><text class="sub" x="601" y="22">LUMIERE</text><circle class="sai" cx="690" cy="18" r="6"/><text class="sub" x="701" y="22">SAILOR</text>
+<line class="ref" x1="222" y1="48" x2="222" y2="264"/><text class="sub" x="227" y="57">persistence</text>
+<g class="grid"><line x1="114" y1="62" x2="654" y2="62"/><line x1="114" y1="111" x2="654" y2="111"/><line x1="114" y1="160" x2="654" y2="160"/><line x1="114" y1="209" x2="654" y2="209"/><line x1="114" y1="258" x2="654" y2="258"/></g>
+<line class="axis" x1="114" y1="264" x2="654" y2="264"/>
+<g class="sub"><text x="110" y="284">0.5</text><text x="214" y="284">1.0</text><text x="322" y="284">1.5</text><text x="430" y="284">2.0</text><text x="538" y="284">2.5</text><text x="644" y="284">3.0</text></g>
+<g class="txt"><text x="0" y="67">P1 · existing JEPA</text><text x="0" y="116">P2.2 · physical history</text><text x="0" y="165">P2.3 · frozen lesion crop</text><text x="0" y="214">P2.4 · learned lesion model</text></g>
+<g class="lum"><circle cx="306" cy="62" r="7"/><text class="txt" x="315" y="67">1.393</text><circle cx="221" cy="111" r="7"/><text class="txt" x="230" y="116">0.997</text><circle cx="215" cy="160" r="7"/><text class="txt" x="224" y="165">0.971</text><circle cx="170" cy="209" r="7"/><text class="txt" x="179" y="214">0.759</text></g>
+<g class="sai"><circle cx="626" cy="62" r="7"/><text class="txt" x="635" y="67">2.873</text><circle cx="284" cy="111" r="7"/><text class="txt" x="293" y="116">1.288</text><circle cx="409" cy="160" r="7"/><text class="txt" x="418" y="165">1.867</text><circle cx="232" cy="209" r="7"/><text class="txt" x="241" y="214">1.047</text></g>
+<text class="sub" x="0" y="307">Each value is compared with persistence in that experiment; patient eligibility differs slightly between stages.</text>
+</svg>
+<table class="mobile-plot" aria-label="Forecast error relative to persistence">
+<thead><tr><th>Stage</th><th class="num">LUMIERE</th><th class="num">SAILOR</th></tr></thead>
+<tbody><tr><td>P1 · existing JEPA</td><td class="num">1.393</td><td class="num">2.873</td></tr><tr><td>P2.2 · physical history</td><td class="num">0.997</td><td class="num">1.288</td></tr><tr><td>P2.3 · frozen lesion crop</td><td class="num">0.971</td><td class="num">1.867</td></tr><tr><td>P2.4 · learned lesion model</td><td class="num">0.759</td><td class="num">1.047</td></tr></tbody>
+</table>
+<figcaption id="forecast-chart-caption">The new model makes a clear LUMIERE gain. On SAILOR, the score is close to persistence and uncertainty includes no difference.</figcaption>
+</figure>
+<p>On eligible locked LUMIERE patients, the learned model's patient-uniform log-volume MAE was 1.183 versus 1.559 for persistence: relative MAE 0.759, with the paired patient-bootstrap 95% confidence interval (range of plausible paired error differences after resampling patients) below zero. Three of the 26 encoder-unseen patients lacked enough recovered masks for this evaluation, so this is a 23-patient result.</p>
+<p>Applied unchanged to all 27 SAILOR patients, it scored 0.987 versus persistence at 0.943 (relative MAE 1.047). The uncertainty interval crosses zero, so we cannot say it is better or worse there. A separate support-only calibration (fit a small correction using labeled SAILOR support patients, then score different query patients) reached median relative MAE 0.863 at 20 support patients, but the query set had only seven patients and its confidence interval still crossed zero.</p>
+<h4>Seed sensitivity</h4>
+<p>Across three training seeds on the same evaluation cohorts, all LUMIERE paired 95% confidence intervals favored the learned model. SAILOR did not show a stable gain: seed 43 was worse than persistence, while seeds 42 and 44 were unresolved. These are repeat fits on previously examined cohorts, not independent validation.</p>
+<figure><img src="plots/lesion_seed_relative_mae.png" width="916" alt="Relative patient-uniform log-volume MAE by training seed for LUMIERE and SAILOR; one is persistence parity."><figcaption>Relative error by seed. Values below 1 favor the learned model over persistence.</figcaption></figure>
+<figure><img src="plots/lesion_seed_delta_ci.png" width="916" alt="Paired patient-bootstrap confidence intervals for learned minus persistence MAE, by cohort and seed."><figcaption>Paired error differences and 95% patient-bootstrap confidence intervals. Negative values favor the learned model; intervals crossing zero do not resolve a difference.</figcaption></figure>
+<p class="result"><b>Where we are now:</b> anatomy supervision and a learned transition model solve part of the in-domain problem. Cross-site generalization remains the blocker; support calibration is a lead to test, not a result we can claim as success.</p>
+
+<h2>What comes next</h2>
+<ol>
+<li><b>Explain the site gap.</b> Check measurement, scanner, preprocessing (image-processing steps), and lesion-state differences that could make learned LUMIERE changes mis-scale on SAILOR.</li>
+<li><b>Bring in independent lesion supervision.</b> Audit available cohorts (including UCSF-ALPTDG, UCSD-PTGBM, and Burdenko) for usable scans, masks, dates, licensing, and overlap before assigning training and test roles.</li>
+<li><b>Test calibration on enough patients.</b> Keep support patients (used to fit the correction) separate from query patients (used only to score it) and report uncertainty; today's seven-query result is too small to settle the question.</li>
+<li><b>Then run a genuinely untouched external test.</b> Keep the model and thresholds fixed before evaluation. Fixed-day forecasts and clinical progression claims also need reliable dates and adjudicated outcomes (clinically reviewed labels).</li>
+</ol>
+<p>For now, persistence remains the external bar. More training on the same LUMIERE targets is not justified until the site gap or a new source of supervision is addressed.</p>
+
+<nav class="links" aria-label="Research records">
+<a href="../TODO.md">Project TODO</a><a href="p0_refresh.md">P0 audit and refresh</a><a href="p1_anatomy_baselines.md">P1 baseline results</a><a href="p2_lesion_architecture.md">P2 architecture and transfer results</a>
+</nav>
+<p class="foot">Metric note: all plotted values are relative patient-uniform log-volume MAE from the recorded P1/P2 evaluations. A value below 1 beats persistence; uncertainty and eligibility limits remain part of each result.</p>
+</main>
+</body>
+</html>

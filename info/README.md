@@ -1,37 +1,34 @@
 # Research documentation
 
-Start with the project [README](../README.md) for setup and common commands. The [research guardrails](research_guardrails.md) state the objective and the decision brief required before substantial research implementation. The documents below have different jobs. Use the active contract and result records for current claims. Treat dated experiment logs as evidence, not as current guidance.
+The four consolidated documents are the starting point for the research record:
 
-## Current research
+- [Notes and insights](NOTES_AND_INSIGHTS.md) explains the research questions, findings, and limits.
+- [Experiments](EXPERIMENTS.md) records measurements, corrections, withdrawals, and incomplete results.
+- [Methods](METHODS.md) defines terms, protocols, and historical decision and audit IDs.
+- [Research TODO](TODO.md) lists the remaining work at the archived research snapshot.
 
-- [`p2_execution.md`](p2_execution.md) defines the active RANO-free next-observed-visit anatomy task, its gates, and the latest results recorded on `main`.
-- [`anatomy_harmonization.md`](anatomy_harmonization.md) defines the `lesion-state-v1` measurements, eligible rows, and timing limits.
-- [`p1_anatomy_baselines.md`](p1_anatomy_baselines.md) records the closed prospective baseline comparison.
-- [`external_supervision_audit.md`](external_supervision_audit.md) records cohort access and data-use constraints for future work.
+R36 runtime statements in the consolidated documents describe October 11, 2026, at 18:30:51 UTC unless a later addendum says otherwise. They are not live job status. The [R36 execution record](r36_delta_representation_results.md) preserves later progress. Document approval does not accept scientific results or authorize Phase 2.
 
-A later cutoff audit and clean reruns are recorded on the local `exp/clean-data-rescues` branch in `info/clean_rescues.md` at commit `067ed6c`. That branch withdraws the learned lesion forecast claims reported in [`p2_execution.md`](p2_execution.md) and [`p2_seed_sensitivity.md`](p2_seed_sensitivity.md). It is not part of `main`.
+## Source history
 
-## Research record
+[Source coverage](SOURCE_COVERAGE.md) maps all 72 captured Markdown versions across 48 paths and ten frozen branch refs. The [source catalog](documentation_sources/catalog.json) records their origins. Research citations use immutable source copies so conflicting branch versions and dirty or untracked records remain traceable.
 
-- [`decisions.md`](decisions.md) is the append-only decision history. Cite its D-IDs.
-- [`ablations.md`](ablations.md) is the append-only experiment and diagnostic ledger. Cite its A-IDs.
-- [`pilot.md`](pilot.md) records the initial training runs.
-- [`results.md`](results.md) is a historical narrative. Its older conclusions are superseded by the dated P0, P1, and P2 records above.
+The [October 12 archive](archive/2026-10-12/README.md) contains 32 original research records and five supporting presentation assets moved without changing their bytes. Their old plans and conclusions are historical. Later corrections and withdrawals take priority when interpreting them.
 
-## Historical protocols and audits
+The [preparation record](documentation_sources/checkpoint.md) records comparisons, reviews, writing changes, and verification limits. A documentation check is not scientific acceptance.
 
-These documents preserve work on the retired RANO-classification program. They are not the active anatomy task contract.
+## Operating guides and binding rules
 
-- [`eval_protocol.md`](eval_protocol.md) and [`p0_audit.md`](p0_audit.md) record the former RANO evaluation protocol and validity audit.
-- [`p0_refresh.md`](p0_refresh.md), [`p1_baselines.md`](p1_baselines.md), and [`p1_sota_audit.md`](p1_sota_audit.md) record the former RANO-era refresh and comparisons.
-- [`directions.md`](directions.md), [`frontier_lumiere.md`](frontier_lumiere.md), [`ASTRA_PROBE.md`](../ASTRA_PROBE.md), and [`K3_PROBE.md`](../K3_PROBE.md) preserve literature reviews and adversarial research audits.
-- [`stale_code_audit.md`](stale_code_audit.md) records which code paths belong to the retired task.
-- [`harness_v2.md`](harness_v2.md) records the historical CLI migration. Use `uv run python scripts/harness.py --help` for current commands.
+Operating documents remain separate:
 
-## Operational guides
+- [Project README](../README.md) covers setup and common commands.
+- [Agent instructions](../AGENTS.md) define repository development and verification rules.
+- [Research guardrails](research_guardrails.md) define the objective and required experiment decision brief.
+- [Preprocessing](preprocessing.md) defines the BRAINIAC input pipeline.
+- [SAILOR reprocessing](../src/preprocessing/reprocess_sailor.md) preserves that procedure and its limits.
+- [Acquisition scripts](../scripts/README.md) document data access tools.
+- [CLI verification skill](../.agents/skills/verify-world-model-cli/SKILL.md) defines command discovery and bounded execution checks.
 
-- [`preprocessing.md`](preprocessing.md) documents the BRAINIAC preprocessing contract.
-- [`../src/preprocessing/reprocess_sailor.md`](../src/preprocessing/reprocess_sailor.md) documents the SAILOR reprocessing procedure.
-- [`../scripts/README.md`](../scripts/README.md) documents data acquisition scripts.
+Add new measurements to Experiments, their reasoning to Notes and insights, and protocol changes to Methods. Preserve historical IDs and corrections. Keep the archive and frozen source bytes unchanged.
 
-The shortened map does not replace experiment records. Decisions and ablations remain append-only so older claims and their corrections stay traceable.
+Regenerate the coverage page with `python3 scripts/render_documentation_coverage.py`. Verify the current four-document package with `python3 scripts/documentation_sources.py verify`.

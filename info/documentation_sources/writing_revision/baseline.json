@@ -1,0 +1,26 @@
+{
+  "recorded_utc": "2026-10-12T15:54:02.115292+00:00",
+  "scope": "Preserve the independently reviewed draft revision before the requested plain-English rewrite. Frozen research sources remain unchanged.",
+  "drafts": [
+    {
+      "path": "info/drafts/TODO.md",
+      "before_snapshot": "info/documentation_sources/writing_revision/before/TODO.md",
+      "sha256": "61b8f873d72e59bf86482c389a2d3ce6e4c8fc2758fcab6c1290072846ee4a62"
+    },
+    {
+      "path": "info/drafts/EXPERIMENTS.md",
+      "before_snapshot": "info/documentation_sources/writing_revision/before/EXPERIMENTS.md",
+      "sha256": "905b0b4ddcf83a927b78bfad815e010ac10f606a00546ddd048bf58137e16c2c"
+    },
+    {
+      "path": "info/drafts/METHODS.md",
+      "before_snapshot": "info/documentation_sources/writing_revision/before/METHODS.md",
+      "sha256": "bb00325524ed32f95959dca9195cadbd92153f4f3105b24ea3d491a9e39ec1d6"
+    },
+    {
+      "path": "info/drafts/NOTES_AND_INSIGHTS.md",
+      "before_snapshot": "info/documentation_sources/writing_revision/before/NOTES_AND_INSIGHTS.md",
+      "sha256": "217e99dfab163eaac30e5a5c3034fba7118fa947b5704f58d13c2e864d99c760"
+    }
+  ]
+}

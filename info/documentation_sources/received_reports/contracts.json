@@ -1,0 +1,175 @@
+{
+  "slice": "contracts",
+  "coverage": [
+    {
+      "id": "S023",
+      "disposition": "Included as a proposed, unrun, unselected synthetic-work idea; not authorization or a result.",
+      "destinations": ["METHODS.md", "NOTES_AND_INSIGHTS.md", "TODO.md"],
+      "evidence": ["METHODS.md: Proposed action-conditioned synthetic work; source info/documentation_sources/versions/f3dad868d43b3aa2bf5f7913b3dfa2872cdf87a65fd9648b1eb9932e3f750855.md:1-61", "NOTES_AND_INSIGHTS.md: Action-conditioned representations; source lines 1-61", "TODO.md: Separately gated work; source lines 1-61"],
+      "read_mode": "Full read"
+    },
+    {
+      "id": "S024",
+      "disposition": "Included as the scoped lesion-state-v1 measurement, eligibility, timing, and audit contract, with its limits.",
+      "destinations": ["METHODS.md", "NOTES_AND_INSIGHTS.md"],
+      "evidence": ["METHODS.md: Geometry and preprocessing; Labels and outcomes; Scoped next-observed-visit forecast contract; source info/documentation_sources/versions/5fe9df82e326552e1bc025675a52347d09c66700f8fa917279073550845f32f3.md:1-89", "NOTES_AND_INSIGHTS.md: Useful leads that survive; Audits, alternatives, and methodological lessons; source lines 1-89"],
+      "read_mode": "Full read"
+    },
+    {
+      "id": "S040",
+      "disposition": "Retained as the superseded historical v1 RANO protocol, including its original holdout language and initial results; use alongside the corrected version, not as current policy.",
+      "destinations": ["METHODS.md", "NOTES_AND_INSIGHTS.md"],
+      "evidence": ["METHODS.md: Historical frozen RANO protocol; source info/documentation_sources/versions/224e30ddf098b5d0f70a6a8edb7ebda7f670fa26599a21726257309770fca964.md:1-105", "NOTES_AND_INSIGHTS.md: Corrected headlines; source lines 1-105"],
+      "read_mode": "Full read"
+    },
+    {
+      "id": "S041",
+      "disposition": "Included as corrected RANO protocol addendum: fixed class-weighted MLP, seed 42, width 256, no standardization, and retained sensitivity grid; final-13 remains development data.",
+      "destinations": ["METHODS.md", "NOTES_AND_INSIGHTS.md"],
+      "evidence": ["METHODS.md: Historical frozen RANO protocol; source info/documentation_sources/versions/7873b012053d04798d82c190a754e9708031bedff4ce9cf4d2abb168553f4386.md:1-106", "NOTES_AND_INSIGHTS.md: Corrected headlines; Decision ledger D44; source lines 92-106"],
+      "read_mode": "Full read"
+    },
+    {
+      "id": "S046",
+      "disposition": "Included as the earlier R34 coordinate, chronology, checkpoint-consumer, and artifact repair record, with implementation verification separated from scientific success.",
+      "destinations": ["METHODS.md", "NOTES_AND_INSIGHTS.md"],
+      "evidence": ["METHODS.md: Geometry and preprocessing; Provenance, reporting, and limitations; source info/documentation_sources/versions/4be6ffde8ccb321f263f3a3f91036667126a719401aa15b3a856b183208c6b47.md:1-93", "NOTES_AND_INSIGHTS.md: Audits, alternatives, and methodological lessons; Decision ledger D54; source lines 1-93"],
+      "read_mode": "Full read"
+    },
+    {
+      "id": "S047",
+      "disposition": "Included as the revised R34 record with whole-cohort QA addendum; it supersedes the earlier snapshot only for added QA, not for the underlying repair history.",
+      "destinations": ["METHODS.md", "NOTES_AND_INSIGHTS.md"],
+      "evidence": ["METHODS.md: Geometry and preprocessing; Provenance, reporting, and limitations; source info/documentation_sources/versions/7bc218e8ef5fd2fdb22bc0ed7f5bab72c4b1d099f1f7f2c3145f6c3bca6f3472.md:1-107", "NOTES_AND_INSIGHTS.md: Useful leads that survive; Decision ledger D54-D56; source lines 91-107"],
+      "read_mode": "Full read"
+    },
+    {
+      "id": "S050",
+      "disposition": "Retained as the earlier P0 evaluation audit; later schema and scorecard updates are represented by S051.",
+      "destinations": ["METHODS.md", "NOTES_AND_INSIGHTS.md"],
+      "evidence": ["METHODS.md: Historical frozen RANO protocol; source info/documentation_sources/versions/bffc0ec9c04e09138faeb31fab3e9c7d4d22e7e7f52ea345904d71e041dbb45b.md:1-67", "NOTES_AND_INSIGHTS.md: Corrected headlines; source lines 1-67"],
+      "read_mode": "Full read"
+    },
+    {
+      "id": "S051",
+      "disposition": "Included as the revised P0 audit with current-schema scorecard; preserve its label, task-manifest, metric-repair, and blocked-item distinctions.",
+      "destinations": ["METHODS.md", "NOTES_AND_INSIGHTS.md"],
+      "evidence": ["METHODS.md: Historical frozen RANO protocol; source info/documentation_sources/versions/da674d536622373c6db154365a73c67d5fffcc9646a10713641169a0b5cb2130.md:1-82", "NOTES_AND_INSIGHTS.md: Corrected headlines; Decision ledger D42-D44; source lines 1-82"],
+      "read_mode": "Full read"
+    },
+    {
+      "id": "S056",
+      "disposition": "Included as the historical gated P2.1-P2.4 plan and its completed P2.1/P2.2 and fusion outcomes; the old plan is not current authorization.",
+      "destinations": ["METHODS.md", "NOTES_AND_INSIGHTS.md"],
+      "evidence": ["METHODS.md: Scoped next-observed-visit forecast contract; source info/documentation_sources/versions/9ea08b90cf4971fb7b85d4b150ef1317994f42aa2fca2f1c9c0f5de5424e38e4.md:1-183", "NOTES_AND_INSIGHTS.md: Withdrawn forecasting claims; Direction and audit indexes R33-R36; source lines 1-183"],
+      "read_mode": "Full read"
+    },
+    {
+      "id": "S057",
+      "disposition": "Retained as the earlier P2.3 lesion-local architecture record, including its learned-run evidence and support-only adaptation, subject to later withdrawal.",
+      "destinations": ["METHODS.md", "NOTES_AND_INSIGHTS.md"],
+      "evidence": ["METHODS.md: Scoped next-observed-visit forecast contract; source info/documentation_sources/versions/2b29cb9bf2068cc77c42960ed21f1fbcdb039dda4f0ffa32a3c17992bb9bdada.md:1-172", "NOTES_AND_INSIGHTS.md: Withdrawn forecasting claims; source lines 1-172"],
+      "read_mode": "Full read"
+    },
+    {
+      "id": "S058",
+      "disposition": "Included as S057 plus A40 supersession: learned P2.4 and adaptation forecasts are withdrawn because future inputs and bridged rows invalidated them.",
+      "destinations": ["METHODS.md", "EXPERIMENTS.md", "NOTES_AND_INSIGHTS.md"],
+      "evidence": ["METHODS.md: Scoped next-observed-visit forecast contract; source info/documentation_sources/versions/3e07b40bdd3849468d6b4c5f52a2d997fb891e3497ccd3d7b23b43aff4980007.md:1-184", "EXPERIMENTS.md: Explicit withdrawals and limits; source lines 174-184", "NOTES_AND_INSIGHTS.md: Withdrawn forecasting claims; source lines 174-184"],
+      "read_mode": "Full read"
+    },
+    {
+      "id": "S061",
+      "disposition": "Retained as operational preprocessing procedure and historical verification; the draft describes its scientific pipeline contract but does not preserve the full runnable procedure or ops lessons.",
+      "destinations": ["METHODS.md", "EXPERIMENTS.md"],
+      "evidence": ["METHODS.md: Geometry and preprocessing; source info/documentation_sources/versions/e29b2b676b2a9a2db5406419ce3e1ee0868b4548c26460bcca0feacaee462cdf.md:1-153", "EXPERIMENTS.md: Earlier experiment details and source records; source lines 59-153"],
+      "read_mode": "Full read"
+    },
+    {
+      "id": "S063",
+      "disposition": "Included as a detailed R36 implementation handoff and conditional Phase 2 proposal, but draft coverage compresses the exact implementation/verifier and receipt requirements.",
+      "destinations": ["TODO.md", "METHODS.md", "NOTES_AND_INSIGHTS.md"],
+      "evidence": ["METHODS.md: R36 locked Phase 1; Conditional Phase 2: future dynamics; source info/documentation_sources/versions/8fc1116f80667885774a5ce6a8fb9ec40f1e360d1f87867fefb81baf01118ab6.md:1-290", "TODO.md: Priority 1; Separately gated work; source lines 1-290", "NOTES_AND_INSIGHTS.md: R35 and R36 boundaries; source lines 1-290"],
+      "read_mode": "Full read"
+    },
+    {
+      "id": "S066",
+      "disposition": "Included as binding research scope and decision-brief requirements, not merely descriptive context.",
+      "destinations": ["METHODS.md", "NOTES_AND_INSIGHTS.md", "TODO.md"],
+      "evidence": ["METHODS.md: Research objective and scope; source info/documentation_sources/versions/6e710be8c33b05d77bf8f13b415b64028fcc13dc03d71defb304e6a7631c78f4.md:1-41", "NOTES_AND_INSIGHTS.md: Research objective and interpretation; source lines 1-41", "TODO.md: Separately gated work; source lines 1-41"],
+      "read_mode": "Full read"
+    },
+    {
+      "id": "S072",
+      "disposition": "Retained as the operational SAILOR reprocessing recipe and aftermath convention, distinct from the negative historical result; the draft points to the guide but omits the executable detail.",
+      "destinations": ["METHODS.md", "EXPERIMENTS.md"],
+      "evidence": ["METHODS.md: Data, geometry, labels, and timing contracts; source info/documentation_sources/versions/c7aeeea2bff31ee76a1190a69a05ca48ec78fc476e89d3afc345d546074c3f0d.md:1-122", "EXPERIMENTS.md: Earlier experiment details and source records; source lines 1-122"],
+      "read_mode": "Full read"
+    }
+  ],
+  "missing_material": [
+    {
+      "source_ids": ["S061", "S072"],
+      "source_lines": "S061: 14-90, 91-153; S072: 18-122",
+      "draft": "METHODS.md",
+      "section": "Geometry and preprocessing",
+      "priority": "medium",
+      "proposed_insertion": "Retain a concise operational pointer to the full preprocessing and SAILOR reprocessing procedures, including that the SAILOR recipe stages linked raws, uses a new config rather than editing default.yaml, runs resume-safely, and preserves the stated evaluation/aftermath constraints. Otherwise retain the frozen procedure as a linked operational reference.",
+      "why_it_matters": "The draft captures the conceptual preprocessing contract but operational reproducibility details and the SAILOR procedure are not represented by that summary."
+    },
+    {
+      "source_ids": ["S063"],
+      "source_lines": "75-202, 203-290",
+      "draft": "METHODS.md",
+      "section": "R36 locked Phase 1; Conditional Phase 2: future dynamics",
+      "priority": "medium",
+      "proposed_insertion": "Retain a pointer to the handoff's exact verifier commands, deliverable receipts, and execution addendum, and clarify that the proposed Phase 2 model and training details remain conditional and unauthorized.",
+      "why_it_matters": "The high-level protocol and status are present, but the handoff's implementation, verification, bounded execution, and receipt contract is operationally important and is not reproduced."
+    },
+    {
+      "source_ids": ["S040", "S041", "S050", "S051"],
+      "source_lines": "S040: 58-77; S041: 58-106; S050: 1-67; S051: 34-82",
+      "draft": "EXPERIMENTS.md",
+      "section": "P0 and P1 developmental RANO results",
+      "priority": "low",
+      "proposed_insertion": "Link the historical locked-protocol and current-schema audit records directly from the compact scorecard; preserve the protocol-version distinction and the corrected readout policy rather than implying one invariant protocol.",
+      "why_it_matters": "The draft reports scorecard metrics and broad caveats, while detailed protocol and schema changes are compressed into METHODS."
+    }
+  ],
+  "branch_differences": [
+    {
+      "source_ids": ["S040", "S041"],
+      "origins": [
+        "S040: info/eval_protocol.md snapshot 224e30ddf098b5d0f70a6a8edb7ebda7f670fa26599a21726257309770fca964",
+        "S041: info/eval_protocol.md snapshot 7873b012053d04798d82c190a754e9708031bedff4ce9cf4d2abb168553f4386"
+      ],
+      "difference": "S041 adds the 2026-09-21 class-weighted MLP readout policy and sensitivity-grid caveat. It should be presented as an explicit later addendum to S040's frozen v1 historical protocol."
+    },
+    {
+      "source_ids": ["S046", "S047"],
+      "origins": [
+        "S046: representation-comparison branch and main",
+        "S047: main and sibling R36 worktree"
+      ],
+      "difference": "S047 appends whole-cohort QA dated 2026-10-08. Include its grid, volume, overlay, target-discontinuity, ONCO/CL and unknown-repeatability findings without retroactively attributing them to S046."
+    },
+    {
+      "source_ids": ["S050", "S051"],
+      "origins": [
+        "S050: earlier P0 audit snapshot bffc0ec9c04e09138faeb31fab3e9c7d4d22e7e7f52ea345904d71e041dbb45b",
+        "S051: later P0 audit snapshot da674d536622373c6db154365a73c67d5fffcc9646a10713641169a0b5cb2130"
+      ],
+      "difference": "S051 adds a current-schema scorecard and updates the blocked-item framing. Preserve the earlier audit as historical lineage and use the later version for current-schema status."
+    },
+    {
+      "source_ids": ["S057", "S058"],
+      "origins": [
+        "S057: earlier P2.3 architecture snapshot 2b29cb9bf2068cc77c42960ed21f1fbcdb039dda4f0ffa32a3c17992bb9bdada",
+        "S058: later P2.3 snapshot 3e07b40bdd3849468d6b4c5f52a2d997fb891e3497ccd3d7b23b43aff4980007"
+      ],
+      "difference": "S058 adds A40's withdrawal of learned forecast and adaptation results. It is the governing result interpretation; S057's detail remains historical evidence only when clearly marked withdrawn."
+    }
+  ],
+  "unread": [],
+  "verdict": "NEEDS_INTEGRATION"
+}

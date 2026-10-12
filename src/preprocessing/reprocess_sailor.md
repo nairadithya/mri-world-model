@@ -28,7 +28,7 @@ including per-visit registration jitter.
   without it the pipeline falls back to a crude percentile mask — check
   logs if skull-strip stage looks instant.
 - Reference numbers: raw-vs-MNI total pipeline damping ~3.9×
-  (`info/ablations.md` A18; raw 0.673 ≈ LUMIERE 0.76).
+  (`info/archive/2026-10-12/info/ablations.md` A18; raw 0.673 ≈ LUMIERE 0.76).
 
 ## 1. Stage linked raws into LUMIERE layout (symlinks, free)
 
@@ -117,6 +117,6 @@ silent).
 ## 7. Aftermath (same conventions as every run)
 
 Numbers → `info/plots/metrics.json` + `make_plots.py` (next plot #),
-writeup → `info/ablations.md` (next A-ID, append-only), downloaded or
+writeup → `info/EXPERIMENTS.md` (next A-ID, append-only), downloaded or
 staged files labeled with (config, date, val). `data/sailor_reprocessed/`
 and `data/sailor_staging/` stay gitignored like all data dirs.

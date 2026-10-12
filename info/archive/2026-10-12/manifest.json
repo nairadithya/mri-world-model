@@ -1,0 +1,266 @@
+{
+  "archived_utc": "2026-10-12T17:09:26.380827+00:00",
+  "base_commit": "389b8aba3802d52f9ed9eb5508cbc26e6c6f9d97",
+  "scope": "32 original research records and five supporting presentation assets moved without changing their bytes. Dirty and untracked documentation copied earlier is included. No operating guide, dataset, checkpoint, run output, or protected checkout is moved.",
+  "records": [
+    {
+      "original_path": "TODO.md",
+      "archive_path": "info/archive/2026-10-12/TODO.md",
+      "sha256": "c7c9fba4178609946f8fd4ce8b90af08b6a88392955d7f2e198aa2e02b14cc57",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "PROPOSAL.md",
+      "archive_path": "info/archive/2026-10-12/PROPOSAL.md",
+      "sha256": "e82ede5e41b034398b599f1f141ffa04335d47ad7d8e66761540a71ce2f72aaa",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "ASTRA_PROBE.md",
+      "archive_path": "info/archive/2026-10-12/ASTRA_PROBE.md",
+      "sha256": "b72ceb2da7c2ba695a4174a43643847c9fb27244c1785ff1a6acb5c898f2fb29",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "K3_PROBE.md",
+      "archive_path": "info/archive/2026-10-12/K3_PROBE.md",
+      "sha256": "7d63fd3f44c1ed975ea9d1b860b597592902c503fbb3124145a01db17ee996dc",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/ablations.md",
+      "archive_path": "info/archive/2026-10-12/info/ablations.md",
+      "sha256": "2ddad8d48f3ebb0e89c6855d2c8da8e2762d8291664d49d38faab77851d72549",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/action_conditioned_representation_brief.md",
+      "archive_path": "info/archive/2026-10-12/info/action_conditioned_representation_brief.md",
+      "sha256": "f3dad868d43b3aa2bf5f7913b3dfa2872cdf87a65fd9648b1eb9932e3f750855",
+      "tracked_at_base": false,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/anatomy_harmonization.md",
+      "archive_path": "info/archive/2026-10-12/info/anatomy_harmonization.md",
+      "sha256": "5fe9df82e326552d35667a3b92cdd7977504ade9f3ceebb9298a8f41d0dbdf19",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/clean_rescues.md",
+      "archive_path": "info/archive/2026-10-12/info/clean_rescues.md",
+      "sha256": "eaca551880e0a9db5c4bdc7785e135675cd518ebfcd361d5aa482beca4f37dce",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/decisions.md",
+      "archive_path": "info/archive/2026-10-12/info/decisions.md",
+      "sha256": "2b7293c884e0e0aa9f1db178d13f55497d584cd7060c68c022436d47330bb63c",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/directions.md",
+      "archive_path": "info/archive/2026-10-12/info/directions.md",
+      "sha256": "eade325e60cbeeb92dc5f6570520d8f502a519e846309ef5803b2bf7e1a2d094",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/eval_protocol.md",
+      "archive_path": "info/archive/2026-10-12/info/eval_protocol.md",
+      "sha256": "7873b012053d04798d82c190a754e9708031bedff4ce9cf4d2abb168553f4386",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/external_supervision_audit.md",
+      "archive_path": "info/archive/2026-10-12/info/external_supervision_audit.md",
+      "sha256": "636f0274c36efa3cee145c530acebff689d5961eff995269ecc3bc91d8c6d89e",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/frontier_lumiere.md",
+      "archive_path": "info/archive/2026-10-12/info/frontier_lumiere.md",
+      "sha256": "bd305198a22112d90d28cf638536c3638ff95806a6aeff087655acb8dea287d1",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/harness_v2.md",
+      "archive_path": "info/archive/2026-10-12/info/harness_v2.md",
+      "sha256": "ad235fe7fd9dbc123dbc829a8242d3c11ce6427b241808ba661ac7ed0fb1db87",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/methodology_validity.md",
+      "archive_path": "info/archive/2026-10-12/info/methodology_validity.md",
+      "sha256": "7bc218e8ef5fd2fdb22bc0ed7f5bab72c4b1d099f1f7f2c3145f6c3bca6f3472",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/methodology_validity_plan.md",
+      "archive_path": "info/archive/2026-10-12/info/methodology_validity_plan.md",
+      "sha256": "e222fabaeb05f4d166a3d220a87398aa55b60e1697d479706b6e87d6bab71212",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/notes.md",
+      "archive_path": "info/archive/2026-10-12/info/notes.md",
+      "sha256": "f33b11d3ab804d4b9bef473c0336e51db5afef9b8a0a8b8740e7d0cbbf38f105",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/p0_audit.md",
+      "archive_path": "info/archive/2026-10-12/info/p0_audit.md",
+      "sha256": "da674d536622373c6db154365a73c67d5fffcc9646a10713641169a0b5cb2130",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/p0_refresh.md",
+      "archive_path": "info/archive/2026-10-12/info/p0_refresh.md",
+      "sha256": "91f9eb3a5aa50c35bb9d8d79dbcca3e76e61bc3c93b814a08ae82b0a34ca4d8d",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/p1_anatomy_baselines.md",
+      "archive_path": "info/archive/2026-10-12/info/p1_anatomy_baselines.md",
+      "sha256": "4c077cc0f084f2d14b48b4cf366088ff7c0dc11a6ed3bf8b5678cbea901e141d",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/p1_baselines.md",
+      "archive_path": "info/archive/2026-10-12/info/p1_baselines.md",
+      "sha256": "b8c596145365e19fbea3ed86218b7b7d7a3131e0be6e60915409d0eddcfddf31",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/p1_sota_audit.md",
+      "archive_path": "info/archive/2026-10-12/info/p1_sota_audit.md",
+      "sha256": "77de3ea25aa45d894d9577a96b69195912e6036883dace704af07b89de07843b",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/p2_execution.md",
+      "archive_path": "info/archive/2026-10-12/info/p2_execution.md",
+      "sha256": "9ea08b90cf4971fb7b85d4b150ef1317994f42aa2fca2f1c9c0f5de5424e38e4",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/p2_lesion_architecture.md",
+      "archive_path": "info/archive/2026-10-12/info/p2_lesion_architecture.md",
+      "sha256": "3e07b40bdd3849468d6b4c5f52a2d997fb891e3497ccd3d7b23b43aff4980007",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/p2_seed_sensitivity.md",
+      "archive_path": "info/archive/2026-10-12/info/p2_seed_sensitivity.md",
+      "sha256": "9392195ed8cf1ac4fea44e0347230844278803dbd3b21318ca48a6c7c0b2f841",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/pilot.md",
+      "archive_path": "info/archive/2026-10-12/info/pilot.md",
+      "sha256": "d8e7bf20a34e6ee1186140c96bb090ed2df0a56f65f11ce140fe05acc4123436",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/r36_delta_representation_handoff.md",
+      "archive_path": "info/archive/2026-10-12/info/r36_delta_representation_handoff.md",
+      "sha256": "8fc1116f80667885774a5ce6a8fb9ec40f1e360d1f87867fefb81baf01118ab6",
+      "tracked_at_base": false,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/r36_delta_representation_results.md",
+      "archive_path": "info/archive/2026-10-12/info/r36_delta_representation_results.md",
+      "sha256": "4f80203aeaed182a3e106b44f5d066b213b65387a143d3979710282be6263077",
+      "tracked_at_base": false,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/results.md",
+      "archive_path": "info/archive/2026-10-12/info/results.md",
+      "sha256": "89605d7963ba3e0f942e5feb416846a32faea82a277f1dbe008b0cd0a6b86068",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/stale_code_audit.md",
+      "archive_path": "info/archive/2026-10-12/info/stale_code_audit.md",
+      "sha256": "eca8302b4c0da4df15f1a8918164254666650e647632c098c025513f6ebe5061",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/methodology_validity_decisions.tsv",
+      "archive_path": "info/archive/2026-10-12/info/methodology_validity_decisions.tsv",
+      "sha256": "bf8829b910053323231e8add333b2e0e806ea2f01e5b3a8555c2ab822e15e7d3",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/explainer.html",
+      "archive_path": "info/archive/2026-10-12/info/explainer.html",
+      "sha256": "c0edb1d7f41aeaa06b5cb990cc8610706ce1b3a34353d462021a9c628a015e97",
+      "tracked_at_base": true,
+      "kind": "research_record"
+    },
+    {
+      "original_path": "info/overall_architecture.drawio",
+      "archive_path": "info/archive/2026-10-12/info/overall_architecture.drawio",
+      "sha256": "910e8700de6e7f488f2031ff859c494a468d74738a2c0f7a62b850be837d6b72",
+      "tracked_at_base": true,
+      "kind": "presentation_asset"
+    },
+    {
+      "original_path": "info/overall_architecture_preview.png",
+      "archive_path": "info/archive/2026-10-12/info/overall_architecture_preview.png",
+      "sha256": "23a178c6025487e67110b8ff726d2246bab4ffa0c580eaaf7e0c41fb42abb9b7",
+      "tracked_at_base": true,
+      "kind": "presentation_asset"
+    },
+    {
+      "original_path": "info/presentation/23UG083 Review 2 Presentation - slide 3 revised.pptx",
+      "archive_path": "info/archive/2026-10-12/info/presentation/23UG083 Review 2 Presentation - slide 3 revised.pptx",
+      "sha256": "8e28014e319a83b689f1df89671947fe1e41e40e92e19ab8e96a45d136b590cf",
+      "tracked_at_base": true,
+      "kind": "presentation_asset"
+    },
+    {
+      "original_path": "info/presentation/23UG083 Review 2 Presentation - slides 3 and 5 revised.pptx",
+      "archive_path": "info/archive/2026-10-12/info/presentation/23UG083 Review 2 Presentation - slides 3 and 5 revised.pptx",
+      "sha256": "82905de64401c03e44f3c33cfc028b2954c6a77f58c6383570a260b2db31288a",
+      "tracked_at_base": true,
+      "kind": "presentation_asset"
+    },
+    {
+      "original_path": "info/presentation/23UG083 Review 2 Presentation.pptx",
+      "archive_path": "info/archive/2026-10-12/info/presentation/23UG083 Review 2 Presentation.pptx",
+      "sha256": "da318c304c0d3a30e90f768ba84a864892ca8aadab2c5dd582e27628e347e1c8",
+      "tracked_at_base": true,
+      "kind": "presentation_asset"
+    }
+  ]
+}

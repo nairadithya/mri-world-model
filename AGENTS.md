@@ -3,14 +3,16 @@
 Research repo: longitudinal glioma MRI using LUMIERE for development and
 SAILOR for developmental transfer. The research objective is useful MRI
 representations that preserve anatomical and pathological state and meaningful
-longitudinal change while separating acquisition nuisance. The active RANO-free
-task in `info/p2_execution.md` is one scoped experiment, not a universal
-definition or gate for representation quality. Lesion awareness, JEPA, forecast
+longitudinal change while separating acquisition nuisance. The consolidated protocols in
+`info/METHODS.md` describe scoped experiments, not a universal definition
+or gate for representation quality. Read `info/TODO.md` for remaining work
+at the dated research snapshot, and `info/EXPERIMENTS.md` for outcomes. Lesion awareness, JEPA, forecast
 heads, and whole-brain methods are hypotheses, not the objective. See
 [`info/research_guardrails.md`](info/research_guardrails.md) before substantial
 research implementation. It sets binding decision and reporting requirements.
-`PROPOSAL.md` records the original JEPA hypothesis. See `info/README.md` for
-the documentation map.
+`info/archive/2026-10-12/PROPOSAL.md` preserves the original JEPA hypothesis.
+See `info/README.md` for the documentation map. Read
+`info/NOTES_AND_INSIGHTS.md` for the reasoning and interpretation.
 
 ## Layout
 
@@ -47,8 +49,12 @@ the documentation map.
   `kernel-lora/` (supervised vision finetune, `harness.py train lora`) and
   `kernel-cnn/` (supervised ResNet-18 comparator, `harness.py train cnn3d`)
   are the current pushable legs.
-- `info/` — decision log (`decisions.md`, IDs D0–), ablations (`ablations.md`,
-  IDs A–/I–), pilot notes (`pilot.md`). Append-only; reference IDs.
+- `info/` contains the consolidated `TODO.md`, `EXPERIMENTS.md`, `METHODS.md`,
+  and `NOTES_AND_INSIGHTS.md`. Keep historical D, A, I, R, G, V, E, and K3 IDs.
+  Add new results and corrections without erasing earlier findings.
+  `info/archive/2026-10-12/` preserves original records byte-for-byte.
+  `info/documentation_sources/` preserves cross-branch snapshots and provenance.
+  Archived originals and frozen source snapshots are immutable.
   Plot numbers live in `info/plots/metrics.json` (single source of truth);
   `info/plots/make_plots.py` regenerates every plot from it — never
   hardcode numbers in a plot script.
@@ -66,7 +72,7 @@ uv sync --extra viewer   # + playwright for the shot_viewer screenshot check
 Activate the venv (`source .venv/bin/activate`) or prefix commands with
 `uv run`. Notes: uv resolves CPU-only `torch` from the PyTorch index and
 mechanically excludes `torchvision` (a skewed build breaks the `peft` import
-with a misleading error; see D16/D37 in `info/decisions.md`). The `dev` extra
+with a misleading error; see D16 and D37 in `info/METHODS.md`). The `dev` extra
 supplies `jupytext` — run notebook regeneration through the venv
 (`uv run --extra dev jupytext --to ipynb <file>.py`, or `.venv/bin/jupytext`),
 never by hand-editing the `.ipynb` JSON. You additionally
@@ -150,11 +156,13 @@ NiiVue 0.69 API gotchas (each cost a blank canvas, found via `shot_viewer.py`):
 - Passing option objects with a `name` breaks `getFileExt(name||url)`; load by
   `{url}` only, then set `name`/`colormap`/`opacity` on `nv.volumes[i]`.
 
-## Figure review (plots + `explainer.html`)
+## Figure review
 
-Plots are generated from `metrics.json` and `explainer.html` embeds them, so a
-plot change is only verified by rendering it and **looking at the pixels** (the
-image-aware read tool). The playwright *module* is not installed — use the
+Plots are generated from `metrics.json`. The historical `explainer.html` is
+archived at `info/archive/2026-10-12/info/explainer.html` and includes withdrawn
+claims. It is not a current presentation. For any active plot or HTML page,
+verification requires rendering it and looking at the pixels with the
+image-aware read tool. The playwright *module* is not installed — use the
 Chromium binary the view_scans dev tooling cached:
 
 ```bash
@@ -162,7 +170,7 @@ python info/plots/make_plots.py          # regenerate png + pdf
 CHROME=$(ls ~/.cache/ms-playwright/chromium-*/chrome-linux64/chrome | head -1)
 "$CHROME" --headless --no-sandbox --disable-gpu --hide-scrollbars \
   --virtual-time-budget=8000 --window-size=1000,16000 \
-  --screenshot=/tmp/explainer.png "file://$PWD/info/explainer.html"
+  --screenshot=/tmp/explainer.png "file://$PWD/info/archive/2026-10-12/info/explainer.html"
 python3 -c "from PIL import Image; Image.open('/tmp/explainer.png').crop((0,400,1000,1200)).save('/tmp/crop.png')"  # then read the crop
 ```
 
@@ -195,11 +203,13 @@ Rules, all earned:
 7. Persist trained weights, not just scores, whenever a follow-up might need
    predictions (`src/harness/train/field.py` saved scores only; recovering field
    predictions cost a full refit — now `checkpoints/field_models.pt`).
-8. Update the record with the result: every experiment lands in `info/` (new
-   D/A/R ID, append-only) and, when plots or conclusions change,
-   `info/explainer.html` too. An unlogged result might as well not have happened.
+8. Record every experiment in `info/EXPERIMENTS.md` with its D, A, or R ID.
+   Add reasoning to `info/NOTES_AND_INSIGHTS.md` and protocol changes to
+   `info/METHODS.md`. Preserve earlier outcomes and corrections. Update the
+   current research presentation when conclusions change. Do not restore the
+   archived explainer as current guidance.
 
-## Gotchas (earned the hard way — see info/ablations.md)
+## Gotchas (see the historical IDs in info/EXPERIMENTS.md)
 
 - **Weights**: use official `BrainIAC.ckpt` only. Community ports can be
   silently corrupt (matching key names, degenerate outputs). Verify any
@@ -211,7 +221,7 @@ Rules, all earned:
   every loss pair.
 - **Probes**: single-split probe numbers are noise, and the legacy all-91
   `--cv` leaks encoder-train patients into probe folds (K3-16) — use the locked
-  protocol (`info/eval_protocol.md`, `--cv-unseen`); even the readout seed
+  protocol (`info/METHODS.md#historical-rano`, `--cv-unseen`); even the readout seed
   alone spans 0.34–0.45 (A27). Ridge + CV-λ mandatory above ~100-d features
   (plain LSQ on 1152-d/450-row gives R²≈−100).
 - **SAILOR**: `-icor` files carry background NaNs (~200 sessions, up to 79%
@@ -247,7 +257,7 @@ Rules, all earned:
   (`sailor_request_access.py`), not a token bug.
 - **Scale**: checkpoints are ~1.5GB each; batch 4 fits 24GB VRAM
   (chunked encoding). No GPU on the dev host — pilot on CPU, hero run
-  needs one (≈6 h all-in, see `info/pilot.md` scale-up checklist).
+  needs one (≈6 h all-in, see `info/archive/2026-10-12/info/pilot.md` scale-up checklist).
 
 ## Programmatic Kaggle runs (verified 2026-09-06, horizon leg)
 

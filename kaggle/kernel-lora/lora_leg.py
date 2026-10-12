@@ -28,7 +28,7 @@
 # temporal frozen; class-weighted CE on state_t -> RANO_{t+1}, JEPA
 # distillation regularizer, augmentation, early stop on the 13 `dev`.
 #
-# Gate (locked protocol, `info/eval_protocol.md`): beat the frozen readout on
+# Gate (locked protocol, `info/archive/2026-10-12/info/eval_protocol.md`): beat the frozen readout on
 # the reserved `final` 13 with a paired patient-cluster CI excluding 0
 # (frozen reference: honest ~0.39, seed-42 0.448). If it does not, the encoder
 # is at its data-limited ceiling and only external data remains.

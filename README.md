@@ -1,11 +1,12 @@
 # world-model
 
-Research code for longitudinal glioma MRI. The original JEPA hypothesis is in
-[`PROPOSAL.md`](PROPOSAL.md). The active RANO-free anatomy task and its
-results on `main` are in
-[`info/p2_execution.md`](info/p2_execution.md) and
-[`info/p1_anatomy_baselines.md`](info/p1_anatomy_baselines.md). The later local
-cutoff audit is described in [`info/README.md`](info/README.md).
+Research code for longitudinal glioma MRI. Start with
+[Notes and insights](info/NOTES_AND_INSIGHTS.md) for the research questions and
+findings. [Experiments](info/EXPERIMENTS.md) records results and corrections,
+[Methods](info/METHODS.md) defines protocols, and
+[Research TODO](info/TODO.md) lists work left at the archived snapshot.
+The [research index](info/README.md) links the source history and operating guides.
+The [archive](info/archive/2026-10-12/README.md) preserves the original documentation.
 
 LUMIERE is the development cohort. SAILOR is controlled-access data used for
 developmental transfer, not an untouched final test set. The research objective

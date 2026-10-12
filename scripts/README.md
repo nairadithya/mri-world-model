@@ -1,7 +1,7 @@
 # Acquisition toolkit (`scripts/`)
 
 Tools to fetch datasets programmatically. See
-[`../info/external_supervision_audit.md`](../info/external_supervision_audit.md)
+[the archived external-supervision audit](../info/archive/2026-10-12/info/external_supervision_audit.md)
 for research-cohort roles and access constraints.
 
 ## What already works, right now (no accounts, no sign-up)
