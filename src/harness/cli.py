@@ -95,8 +95,9 @@ usage: harness.py <command> [options]
 
   anatomy manifest [options]    build/audit lesion-state-v1 rows
   anatomy baseline [options]    run the continuous prospective floor
+  representation <command>      R35 state and observed-change experiments
+  delta-representation <command> R36 signed-difference objective experiments
   checkpoint inspect PATH       inspect checkpoint format and legacy contents
-  representation <command>      state, observed-change, and nuisance experiments
   list                          show active anatomy workflows
   legacy <command> [options]    old list/encode/eval/train/run interface
 
@@ -112,8 +113,9 @@ def cmd_list(_args) -> None:
     _log("harness:    anatomy-v2")
     _log("anatomy:    manifest, features, baseline, residual, fusion, coverage, "
          "lesion-encode, lesion-eval, lesion-decode, lesion-transfer, lesion-adapt")
-    _log("checkpoint: inspect")
     _log("representation: export, prepare, controls, supervised-controls, smoke, reference, train, cached-transfer, transfer")
+    _log("delta-representation: audit, smoke, train, encode, probe, eval, nuisance, transfer, ridge, report")
+    _log("checkpoint: inspect")
     _log("legacy:     list, encode, eval, train, run")
 
 
@@ -385,6 +387,8 @@ def main(argv=None) -> None:
         cmd_anatomy(rest)
     elif cmd == "representation":
         _dispatch_entry("src.harness.analysis.representation:main", rest)
+    elif cmd == "delta-representation":
+        _dispatch_entry("src.harness.analysis.delta_representation:main", rest)
     elif cmd == "checkpoint":
         cmd_checkpoint(rest)
     elif cmd == "legacy":
