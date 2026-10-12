@@ -1,0 +1,387 @@
+{
+  "slice": "experiments",
+  "coverage": [
+    {
+      "id": "S020",
+      "comparison_status": "checked",
+      "checked_by": "parent",
+      "read_mode": "Full read",
+      "disposition": "Preserve A1-A41, their setups, corrections, negative and invalid results. Current-schema and causal records qualify legacy claims.",
+      "destinations": [
+        "EXPERIMENTS.md",
+        "NOTES_AND_INSIGHTS.md"
+      ],
+      "evidence": [
+        "S020: info/documentation_sources/versions/2ddad8d48f3ebb0e89c6855d2c8da8e2762d8291664d49d38faab77851d72549.md:1-1522; complete source read.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+      ],
+      "source_range": [
+        1,
+        1522
+      ],
+      "diff_base": null,
+      "evidence_before_writing_revision": [
+        "S020: info/documentation_sources/versions/2ddad8d48f3ebb0e89c6855d2c8da8e2762d8291664d49d38faab77851d72549.md:1-1522; complete source read.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+      ],
+      "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+    },
+    {
+      "id": "S021",
+      "comparison_status": "checked",
+      "checked_by": "parent",
+      "read_mode": "Complete diff against S020",
+      "disposition": "Earlier ablations end at A36. S020 adds A37-A41 and their validity limits; the shared historical evidence is preserved.",
+      "destinations": [
+        "EXPERIMENTS.md",
+        "NOTES_AND_INSIGHTS.md"
+      ],
+      "evidence": [
+        "S021: info/documentation_sources/versions/5c2b29fa7d10d546917b2240faee24aa8b8f6560172ab618bab3d4782e2bb2d9.md:1-1386; complete variant diff.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+      ],
+      "source_range": [
+        1,
+        1386
+      ],
+      "diff_base": "S020",
+      "evidence_before_writing_revision": [
+        "S021: info/documentation_sources/versions/5c2b29fa7d10d546917b2240faee24aa8b8f6560172ab618bab3d4782e2bb2d9.md:1-1386; complete variant diff.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+      ],
+      "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+    },
+    {
+      "id": "S022",
+      "comparison_status": "checked",
+      "checked_by": "parent",
+      "read_mode": "Complete diff against S020",
+      "disposition": "Earlier ablations end at A39. S020 adds the A40 withdrawal and A41 clean head diagnostics.",
+      "destinations": [
+        "EXPERIMENTS.md",
+        "NOTES_AND_INSIGHTS.md"
+      ],
+      "evidence": [
+        "S022: info/documentation_sources/versions/6b7d9def32bbabf5f63dbac2126bb7b066d7b4606e54ebad6f56cd494f569d5f.md:1-1476; complete variant diff.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+      ],
+      "source_range": [
+        1,
+        1476
+      ],
+      "diff_base": "S020",
+      "evidence_before_writing_revision": [
+        "S022: info/documentation_sources/versions/6b7d9def32bbabf5f63dbac2126bb7b066d7b4606e54ebad6f56cd494f569d5f.md:1-1476; complete variant diff.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+      ],
+      "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+    },
+    {
+      "id": "S025",
+      "comparison_status": "checked",
+      "checked_by": "parent",
+      "read_mode": "Full read",
+      "disposition": "Preserve A40 cutoff and adjacency audit, clean A41 all-horizon results, and completed seven-arm GPU rescue table. CPU alignment/field closure is not invented.",
+      "destinations": [
+        "EXPERIMENTS.md",
+        "NOTES_AND_INSIGHTS.md"
+      ],
+      "evidence": [
+        "S025: info/documentation_sources/versions/eaca551880e0a9db5c4bdc7785e135675cd518ebfcd361d5aa482beca4f37dce.md:1-232; complete source read.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+      ],
+      "source_range": [
+        1,
+        232
+      ],
+      "diff_base": null,
+      "evidence_before_writing_revision": [
+        "S025: info/documentation_sources/versions/eaca551880e0a9db5c4bdc7785e135675cd518ebfcd361d5aa482beca4f37dce.md:1-232; complete source read.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+      ],
+      "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+    },
+    {
+      "id": "S052",
+      "comparison_status": "checked",
+      "checked_by": "parent",
+      "read_mode": "Full read",
+      "disposition": "Preserve survival-free cache provenance, corrected surprise/lead-time values, refreshed SAILOR zero/K-shot reversal, and scorecard closure.",
+      "destinations": [
+        "EXPERIMENTS.md",
+        "NOTES_AND_INSIGHTS.md"
+      ],
+      "evidence": [
+        "S052: info/documentation_sources/versions/91f9eb3a5aa50c35bb9d8d79dbcca3e76e61bc3c93b814a08ae82b0a34ca4d8d.md:1-44; complete source read.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+      ],
+      "source_range": [
+        1,
+        44
+      ],
+      "diff_base": null,
+      "evidence_before_writing_revision": [
+        "S052: info/documentation_sources/versions/91f9eb3a5aa50c35bb9d8d79dbcca3e76e61bc3c93b814a08ae82b0a34ca4d8d.md:1-44; complete source read.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+      ],
+      "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+    },
+    {
+      "id": "S053",
+      "comparison_status": "checked",
+      "checked_by": "parent",
+      "read_mode": "Full read",
+      "disposition": "Preserve all eight matched anatomy baselines, patient-grouped fitting, paired uncertainty, and negative JEPA result on the next-observed task.",
+      "destinations": [
+        "EXPERIMENTS.md",
+        "NOTES_AND_INSIGHTS.md"
+      ],
+      "evidence": [
+        "S053: info/documentation_sources/versions/4c077cc0f084f2d14b48b4cf366088ff7c0dc11a6ed3bf8b5678cbea901e141d.md:1-58; complete source read.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+      ],
+      "source_range": [
+        1,
+        58
+      ],
+      "diff_base": null,
+      "evidence_before_writing_revision": [
+        "S053: info/documentation_sources/versions/4c077cc0f084f2d14b48b4cf366088ff7c0dc11a6ed3bf8b5678cbea901e141d.md:1-58; complete source read.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+      ],
+      "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+    },
+    {
+      "id": "S054",
+      "comparison_status": "checked",
+      "checked_by": "parent",
+      "read_mode": "Full read",
+      "disposition": "Preserve prospective RANO floors and completed temporal controls. Matched JEPA and temporal-transfer pending items remain explicit; legacy-cache rows stay historical.",
+      "destinations": [
+        "EXPERIMENTS.md",
+        "NOTES_AND_INSIGHTS.md"
+      ],
+      "evidence": [
+        "S054: info/documentation_sources/versions/b8c596145365e19fbea3ed86218b7b7d7a3131e0be6e60915409d0eddcfddf31.md:1-78; complete source read.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+      ],
+      "source_range": [
+        1,
+        78
+      ],
+      "diff_base": null,
+      "evidence_before_writing_revision": [
+        "S054: info/documentation_sources/versions/b8c596145365e19fbea3ed86218b7b7d7a3131e0be6e60915409d0eddcfddf31.md:1-78; complete source read.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+      ],
+      "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+    },
+    {
+      "id": "S059",
+      "comparison_status": "checked",
+      "checked_by": "parent",
+      "read_mode": "Full read",
+      "disposition": "Preserve all three historical seed scores and seed43 recovery chronology, explicitly withdrawn as forecasting evidence under A40.",
+      "destinations": [
+        "EXPERIMENTS.md",
+        "NOTES_AND_INSIGHTS.md"
+      ],
+      "evidence": [
+        "S059: info/documentation_sources/versions/9392195ed8cf1ac4fea44e0347230844278803dbd3b21318ca48a6c7c0b2f841.md:1-87; complete source read.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+      ],
+      "source_range": [
+        1,
+        87
+      ],
+      "diff_base": null,
+      "evidence_before_writing_revision": [
+        "S059: info/documentation_sources/versions/9392195ed8cf1ac4fea44e0347230844278803dbd3b21318ca48a6c7c0b2f841.md:1-87; complete source read.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+      ],
+      "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+    },
+    {
+      "id": "S060",
+      "comparison_status": "checked",
+      "checked_by": "parent",
+      "read_mode": "Full read",
+      "disposition": "Preserve invalid and official-weight pilots, hero/resume/auxiliary trajectories, and failed re-gate. A8/A24 and later readout corrections qualify early success language.",
+      "destinations": [
+        "EXPERIMENTS.md",
+        "NOTES_AND_INSIGHTS.md"
+      ],
+      "evidence": [
+        "S060: info/documentation_sources/versions/d8e7bf20a34e6ee1186140c96bb090ed2df0a56f65f11ce140fe05acc4123436.md:1-184; complete source read.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+      ],
+      "source_range": [
+        1,
+        184
+      ],
+      "diff_base": null,
+      "evidence_before_writing_revision": [
+        "S060: info/documentation_sources/versions/d8e7bf20a34e6ee1186140c96bb090ed2df0a56f65f11ce140fe05acc4123436.md:1-184; complete source read.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+      ],
+      "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+    },
+    {
+      "id": "S062",
+      "comparison_status": "checked",
+      "checked_by": "parent",
+      "read_mode": "Full read",
+      "disposition": "Preserve completed R35 state/change/nuisance/transfer matrix, matched budgets, later-only and independent-state controls, empty targets, and missing biological validation.",
+      "destinations": [
+        "EXPERIMENTS.md",
+        "NOTES_AND_INSIGHTS.md"
+      ],
+      "evidence": [
+        "S062: info/documentation_sources/versions/768fdfa0a9be4dc76e99fcef9ff971e26252d672e82b08267f5e9ea157ced0f3.md:1-173; complete source read.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+      ],
+      "source_range": [
+        1,
+        173
+      ],
+      "diff_base": null,
+      "evidence_before_writing_revision": [
+        "S062: info/documentation_sources/versions/768fdfa0a9be4dc76e99fcef9ff971e26252d672e82b08267f5e9ea157ced0f3.md:1-173; complete source read.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+      ],
+      "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+    },
+    {
+      "id": "S064",
+      "comparison_status": "checked",
+      "checked_by": "parent",
+      "read_mode": "Complete diff against S065",
+      "disposition": "Retain the older R36 record ending at 04:04 UTC. S065 adds completed matrix/probe and recovery receipts; do not treat S064 as latest status.",
+      "destinations": [
+        "EXPERIMENTS.md",
+        "NOTES_AND_INSIGHTS.md"
+      ],
+      "evidence": [
+        "S064: info/documentation_sources/versions/4f80203aeaed182a3e106b44f5d066b213b65387a143d3979710282be6263077.md:1-88; complete variant diff.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+      ],
+      "source_range": [
+        1,
+        88
+      ],
+      "diff_base": "S065",
+      "evidence_before_writing_revision": [
+        "S064: info/documentation_sources/versions/4f80203aeaed182a3e106b44f5d066b213b65387a143d3979710282be6263077.md:1-88; complete variant diff.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+      ],
+      "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+    },
+    {
+      "id": "S065",
+      "comparison_status": "checked",
+      "checked_by": "parent",
+      "read_mode": "Full read",
+      "disposition": "Preserve branch-only 06:07, 14:08, and 14:16 receipts, accounting reversal, final20 reuse guards, and post-implementation delegation. A42/A43/A44 are arm-seed names, not ablation IDs.",
+      "destinations": [
+        "EXPERIMENTS.md",
+        "NOTES_AND_INSIGHTS.md"
+      ],
+      "evidence": [
+        "S065: info/documentation_sources/versions/51d6523f0da4b3d8745af10b79318fd684aba1fd9b47cc7d321e30df79984551.md:1-118; complete source read.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+      ],
+      "source_range": [
+        1,
+        118
+      ],
+      "diff_base": null,
+      "evidence_before_writing_revision": [
+        "S065: info/documentation_sources/versions/51d6523f0da4b3d8745af10b79318fd684aba1fd9b47cc7d321e30df79984551.md:1-118; complete source read.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+      ],
+      "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+    },
+    {
+      "id": "S067",
+      "comparison_status": "checked",
+      "checked_by": "parent",
+      "read_mode": "Complete diff against S068",
+      "disposition": "Retain earlier results without the later validity reset. S068 and current-schema records supersede broad persistence, surprise, and transfer headlines.",
+      "destinations": [
+        "EXPERIMENTS.md",
+        "NOTES_AND_INSIGHTS.md"
+      ],
+      "evidence": [
+        "S067: info/documentation_sources/versions/4d997fd0cbc3cca6862a1a6eb333bde54fa5f7a6c416cfbed5390983c7905797.md:1-584; complete variant diff.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+      ],
+      "source_range": [
+        1,
+        584
+      ],
+      "diff_base": "S068",
+      "evidence_before_writing_revision": [
+        "S067: info/documentation_sources/versions/4d997fd0cbc3cca6862a1a6eb333bde54fa5f7a6c416cfbed5390983c7905797.md:1-584; complete variant diff.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+      ],
+      "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+    },
+    {
+      "id": "S068",
+      "comparison_status": "checked",
+      "checked_by": "parent",
+      "read_mode": "Full read",
+      "disposition": "Preserve the narrative, historical horizon study, and validity reset. Flag table labels that contradict listed errors; later P0 and A40 records govern current claims.",
+      "destinations": [
+        "EXPERIMENTS.md",
+        "NOTES_AND_INSIGHTS.md"
+      ],
+      "evidence": [
+        "S068: info/documentation_sources/versions/89605d7963ba3e0f942e5feb416846a32faea82a277f1dbe008b0cd0a6b86068.md:1-605; complete source read.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+      ],
+      "source_range": [
+        1,
+        605
+      ],
+      "diff_base": null,
+      "evidence_before_writing_revision": [
+        "S068: info/documentation_sources/versions/89605d7963ba3e0f942e5feb416846a32faea82a277f1dbe008b0cd0a6b86068.md:1-605; complete source read.",
+        "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+      ],
+      "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+    }
+  ],
+  "missing_material": [],
+  "unread": [],
+  "verdict": "INTEGRATED_FOR_REVIEW",
+  "scope": "Parent dispositions and integration. Not independent semantic review or scientific acceptance."
+}

@@ -1,0 +1,13 @@
+{
+  "source_session": "2026-10-12T11-42-18-379Z_01a12feb-b309-747c-9185-17c762bf147a.jsonl",
+  "command_line": 56,
+  "result_line": 57,
+  "command": "git worktree add -b docs/portable-research-records /home/adithya/projects/world-model-docs main; python - <<'PY'\nimport subprocess,pathlib,json,datetime\nroot=pathlib.Path('/home/adithya/projects/world-model');dst=pathlib.Path('/home/adithya/projects/world-model-docs')\nfor rel in subprocess.check_output(['git','ls-files','-co','--exclude-standard','-z'],cwd=root).decode().split('\\0'):\n if rel and rel.lower().endswith('.md') and (root/rel).is_file():\n  target=dst/rel;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes((root/rel).read_bytes())\nsource=dst/'info/documentation_sources';source.mkdir(parents=True,exist_ok=True)\n(source/'plan.md').write_bytes(pathlib.Path('/home/adithya/projects/world-model-doc-plan/TODO.md').read_bytes())\n(source/'initial_main_status.txt').write_bytes(subprocess.check_output(['git','status','--short'],cwd=root))\nprint('documentation worktree',dst)\nPY",
+  "result": [
+    {
+      "type": "text",
+      "text": "Preparing worktree (new branch 'docs/portable-research-records')\nHEAD is now at 389b8ab merge methodology validity repairs\ndocumentation worktree /home/adithya/projects/world-model-docs\n"
+    }
+  ],
+  "scope": "Creation and initial copy evidence only. Not proof of subsequent protected-worktree non-mutation."
+}

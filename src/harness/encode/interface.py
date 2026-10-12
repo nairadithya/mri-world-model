@@ -2,7 +2,7 @@
 
 Runs the frozen champion once per volume, keeping representations the
 existing `probe_cache` throws away, so interface variants can be scored on
-the locked protocol (info/eval_protocol.md):
+the locked protocol (info/archive/2026-10-12/info/eval_protocol.md):
 
   vision_mod      (T, M, 768)  first-token latent, per modality (R9)
   vision_roi_mod  (T, M, 768)  DeepBraTumIA-atlas ROI-pooled latent, per modality (R5)

@@ -1,0 +1,2050 @@
+[
+  {
+    "id": "S001",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Retain the executable CLI skill separately. METHODS links its launch, doctor, evidence, and cleanup contract.",
+    "destinations": [
+      "METHODS.md"
+    ],
+    "evidence": [
+      "S001: info/documentation_sources/versions/883e1ec8b8bcf46a3f3195d03800d90f91ddfdbb7f91abd4fdf628f433be97e5.md:1-56; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+    ],
+    "source_range": [
+      1,
+      56
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S001: info/documentation_sources/versions/883e1ec8b8bcf46a3f3195d03800d90f91ddfdbb7f91abd4fdf628f433be97e5.md:1-56; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S002",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Retain the CLI feature map separately. METHODS links it rather than absorbing operator recipes.",
+    "destinations": [
+      "METHODS.md"
+    ],
+    "evidence": [
+      "S002: info/documentation_sources/versions/bcac72661517b6aef6743244ebb1c9c459188acdee1c1dd526b495ee2b33bb0a.md:1-23; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+    ],
+    "source_range": [
+      1,
+      23
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S002: info/documentation_sources/versions/bcac72661517b6aef6743244ebb1c9c459188acdee1c1dd526b495ee2b33bb0a.md:1-23; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S003",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Retain the anatomy-manifest recipe, disposable-output rule, and privacy preconditions separately.",
+    "destinations": [
+      "METHODS.md"
+    ],
+    "evidence": [
+      "S003: info/documentation_sources/versions/4a7defbca15a2ed95f988863a24ad44465210928a5e89796c19ee12e4ab4c794.md:1-31; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+    ],
+    "source_range": [
+      1,
+      31
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S003: info/documentation_sources/versions/4a7defbca15a2ed95f988863a24ad44465210928a5e89796c19ee12e4ab4c794.md:1-31; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S004",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Retain read-only checkpoint inspection and its metadata-versus-behavior distinction separately.",
+    "destinations": [
+      "METHODS.md"
+    ],
+    "evidence": [
+      "S004: info/documentation_sources/versions/13dbe34373467fe847c4ed3ff544c7228b092570be6b352a2e19cc4c9d3ffa45.md:1-29; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+    ],
+    "source_range": [
+      1,
+      29
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S004: info/documentation_sources/versions/13dbe34373467fe847c4ed3ff544c7228b092570be6b352a2e19cc4c9d3ffa45.md:1-29; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S005",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Retain capability discovery separately. Discovery is not proof of data-dependent execution.",
+    "destinations": [
+      "METHODS.md"
+    ],
+    "evidence": [
+      "S005: info/documentation_sources/versions/c71f6ff4fcf332b74565777ff3ef8fc33ba5368829692c73704a24211dc42116.md:1-28; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+    ],
+    "source_range": [
+      1,
+      28
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S005: info/documentation_sources/versions/c71f6ff4fcf332b74565777ff3ef8fc33ba5368829692c73704a24211dc42116.md:1-28; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S006",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Retain the dated R36 workflow checklist. Later S065 and the recovered receipt supersede its launch and unavailable-delegation statuses.",
+    "destinations": [
+      "TODO.md",
+      "METHODS.md"
+    ],
+    "evidence": [
+      "S006: info/documentation_sources/versions/5e5409445bd5d258f7b1bb090aaf316ff56241007f54f8173c1d180ba200bf3a.md:1-33; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+    ],
+    "source_range": [
+      1,
+      33
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S006: info/documentation_sources/versions/5e5409445bd5d258f7b1bb090aaf316ff56241007f54f8173c1d180ba200bf3a.md:1-33; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged.",
+    "evidence_before_promotion": [
+      "S006: info/documentation_sources/versions/5e5409445bd5d258f7b1bb090aaf316ff56241007f54f8173c1d180ba200bf3a.md:1-33; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+    ]
+  },
+  {
+    "id": "S007",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Complete diff against S008",
+    "disposition": "Retain the earlier agent contract. S008 adds broader objective and developmental-cohort framing; do not restore the old held-out claim.",
+    "destinations": [
+      "METHODS.md"
+    ],
+    "evidence": [
+      "S007: info/documentation_sources/versions/97afb43550bc7feac110eefa3277d8b8485e957bdec8dff6f9897e042851fedb.md:1-304; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+    ],
+    "source_range": [
+      1,
+      304
+    ],
+    "diff_base": "S008",
+    "evidence_before_writing_revision": [
+      "S007: info/documentation_sources/versions/97afb43550bc7feac110eefa3277d8b8485e957bdec8dff6f9897e042851fedb.md:1-304; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S008",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Retain the live agent contract and operational safeguards separately. Its historical command and figure references are not current research authorization.",
+    "destinations": [
+      "METHODS.md"
+    ],
+    "evidence": [
+      "S008: info/documentation_sources/versions/a1f3b50120348c22bd0d02de180df52e4d798b9d5fa763e0c27a7e8872bb22a5.md:1-312; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+    ],
+    "source_range": [
+      1,
+      312
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S008: info/documentation_sources/versions/a1f3b50120348c22bd0d02de180df52e4d798b9d5fa763e0c27a7e8872bb22a5.md:1-312; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S009",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Complete diff against S008",
+    "disposition": "Retain the older branch agent contract. It lacks the later objective framing and enforced notebook-pair table; S008 governs those additions.",
+    "destinations": [
+      "METHODS.md"
+    ],
+    "evidence": [
+      "S009: info/documentation_sources/versions/f56dab2c73a11d29aea114c22e1daeabee068c877d471b684c0b8aa66a971dfc.md:1-298; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+    ],
+    "source_range": [
+      1,
+      298
+    ],
+    "diff_base": "S008",
+    "evidence_before_writing_revision": [
+      "S009: info/documentation_sources/versions/f56dab2c73a11d29aea114c22e1daeabee068c877d471b684c0b8aa66a971dfc.md:1-298; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S010",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve ASTRA V1-V5 and E0-E4, task cutoffs, metric repair, survival exclusion, alternative baselines, and unknown external validity.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S010: info/documentation_sources/versions/b72ceb2da7c2ba695a4174a43643847c9fb27244c1785ff1a6acb5c898f2fb29.md:1-363; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      363
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S010: info/documentation_sources/versions/b72ceb2da7c2ba695a4174a43643847c9fb27244c1785ff1a6acb5c898f2fb29.md:1-363; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S011",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve all K3-1 through K3-35 audit dispositions. Corrected cache, space, timing, and holdout claims take priority over original headlines.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S011: info/documentation_sources/versions/7d63fd3f44c1ed975ea9d1b860b597592902c503fbb3124145a01db17ee996dc.md:1-580; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      580
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S011: info/documentation_sources/versions/7d63fd3f44c1ed975ea9d1b860b597592902c503fbb3124145a01db17ee996dc.md:1-580; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S012",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve the original JEPA architecture and treatment/action hypothesis as history. It does not define the objective or validate treatment effects.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S012: info/documentation_sources/versions/e82ede5e41b034398b599f1f141ffa04335d47ad7d8e66761540a71ce2f72aaa.md:1-274; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      274
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S012: info/documentation_sources/versions/e82ede5e41b034398b599f1f141ffa04335d47ad7d8e66761540a71ce2f72aaa.md:1-274; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S013",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Retain the older README acquisition and setup runbook as history. S014 replaces its weekly and held-out framing; operational detail remains archived.",
+    "destinations": [
+      "TODO.md",
+      "METHODS.md"
+    ],
+    "evidence": [
+      "S013: info/documentation_sources/versions/904659c6bdcfeff428d0bde5d406be42fdc4d004dc5c915d13c335a049add7a3.md:1-175; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+    ],
+    "source_range": [
+      1,
+      175
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S013: info/documentation_sources/versions/904659c6bdcfeff428d0bde5d406be42fdc4d004dc5c915d13c335a049add7a3.md:1-175; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged.",
+    "evidence_before_promotion": [
+      "S013: info/documentation_sources/versions/904659c6bdcfeff428d0bde5d406be42fdc4d004dc5c915d13c335a049add7a3.md:1-175; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+    ]
+  },
+  {
+    "id": "S014",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Retain the live project README as the setup and command entry point. Research contracts and results remain separate.",
+    "destinations": [
+      "TODO.md",
+      "METHODS.md"
+    ],
+    "evidence": [
+      "S014: info/documentation_sources/versions/e45ccd301fe0a119a2310f90c2c6f9fa43fa262af7c5ddc32efdcf775779b1b3.md:1-58; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+    ],
+    "source_range": [
+      1,
+      58
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S014: info/documentation_sources/versions/e45ccd301fe0a119a2310f90c2c6f9fa43fa262af7c5ddc32efdcf775779b1b3.md:1-58; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged.",
+    "evidence_before_promotion": [
+      "S014: info/documentation_sources/versions/e45ccd301fe0a119a2310f90c2c6f9fa43fa262af7c5ddc32efdcf775779b1b3.md:1-58; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+    ]
+  },
+  {
+    "id": "S015",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Complete diff against S016",
+    "disposition": "Retain the earlier TODO. S016 adds the A40/R33 reset; unchecked old launch boxes do not reopen completed work.",
+    "destinations": [
+      "TODO.md",
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S015: info/documentation_sources/versions/5d8b1b11c9e6dbb0be28d861a5ace37a570c1230fcc4632746b40426b3b3dce5.md:1-350; complete variant diff.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      350
+    ],
+    "diff_base": "S016",
+    "evidence_before_writing_revision": [
+      "S015: info/documentation_sources/versions/5d8b1b11c9e6dbb0be28d861a5ace37a570c1230fcc4632746b40426b3b3dce5.md:1-350; complete variant diff.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged.",
+    "evidence_before_promotion": [
+      "S015: info/documentation_sources/versions/5d8b1b11c9e6dbb0be28d861a5ace37a570c1230fcc4632746b40426b3b3dce5.md:1-350; complete variant diff.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ]
+  },
+  {
+    "id": "S016",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve original TODO lineage and the A40 withdrawal. Later completion records supersede old pending rescue and learned-forecast boxes.",
+    "destinations": [
+      "TODO.md",
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S016: info/documentation_sources/versions/c7c9fba4178609946f8fd4ce8b90af08b6a88392955d7f2e198aa2e02b14cc57.md:1-368; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      368
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S016: info/documentation_sources/versions/c7c9fba4178609946f8fd4ce8b90af08b6a88392955d7f2e198aa2e02b14cc57.md:1-368; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged.",
+    "evidence_before_promotion": [
+      "S016: info/documentation_sources/versions/c7c9fba4178609946f8fd4ce8b90af08b6a88392955d7f2e198aa2e02b14cc57.md:1-368; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ]
+  },
+  {
+    "id": "S017",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Retain the live research index separately. Its main-versus-local-branch statements are dated, not the consolidated source priority.",
+    "destinations": [
+      "TODO.md",
+      "METHODS.md"
+    ],
+    "evidence": [
+      "S017: info/documentation_sources/versions/6c28bb95dc89e05742f41ae69a61f1bcbdd5f8d7a0eb3857055b0b2989a5ce9c.md:1-37; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+    ],
+    "source_range": [
+      1,
+      37
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S017: info/documentation_sources/versions/6c28bb95dc89e05742f41ae69a61f1bcbdd5f8d7a0eb3857055b0b2989a5ce9c.md:1-37; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged.",
+    "evidence_before_promotion": [
+      "S017: info/documentation_sources/versions/6c28bb95dc89e05742f41ae69a61f1bcbdd5f8d7a0eb3857055b0b2989a5ce9c.md:1-37; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+    ]
+  },
+  {
+    "id": "S018",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Complete diff against S017",
+    "disposition": "Retain the anatomy-era index variant and append-only conventions. Use the new coverage map for cross-branch scope.",
+    "destinations": [
+      "TODO.md",
+      "METHODS.md"
+    ],
+    "evidence": [
+      "S018: info/documentation_sources/versions/7d6adbe335852289339963e40a758990e325c71fa6075e037037b4e613747cb5.md:1-41; complete variant diff.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+    ],
+    "source_range": [
+      1,
+      41
+    ],
+    "diff_base": "S017",
+    "evidence_before_writing_revision": [
+      "S018: info/documentation_sources/versions/7d6adbe335852289339963e40a758990e325c71fa6075e037037b4e613747cb5.md:1-41; complete variant diff.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged.",
+    "evidence_before_promotion": [
+      "S018: info/documentation_sources/versions/7d6adbe335852289339963e40a758990e325c71fa6075e037037b4e613747cb5.md:1-41; complete variant diff.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+    ]
+  },
+  {
+    "id": "S019",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Complete diff against S017",
+    "disposition": "Retain the older compact index and identifier conventions. It predates the later anatomy and audit pages.",
+    "destinations": [
+      "TODO.md",
+      "METHODS.md"
+    ],
+    "evidence": [
+      "S019: info/documentation_sources/versions/cbc9c0e336dab8f4b055c9a0897c0db4b7bbce920ab328701445cf299ba8984d.md:1-20; complete variant diff.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+    ],
+    "source_range": [
+      1,
+      20
+    ],
+    "diff_base": "S017",
+    "evidence_before_writing_revision": [
+      "S019: info/documentation_sources/versions/cbc9c0e336dab8f4b055c9a0897c0db4b7bbce920ab328701445cf299ba8984d.md:1-20; complete variant diff.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged.",
+    "evidence_before_promotion": [
+      "S019: info/documentation_sources/versions/cbc9c0e336dab8f4b055c9a0897c0db4b7bbce920ab328701445cf299ba8984d.md:1-20; complete variant diff.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+    ]
+  },
+  {
+    "id": "S020",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve A1-A41, their setups, corrections, negative and invalid results. Current-schema and causal records qualify legacy claims.",
+    "destinations": [
+      "EXPERIMENTS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S020: info/documentation_sources/versions/2ddad8d48f3ebb0e89c6855d2c8da8e2762d8291664d49d38faab77851d72549.md:1-1522; complete source read.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      1522
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S020: info/documentation_sources/versions/2ddad8d48f3ebb0e89c6855d2c8da8e2762d8291664d49d38faab77851d72549.md:1-1522; complete source read.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S021",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Complete diff against S020",
+    "disposition": "Earlier ablations end at A36. S020 adds A37-A41 and their validity limits; the shared historical evidence is preserved.",
+    "destinations": [
+      "EXPERIMENTS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S021: info/documentation_sources/versions/5c2b29fa7d10d546917b2240faee24aa8b8f6560172ab618bab3d4782e2bb2d9.md:1-1386; complete variant diff.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      1386
+    ],
+    "diff_base": "S020",
+    "evidence_before_writing_revision": [
+      "S021: info/documentation_sources/versions/5c2b29fa7d10d546917b2240faee24aa8b8f6560172ab618bab3d4782e2bb2d9.md:1-1386; complete variant diff.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S022",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Complete diff against S020",
+    "disposition": "Earlier ablations end at A39. S020 adds the A40 withdrawal and A41 clean head diagnostics.",
+    "destinations": [
+      "EXPERIMENTS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S022: info/documentation_sources/versions/6b7d9def32bbabf5f63dbac2126bb7b066d7b4606e54ebad6f56cd494f569d5f.md:1-1476; complete variant diff.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      1476
+    ],
+    "diff_base": "S020",
+    "evidence_before_writing_revision": [
+      "S022: info/documentation_sources/versions/6b7d9def32bbabf5f63dbac2126bb7b066d7b4606e54ebad6f56cd494f569d5f.md:1-1476; complete variant diff.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S023",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve the unrun synthetic-action proposal, physical-coordinate generator requirements, held-out transformation families, baselines, and falsifiers. It is not selected.",
+    "destinations": [
+      "TODO.md",
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S023: info/documentation_sources/versions/f3dad868d43b3aa2bf5f7913b3dfa2872cdf87a65fd9648b1eb9932e3f750855.md:1-61; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      61
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S023: info/documentation_sources/versions/f3dad868d43b3aa2bf5f7913b3dfa2872cdf87a65fd9648b1eb9932e3f750855.md:1-61; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged.",
+    "evidence_before_promotion": [
+      "S023: info/documentation_sources/versions/f3dad868d43b3aa2bf5f7913b3dfa2872cdf87a65fd9648b1eb9932e3f750855.md:1-61; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ]
+  },
+  {
+    "id": "S024",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve lesion-state-v1 definitions, native volumes, consecutive eligibility, next-observed timing, and ONCO/CL target sensitivity.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S024: info/documentation_sources/versions/5fe9df82e326552d35667a3b92cdd7977504ade9f3ceebb9298a8f41d0dbdf19.md:1-89; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      89
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S024: info/documentation_sources/versions/5fe9df82e326552d35667a3b92cdd7977504ade9f3ceebb9298a8f41d0dbdf19.md:1-89; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S025",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve A40 cutoff and adjacency audit, clean A41 all-horizon results, and completed seven-arm GPU rescue table. CPU alignment/field closure is not invented.",
+    "destinations": [
+      "EXPERIMENTS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S025: info/documentation_sources/versions/eaca551880e0a9db5c4bdc7785e135675cd518ebfcd361d5aa482beca4f37dce.md:1-232; complete source read.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      232
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S025: info/documentation_sources/versions/eaca551880e0a9db5c4bdc7785e135675cd518ebfcd361d5aa482beca4f37dce.md:1-232; complete source read.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S026",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve D0-D57 and D33b rationale and status. Governing objective, scope, and integrity policies are distinguished from dated launch and success interpretations.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S026: info/documentation_sources/versions/2b7293c884e0e0aa9f1db178d13f55497d584cd7060c68c022436d47330bb63c.md:1-776; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      776
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S026: info/documentation_sources/versions/2b7293c884e0e0aa9f1db178d13f55497d584cd7060c68c022436d47330bb63c.md:1-776; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S027",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Complete diff against S026",
+    "disposition": "Earlier decisions stop at D41. S026 adds the validity reset, anatomy sequence, clean rescues, and R34-R36 scope.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S027: info/documentation_sources/versions/3717abf358c955772ee5eb3571c4aa0dcdb5c97637d99899a255927d21eeee3e.md:1-548; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      548
+    ],
+    "diff_base": "S026",
+    "evidence_before_writing_revision": [
+      "S027: info/documentation_sources/versions/3717abf358c955772ee5eb3571c4aa0dcdb5c97637d99899a255927d21eeee3e.md:1-548; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S028",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Complete diff against S026",
+    "disposition": "Earlier decisions stop at D52. S026 adds D53, D33b, and D54-D57; no older statement reinstates leaked gains.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S028: info/documentation_sources/versions/3757850c1f2c602e1bc025675a52347d09c66700f8fa917279073550845f32f3.md:1-703; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      703
+    ],
+    "diff_base": "S026",
+    "evidence_before_writing_revision": [
+      "S028: info/documentation_sources/versions/3757850c1f2c602e1bc025675a52347d09c66700f8fa917279073550845f32f3.md:1-703; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S029",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Complete diff against S026",
+    "disposition": "This branch has D57 but omits D55-D56. S026 preserves all three without treating chronology as identical across branches.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S029: info/documentation_sources/versions/64414e220c402593df722fe70a71361a97c3d669b349c261d5fc281aab938602.md:1-755; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      755
+    ],
+    "diff_base": "S026",
+    "evidence_before_writing_revision": [
+      "S029: info/documentation_sources/versions/64414e220c402593df722fe70a71361a97c3d669b349c261d5fc281aab938602.md:1-755; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S030",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Complete diff against S026",
+    "disposition": "Earlier decisions include D33b but stop before D54-D57. S026 preserves the later observation, objective, QA, and R36 decisions.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S030: info/documentation_sources/versions/919cb93f22b6b82b78558c3fa37786b5ea163f3911a7d9c5d8d0ad33bff9df80.md:1-730; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      730
+    ],
+    "diff_base": "S026",
+    "evidence_before_writing_revision": [
+      "S030: info/documentation_sources/versions/919cb93f22b6b82b78558c3fa37786b5ea163f3911a7d9c5d8d0ad33bff9df80.md:1-730; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S031",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Complete diff against S026",
+    "disposition": "Earlier decisions stop at D54. S026 preserves the objective, whole-cohort QA, and R36 authorization additions.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S031: info/documentation_sources/versions/9c693cb9fda31211831d08c8004ace96ab9b629066bf6d4e4fd25989829ecc50.md:1-743; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      743
+    ],
+    "diff_base": "S026",
+    "evidence_before_writing_revision": [
+      "S031: info/documentation_sources/versions/9c693cb9fda31211831d08c8004ace96ab9b629066bf6d4e4fd25989829ecc50.md:1-743; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S032",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Complete diff against S035",
+    "disposition": "Earlier directions retain a notes pointer and stop before R36. S035 removes duplicate-note guidance and adds the bounded objective contrast.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S032: info/documentation_sources/versions/2be6e4e222c5e3e4235dbe54e9d9d941ff0ad06bacd999a8f980d4e80fdd5071.md:1-451; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      451
+    ],
+    "diff_base": "S035",
+    "evidence_before_writing_revision": [
+      "S032: info/documentation_sources/versions/2be6e4e222c5e3e4235dbe54e9d9d941ff0ad06bacd999a8f980d4e80fdd5071.md:1-451; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S033",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Complete diff against S035",
+    "disposition": "Earlier directions stop before ASTRA/K3 and the P2/R36 resets. Preserve proposals as history, not the current execution order.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S033: info/documentation_sources/versions/48f54a5c4241c65c1f3c023d0261f9a8398edb18a3b1b642ee6c534fd659e84a.md:1-328; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      328
+    ],
+    "diff_base": "S035",
+    "evidence_before_writing_revision": [
+      "S033: info/documentation_sources/versions/48f54a5c4241c65c1f3c023d0261f9a8398edb18a3b1b642ee6c534fd659e84a.md:1-328; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S034",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Complete diff against S035",
+    "disposition": "This version has the R36 addendum but keeps the old notes pointer. S035 preserves R29-R32 without restoring deleted guidance.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S034: info/documentation_sources/versions/4ae80f2d62b0a16ac6644e2b2faabd95d6fc40d94d8e0400cb886cd59216313b.md:1-463; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      463
+    ],
+    "diff_base": "S035",
+    "evidence_before_writing_revision": [
+      "S034: info/documentation_sources/versions/4ae80f2d62b0a16ac6644e2b2faabd95d6fc40d94d8e0400cb886cd59216313b.md:1-463; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S035",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve G1-G20, R1-R36, audit triage, old proposals, and later task changes. Only the scoped R36 Phase 1 is authorized at the research snapshot.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S035: info/documentation_sources/versions/eade325e60cbeeb92dc5f6570520d8f502a519e846309ef5803b2bf7e1a2d094.md:1-466; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      466
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S035: info/documentation_sources/versions/eade325e60cbeeb92dc5f6570520d8f502a519e846309ef5803b2bf7e1a2d094.md:1-466; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S036",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve the original experiment draft baseline, including identifiers, withdrawals, scope qualifications, and its dated runtime snapshot. Add omissions without promoting it.",
+    "destinations": [
+      "TODO.md",
+      "EXPERIMENTS.md",
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S036: info/documentation_sources/versions/376ef33c6235a3b4ac055340d2447d5f33d1b54abe2504c525a2e2330ee88904.md:1-197; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      197
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S036: info/documentation_sources/versions/376ef33c6235a3b4ac055340d2447d5f33d1b54abe2504c525a2e2330ee88904.md:1-197; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged.",
+    "evidence_before_promotion": [
+      "S036: info/documentation_sources/versions/376ef33c6235a3b4ac055340d2447d5f33d1b54abe2504c525a2e2330ee88904.md:1-197; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ]
+  },
+  {
+    "id": "S037",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve the original methods draft baseline. Add chronology, projector routing, exact operational pointers, and frozen source bindings.",
+    "destinations": [
+      "TODO.md",
+      "EXPERIMENTS.md",
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S037: info/documentation_sources/versions/4152bf66cc81cd99bb7970ddaf52cffcdff59756fa1baf7a95e1cd349ef34352.md:1-193; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      193
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S037: info/documentation_sources/versions/4152bf66cc81cd99bb7970ddaf52cffcdff59756fa1baf7a95e1cd349ef34352.md:1-193; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged.",
+    "evidence_before_promotion": [
+      "S037: info/documentation_sources/versions/4152bf66cc81cd99bb7970ddaf52cffcdff59756fa1baf7a95e1cd349ef34352.md:1-193; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ]
+  },
+  {
+    "id": "S038",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve the original notes baseline and complete decision/audit indexes. Add literature attribution limits and source-priority traceability.",
+    "destinations": [
+      "TODO.md",
+      "EXPERIMENTS.md",
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S038: info/documentation_sources/versions/7fb4e40c27dada7024a7cee70887a036cb98780d3b717cc25cccf3181d1a9fde.md:1-265; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      265
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S038: info/documentation_sources/versions/7fb4e40c27dada7024a7cee70887a036cb98780d3b717cc25cccf3181d1a9fde.md:1-265; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged.",
+    "evidence_before_promotion": [
+      "S038: info/documentation_sources/versions/7fb4e40c27dada7024a7cee70887a036cb98780d3b717cc25cccf3181d1a9fde.md:1-265; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ]
+  },
+  {
+    "id": "S039",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve the original TODO baseline and dated runtime snapshot. Recover its missing temporary evidence rather than infer live status.",
+    "destinations": [
+      "TODO.md",
+      "EXPERIMENTS.md",
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S039: info/documentation_sources/versions/e3c486ef9cc77afcc1978e53ce4495ef1051a5b8d22cf31b9d627c72d4db029e.md:1-116; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      116
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S039: info/documentation_sources/versions/e3c486ef9cc77afcc1978e53ce4495ef1051a5b8d22cf31b9d627c72d4db029e.md:1-116; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged.",
+    "evidence_before_promotion": [
+      "S039: info/documentation_sources/versions/e3c486ef9cc77afcc1978e53ce4495ef1051a5b8d22cf31b9d627c72d4db029e.md:1-116; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ]
+  },
+  {
+    "id": "S040",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Complete diff against S041",
+    "disposition": "Retain the older v1 RANO protocol and unfixed readout-seed warning. S041 later freezes the P0 policy; reused final13 remains development.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S040: info/documentation_sources/versions/224e30ddf098b5d0f70a6a8edb7ebda7f670fa26599a21726257309770fca964.md:1-105; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      105
+    ],
+    "diff_base": "S041",
+    "evidence_before_writing_revision": [
+      "S040: info/documentation_sources/versions/224e30ddf098b5d0f70a6a8edb7ebda7f670fa26599a21726257309770fca964.md:1-105; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S041",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve the later seed42/width256/no-standardization addendum and fixed folds. It does not create a fresh holdout.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S041: info/documentation_sources/versions/7873b012053d04798d82c190a754e9708031bedff4ce9cf4d2abb168553f4386.md:1-106; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      106
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S041: info/documentation_sources/versions/7873b012053d04798d82c190a754e9708031bedff4ce9cf4d2abb168553f4386.md:1-106; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S042",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve cohort roles, dated capacities, DUA/storage blockers, and UCSD version-3 identifier correction. D183 is a DOI token, not a decision ID.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S042: info/documentation_sources/versions/636f0274c36efa3cee145c530acebff689d5961eff995269ecc3bc91d8c6d89e.md:1-81; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      81
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S042: info/documentation_sources/versions/636f0274c36efa3cee145c530acebff689d5961eff995269ecc3bc91d8c6d89e.md:1-81; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S043",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve the literature survey and later assessment-versus-forecast distinction. Reported scores and conflicting attribution remain unverified externally.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S043: info/documentation_sources/versions/bd305198a22112d90d28cf638536c3638ff95806a6aeff087655acb8dea287d1.md:1-162; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      162
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S043: info/documentation_sources/versions/bd305198a22112d90d28cf638536c3638ff95806a6aeff087655acb8dea287d1.md:1-162; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S044",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Complete diff against S043",
+    "disposition": "Retain the earlier survey without the later task-cutoff and Amato/Maurya caveats. S043 governs those additions.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S044: info/documentation_sources/versions/ef50d853844e9c04d0dc4f8dc7b8fcdbdf1c9cf3234b5dd5dfc0951a3a58db18.md:1-145; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      145
+    ],
+    "diff_base": "S043",
+    "evidence_before_writing_revision": [
+      "S044: info/documentation_sources/versions/ef50d853844e9c04d0dc4f8dc7b8fcdbdf1c9cf3234b5dd5dfc0951a3a58db18.md:1-145; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S045",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve anatomy-first and legacy CLI separation and checkpoint audit contracts. METHODS retains operator entry points separately.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S045: info/documentation_sources/versions/ad235fe7fd9dbc123dbc829a8242d3c11ce6427b241808ba661ac7ed0fb1db87.md:1-66; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      66
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S045: info/documentation_sources/versions/ad235fe7fd9dbc123dbc829a8242d3c11ce6427b241808ba661ac7ed0fb1db87.md:1-66; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S046",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Complete diff against S047",
+    "disposition": "Retain the earlier R34 structural repair and independent-review closure. S047 adds whole-cohort QA, not a forecast gain.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S046: info/documentation_sources/versions/4be6ffde8ccb321f263f3a3f91036667126a719401aa15b3a856b183208c6b47.md:1-93; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      93
+    ],
+    "diff_base": "S047",
+    "evidence_before_writing_revision": [
+      "S046: info/documentation_sources/versions/4be6ffde8ccb321f263f3a3f91036667126a719401aa15b3a856b183208c6b47.md:1-93; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S047",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve coordinate repair, elapsed versus previous-gap semantics, absent projector gradient, scientific limits, and whole-cohort QA.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S047: info/documentation_sources/versions/7bc218e8ef5fd2fdb22bc0ed7f5bab72c4b1d099f1f7f2c3145f6c3bca6f3472.md:1-107; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      107
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S047: info/documentation_sources/versions/7bc218e8ef5fd2fdb22bc0ed7f5bab72c4b1d099f1f7f2c3145f6c3bca6f3472.md:1-107; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S048",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve the bounded validity plan, alternative design disposition, rerunnable checks, and scientific gates. Implementation closure is not outcome acceptance.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S048: info/documentation_sources/versions/e222fabaeb05f4d166a3d220a87398aa55b60e1697d479706b6e87d6bab71212.md:1-47; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      47
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S048: info/documentation_sources/versions/e222fabaeb05f4d166a3d220a87398aa55b60e1697d479706b6e87d6bab71212.md:1-47; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S049",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve the deleted notes bytes as history. R29-R32 already appear in S035 and METHODS; do not restore them as current canonical guidance.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S049: info/documentation_sources/versions/f33b11d3ab804d4b9bef473c0336e51db5afef9b8a0a8b8740e7d0cbbf38f105.md:1-22; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      22
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S049: info/documentation_sources/versions/f33b11d3ab804d4b9bef473c0336e51db5afef9b8a0a8b8740e7d0cbbf38f105.md:1-22; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S050",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Complete diff against S051",
+    "disposition": "Retain the earlier P0 audit and corrected legacy-cache AUCs. S051 supersedes its cache-rebuild blocker with refreshed results.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S050: info/documentation_sources/versions/bffc0ec9c04e09138faeb31fab3e9c7d4d22e7e7f52ea345904d71e041dbb45b.md:1-67; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      67
+    ],
+    "diff_base": "S051",
+    "evidence_before_writing_revision": [
+      "S050: info/documentation_sources/versions/bffc0ec9c04e09138faeb31fab3e9c7d4d22e7e7f52ea345904d71e041dbb45b.md:1-67; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S051",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve label/task/metric repairs, current-schema scorecard, fixed readout policy, and remaining codebook, timing, and holdout blockers.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S051: info/documentation_sources/versions/da674d536622373c6db154365a73c67d5fffcc9646a10713641169a0b5cb2130.md:1-82; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      82
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S051: info/documentation_sources/versions/da674d536622373c6db154365a73c67d5fffcc9646a10713641169a0b5cb2130.md:1-82; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S052",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve survival-free cache provenance, corrected surprise/lead-time values, refreshed SAILOR zero/K-shot reversal, and scorecard closure.",
+    "destinations": [
+      "EXPERIMENTS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S052: info/documentation_sources/versions/91f9eb3a5aa50c35bb9d8d79dbcca3e76e61bc3c93b814a08ae82b0a34ca4d8d.md:1-44; complete source read.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      44
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S052: info/documentation_sources/versions/91f9eb3a5aa50c35bb9d8d79dbcca3e76e61bc3c93b814a08ae82b0a34ca4d8d.md:1-44; complete source read.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S053",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve all eight matched anatomy baselines, patient-grouped fitting, paired uncertainty, and negative JEPA result on the next-observed task.",
+    "destinations": [
+      "EXPERIMENTS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S053: info/documentation_sources/versions/4c077cc0f084f2d14b48b4cf366088ff7c0dc11a6ed3bf8b5678cbea901e141d.md:1-58; complete source read.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      58
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S053: info/documentation_sources/versions/4c077cc0f084f2d14b48b4cf366088ff7c0dc11a6ed3bf8b5678cbea901e141d.md:1-58; complete source read.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S054",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve prospective RANO floors and completed temporal controls. Matched JEPA and temporal-transfer pending items remain explicit; legacy-cache rows stay historical.",
+    "destinations": [
+      "EXPERIMENTS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S054: info/documentation_sources/versions/b8c596145365e19fbea3ed86218b7b7d7a3131e0be6e60915409d0eddcfddf31.md:1-78; complete source read.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      78
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S054: info/documentation_sources/versions/b8c596145365e19fbea3ed86218b7b7d7a3131e0be6e60915409d0eddcfddf31.md:1-78; complete source read.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S055",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve the observed-pair SOTA audit and implemented reduced tabular proxy. Its 0.5703 reused-final score is assessment development, not forecast success.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S055: info/documentation_sources/versions/77de3ea25aa45d894d9577a96b69195912e6036883dace704af07b89de07843b.md:1-66; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      66
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S055: info/documentation_sources/versions/77de3ea25aa45d894d9577a96b69195912e6036883dace704af07b89de07843b.md:1-66; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S056",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve the staged P2 plan and structured/frozen-fusion negative results. Its old active label is not current authorization.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S056: info/documentation_sources/versions/9ea08b90cf4971fb7b85d4b150ef1317994f42aa2fca2f1c9c0f5de5424e38e4.md:1-183; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      183
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S056: info/documentation_sources/versions/9ea08b90cf4971fb7b85d4b150ef1317994f42aa2fca2f1c9c0f5de5424e38e4.md:1-183; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S057",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Complete diff against S058",
+    "disposition": "Retain the earlier crop architecture and learned/adaptation history. S058 withdraws the learned claims under A40.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S057: info/documentation_sources/versions/2b29cb9bf2068cc77c42960ed21f1fbcdb039dda4f0ffa32a3c17992bb9bdada.md:1-172; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      172
+    ],
+    "diff_base": "S058",
+    "evidence_before_writing_revision": [
+      "S057: info/documentation_sources/versions/2b29cb9bf2068cc77c42960ed21f1fbcdb039dda4f0ffa32a3c17992bb9bdada.md:1-172; complete variant diff.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S058",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve frozen crop/current-anatomy/transition diagnostics with legacy-geometry limits. Learned forecasts and support adaptation remain withdrawn.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S058: info/documentation_sources/versions/3e07b40bdd3849468d6b4c5f52a2d997fb891e3497ccd3d7b23b43aff4980007.md:1-184; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      184
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S058: info/documentation_sources/versions/3e07b40bdd3849468d6b4c5f52a2d997fb891e3497ccd3d7b23b43aff4980007.md:1-184; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S059",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve all three historical seed scores and seed43 recovery chronology, explicitly withdrawn as forecasting evidence under A40.",
+    "destinations": [
+      "EXPERIMENTS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S059: info/documentation_sources/versions/9392195ed8cf1ac4fea44e0347230844278803dbd3b21318ca48a6c7c0b2f841.md:1-87; complete source read.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      87
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S059: info/documentation_sources/versions/9392195ed8cf1ac4fea44e0347230844278803dbd3b21318ca48a6c7c0b2f841.md:1-87; complete source read.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S060",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve invalid and official-weight pilots, hero/resume/auxiliary trajectories, and failed re-gate. A8/A24 and later readout corrections qualify early success language.",
+    "destinations": [
+      "EXPERIMENTS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S060: info/documentation_sources/versions/d8e7bf20a34e6ee1186140c96bb090ed2df0a56f65f11ce140fe05acc4123436.md:1-184; complete source read.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      184
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S060: info/documentation_sources/versions/d8e7bf20a34e6ee1186140c96bb090ed2df0a56f65f11ce140fe05acc4123436.md:1-184; complete source read.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S061",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Retain the full preprocessing procedure separately. METHODS includes fallback, concurrency, and provenance cautions; A23 supersedes its stale A21 recovery conclusion.",
+    "destinations": [
+      "METHODS.md",
+      "EXPERIMENTS.md"
+    ],
+    "evidence": [
+      "S061: info/documentation_sources/versions/e29b2b676b2a9a2db5406419ce3e1ee0868b4548c26460bcca0feacaee462cdf.md:1-153; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status"
+    ],
+    "source_range": [
+      1,
+      153
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S061: info/documentation_sources/versions/e29b2b676b2a9a2db5406419ce3e1ee0868b4548c26460bcca0feacaee462cdf.md:1-153; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S062",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve completed R35 state/change/nuisance/transfer matrix, matched budgets, later-only and independent-state controls, empty targets, and missing biological validation.",
+    "destinations": [
+      "EXPERIMENTS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S062: info/documentation_sources/versions/768fdfa0a9be4dc76e99fcef9ff971e26252d672e82b08267f5e9ea157ced0f3.md:1-173; complete source read.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      173
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S062: info/documentation_sources/versions/768fdfa0a9be4dc76e99fcef9ff971e26252d672e82b08267f5e9ea157ced0f3.md:1-173; complete source read.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S063",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve initial plan and later Phase 1 authorization, exact verifier/deliverable pointers, locked objective controls, and conditional unauthorized Phase 2.",
+    "destinations": [
+      "TODO.md",
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S063: info/documentation_sources/versions/8fc1116f80667885774a5ce6a8fb9ec40f1e360d1f87867fefb81baf01118ab6.md:1-290; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      290
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S063: info/documentation_sources/versions/8fc1116f80667885774a5ce6a8fb9ec40f1e360d1f87867fefb81baf01118ab6.md:1-290; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged.",
+    "evidence_before_promotion": [
+      "S063: info/documentation_sources/versions/8fc1116f80667885774a5ce6a8fb9ec40f1e360d1f87867fefb81baf01118ab6.md:1-290; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ]
+  },
+  {
+    "id": "S064",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Complete diff against S065",
+    "disposition": "Retain the older R36 record ending at 04:04 UTC. S065 adds completed matrix/probe and recovery receipts; do not treat S064 as latest status.",
+    "destinations": [
+      "EXPERIMENTS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S064: info/documentation_sources/versions/4f80203aeaed182a3e106b44f5d066b213b65387a143d3979710282be6263077.md:1-88; complete variant diff.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      88
+    ],
+    "diff_base": "S065",
+    "evidence_before_writing_revision": [
+      "S064: info/documentation_sources/versions/4f80203aeaed182a3e106b44f5d066b213b65387a143d3979710282be6263077.md:1-88; complete variant diff.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S065",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve branch-only 06:07, 14:08, and 14:16 receipts, accounting reversal, final20 reuse guards, and post-implementation delegation. A42/A43/A44 are arm-seed names, not ablation IDs.",
+    "destinations": [
+      "EXPERIMENTS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S065: info/documentation_sources/versions/51d6523f0da4b3d8745af10b79318fd684aba1fd9b47cc7d321e30df79984551.md:1-118; complete source read.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      118
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S065: info/documentation_sources/versions/51d6523f0da4b3d8745af10b79318fd684aba1fd9b47cc7d321e30df79984551.md:1-118; complete source read.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S066",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve the binding broader objective, distinct state/change/prediction questions, operator scientific authority, decision brief, and evidence/interpretation/unknown separation.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S066: info/documentation_sources/versions/6e710be8c33b05d77bf8f13b415b64028fcc13dc03d71defb304e6a7631c78f4.md:1-41; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      41
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S066: info/documentation_sources/versions/6e710be8c33b05d77bf8f13b415b64028fcc13dc03d71defb304e6a7631c78f4.md:1-41; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S067",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Complete diff against S068",
+    "disposition": "Retain earlier results without the later validity reset. S068 and current-schema records supersede broad persistence, surprise, and transfer headlines.",
+    "destinations": [
+      "EXPERIMENTS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S067: info/documentation_sources/versions/4d997fd0cbc3cca6862a1a6eb333bde54fa5f7a6c416cfbed5390983c7905797.md:1-584; complete variant diff.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      584
+    ],
+    "diff_base": "S068",
+    "evidence_before_writing_revision": [
+      "S067: info/documentation_sources/versions/4d997fd0cbc3cca6862a1a6eb333bde54fa5f7a6c416cfbed5390983c7905797.md:1-584; complete variant diff.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S068",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve the narrative, historical horizon study, and validity reset. Flag table labels that contradict listed errors; later P0 and A40 records govern current claims.",
+    "destinations": [
+      "EXPERIMENTS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S068: info/documentation_sources/versions/89605d7963ba3e0f942e5feb416846a32faea82a277f1dbe008b0cd0a6b86068.md:1-605; complete source read.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      605
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S068: info/documentation_sources/versions/89605d7963ba3e0f942e5feb416846a32faea82a277f1dbe008b0cd0a6b86068.md:1-605; complete source read.",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S069",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Preserve reusable versus stale interfaces, response-as-treatment risk, unsafe observed-pair feature cutoffs, and cleanup sequence as dated audit history.",
+    "destinations": [
+      "METHODS.md",
+      "NOTES_AND_INSIGHTS.md"
+    ],
+    "evidence": [
+      "S069: info/documentation_sources/versions/eca8302b4c0da4df15f1a8918164254666650e647632c098c025513f6ebe5061.md:1-116; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+    ],
+    "source_range": [
+      1,
+      116
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S069: info/documentation_sources/versions/eca8302b4c0da4df15f1a8918164254666650e647632c098c025513f6ebe5061.md:1-116; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Decision ledger; Direction and audit indexes; Audits, alternatives, and methodological lessons; Source map and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  },
+  {
+    "id": "S070",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Retain acquisition tooling, authenticated-fetch safeguards, and dated network observations separately. No new download or access acceptance is authorized.",
+    "destinations": [
+      "TODO.md",
+      "METHODS.md"
+    ],
+    "evidence": [
+      "S070: info/documentation_sources/versions/775110c703c7f702ccf2c1dfc9e2504eb9fdb5303b8d5f2cfbbe3619a7cf6a12.md:1-80; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+    ],
+    "source_range": [
+      1,
+      80
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S070: info/documentation_sources/versions/775110c703c7f702ccf2c1dfc9e2504eb9fdb5303b8d5f2cfbbe3619a7cf6a12.md:1-80; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged.",
+    "evidence_before_promotion": [
+      "S070: info/documentation_sources/versions/775110c703c7f702ccf2c1dfc9e2504eb9fdb5303b8d5f2cfbbe3619a7cf6a12.md:1-80; complete source read.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+    ]
+  },
+  {
+    "id": "S071",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Complete diff against S070",
+    "disposition": "Retain older acquisition guide; its missing acquisition-plan pointer is historical. S070 adds SAILOR operations and replaces the stale pointer.",
+    "destinations": [
+      "TODO.md",
+      "METHODS.md"
+    ],
+    "evidence": [
+      "S071: info/documentation_sources/versions/f9519fae5516ba946acba78908c36f41e9d095aa536a4924938820c9f4f976e7.md:1-61; complete variant diff.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+    ],
+    "source_range": [
+      1,
+      61
+    ],
+    "diff_base": "S070",
+    "evidence_before_writing_revision": [
+      "S071: info/documentation_sources/versions/f9519fae5516ba946acba78908c36f41e9d095aa536a4924938820c9f4f976e7.md:1-61; complete variant diff.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged.",
+    "evidence_before_promotion": [
+      "S071: info/documentation_sources/versions/f9519fae5516ba946acba78908c36f41e9d095aa536a4924938820c9f4f976e7.md:1-61; complete variant diff.",
+      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+    ]
+  },
+  {
+    "id": "S072",
+    "comparison_status": "checked",
+    "checked_by": "parent",
+    "read_mode": "Full read",
+    "disposition": "Retain the full SAILOR staging/config/resume/evaluation/aftermath recipe separately. Historical expected success and interpretation are qualified by A19-A24.",
+    "destinations": [
+      "METHODS.md",
+      "EXPERIMENTS.md"
+    ],
+    "evidence": [
+      "S072: info/documentation_sources/versions/c7aeeea2bff31ee76a1190a69a05ca48ec78fc476e89d3afc345d546074c3f0d.md:1-122; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status"
+    ],
+    "source_range": [
+      1,
+      122
+    ],
+    "diff_base": null,
+    "evidence_before_writing_revision": [
+      "S072: info/documentation_sources/versions/c7aeeea2bff31ee76a1190a69a05ca48ec78fc476e89d3afc345d546074c3f0d.md:1-122; complete source read.",
+      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations",
+      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status"
+    ],
+    "writing_revision_note": "Editorial revision only. Historical decision and audit indexes moved from Notes to Methods. Source-read modes and frozen source ranges are unchanged."
+  }
+]

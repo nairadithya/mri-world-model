@@ -1,0 +1,101 @@
+{
+  "slice": "notes",
+  "coverage": [],
+  "missing_material": [],
+  "branch_differences": [],
+  "unread": [
+    {
+      "id": "S010",
+      "reason": "Catalog metadata and draft sections were inspected, but the complete frozen primary source and its line-by-line comparison against all four drafts were not completed."
+    },
+    {
+      "id": "S011",
+      "reason": "Catalog metadata and draft sections were inspected, but the complete frozen primary source and its line-by-line comparison against all four drafts were not completed."
+    },
+    {
+      "id": "S012",
+      "reason": "Catalog metadata and draft sections were inspected, but the complete frozen primary source and its line-by-line comparison against all four drafts were not completed."
+    },
+    {
+      "id": "S015",
+      "reason": "Catalog metadata and draft sections were inspected, but the complete frozen primary source and its line-by-line comparison against all four drafts were not completed."
+    },
+    {
+      "id": "S016",
+      "reason": "Catalog metadata and draft sections were inspected, but the complete frozen primary source and its line-by-line comparison against all four drafts were not completed."
+    },
+    {
+      "id": "S026",
+      "reason": "Catalog metadata was inspected; this source and its variants were not fully read or compared."
+    },
+    {
+      "id": "S027",
+      "reason": "Catalog metadata was inspected; this source and its variants were not fully read or compared."
+    },
+    {
+      "id": "S028",
+      "reason": "Catalog metadata was inspected; this source and its variants were not fully read or compared."
+    },
+    {
+      "id": "S029",
+      "reason": "Catalog metadata was inspected; this source and its variants were not fully read or compared."
+    },
+    {
+      "id": "S030",
+      "reason": "Catalog metadata was inspected; this source and its variants were not fully read or compared."
+    },
+    {
+      "id": "S031",
+      "reason": "Catalog metadata was inspected; this source and its variants were not fully read or compared."
+    },
+    {
+      "id": "S032",
+      "reason": "Catalog metadata was inspected; this source and its variants were not fully read or compared."
+    },
+    {
+      "id": "S033",
+      "reason": "Catalog metadata was inspected; this source and its variants were not fully read or compared."
+    },
+    {
+      "id": "S034",
+      "reason": "Catalog metadata was inspected; this source and its variants were not fully read or compared."
+    },
+    {
+      "id": "S035",
+      "reason": "Catalog metadata was inspected; this source and its variants were not fully read or compared."
+    },
+    {
+      "id": "S042",
+      "reason": "Catalog metadata was inspected; the complete source and its comparison against all four drafts were not completed."
+    },
+    {
+      "id": "S043",
+      "reason": "Catalog metadata was inspected; this source and the complete variant comparison were not completed."
+    },
+    {
+      "id": "S044",
+      "reason": "Catalog metadata was inspected; this source and the complete variant comparison were not completed."
+    },
+    {
+      "id": "S045",
+      "reason": "Catalog metadata was inspected; the complete source and its comparison against all four drafts were not completed."
+    },
+    {
+      "id": "S048",
+      "reason": "Catalog metadata was inspected; the complete source and its comparison against all four drafts were not completed."
+    },
+    {
+      "id": "S049",
+      "reason": "Catalog metadata was inspected; the complete source and its comparison against all four drafts were not completed."
+    },
+    {
+      "id": "S055",
+      "reason": "Catalog metadata was inspected; the complete source and its comparison against all four drafts were not completed."
+    },
+    {
+      "id": "S069",
+      "reason": "Catalog metadata was inspected; the complete source and its comparison against all four drafts were not completed."
+    }
+  ],
+  "verdict": "BLOCKED"
+}

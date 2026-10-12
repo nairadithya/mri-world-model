@@ -1,0 +1,19 @@
+{
+  "scope": "Recovered dated tool-result excerpt, not a live status check.",
+  "source_session": "2026-10-10T20-16-54-440Z_01a12776-1ca0-75f4-ae9d-e5ef5a2101b3.jsonl",
+  "source_line": 701,
+  "source_timestamp": "2026-10-11T18:31:49.625Z",
+  "source_line_sha256": "d79b0de9687aa8e15da0fa923a935322b898c8a1e181a3bb6de722305ce6a004",
+  "continuation": {
+    "state": "waiting",
+    "evidence": {
+      "nairadithya/r36-probes-seed43": "RUNNING"
+    },
+    "time": "2026-10-11T18:30:51.301776+00:00",
+    "independent_review": "pending_not_yet_completed",
+    "phase2": "not_authorized"
+  },
+  "local_final_arms": 12,
+  "local_probe_weights": 10,
+  "quoted_excerpt": "continuation.json {\n  \"state\": \"waiting\",\n  \"evidence\": {\n    \"nairadithya/r36-probes-seed43\": \"RUNNING\"\n  },\n  \"time\": \"2026-10-11T18:30:51.301776+00:00\",\n  \"independent_review\": \"pending_not_yet_completed\",\n  \"phase2\": \"not_authorized\"\n}\n\nlocal final arms 12\nlocal probe weights 10\n"
+}

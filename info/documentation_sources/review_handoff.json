@@ -1,0 +1,447 @@
+{
+  "released_utc": "2026-10-12T15:07:09.475104+00:00",
+  "barrier": "RELEASED_FOR_INDEPENDENT_DOCUMENTATION_REVIEW",
+  "worktree": "world-model-docs",
+  "branch": "docs/portable-research-records",
+  "scope": "Four research drafts, complete captured-source dispositions, portable provenance, and protection/verification evidence. No scientific acceptance, source deletion, promotion, commits, pushes, merges, or research execution.",
+  "review_inputs": [
+    {
+      "path": "info/documentation_sources/catalog.json",
+      "sha256": "0b6dfbad31367fb91e747511773314e253cbae87b73ae38ad84b8cb4e7fa1d70"
+    },
+    {
+      "path": "info/documentation_sources/checkpoint.md",
+      "sha256": "90061ca17054fac663b699f29bd1135a41db96c34c6cc8bc5d7b63858de14170"
+    },
+    {
+      "path": "info/documentation_sources/comparison_contract.md",
+      "sha256": "e6380c89cddc7d4ae9fd9f9f6372fcfde2a324a9cc2f4b7984fc43357ca9ec78"
+    },
+    {
+      "path": "info/documentation_sources/comparisons/contracts.json",
+      "sha256": "34bc978a691f9f859a397a63d98345a2bb0d20be41aa7d553654f31ee9891565"
+    },
+    {
+      "path": "info/documentation_sources/comparisons/experiments.json",
+      "sha256": "398c30a32e0c950bb43ae86eab29aa4aed9eb70993380abe2e0e65644be91994"
+    },
+    {
+      "path": "info/documentation_sources/comparisons/notes.json",
+      "sha256": "e3a0ae1d237c636b4536d583fa3e7d7ce8fe1d4ae603ccf96cf0ab932358c361"
+    },
+    {
+      "path": "info/documentation_sources/coverage.json",
+      "sha256": "959e75527842112cf272808bccf0edab592ed52e5c72c2c58a92400247464a80"
+    },
+    {
+      "path": "info/documentation_sources/decisions.tsv",
+      "sha256": "5c05a31cbc46d4dc872840374d21cc85cca4c12584b9df39a08ffda5fcd9270a"
+    },
+    {
+      "path": "info/documentation_sources/documentation_baseline_status.txt",
+      "sha256": "9ecbc4db40df5e43ba6ef124021428f73f50c606e58c39de9b977d527e4f90de"
+    },
+    {
+      "path": "info/documentation_sources/initial_main_status.txt",
+      "sha256": "19e0304e6eae3c6e073d888709b15a87b99b0b7e8f2a34f5eb9249fa16221ef9"
+    },
+    {
+      "path": "info/documentation_sources/plan.md",
+      "sha256": "5734c46326969e82ce7fcddb2261b3ffaff5c0b837d9d3b8b5ee891f4e7e9d09"
+    },
+    {
+      "path": "info/documentation_sources/pre_review_checks.json",
+      "sha256": "771b7c6ed323501aee6850ed096375cde9e74912ab6357b54ec5a195a3cfce41"
+    },
+    {
+      "path": "info/documentation_sources/protection_baseline.json",
+      "sha256": "03a743074c5000dd452a877b886586789003bec65f9f6ebe2d55b254bc759ea1"
+    },
+    {
+      "path": "info/documentation_sources/protection_check.json",
+      "sha256": "58963eb97d97c2d5bc615937b32c65d774799c03c0de12ae7c519c1042102f1d"
+    },
+    {
+      "path": "info/documentation_sources/received_reports/contracts.json",
+      "sha256": "188ad844eed974ba33d07c83268266d3986a6f4da8d6545f3fa300cdbea3289f"
+    },
+    {
+      "path": "info/documentation_sources/received_reports/experiments.json",
+      "sha256": "5c050212a28bca906cf43687e379ce7a147c156a3c9c8a3d16b7b3a1e3ca5dbd"
+    },
+    {
+      "path": "info/documentation_sources/received_reports/manifest.json",
+      "sha256": "ceaa9ab8bacd5cd05619970dc7d40f9a7b8bbe441b8bbcefd560ffefe8052cff"
+    },
+    {
+      "path": "info/documentation_sources/received_reports/notes.json",
+      "sha256": "add4fa9065f1369bc160a7f11f454bc38779b94b338f45b91c0b97bd1c400d41"
+    },
+    {
+      "path": "info/documentation_sources/received_reports/portable-coverage.md",
+      "sha256": "50ba62239aaab0386223b12187ec2f3e80cef09b38b8818b98ea99774d6f3282"
+    },
+    {
+      "path": "info/documentation_sources/slices.json",
+      "sha256": "b91b53fe94d23a267252284f2d13ffc624286beb064cf1844a1d1d0a0c1a746b"
+    },
+    {
+      "path": "info/documentation_sources/supplementary/manifest.json",
+      "sha256": "eebe20bbdd9e5bd622f3ecdf0b8f19d6e0361664023e33550122b40a6fc78857"
+    },
+    {
+      "path": "info/documentation_sources/supplementary/r36-protocol-recovery.md",
+      "sha256": "3e2cdf0b91e615e76d728be9564150d3c6862846e6f43b7dc85f4453cc7412cc"
+    },
+    {
+      "path": "info/documentation_sources/supplementary/r36-runtime-snapshot.json",
+      "sha256": "0ad51d24c7882ecb322470493b379e1c489dd4d85306eb823007d79cbdad423a"
+    },
+    {
+      "path": "info/documentation_sources/supplementary/worktree-creation.json",
+      "sha256": "b942b60f2c9d9c4d61628beb783f2515f20573f82961164a13d5deca51e93599"
+    },
+    {
+      "path": "info/documentation_sources/verification.json",
+      "sha256": "32173054212b7d97c6aab6badf8f5db79041bfca0d4388eef50cd862c509ad68"
+    },
+    {
+      "path": "info/documentation_sources/verifier_tests.json",
+      "sha256": "bf80f7d3dd5641b6ccaa64e19a1bd1fc926e2e4b540bdaaf85074a682bfc378c"
+    },
+    {
+      "path": "info/documentation_sources/versions/13dbe34373467fe847c4ed3ff544c7228b092570be6b352a2e19cc4c9d3ffa45.md",
+      "sha256": "13dbe34373467fe847c4ed3ff544c7228b092570be6b352a2e19cc4c9d3ffa45"
+    },
+    {
+      "path": "info/documentation_sources/versions/224e30ddf098b5d0f70a6a8edb7ebda7f670fa26599a21726257309770fca964.md",
+      "sha256": "224e30ddf098b5d0f70a6a8edb7ebda7f670fa26599a21726257309770fca964"
+    },
+    {
+      "path": "info/documentation_sources/versions/2b29cb9bf2068cc77c42960ed21f1fbcdb039dda4f0ffa32a3c17992bb9bdada.md",
+      "sha256": "2b29cb9bf2068cc77c42960ed21f1fbcdb039dda4f0ffa32a3c17992bb9bdada"
+    },
+    {
+      "path": "info/documentation_sources/versions/2b7293c884e0e0aa9f1db178d13f55497d584cd7060c68c022436d47330bb63c.md",
+      "sha256": "2b7293c884e0e0aa9f1db178d13f55497d584cd7060c68c022436d47330bb63c"
+    },
+    {
+      "path": "info/documentation_sources/versions/2be6e4e222c5e3e4235dbe54e9d9d941ff0ad06bacd999a8f980d4e80fdd5071.md",
+      "sha256": "2be6e4e222c5e3e4235dbe54e9d9d941ff0ad06bacd999a8f980d4e80fdd5071"
+    },
+    {
+      "path": "info/documentation_sources/versions/2ddad8d48f3ebb0e89c6855d2c8da8e2762d8291664d49d38faab77851d72549.md",
+      "sha256": "2ddad8d48f3ebb0e89c6855d2c8da8e2762d8291664d49d38faab77851d72549"
+    },
+    {
+      "path": "info/documentation_sources/versions/3717abf358c955772ee5eb3571c4aa0dcdb5c97637d99899a255927d21eeee3e.md",
+      "sha256": "3717abf358c955772ee5eb3571c4aa0dcdb5c97637d99899a255927d21eeee3e"
+    },
+    {
+      "path": "info/documentation_sources/versions/3757850c1f2c602e1bc025675a52347d09c66700f8fa917279073550845f32f3.md",
+      "sha256": "3757850c1f2c602e1bc025675a52347d09c66700f8fa917279073550845f32f3"
+    },
+    {
+      "path": "info/documentation_sources/versions/376ef33c6235a3b4ac055340d2447d5f33d1b54abe2504c525a2e2330ee88904.md",
+      "sha256": "376ef33c6235a3b4ac055340d2447d5f33d1b54abe2504c525a2e2330ee88904"
+    },
+    {
+      "path": "info/documentation_sources/versions/3e07b40bdd3849468d6b4c5f52a2d997fb891e3497ccd3d7b23b43aff4980007.md",
+      "sha256": "3e07b40bdd3849468d6b4c5f52a2d997fb891e3497ccd3d7b23b43aff4980007"
+    },
+    {
+      "path": "info/documentation_sources/versions/4152bf66cc81cd99bb7970ddaf52cffcdff59756fa1baf7a95e1cd349ef34352.md",
+      "sha256": "4152bf66cc81cd99bb7970ddaf52cffcdff59756fa1baf7a95e1cd349ef34352"
+    },
+    {
+      "path": "info/documentation_sources/versions/48f54a5c4241c65c1f3c023d0261f9a8398edb18a3b1b642ee6c534fd659e84a.md",
+      "sha256": "48f54a5c4241c65c1f3c023d0261f9a8398edb18a3b1b642ee6c534fd659e84a"
+    },
+    {
+      "path": "info/documentation_sources/versions/4a7defbca15a2ed95f988863a24ad44465210928a5e89796c19ee12e4ab4c794.md",
+      "sha256": "4a7defbca15a2ed95f988863a24ad44465210928a5e89796c19ee12e4ab4c794"
+    },
+    {
+      "path": "info/documentation_sources/versions/4ae80f2d62b0a16ac6644e2b2faabd95d6fc40d94d8e0400cb886cd59216313b.md",
+      "sha256": "4ae80f2d62b0a16ac6644e2b2faabd95d6fc40d94d8e0400cb886cd59216313b"
+    },
+    {
+      "path": "info/documentation_sources/versions/4be6ffde8ccb321f263f3a3f91036667126a719401aa15b3a856b183208c6b47.md",
+      "sha256": "4be6ffde8ccb321f263f3a3f91036667126a719401aa15b3a856b183208c6b47"
+    },
+    {
+      "path": "info/documentation_sources/versions/4c077cc0f084f2d14b48b4cf366088ff7c0dc11a6ed3bf8b5678cbea901e141d.md",
+      "sha256": "4c077cc0f084f2d14b48b4cf366088ff7c0dc11a6ed3bf8b5678cbea901e141d"
+    },
+    {
+      "path": "info/documentation_sources/versions/4d997fd0cbc3cca6862a1a6eb333bde54fa5f7a6c416cfbed5390983c7905797.md",
+      "sha256": "4d997fd0cbc3cca6862a1a6eb333bde54fa5f7a6c416cfbed5390983c7905797"
+    },
+    {
+      "path": "info/documentation_sources/versions/4f80203aeaed182a3e106b44f5d066b213b65387a143d3979710282be6263077.md",
+      "sha256": "4f80203aeaed182a3e106b44f5d066b213b65387a143d3979710282be6263077"
+    },
+    {
+      "path": "info/documentation_sources/versions/51d6523f0da4b3d8745af10b79318fd684aba1fd9b47cc7d321e30df79984551.md",
+      "sha256": "51d6523f0da4b3d8745af10b79318fd684aba1fd9b47cc7d321e30df79984551"
+    },
+    {
+      "path": "info/documentation_sources/versions/5c2b29fa7d10d546917b2240faee24aa8b8f6560172ab618bab3d4782e2bb2d9.md",
+      "sha256": "5c2b29fa7d10d546917b2240faee24aa8b8f6560172ab618bab3d4782e2bb2d9"
+    },
+    {
+      "path": "info/documentation_sources/versions/5d8b1b11c9e6dbb0be28d861a5ace37a570c1230fcc4632746b40426b3b3dce5.md",
+      "sha256": "5d8b1b11c9e6dbb0be28d861a5ace37a570c1230fcc4632746b40426b3b3dce5"
+    },
+    {
+      "path": "info/documentation_sources/versions/5e5409445bd5d258f7b1bb090aaf316ff56241007f54f8173c1d180ba200bf3a.md",
+      "sha256": "5e5409445bd5d258f7b1bb090aaf316ff56241007f54f8173c1d180ba200bf3a"
+    },
+    {
+      "path": "info/documentation_sources/versions/5fe9df82e326552d35667a3b92cdd7977504ade9f3ceebb9298a8f41d0dbdf19.md",
+      "sha256": "5fe9df82e326552d35667a3b92cdd7977504ade9f3ceebb9298a8f41d0dbdf19"
+    },
+    {
+      "path": "info/documentation_sources/versions/636f0274c36efa3cee145c530acebff689d5961eff995269ecc3bc91d8c6d89e.md",
+      "sha256": "636f0274c36efa3cee145c530acebff689d5961eff995269ecc3bc91d8c6d89e"
+    },
+    {
+      "path": "info/documentation_sources/versions/64414e220c402593df722fe70a71361a97c3d669b349c261d5fc281aab938602.md",
+      "sha256": "64414e220c402593df722fe70a71361a97c3d669b349c261d5fc281aab938602"
+    },
+    {
+      "path": "info/documentation_sources/versions/6b7d9def32bbabf5f63dbac2126bb7b066d7b4606e54ebad6f56cd494f569d5f.md",
+      "sha256": "6b7d9def32bbabf5f63dbac2126bb7b066d7b4606e54ebad6f56cd494f569d5f"
+    },
+    {
+      "path": "info/documentation_sources/versions/6c28bb95dc89e05742f41ae69a61f1bcbdd5f8d7a0eb3857055b0b2989a5ce9c.md",
+      "sha256": "6c28bb95dc89e05742f41ae69a61f1bcbdd5f8d7a0eb3857055b0b2989a5ce9c"
+    },
+    {
+      "path": "info/documentation_sources/versions/6e710be8c33b05d77bf8f13b415b64028fcc13dc03d71defb304e6a7631c78f4.md",
+      "sha256": "6e710be8c33b05d77bf8f13b415b64028fcc13dc03d71defb304e6a7631c78f4"
+    },
+    {
+      "path": "info/documentation_sources/versions/768fdfa0a9be4dc76e99fcef9ff971e26252d672e82b08267f5e9ea157ced0f3.md",
+      "sha256": "768fdfa0a9be4dc76e99fcef9ff971e26252d672e82b08267f5e9ea157ced0f3"
+    },
+    {
+      "path": "info/documentation_sources/versions/775110c703c7f702ccf2c1dfc9e2504eb9fdb5303b8d5f2cfbbe3619a7cf6a12.md",
+      "sha256": "775110c703c7f702ccf2c1dfc9e2504eb9fdb5303b8d5f2cfbbe3619a7cf6a12"
+    },
+    {
+      "path": "info/documentation_sources/versions/77de3ea25aa45d894d9577a96b69195912e6036883dace704af07b89de07843b.md",
+      "sha256": "77de3ea25aa45d894d9577a96b69195912e6036883dace704af07b89de07843b"
+    },
+    {
+      "path": "info/documentation_sources/versions/7873b012053d04798d82c190a754e9708031bedff4ce9cf4d2abb168553f4386.md",
+      "sha256": "7873b012053d04798d82c190a754e9708031bedff4ce9cf4d2abb168553f4386"
+    },
+    {
+      "path": "info/documentation_sources/versions/7bc218e8ef5fd2fdb22bc0ed7f5bab72c4b1d099f1f7f2c3145f6c3bca6f3472.md",
+      "sha256": "7bc218e8ef5fd2fdb22bc0ed7f5bab72c4b1d099f1f7f2c3145f6c3bca6f3472"
+    },
+    {
+      "path": "info/documentation_sources/versions/7d63fd3f44c1ed975ea9d1b860b597592902c503fbb3124145a01db17ee996dc.md",
+      "sha256": "7d63fd3f44c1ed975ea9d1b860b597592902c503fbb3124145a01db17ee996dc"
+    },
+    {
+      "path": "info/documentation_sources/versions/7d6adbe335852289339963e40a758990e325c71fa6075e037037b4e613747cb5.md",
+      "sha256": "7d6adbe335852289339963e40a758990e325c71fa6075e037037b4e613747cb5"
+    },
+    {
+      "path": "info/documentation_sources/versions/7fb4e40c27dada7024a7cee70887a036cb98780d3b717cc25cccf3181d1a9fde.md",
+      "sha256": "7fb4e40c27dada7024a7cee70887a036cb98780d3b717cc25cccf3181d1a9fde"
+    },
+    {
+      "path": "info/documentation_sources/versions/883e1ec8b8bcf46a3f3195d03800d90f91ddfdbb7f91abd4fdf628f433be97e5.md",
+      "sha256": "883e1ec8b8bcf46a3f3195d03800d90f91ddfdbb7f91abd4fdf628f433be97e5"
+    },
+    {
+      "path": "info/documentation_sources/versions/89605d7963ba3e0f942e5feb416846a32faea82a277f1dbe008b0cd0a6b86068.md",
+      "sha256": "89605d7963ba3e0f942e5feb416846a32faea82a277f1dbe008b0cd0a6b86068"
+    },
+    {
+      "path": "info/documentation_sources/versions/8fc1116f80667885774a5ce6a8fb9ec40f1e360d1f87867fefb81baf01118ab6.md",
+      "sha256": "8fc1116f80667885774a5ce6a8fb9ec40f1e360d1f87867fefb81baf01118ab6"
+    },
+    {
+      "path": "info/documentation_sources/versions/904659c6bdcfeff428d0bde5d406be42fdc4d004dc5c915d13c335a049add7a3.md",
+      "sha256": "904659c6bdcfeff428d0bde5d406be42fdc4d004dc5c915d13c335a049add7a3"
+    },
+    {
+      "path": "info/documentation_sources/versions/919cb93f22b6b82b78558c3fa37786b5ea163f3911a7d9c5d8d0ad33bff9df80.md",
+      "sha256": "919cb93f22b6b82b78558c3fa37786b5ea163f3911a7d9c5d8d0ad33bff9df80"
+    },
+    {
+      "path": "info/documentation_sources/versions/91f9eb3a5aa50c35bb9d8d79dbcca3e76e61bc3c93b814a08ae82b0a34ca4d8d.md",
+      "sha256": "91f9eb3a5aa50c35bb9d8d79dbcca3e76e61bc3c93b814a08ae82b0a34ca4d8d"
+    },
+    {
+      "path": "info/documentation_sources/versions/9392195ed8cf1ac4fea44e0347230844278803dbd3b21318ca48a6c7c0b2f841.md",
+      "sha256": "9392195ed8cf1ac4fea44e0347230844278803dbd3b21318ca48a6c7c0b2f841"
+    },
+    {
+      "path": "info/documentation_sources/versions/97afb43550bc7feac110eefa3277d8b8485e957bdec8dff6f9897e042851fedb.md",
+      "sha256": "97afb43550bc7feac110eefa3277d8b8485e957bdec8dff6f9897e042851fedb"
+    },
+    {
+      "path": "info/documentation_sources/versions/9c693cb9fda31211831d08c8004ace96ab9b629066bf6d4e4fd25989829ecc50.md",
+      "sha256": "9c693cb9fda31211831d08c8004ace96ab9b629066bf6d4e4fd25989829ecc50"
+    },
+    {
+      "path": "info/documentation_sources/versions/9ea08b90cf4971fb7b85d4b150ef1317994f42aa2fca2f1c9c0f5de5424e38e4.md",
+      "sha256": "9ea08b90cf4971fb7b85d4b150ef1317994f42aa2fca2f1c9c0f5de5424e38e4"
+    },
+    {
+      "path": "info/documentation_sources/versions/a1f3b50120348c22bd0d02de180df52e4d798b9d5fa763e0c27a7e8872bb22a5.md",
+      "sha256": "a1f3b50120348c22bd0d02de180df52e4d798b9d5fa763e0c27a7e8872bb22a5"
+    },
+    {
+      "path": "info/documentation_sources/versions/ad235fe7fd9dbc123dbc829a8242d3c11ce6427b241808ba661ac7ed0fb1db87.md",
+      "sha256": "ad235fe7fd9dbc123dbc829a8242d3c11ce6427b241808ba661ac7ed0fb1db87"
+    },
+    {
+      "path": "info/documentation_sources/versions/b72ceb2da7c2ba695a4174a43643847c9fb27244c1785ff1a6acb5c898f2fb29.md",
+      "sha256": "b72ceb2da7c2ba695a4174a43643847c9fb27244c1785ff1a6acb5c898f2fb29"
+    },
+    {
+      "path": "info/documentation_sources/versions/b8c596145365e19fbea3ed86218b7b7d7a3131e0be6e60915409d0eddcfddf31.md",
+      "sha256": "b8c596145365e19fbea3ed86218b7b7d7a3131e0be6e60915409d0eddcfddf31"
+    },
+    {
+      "path": "info/documentation_sources/versions/bcac72661517b6aef6743244ebb1c9c459188acdee1c1dd526b495ee2b33bb0a.md",
+      "sha256": "bcac72661517b6aef6743244ebb1c9c459188acdee1c1dd526b495ee2b33bb0a"
+    },
+    {
+      "path": "info/documentation_sources/versions/bd305198a22112d90d28cf638536c3638ff95806a6aeff087655acb8dea287d1.md",
+      "sha256": "bd305198a22112d90d28cf638536c3638ff95806a6aeff087655acb8dea287d1"
+    },
+    {
+      "path": "info/documentation_sources/versions/bffc0ec9c04e09138faeb31fab3e9c7d4d22e7e7f52ea345904d71e041dbb45b.md",
+      "sha256": "bffc0ec9c04e09138faeb31fab3e9c7d4d22e7e7f52ea345904d71e041dbb45b"
+    },
+    {
+      "path": "info/documentation_sources/versions/c71f6ff4fcf332b74565777ff3ef8fc33ba5368829692c73704a24211dc42116.md",
+      "sha256": "c71f6ff4fcf332b74565777ff3ef8fc33ba5368829692c73704a24211dc42116"
+    },
+    {
+      "path": "info/documentation_sources/versions/c7aeeea2bff31ee76a1190a69a05ca48ec78fc476e89d3afc345d546074c3f0d.md",
+      "sha256": "c7aeeea2bff31ee76a1190a69a05ca48ec78fc476e89d3afc345d546074c3f0d"
+    },
+    {
+      "path": "info/documentation_sources/versions/c7c9fba4178609946f8fd4ce8b90af08b6a88392955d7f2e198aa2e02b14cc57.md",
+      "sha256": "c7c9fba4178609946f8fd4ce8b90af08b6a88392955d7f2e198aa2e02b14cc57"
+    },
+    {
+      "path": "info/documentation_sources/versions/cbc9c0e336dab8f4b055c9a0897c0db4b7bbce920ab328701445cf299ba8984d.md",
+      "sha256": "cbc9c0e336dab8f4b055c9a0897c0db4b7bbce920ab328701445cf299ba8984d"
+    },
+    {
+      "path": "info/documentation_sources/versions/d8e7bf20a34e6ee1186140c96bb090ed2df0a56f65f11ce140fe05acc4123436.md",
+      "sha256": "d8e7bf20a34e6ee1186140c96bb090ed2df0a56f65f11ce140fe05acc4123436"
+    },
+    {
+      "path": "info/documentation_sources/versions/da674d536622373c6db154365a73c67d5fffcc9646a10713641169a0b5cb2130.md",
+      "sha256": "da674d536622373c6db154365a73c67d5fffcc9646a10713641169a0b5cb2130"
+    },
+    {
+      "path": "info/documentation_sources/versions/e222fabaeb05f4d166a3d220a87398aa55b60e1697d479706b6e87d6bab71212.md",
+      "sha256": "e222fabaeb05f4d166a3d220a87398aa55b60e1697d479706b6e87d6bab71212"
+    },
+    {
+      "path": "info/documentation_sources/versions/e29b2b676b2a9a2db5406419ce3e1ee0868b4548c26460bcca0feacaee462cdf.md",
+      "sha256": "e29b2b676b2a9a2db5406419ce3e1ee0868b4548c26460bcca0feacaee462cdf"
+    },
+    {
+      "path": "info/documentation_sources/versions/e3c486ef9cc77afcc1978e53ce4495ef1051a5b8d22cf31b9d627c72d4db029e.md",
+      "sha256": "e3c486ef9cc77afcc1978e53ce4495ef1051a5b8d22cf31b9d627c72d4db029e"
+    },
+    {
+      "path": "info/documentation_sources/versions/e45ccd301fe0a119a2310f90c2c6f9fa43fa262af7c5ddc32efdcf775779b1b3.md",
+      "sha256": "e45ccd301fe0a119a2310f90c2c6f9fa43fa262af7c5ddc32efdcf775779b1b3"
+    },
+    {
+      "path": "info/documentation_sources/versions/e82ede5e41b034398b599f1f141ffa04335d47ad7d8e66761540a71ce2f72aaa.md",
+      "sha256": "e82ede5e41b034398b599f1f141ffa04335d47ad7d8e66761540a71ce2f72aaa"
+    },
+    {
+      "path": "info/documentation_sources/versions/eaca551880e0a9db5c4bdc7785e135675cd518ebfcd361d5aa482beca4f37dce.md",
+      "sha256": "eaca551880e0a9db5c4bdc7785e135675cd518ebfcd361d5aa482beca4f37dce"
+    },
+    {
+      "path": "info/documentation_sources/versions/eade325e60cbeeb92dc5f6570520d8f502a519e846309ef5803b2bf7e1a2d094.md",
+      "sha256": "eade325e60cbeeb92dc5f6570520d8f502a519e846309ef5803b2bf7e1a2d094"
+    },
+    {
+      "path": "info/documentation_sources/versions/eca8302b4c0da4df15f1a8918164254666650e647632c098c025513f6ebe5061.md",
+      "sha256": "eca8302b4c0da4df15f1a8918164254666650e647632c098c025513f6ebe5061"
+    },
+    {
+      "path": "info/documentation_sources/versions/ef50d853844e9c04d0dc4f8dc7b8fcdbdf1c9cf3234b5dd5dfc0951a3a58db18.md",
+      "sha256": "ef50d853844e9c04d0dc4f8dc7b8fcdbdf1c9cf3234b5dd5dfc0951a3a58db18"
+    },
+    {
+      "path": "info/documentation_sources/versions/f33b11d3ab804d4b9bef473c0336e51db5afef9b8a0a8b8740e7d0cbbf38f105.md",
+      "sha256": "f33b11d3ab804d4b9bef473c0336e51db5afef9b8a0a8b8740e7d0cbbf38f105"
+    },
+    {
+      "path": "info/documentation_sources/versions/f3dad868d43b3aa2bf5f7913b3dfa2872cdf87a65fd9648b1eb9932e3f750855.md",
+      "sha256": "f3dad868d43b3aa2bf5f7913b3dfa2872cdf87a65fd9648b1eb9932e3f750855"
+    },
+    {
+      "path": "info/documentation_sources/versions/f56dab2c73a11d29aea114c22e1daeabee068c877d471b684c0b8aa66a971dfc.md",
+      "sha256": "f56dab2c73a11d29aea114c22e1daeabee068c877d471b684c0b8aa66a971dfc"
+    },
+    {
+      "path": "info/documentation_sources/versions/f9519fae5516ba946acba78908c36f41e9d095aa536a4924938820c9f4f976e7.md",
+      "sha256": "f9519fae5516ba946acba78908c36f41e9d095aa536a4924938820c9f4f976e7"
+    },
+    {
+      "path": "info/drafts/EXPERIMENTS.md",
+      "sha256": "905b0b4ddcf83a927b78bfad815e010ac10f606a00546ddd048bf58137e16c2c"
+    },
+    {
+      "path": "info/drafts/METHODS.md",
+      "sha256": "bb00325524ed32f95959dca9195cadbd92153f4f3105b24ea3d491a9e39ec1d6"
+    },
+    {
+      "path": "info/drafts/NOTES_AND_INSIGHTS.md",
+      "sha256": "217e99dfab163eaac30e5a5c3034fba7118fa947b5704f58d13c2e864d99c760"
+    },
+    {
+      "path": "info/drafts/SOURCE_COVERAGE.md",
+      "sha256": "3746293e4373dd780c112309429738dfa9062e122cf2fd933d3a578ab147f94d"
+    },
+    {
+      "path": "info/drafts/TODO.md",
+      "sha256": "61b8f873d72e59bf86482c389a2d3ce6e4c8fc2758fcab6c1290072846ee4a62"
+    },
+    {
+      "path": "scripts/check_documentation_protection.py",
+      "sha256": "8e092f24f62d7f49c51afdaf1524cd1b9c9526e138571dc0d4b8aa2ed8c52fda"
+    },
+    {
+      "path": "scripts/documentation_sources.py",
+      "sha256": "005384ad049b6cee0a09ef32e0a7f1bb6ffe882e9848f3a4bd744aa9567e3c53"
+    },
+    {
+      "path": "scripts/portable_documentation_links.py",
+      "sha256": "911aa1d17767883141fb9daf39f9b2fe7e51ccf72c568faf98da52407de37253"
+    },
+    {
+      "path": "scripts/render_documentation_coverage.py",
+      "sha256": "db2a7835289f9c89a284301aa39bb5750cdcc2dbd884221b13f537a7591b31b2"
+    },
+    {
+      "path": "tests/test_documentation_protection.py",
+      "sha256": "4d5efc3459d9c27cc388a76bbc1422c1ac5dbbc253848fd7ab73a1748a7cba09"
+    },
+    {
+      "path": "tests/test_documentation_sources.py",
+      "sha256": "616a396068398f1361ebca3c5adc95d6a106825278d93d551b4a87c20a77c477"
+    }
+  ],
+  "earlier_review_run": "1fac6107-a02e-4784-b708-e76e1daed6f8",
+  "review_input_policy": "Inputs stay unchanged during review. Findings and runtime-managed review output are separate artifacts. Independent reports must state actual read coverage and limitations."
+}

@@ -1,0 +1,106 @@
+{
+  "recorded_utc": "2026-10-12T16:23:49.988568+00:00",
+  "status": "PASS",
+  "review_status": "Parent editorial review only. Previous independent approval applies to the preserved before-snapshots, not the revised hashes.",
+  "changes": "Plain-English wording, definitions, separated result columns, and historical indexes moved from Notes into Methods. Coverage section locators updated with prior locators retained. No intended scientific claim, protocol, or outcome change.",
+  "preservation": {
+    "before_snapshot_integrity": [
+      {
+        "path": "info/documentation_sources/writing_revision/before/TODO.md",
+        "matches_sha256": true
+      },
+      {
+        "path": "info/documentation_sources/writing_revision/before/EXPERIMENTS.md",
+        "matches_sha256": true
+      },
+      {
+        "path": "info/documentation_sources/writing_revision/before/METHODS.md",
+        "matches_sha256": true
+      },
+      {
+        "path": "info/documentation_sources/writing_revision/before/NOTES_AND_INSIGHTS.md",
+        "matches_sha256": true
+      }
+    ],
+    "lost_link_targets": [],
+    "lost_identifiers": [],
+    "lost_inline_sha256_values": [],
+    "removed_decimal_values_by_document": {
+      "TODO.md": [],
+      "EXPERIMENTS.md": [],
+      "METHODS.md": [],
+      "NOTES_AND_INSIGHTS.md": []
+    },
+    "scope": "Set-presence checks only. They do not check the association of every value with its model, unit, cohort, or condition and do not prove semantic equivalence."
+  },
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_documentation*.py",
+        "-v"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "test_git_optional_locks_are_disabled (test_documentation_protection.DocumentationProtectionTests.test_git_optional_locks_are_disabled) ... ok\ntest_missing_file_and_unexpected_checkout_are_detected (test_documentation_protection.DocumentationProtectionTests.test_missing_file_and_unexpected_checkout_are_detected) ... ok\ntest_unchanged_and_changed_files_are_reported_without_writes (test_documentation_protection.DocumentationProtectionTests.test_unchanged_and_changed_files_are_reported_without_writes) ... ok\ntest_all_four_baseline_identifiers_are_checked (test_documentation_sources.DocumentationSourcesTests.test_all_four_baseline_identifiers_are_checked) ... ok\ntest_broken_targets_and_fragments_fail (test_documentation_sources.DocumentationSourcesTests.test_broken_targets_and_fragments_fail) ... ok\ntest_complete_fixture_passes (test_documentation_sources.DocumentationSourcesTests.test_complete_fixture_passes) ... ok\ntest_destinations_must_match_catalog_or_explain_override (test_documentation_sources.DocumentationSourcesTests.test_destinations_must_match_catalog_or_explain_override) ... ok\ntest_incomplete_comparisons_cannot_pass (test_documentation_sources.DocumentationSourcesTests.test_incomplete_comparisons_cannot_pass) ... ok\ntest_machine_local_and_sibling_targets_fail (test_documentation_sources.DocumentationSourcesTests.test_machine_local_and_sibling_targets_fail) ... ok\ntest_missing_and_duplicate_source_coverage_fail (test_documentation_sources.DocumentationSourcesTests.test_missing_and_duplicate_source_coverage_fail) ... ok\ntest_missing_baseline_fails (test_documentation_sources.DocumentationSourcesTests.test_missing_baseline_fails) ... ok\ntest_missing_coverage_file_fails_without_crashing (test_documentation_sources.DocumentationSourcesTests.test_missing_coverage_file_fails_without_crashing) ... ok\ntest_missing_draft_fails_without_crashing (test_documentation_sources.DocumentationSourcesTests.test_missing_draft_fails_without_crashing) ... ok\ntest_missing_human_coverage_fails (test_documentation_sources.DocumentationSourcesTests.test_missing_human_coverage_fails) ... ok\ntest_missing_or_modified_snapshot_fails (test_documentation_sources.DocumentationSourcesTests.test_missing_or_modified_snapshot_fails) ... ok\ntest_missing_supplementary_manifest_fails (test_documentation_sources.DocumentationSourcesTests.test_missing_supplementary_manifest_fails) ... ok\ntest_read_mode_and_evidence_are_required (test_documentation_sources.DocumentationSourcesTests.test_read_mode_and_evidence_are_required) ... ok\ntest_supplementary_bytes_are_verified (test_documentation_sources.DocumentationSourcesTests.test_supplementary_bytes_are_verified) ... ok\ntest_supplementary_path_must_stay_in_evidence_directory (test_documentation_sources.DocumentationSourcesTests.test_supplementary_path_must_stay_in_evidence_directory) ... ok\n\n----------------------------------------------------------------------\nRan 19 tests in 0.030s\n\nOK\n"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "scripts/documentation_sources.py",
+        "verify"
+      ],
+      "returncode": 0,
+      "stdout": "{\n  \"status\": \"PASS\",\n  \"source_versions\": 72,\n  \"branch_refs\": 10,\n  \"local_links_checked\": 367,\n  \"supplementary_files_checked\": 3,\n  \"draft_sha256\": {\n    \"TODO.md\": \"2c441ece2601fc4800ac7b75cee1add192a86cd570ba33de716c604fbb0538ee\",\n    \"EXPERIMENTS.md\": \"8660f9fa03f1bb28c171d035cb90ec70205312bea0349bc22386264abc085908\",\n    \"METHODS.md\": \"5bfb4f418422b3b0011990bb4a0741f5c817425b862dee7f40f6af9b151c7e0f\",\n    \"NOTES_AND_INSIGHTS.md\": \"86d0313a8eb4d08f312a68f190b2a9183b30e09e0330c954e4189e5436e3950e\"\n  },\n  \"errors\": [],\n  \"scope\": \"Frozen source and supplementary bytes, checked coverage records, baseline identifier presence, and draft link portability. This is not scientific acceptance or a semantic completeness proof.\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "scripts/check_documentation_protection.py"
+      ],
+      "returncode": 0,
+      "stdout": "{\n  \"status\": \"UNCHANGED\",\n  \"branch_refs_match_capture\": true,\n  \"tracked_files_checked\": 799,\n  \"live_markdown_checks\": 115,\n  \"changes\": []\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "verification": {
+    "status": "PASS",
+    "source_versions": 72,
+    "branch_refs": 10,
+    "local_links_checked": 367,
+    "supplementary_files_checked": 3,
+    "draft_sha256": {
+      "TODO.md": "2c441ece2601fc4800ac7b75cee1add192a86cd570ba33de716c604fbb0538ee",
+      "EXPERIMENTS.md": "8660f9fa03f1bb28c171d035cb90ec70205312bea0349bc22386264abc085908",
+      "METHODS.md": "5bfb4f418422b3b0011990bb4a0741f5c817425b862dee7f40f6af9b151c7e0f",
+      "NOTES_AND_INSIGHTS.md": "86d0313a8eb4d08f312a68f190b2a9183b30e09e0330c954e4189e5436e3950e"
+    },
+    "errors": [],
+    "scope": "Frozen source and supplementary bytes, checked coverage records, baseline identifier presence, and draft link portability. This is not scientific acceptance or a semantic completeness proof."
+  },
+  "protection_status": "UNCHANGED",
+  "protection_recorded_utc": "2026-10-12T16:23:49.946585+00:00",
+  "protection_scope": "Protected checkout HEAD, Git status, baseline tracked-file bytes, and captured live Markdown. Git optional locks disabled. No process controls or experiment-output traversal. Changes may belong to the concurrent owner; this comparison does not attribute them. Shared outputs and process state are not certified by file equality.",
+  "no_research_execution": true,
+  "no_promotion_or_publication": true
+}
