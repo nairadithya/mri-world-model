@@ -1,0 +1,118 @@
+{
+  "checker_sha256": "0e9c26f44d39d55cdcf1e09f7377f474dbd41d09ee452cd1bb7eadac395d1cb6",
+  "scope": "Public-file temporary fixtures only. No private artifact or process access.",
+  "cases": [
+    {
+      "case": "clean fixture",
+      "expected_returncode": 0,
+      "actual_returncode": 0,
+      "passed": true,
+      "result": {
+        "status": "PASS",
+        "relocated_sources": 10,
+        "immutable_files": 116,
+        "published_arm_rows": 10,
+        "published_ridge_rows": 5,
+        "published_contrast_rows": 6,
+        "protected_checkouts": 4,
+        "errors": [],
+        "scope": "File integrity, source dispositions, published metric associations, and protected HEAD/status equality. Not semantic completeness, ignored-output integrity, process state, or scientific acceptance."
+      }
+    },
+    {
+      "case": "changed archived bytes",
+      "expected_returncode": 1,
+      "actual_returncode": 1,
+      "passed": true,
+      "result": {
+        "status": "FAIL",
+        "relocated_sources": 10,
+        "immutable_files": 116,
+        "published_arm_rows": 10,
+        "published_ridge_rows": 5,
+        "published_contrast_rows": 6,
+        "protected_checkouts": 4,
+        "errors": [
+          "Relocated source changed or missing: info/archive/2026-10-13/info/r35_representation_comparison.md"
+        ],
+        "scope": "File integrity, source dispositions, published metric associations, and protected HEAD/status equality. Not semantic completeness, ignored-output integrity, process state, or scientific acceptance."
+      }
+    },
+    {
+      "case": "missing immutable evidence",
+      "expected_returncode": 1,
+      "actual_returncode": 1,
+      "passed": true,
+      "result": {
+        "status": "FAIL",
+        "relocated_sources": 10,
+        "immutable_files": 116,
+        "published_arm_rows": 10,
+        "published_ridge_rows": 5,
+        "published_contrast_rows": 6,
+        "protected_checkouts": 4,
+        "errors": [
+          "Immutable evidence changed or missing: info/documentation_sources/versions/883e1ec8b8bcf46a3f3195d03800d90f91ddfdbb7f91abd4fdf628f433be97e5.md"
+        ],
+        "scope": "File integrity, source dispositions, published metric associations, and protected HEAD/status equality. Not semantic completeness, ignored-output integrity, process state, or scientific acceptance."
+      }
+    },
+    {
+      "case": "changed published metric association",
+      "expected_returncode": 1,
+      "actual_returncode": 1,
+      "passed": true,
+      "result": {
+        "status": "FAIL",
+        "relocated_sources": 10,
+        "immutable_files": 116,
+        "published_arm_rows": 10,
+        "published_ridge_rows": 5,
+        "published_contrast_rows": 6,
+        "protected_checkouts": 4,
+        "errors": [
+          "Missing or changed published arm association: lumiere/C"
+        ],
+        "scope": "File integrity, source dispositions, published metric associations, and protected HEAD/status equality. Not semantic completeness, ignored-output integrity, process state, or scientific acceptance."
+      }
+    },
+    {
+      "case": "duplicate source disposition",
+      "expected_returncode": 1,
+      "actual_returncode": 1,
+      "passed": true,
+      "result": {
+        "status": "FAIL",
+        "relocated_sources": 10,
+        "immutable_files": 116,
+        "published_arm_rows": 10,
+        "published_ridge_rows": 5,
+        "published_contrast_rows": 6,
+        "protected_checkouts": 4,
+        "errors": [
+          "Update coverage must name every captured source exactly once"
+        ],
+        "scope": "File integrity, source dispositions, published metric associations, and protected HEAD/status equality. Not semantic completeness, ignored-output integrity, process state, or scientific acceptance."
+      }
+    },
+    {
+      "case": "changed captured source hash",
+      "expected_returncode": 1,
+      "actual_returncode": 1,
+      "passed": true,
+      "result": {
+        "status": "FAIL",
+        "relocated_sources": 10,
+        "immutable_files": 116,
+        "published_arm_rows": 10,
+        "published_ridge_rows": 5,
+        "published_contrast_rows": 6,
+        "protected_checkouts": 4,
+        "errors": [
+          "Source disposition differs from captured identity: info/r35_representation_comparison.md"
+        ],
+        "scope": "File integrity, source dispositions, published metric associations, and protected HEAD/status equality. Not semantic completeness, ignored-output integrity, process state, or scientific acceptance."
+      }
+    }
+  ]
+}

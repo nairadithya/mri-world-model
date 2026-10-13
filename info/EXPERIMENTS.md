@@ -1,6 +1,6 @@
 # Experiments and evidence
 
-This reference records what the experiments measured and which claims remain valid. The wording was revised on October 12, 2026, using fixed copies of the original records. The latest R36 runtime snapshot remains October 11 at 18:30:51 UTC. This is not a live progress report.
+This reference records what the experiments measured and which claims remain valid. The October 13, 2026, update incorporates completed R36 Phase 1 findings and their independent review. The earlier October 11 runtime snapshots remain historical. This is a record of saved evidence, not a live progress report.
 
 Use [Notes and insights](NOTES_AND_INSIGHTS.md) for the reasoning, [Methods](METHODS.md) for protocols and term definitions, and [TODO](TODO.md) for remaining work. The [archive](archive/2026-10-12/README.md) preserves the original records and their correction history.
 
@@ -30,7 +30,7 @@ The full records are [P1 anatomy baselines](documentation_sources/versions/4c077
 
 R35 completed a different task: state estimation and change between two observed scans. Its spatial model reduced in-domain automated-volume error. The dedicated paired head did not establish an advantage over subtracting separate state estimates. It did not establish nuisance separation or successful SAILOR transfer. It was neither forecasting nor validation of biological change. [The R35 section](#r35) gives the comparisons.
 
-R36 Phase 1 was incomplete at the archived snapshot. Twelve training checkpoints and ten seed-42 source-trained readouts had passed local checks. No model-quality comparisons on evaluation patients had been scored. Seed 43 was running, seed 44 had not started, and Phase 2 was unauthorized. [The R36 section](#r36) records the dated status.
+R36 Phase 1 computation and scoped reporting review are complete. The primary C-versus-B encoder-accessibility result remains INCONCLUSIVE. C passes the specified direct-volume retention margin against A. D's nuisance tradeoff and added temporal information remain INCONCLUSIVE. Descriptive nonlinear-head gains do not replace the encoder comparison. [The completed R36 findings](#r36-completed) retain the controls, measured harms, and audit limits. Phase 2 remains unauthorized.
 
 ### Explicit withdrawals and limits
 
@@ -332,6 +332,8 @@ A38's physical-history residual MLP had LUMIERE MAE 1.5405 and SAILOR MAE 1.2143
 
 R35 is a completed comparison of MRI-only spatial state and observed-pair representations, originating in sibling worktree `world-model-representations` at revision `2f6e1f5a65be4ccbceac6de706b537de8b695faa`. Its report is the frozen [branch-only R35 record](documentation_sources/versions/768fdfa0a9be4dc76e99fcef9ff971e26252d672e82b08267f5e9ea157ced0f3.md), captured as S062 with branch and live-worktree origins.
 
+The [archived R35 presentation](archive/2026-10-13/info/r35_representation_results.html) retains the full historical direct-head, transfer-budget, and nuisance tables. Its old review-status statements are not current R36 guidance.
+
 The study used 65 encoder-training patients and 26 encoder-unseen LUMIERE patients, with an internal training and validation split. The seeds were 42, 43, and 44. The learned state encoder received dense supervision and native log-volume targets.
 
 Pair models used two observed scans and their measured change. The results therefore concern state estimation and observed change, not forecasting. The fixed reference used BRAINIAC without clinical inputs.
@@ -376,11 +378,115 @@ The aggregate gain does not resolve these absent-compartment failures.
 
 R35 artifacts passed model, feature, row, and patient-disjointness checks. All twelve corrected arms completed 240 epochs, with 74,592 successful updates and 48 AMP backoffs. The first candidate run was invalidated by float16 dense-loss reduction overflow. A later AMP lifecycle failure occurred before a completed candidate epoch. Corrected finite-reduction and backoff-ordering artifacts are the graded runs. Earlier caches lack a creation-time MRI-byte fingerprint. Completion-time tensor hashes do not retroactively supply one. It did not establish biological validity, segmentation repeatability, nuisance invariance, or untouched external generalization. No future prediction claim follows.
 
-## R36: delta-representation experiment status
+## R36 observed-change evidence
 
 <a id="r36"></a>
 
-### R36 Phase 1 incomplete
+<a id="r36-completed"></a>
+
+### Completed Phase 1 findings, October 13, 2026
+
+All twelve training arms and thirty source-only probes completed the locked final-epoch recipe. Both development assessments completed, including bounded CPU recovery of interrupted seed-44 work. No GPU work was repeated for reporting closure. Each arm recorded 5,940 real-pair exposures, with 5,928 to 5,936 successful updates after disclosed AMP skips.
+
+Both scans are observed inputs. This experiment tests access to observed change, not future prediction. C versus B is the primary objective-only comparison. A controls continued state-only training, original R35 is the initialization reference, and D adds nuisance constraints. All readouts use the matched source52 budget.
+
+LUMIERE includes 149 visits from 26 encoder-unseen development patients and 117 pairs from 23 patients. SAILOR includes 269 visits and 242 pairs from 27 development subjects. No SAILOR fitting or checkpoint selection occurred. Neither cohort is untouched independent validation.
+
+#### Fixed hypothesis classifications
+
+Differences are candidate minus comparator. Intervals are the locked family-three adjusted paired-patient intervals. The report averages patient errors over seeds 42, 43, and 44, not predictions from an ensemble. It uses 10,000 patient-bootstrap draws and seed 2026. The intervals describe these fitted seeds, not unrestricted training-seed uncertainty.
+
+| Endpoint | Difference | Adjusted interval | Classification |
+|---|---:|---|---|
+| C minus B frozen local occupancy MAE | -0.003067 | [-0.007995, +0.002644] | INCONCLUSIVE |
+| C minus A direct native log-volume state MAE | -0.029774 | [-0.073244, +0.017074] | VERIFIED against the +0.05 retention allowance |
+| D nuisance tradeoff | Trained-perturbation excess falls, but state retention is unresolved | State interval overlaps +0.05 | INCONCLUSIVE |
+| Added observed temporal information | C and D beat target-only probes, but not independent-state differences conclusively | See the controls below | INCONCLUSIVE |
+
+C minus B's raw 95% interval also crosses zero, at [-0.007162, +0.001430]. Failure to establish a gain is not proof of equivalence or universal representation failure. C's retention result is noninferiority on the specified direct-volume endpoint. It is not a verified improvement or retention of every anatomical capability.
+
+#### All encoder arms and local controls
+
+State columns are native `log1p`-volume MAE. Other columns are balanced signed-occupancy MAE. Values are three-seed mean patient-uniform errors. Companion tables are descriptive, not new selected hypothesis tests. A and original R35 have no graded nonlinear change head.
+
+LUMIERE has zero-change occupancy MAE 0.484840.
+
+| Arm | Direct state | Frozen difference | Independent-state difference | Target-only | Nonlinear change head |
+|---|---:|---:|---:|---:|---:|
+| A | 0.929272 | 0.376955 | 0.376293 | 0.437612 | not graded |
+| B | 0.994212 | 0.381971 | 0.376508 | 0.440397 | 0.483508 |
+| C | 0.899498 | 0.378904 | 0.375365 | 0.437862 | 0.270405 |
+| D | 0.947002 | 0.381402 | 0.375873 | 0.435008 | 0.274940 |
+| R35 | 1.114490 | 0.373396 | 0.375064 | 0.440490 | not graded |
+
+SAILOR has zero-change occupancy MAE 0.469092.
+
+| Arm | Direct state | Frozen difference | Independent-state difference | Target-only | Nonlinear change head |
+|---|---:|---:|---:|---:|---:|
+| A | 2.209396 | 0.423821 | 0.396249 | 0.480684 | not graded |
+| B | 2.279716 | 0.436557 | 0.395125 | 0.483279 | 0.468779 |
+| C | 2.117310 | 0.431323 | 0.391896 | 0.483676 | 0.342619 |
+| D | 2.154923 | 0.436907 | 0.394481 | 0.490904 | 0.340042 |
+| R35 | 2.240098 | 0.438596 | 0.397776 | 0.470256 | not graded |
+
+C and D improve the descriptive nonlinear change-head error relative to B. That is a decoder result, not the primary frozen-encoder gain. On SAILOR, every frozen difference probe has higher descriptive error than its independent-state control.
+
+The LUMIERE temporal controls use the same occupancy endpoint and 23 pair-bearing patients:
+
+| Candidate minus control | Difference | Adjusted interval |
+|---|---:|---|
+| C minus target-only | -0.058958 | [-0.074268, -0.043641] |
+| C minus independent-state difference | +0.003539 | [-0.008029, +0.013840] |
+| D minus target-only | -0.053606 | [-0.068688, -0.038017] |
+| D minus independent-state difference | +0.005528 | [-0.005650, +0.016473] |
+
+Beating target-only is insufficient when the independent-state control is not beaten conclusively.
+
+#### Source52 ridge companions
+
+The following values are native log-volume state and change MAEs from source-only ridge fits. These are separate readouts from the direct state heads and occupancy probes above.
+
+| Arm | LUMIERE state | LUMIERE change | SAILOR state | SAILOR change |
+|---|---:|---:|---:|---:|
+| A | 0.887015 | 1.189453 | 2.180392 | 0.983491 |
+| B | 0.937617 | 1.230057 | 2.207182 | 1.006660 |
+| C | 0.897726 | 1.165711 | 2.051489 | 0.969616 |
+| D | 0.915186 | 1.171241 | 2.065202 | 0.963816 |
+| R35 | 1.031088 | 1.273334 | 1.952590 | 0.980395 |
+
+Zero native-volume change scores 1.544612 in LUMIERE and 0.943004 in SAILOR. Every SAILOR ridge-change mean exceeds zero change. These controls do not establish a transfer gain.
+
+#### D's unresolved tradeoff includes measured harm
+
+D minus C mean excess false change over identity, averaged across noise, intensity, and bias, is -0.000220 with adjusted interval [-0.000416, -0.000083]. Bias excess falls by -0.000691, with interval [-0.001278, -0.000277]. Noise excess rises by +0.0000301, with interval [+0.0000182, +0.0000436]. Held-out resolution excess is -0.000575, with interval [-0.001358, +0.000106].
+
+D minus C direct-state error rises by +0.047505, with interval [+0.004175, +0.098686]. This establishes worsening. The interval overlaps the locked +0.05 allowance, so it does not demonstrate violation of that specific margin. The intended state-preserving tradeoff remains INCONCLUSIVE, not VERIFIED.
+
+Per-sequence foreground standardization largely cancels the affine-intensity transform. Near-zero intensity drift is not evidence of learned intensity invariance. The locked stress is retained with this limitation rather than replaced after observing results.
+
+#### Target and empty-compartment limits
+
+The target audit retains all 599 visits and 496 usable pairs without model-selected exclusions. Sparse changed occupancy motivated balancing. It did not establish background dilution as the cause of earlier failures. One native enhancing disagreement disappeared completely after resizing. Partial boundary-detail loss remains unquantified.
+
+Empty compartments still have large state errors. The reviewer reports C42 LUMIERE empty-compartment MAEs of 3.8969, 3.0033, and 7.9117 for core, enhancement, and edema. Empty-target coverage is 7, 22, and 5 LUMIERE visits, and 58, 28, and 1 SAILOR visits. Sparse support limits interpretation. No-positive AUPRC cases remain empty, not perfect scores.
+
+The [aggregate companions](r36_phase1_metrics.json) retain changed and unchanged partitions, appearance and disappearance, both-empty pairs, source-fixed change-size groups, native scalar change, ridge readouts, reversal, and nuisance responses. Partition summaries are supported-pair pooled means, not the primary patient-uniform endpoint. A post-hoc within-patient permutation tests visit specificity, not biological change.
+
+Correct affines and native volumes do not establish accurate segmentation or anatomical correspondence. The suspect extracranial contour remains in the primary analysis. Automated differences are not expert-verified biological change. No repeatability estimate or noise ceiling is available.
+
+#### Independent review and scoped closure
+
+The [result reviewer](reviews/r36_phase1_result_review.md) returned APPROVED_FOR_SCOPED_REPORT and reporting-patch OK. The [artifact audit](reviews/r36_phase1_artifact_audit.md) passed with zero failed assertions. The [closure receipt](reviews/r36_closure_receipt.json) binds both completed native runs and the unchanged recovered audit report.
+
+The audit checked twelve checkpoints, thirty probes, all fifteen assessment sets, 1,950 nuisance rows, and thirty saved ridge bundles. Saved-coefficient replay and independent raw-row seed-mean bootstraps reproduced the classifications. Floating-point reduction differences of about 1e-9 did not change conclusions.
+
+The audit binds declared tensor provenance. It does not newly replay every dense occupancy prediction, precision-recall or direction measure, or original MRI tensor. The [reporting rules and reproduction commands](METHODS.md#r36-phase1) retain that scope. The raw aggregation CLI still labels reports review-pending because it does not consume review evidence. The separate closure receipt records completed review.
+
+Failed initial review runs were not accepted. The resumed native runs completed under their original contracts. Independent review cannot provide retrospective pre-training approval, expert biological validation, or untouched external validation. No forecast or general representation-quality claim follows, and Phase 2 remains unauthorized. The [original report](archive/2026-10-13/info/r36_phase1_report.md) and [execution chronology](archive/2026-10-13/info/r36_delta_representation_results.md) retain their exact bytes.
+
+### Historical execution through October 11
+
+Phase 1 was incomplete in the following dated receipts. The [completed findings](#r36-completed) supersede their open launch and review tasks, not their historical facts.
 
 The newer execution record is [R36 results](documentation_sources/versions/51d6523f0da4b3d8745af10b79318fd684aba1fd9b47cc7d321e30df79984551.md), from sibling worktree `world-model-r36` at revision `f4b96c00dd5d79c59ba02d186e024ff747f690ad`. The captured newer record is S065. S064 preserves the older main-checkout version, which ends before the later check-ins.
 
@@ -425,15 +531,3 @@ A1 to A41 are preserved above as an index; full setups, tables, and correction h
 The historical SAILOR reprocess procedure is preserved at [reprocess guide](documentation_sources/versions/c7aeeea2bff31ee76a1190a69a05ca48ec78fc476e89d3afc345d546074c3f0d.md). Its intended question was whether matching the LUMIERE preprocessing contract would restore dynamics transfer. A19's same-code reprocess did not flip the persistence gate; A21's skull-out readout-recovery interpretation was subsequently withdrawn because the rebuilt cache did not reproduce it. A23's rebuilt same-space ratios remain the relevant historical evidence. Reprocessing details and limitations remain in the guide and A18 to A24.
 
 Numeric claims in this document are scoped to the stated cache, task, cohort, and aggregation. Patient-level bootstrap intervals do not account for readout training-seed uncertainty unless stated. Developmental SAILOR transfer is not untouched external validation. Historical rows and scores are retained as history where corrected, invalid, or withdrawn; they must not be silently promoted to current evidence.
-
-## R36 completed assessment, 2026-10-13
-
-This addendum supersedes the earlier execution snapshots, not their historical evidence. All twelve final training arms and thirty source-only probes are present. Both development-cohort assessments completed, including bounded CPU recovery of the interrupted seed44 work. No GPU work was repeated for this reporting closure.
-
-The primary C minus B frozen local MAE difference is -0.003067, with family-three adjusted paired-patient interval [-0.007995, +0.002644]. Frozen accessibility remains INCONCLUSIVE. C passes the locked direct-volume state-retention margin against A. Added observed temporal information remains INCONCLUSIVE because neither C nor D establishes superiority over independent decoded-state differences. D reduces its aggregate trained-perturbation false-change endpoint but worsens state error and noise sensitivity; the intended retention tradeoff remains INCONCLUSIVE.
-
-The nonlinear change heads improve descriptively under C and D. That is not evidence of the primary encoder gain. Negative developmental SAILOR controls, large empty-compartment errors, and the ineffective standardized affine-intensity stress remain visible in the [complete report](r36_phase1_report.md) and [aggregate companions](r36_phase1_metrics.json).
-
-The [independent result reviewer](reviews/r36_phase1_result_review.md) approved the scoped report and final reporting patch. The full executable artifact audit is tracked separately in the report. No global quality, biological-change, or forecasting verdict follows. Phase 2 remains unauthorized.
-
-The [executable artifact audit](reviews/r36_phase1_artifact_audit.md) subsequently passed with zero failed assertions, including checkpoint/probe bytes, exact assessment identities, nuisance checks, saved ridge replay, and independent raw-row bootstrap regeneration. The [closure receipt](reviews/r36_closure_receipt.json) binds both completed native runs. Phase 1 scoped reporting is complete; the unavailable biological and independent-validation prerequisites remain named rather than declared satisfied.

@@ -1,6 +1,6 @@
 # Methods
 
-This reference defines the methods, evaluation rules, and historical IDs used in the project. The wording was revised on October 12, 2026, using fixed copies of the research records. It does not change the approved protocols or update job status.
+This reference defines the methods, evaluation rules, and historical IDs used in the project. The October 13, 2026, update incorporates the completed R36 reporting rules and review scope. It does not change the locked experiment, refresh live job status, or authorize new research.
 
 Use [Notes and insights](NOTES_AND_INSIGHTS.md) for the reasoning, [Experiments](EXPERIMENTS.md) for results, and [TODO](TODO.md) for remaining steps. Detailed frozen experiment contracts remain binding. The [archive](archive/2026-10-12/README.md) preserves the original records.
 
@@ -200,6 +200,10 @@ R36 tests whether giving changed regions more weight during training makes chang
 
 The primary comparison is C versus B, using matched local linear readouts trained on the 52 source patients. A continues state-only training. Original R35 is the starting encoder. D tests the added nuisance constraint. Better observed-change estimates do not establish better future prediction.
 
+Phase 1 computation and independently reviewed scoped reporting are complete as recorded on October 13, 2026. The [closure receipt](reviews/r36_closure_receipt.json) binds the completed result review and artifact audit. [Experiments](EXPERIMENTS.md#r36-completed) records the classifications. Reporting completion does not establish an encoder gain, biological validity, or future prediction. Phase 2 remains unauthorized.
+
+### Historical execution snapshot
+
 Phase 1 was authorized but incomplete at the October 11, 2026, 18:30:51 UTC snapshot. The seed-43 source-trained readouts were running. Seed 44 had not started. No comparison of model quality on evaluation patients existed.
 
 The completed implementation review was neither design approval before training nor acceptance of scientific results. Checks on nuisance-report identity and classification of harmful tradeoffs remained open. Phase 2 was not authorized. These statements describe the archived snapshot, not current progress. [TODO](TODO.md) owns the remaining actions, and [R36 evidence](EXPERIMENTS.md#r36) owns the execution receipt.
@@ -313,6 +317,42 @@ The +0.05 margins are research decisions, not clinical thresholds. The family-th
 
 Wide intervals or missing evidence produce INCONCLUSIVE results. Demonstrated harmful tradeoffs produce NOT VERIFIED results. A gain from a nonlinear head alone establishes a decoder benefit, not an encoder improvement. Before a D-versus-C verdict, report generation checks the identity of every required nuisance artifact and complete coverage of patients and conditions.
 
+### Reporting validation and independent audit
+
+The corrected nuisance validator checks complete status and exact arm and seed identity. It hashes actual final checkpoint and difference-probe bytes and binds the corresponding evaluation provenance. It also checks prepared metadata, the canonical tensor-manifest hash, and exact patient, first-visit, and condition tuples.
+
+Every required tuple occurs exactly once. Errors and state drift are finite and nonnegative. Excess false change equals the perturbation error minus identity error, and condition summaries agree with their rows. Duplicate, missing, substituted, or mismatched evidence is rejected.
+
+The D classifier returns NOT VERIFIED for demonstrated aggregate nuisance worsening or a demonstrated state or change margin violation. It returns VERIFIED only when nuisance benefit and both retention criteria hold. An interval overlapping a margin, or missing evidence, leaves the result INCONCLUSIVE. A positive error interval can establish worsening without establishing violation of the +0.05 allowance.
+
+`tests/test_delta_reporting.py` covers successful, adverse, margin-violating, overlapping, and missing-evidence cases. It includes 18 identity, coverage, and metric tamper cases, plus replacement of actual checkpoint and probe bytes. `tests/test_delta_summary.py` checks aggregate shapes, privacy filtering, and presentation scope. The final reporting correction is `ac931da`.
+
+The [result review](reviews/r36_phase1_result_review.md) approves the bounded interpretation and reporting patch. It did not independently recompute binary hashes, replay models, regenerate bootstraps, or execute tests. The separate [artifact audit](reviews/r36_phase1_artifact_audit.md) checked twelve checkpoints, thirty probes, fifteen assessment sets, 1,950 nuisance rows, and thirty ridge bundles. It replayed saved ridge coefficients and independently recomputed seed-mean paired-patient contrasts from raw rows. Floating-point reduction changed aggregates by about 1e-9 without changing conclusions.
+
+The audit binds declared tensor provenance. It does not newly replay every dense occupancy prediction, precision-recall or direction measure, or original MRI tensor. Its [saved source](reviews/evidence/r36_artifact_audit.py), [aggregate results](reviews/evidence/r36_artifact_audit_results.json), and [console summary](reviews/evidence/r36_artifact_audit_console.json) retain the checked scope. No expert target adjudication or untouched external validation follows from those checks.
+
+The failed initial native reviews were not accepted. The resumed reviewer and verifier completed under their original model and tool contracts. The verifier's full report was recovered from its exact child-recorded path after an output-routing error. The closure receipt binds its unchanged bytes. A completion summary alone was not accepted as the audit.
+
+The raw aggregation CLI does not consume review artifacts and still labels reports review-pending. The separate closure receipt records completed review. Do not rewrite historical runtime receipts to hide that distinction.
+
+### Reproduce the saved aggregation
+
+The following commands require the existing private artifacts in the execution environment. They aggregate saved results, not new training or inference. They are reference commands, not work performed by this documentation update.
+
+```bash
+.venv/bin/python -B -m unittest discover -s tests -p 'test_delta*.py' -v
+.venv/bin/python scripts/harness.py delta-representation report \
+  --results outputs/r36-delta-objective/matched-final \
+  --contract outputs/r36-delta-objective/qa/r36_contract.json \
+  --out results/r36-report-reproduction.json
+.venv/bin/python scripts/summarize_delta_representation.py \
+  --results outputs/r36-delta-objective/matched-final \
+  --report results/r36-report-reproduction.json \
+  --out results/r36-public-metrics.json
+```
+
+[Aggregate metrics](r36_phase1_metrics.json) retain input and generator hashes. Original weights, predictions, tensors, and participant inventories remain under ignored outputs. The full [archived Phase 1 report](archive/2026-10-13/info/r36_phase1_report.md) preserves the original reproduction record.
+
 ### Resource, privacy, and review guardrails
 
 The total Phase 1 ceiling is 24 GPU-hours and the per-session ceiling is nine hours, subject to a fresh quota check. Training inputs are existing private LUMIERE data only. No SAILOR upload, new acquisition, public push, deployment, or data-use agreement is authorized. Incomplete arms remain incomplete; do not grade partial arms, retry a failed arm, change the recipe, duplicate a launch, or exceed the ceiling. Preserve incomplete outputs and stop on identity, geometry, target-QA, or nonfinite-gradient failures.
@@ -353,6 +393,8 @@ The proposed controls include:
 The proposed evaluation includes patient-uniform forecast MAE and a probability score, either log score or CRPS. CRPS measures how well a predicted distribution matches an observed outcome. Coverage measures how often uncertainty intervals contain the outcome. Sharpness measures how narrow those intervals are. Matched probabilistic controls test whether history adds information.
 
 Multi-step rollout is a separate later capability. Forecast gains do not establish causal treatment effects or validate plans for alternative treatment.
+
+<a id="synthetic-actions"></a>
 
 ## Proposed action-conditioned synthetic work
 
@@ -445,6 +487,7 @@ This compact ledger records historical decisions and their current interpretive 
 | D55 | Objective is broader than current method | Governing research principle. |
 | D56 | Whole-cohort source-grid QA | Integrity result only; not segmentation accuracy, repeatability, biological change, or forecasting benefit. |
 | D57 | Execute matched R36 objective contrast | Phase 1 authorization only; no Phase 2 authorization and no result acceptance implied. |
+| D58 | Separate decoder benefit from encoder progression | Completed R36 interpretation. Frozen accessibility and D's tradeoff remain inconclusive. C passes the specified direct-volume retention margin, not a general quality test. See [Notes](NOTES_AND_INSIGHTS.md#d58). |
 
 ## Direction and audit indexes
 
@@ -562,4 +605,4 @@ R1 to R28 are historical proposals and follow-ups catalogued in [directions.md](
 | R33 | Bounded clean-data rescue matrix. Seven GPU arms completed without reaching pooled anatomy persistence. A40 withdrew leaked forecasts; A41 retained separate latent diagnostics. |
 | R34 | Coordinate, chronology, and checkpoint repairs. Structural implementation review closed. Whole-cohort source-grid QA passed, but biological and repeatability limits remain. |
 | R35 | State, observed-change, and nuisance representation comparison. Completed corrected sibling record; bounded as described above. |
-| R36 | Delta-representation objective contrast. Phase 1 incomplete at snapshot; Phase 2 unauthorized. |
+| R36 | Delta-representation objective contrast. Phase 1 incomplete at the October 11 snapshot. Computation and scoped reporting closed October 13; primary encoder gain remains inconclusive. Phase 2 unauthorized. |

@@ -6,7 +6,7 @@ representations that preserve anatomical and pathological state and meaningful
 longitudinal change while separating acquisition nuisance. The consolidated protocols in
 `info/METHODS.md` describe scoped experiments, not a universal definition
 or gate for representation quality. Read `info/TODO.md` for remaining work
-at the dated research snapshot, and `info/EXPERIMENTS.md` for outcomes. Lesion awareness, JEPA, forecast
+at the latest recorded closure, and `info/EXPERIMENTS.md` for outcomes. Lesion awareness, JEPA, forecast
 heads, and whole-brain methods are hypotheses, not the objective. See
 [`info/research_guardrails.md`](info/research_guardrails.md) before substantial
 research implementation. It sets binding decision and reporting requirements.
@@ -59,6 +59,41 @@ See `info/README.md` for the documentation map. Read
   `info/plots/make_plots.py` regenerates every plot from it — never
   hardcode numbers in a plot script.
 - `data/`, `checkpoints/`, `.venv/`, `.env` — NEVER commit (gitignored).
+
+## Maintain the research documentation
+
+The four canonical pages own different kinds of content:
+
+- `info/TODO.md` lists current actions, blockers, and authorization. Date the status. Close completed tasks instead of leaving old launch instructions active.
+- `info/EXPERIMENTS.md` records measurements, controls, uncertainty, corrections, withdrawals, and negative or inconclusive outcomes.
+- `info/METHODS.md` defines terms, fixed protocols, evaluation rules, reproduction commands, and historical IDs.
+- `info/NOTES_AND_INSIGHTS.md` explains the reasoning and separates measured evidence from interpretation and unknowns.
+
+When new research documentation arrives:
+
+1. Read the prior session's final handoff and committed evidence. Compare the new record with the canonical pages and existing source coverage. Do not repeat completed experiments to reconstruct context.
+2. Put each new fact in its owning page. Preserve D, A, I, R, G, V, E, and K3 IDs. Add a date and source for every result or changed status. Retain the task, cohort, fitting budget, units, aggregation, and uncertainty beside a number.
+3. Preserve corrections, withdrawals, failed and incomplete work, and conflicting historical versions. A later dated finding supersedes an old status without rewriting the old receipt. Separate computational completion, documentation approval, scoped result review, and scientific success.
+4. Keep protocols and proposed work distinct. A documentation update does not authorize a new scientific target, method family, data acquisition, or Phase 2. Follow `info/research_guardrails.md` before implementation.
+5. Fold duplicate standalone narratives into the four pages. Before relocation, preserve exact dirty and untracked bytes. Move originals to a new `info/archive/YYYY-MM-DD/` directory with a README and `manifest.json`. Each record contains `original_path`, `archive_path`, and `sha256`. Never edit an existing archive, frozen source, or hash-bound review report.
+6. Record new source dispositions under `info/documentation_sources/updates/YYYY-MM-DD/`. Link that update from `info/SOURCE_COVERAGE.md`. Do not inflate or overwrite the original 72-version catalog to make it look current. Do not restore `info/drafts/` or create a second active result narrative.
+7. Keep operating guides, review evidence, closure receipts, and aggregate machine-readable measurements separate and discoverable. Preserve exact review verdicts, reviewed hashes, checked scope, and remaining limits. Approval of old hashes does not automatically cover rewritten text.
+8. Update active Markdown links, HTML links, and presentation generators after moving a file. Historical embedded links may remain broken inside immutable archives. Explain that limit in the archive README. Current navigation must work.
+9. Update `info/README.md` and this guide when ownership or maintenance changes. Write plain English, define technical shorthand, and do not replace actual symbols, paths, or metric names with vague prose.
+
+Verify the actual updated files before handing them back:
+
+```bash
+python3 -B -m unittest discover -s tests -p 'test_documentation*.py' -v
+python3 -B scripts/documentation_sources.py verify
+python3 -B scripts/render_documentation_coverage.py
+```
+
+Compile touched ordinary Python files. Keep edited notebook pairs synchronized. Check active links and archive hashes. If a plot or active HTML page changes, regenerate it from its existing inputs, render it, and inspect the pixels. Do not regenerate withdrawn findings as current evidence.
+
+For a substantive consolidation, obtain a fresh read-only comparison after the edited inputs are stable. Record its exact scope and verdict. Integrity tests and identifier-presence checks do not prove semantic completeness or scientific acceptance. Report any unavailable review rather than implying approval.
+
+Keep private participant inventories, raw images, predictions, tensors, and credentials out of committed documentation. Store only approved aggregate evidence and provenance. Do not control research processes or change shared outputs to finish a documentation task.
 
 ## Setup
 

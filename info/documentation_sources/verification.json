@@ -2,14 +2,14 @@
   "status": "PASS",
   "source_versions": 72,
   "branch_refs": 10,
-  "local_links_checked": 384,
+  "local_links_checked": 392,
   "supplementary_files_checked": 3,
-  "archive_records_checked": 37,
+  "archive_records_checked": 47,
   "draft_sha256": {
-    "TODO.md": "ec58352b117103c6c8e97e80931a5ec54130f3c53bb94c46754f5e155ae06d7b",
-    "EXPERIMENTS.md": "331b47f74b14be11b9e64e60eecb550eeafe2583ca98aa0b3027924d55b4abd1",
-    "METHODS.md": "7aecc56f60f088d043b613a2ed2e75d749f292ad360375ad621fabc0d44813aa",
-    "NOTES_AND_INSIGHTS.md": "1db8fef55108700f6b13a6f18091933891beb1a37a0cb7dd6d2f0e0def9ce40b"
+    "TODO.md": "f02e73f8e587b7745c2db7c6d7026efb0bf4284ddf2e64fdaf65eb470315a189",
+    "EXPERIMENTS.md": "efed6787606e69988e9b906cce7594429a09a202951a831ed9f3749a203312ce",
+    "METHODS.md": "1968a9ab5df9dd756fc4c8f17773a41f204ac9d7989465c1659c08a99686b6c1",
+    "NOTES_AND_INSIGHTS.md": "3c970ddda98c3d5a971312e523e6d0fcd9a73bc367be2be081645aa7252a6ed2"
   },
   "errors": [],
   "scope": "Frozen source, supplementary and archive bytes, checked coverage records, baseline identifier presence, and draft link portability. This is not scientific acceptance or a semantic completeness proof."

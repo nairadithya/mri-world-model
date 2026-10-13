@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "workflowRunId": "7e9cab70-c801-41c9-b76c-e62d14a0d896",
+  "state": "complete",
+  "createdAt": 1791868633425,
+  "entries": {
+    "stable-input-verification": {
+      "key": "stable-input-verification",
+      "agent": "verifier",
+      "requestedContext": "fresh",
+      "resolvedContext": "fresh",
+      "outputReference": "/home/adithya/.pi/agent/sessions/--home-adithya-projects-world-model--/subagent-artifacts/outputs/7e9cab70-c801-41c9-b76c-e62d14a0d896/documentation-update/independent-verification.json",
+      "continuation": {
+        "runIds": [
+          "011a9eff-8d66-405b-9ea2-a5bc62e16362"
+        ]
+      },
+      "latestRunId": "011a9eff-8d66-405b-9ea2-a5bc62e16362",
+      "resumability": {
+        "state": "resumable"
+      }
+    },
+    "documentation-review-resume-1": {
+      "key": "documentation-review-resume-1",
+      "agent": "reviewer",
+      "resolvedContext": "fresh",
+      "outputReference": "/home/adithya/.pi/agent/sessions/--home-adithya-projects-world-model--/subagent-artifacts/outputs/7e9cab70-c801-41c9-b76c-e62d14a0d896/documentation-update/independent-review-rerun.md",
+      "continuation": {
+        "runIds": [
+          "cd1c2c5c-6349-4aa4-874c-2580486b6ef0",
+          "8fc4fa91-a0bb-46a6-b343-14cc59bf55a2"
+        ]
+      },
+      "latestRunId": "8fc4fa91-a0bb-46a6-b343-14cc59bf55a2",
+      "resumability": {
+        "state": "resumable"
+      }
+    }
+  },
+  "argsDigest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "workflowChildren": {
+    "version": 1,
+    "parentToolCallId": "call_76f868b62f534fff84eeb7f9413c0079|fc_01c413fe9dfb947a016acdbde8ee0887d0ac14e566779cbcd8",
+    "workflowRunId": "7e9cab70-c801-41c9-b76c-e62d14a0d896",
+    "inventoryComplete": true,
+    "workflowState": "completed",
+    "children": [
+      {
+        "childId": "stable-input-verification",
+        "state": "completed",
+        "runId": "011a9eff-8d66-405b-9ea2-a5bc62e16362",
+        "agent": "verifier",
+        "sessionName": "verifier: Read-only executable verification in /home/adithya/projec...",
+        "model": "openai-codex/gpt-6-luna:medium"
+      },
+      {
+        "childId": "documentation-review-resume-1",
+        "state": "completed",
+        "runId": "8fc4fa91-a0bb-46a6-b343-14cc59bf55a2",
+        "agent": "reviewer",
+        "sessionName": "reviewer: You are reviving a previous subagent conversation. Origin...",
+        "model": "openai-codex/gpt-6.1-sol:high"
+      }
+    ]
+  }
+}

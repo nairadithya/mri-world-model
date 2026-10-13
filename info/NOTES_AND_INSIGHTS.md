@@ -2,7 +2,7 @@
 
 Why have the experiments not yet established useful prediction of glioma change? This page explains what the results mean, why several earlier claims were withdrawn, and what the remaining experiments can test.
 
-The explanation uses fixed copies of the research records. The wording was revised on October 12, 2026, but the latest R36 runtime snapshot is still October 11 at 18:30:51 UTC. No job status or scientific result was updated for this rewrite.
+The October 13, 2026, update explains the completed R36 Phase 1 findings and their scoped review. Earlier runtime snapshots remain dated history, not live job status. No new experiment was run for this documentation update.
 
 Use [Experiments](EXPERIMENTS.md) for measurements, [Methods](METHODS.md) for exact protocols and historical IDs, and [TODO](TODO.md) for remaining work. The [archive](archive/2026-10-12/README.md) preserves the original records and their correction history.
 
@@ -52,7 +52,7 @@ R36's target audit found that the median changed region occupied less than 0.5% 
 
 A whole-grid loss gives most of its weight to unchanged voxels because they are far more numerous. R36 tests whether giving changed and unchanged regions equal weight helps the encoder preserve change information.
 
-That is a testable hypothesis. The audit does not prove that sparse change caused the earlier failures, that most change disappeared during resizing, or that balanced training will improve the representation. The [R36 execution record](documentation_sources/versions/51d6523f0da4b3d8745af10b79318fd684aba1fd9b47cc7d321e30df79984551.md) supplies the audit evidence.
+That was a testable hypothesis. The completed comparison improves the descriptive nonlinear decoder but does not verify the primary frozen-encoder gain. The audit does not prove that sparse change caused earlier failures or that most change disappeared during resizing. The [R36 execution record](documentation_sources/versions/51d6523f0da4b3d8745af10b79318fd684aba1fd9b47cc7d321e30df79984551.md) supplies the audit evidence.
 
 ### A measurement pipeline is useful even when forecasting fails
 
@@ -108,7 +108,9 @@ Its RANO code mapping is empirical and lacks independent codebook confirmation. 
 
 SAILOR is controlled-access data. It remains local. The [Methods reference](METHODS.md) defines the source-trained transfer protocols and privacy limits.
 
-### R35 completion and R36 execution are not forecast verdicts
+### Completed observed-change experiments are not forecasts
+
+R36 Phase 1 computation and scoped reporting review are now complete. Its [current interpretation](#d58) replaces the old launch and reporting tasks below. It does not establish a frozen-encoder gain or future predictability.
 
 R35 completed its corrected state, observed-change, and nuisance comparison. It did not show that a paired head beats independent state differences, and it did not test future prediction.
 
@@ -181,10 +183,18 @@ R33's [clean reruns](documentation_sources/versions/eaca551880e0a9db5c4bdc7785e1
 
 This rewrite does not restore the deleted `notes.md` or `explainer.html`, authorize old proposals, or independently verify the literature.
 
-## D58. Keep the R36 decoder finding separate from encoder progression, 2026-10-13
+<a id="d58"></a>
+
+## D58. Keep the R36 decoder finding separate from encoder progression, October 13, 2026
 
 R36's completed assessment does not establish the primary frozen-encoder benefit of balanced change supervision. C retains the specified direct-volume state endpoint relative to A, but that narrow noninferiority result is not universal representation quality. The trained nonlinear heads improve descriptively while the frozen C-versus-B interval crosses zero. Both observations must remain in the record.
 
 D reduces the mean trained-perturbation excess false-change endpoint, but worsens direct-state error and noise sensitivity. The state interval overlaps the allowed margin, so the intended tradeoff is inconclusive. A favorable aggregate cannot erase these negative companions. The affine-intensity stress is largely canceled by standardization and cannot establish learned scanner invariance.
 
-The [Phase 1 report](r36_phase1_report.md) and [independent result review](reviews/r36_phase1_result_review.md) support this scoped interpretation. No follow-up method family is selected. Any new dynamics experiment needs the separately approved contract and operator decision. Expert target reliability and genuinely independent validation remain unresolved.
+C and D beat matched target-only occupancy probes. Neither establishes superiority over independent decoded-state differences. This limits the claim that a specialized paired representation adds useful observed temporal information. On developmental SAILOR, every frozen difference probe has higher descriptive error than its independent-state control, and every source52 ridge-change mean exceeds zero change.
+
+Failure to establish C's primary gain is not proof that B and C are equivalent or that useful MRI representations are impossible. Passing C's direct-volume retention margin is also not proof that every anatomical capability is retained. The comparisons answer narrower questions than the research objective.
+
+The [completed findings](EXPERIMENTS.md#r36-completed), [independent result review](reviews/r36_phase1_result_review.md), and [closure receipt](reviews/r36_closure_receipt.json) support this interpretation. The separate artifact audit reproduces the bounded classifications. It does not newly replay all dense predictions or establish biological correctness. Reporting approval cannot provide retrospective pre-training approval.
+
+My reading is that the frozen-accessibility hypothesis remains unresolved, while the decoder responds to balanced supervision. Those are different findings. Neither selects a follow-up method family. Any new dynamics experiment needs a separately approved contract and operator decision. Expert target reliability and genuinely independent validation remain unresolved. Phase 2 remains unauthorized.

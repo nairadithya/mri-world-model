@@ -59,6 +59,25 @@ class DocumentationSourcesTests(unittest.TestCase):
     def test_complete_fixture_passes(self):
         self.assertEqual(self.report()["errors"], [])
 
+    def test_renderer_keeps_later_updates_separate_and_is_idempotent(self):
+        from render_documentation_coverage import render
+        (self.package / "slices.json").write_text(json.dumps({"notes": [], "experiments": [], "contracts": []}))
+        catalog = (self.package / "catalog.json").read_bytes()
+        update = self.package / "updates/2026-10-13/coverage.json"
+        update.parent.mkdir(parents=True)
+        update.write_text(json.dumps({"records": []}))
+        for destination, link in ((self.drafts, "../documentation_sources/updates/2026-10-13/coverage.json"),
+                                  (self.root / "info", "documentation_sources/updates/2026-10-13/coverage.json")):
+            with self.subTest(destination=destination):
+                render(self.package, destination, self.root)
+                page = destination / "SOURCE_COVERAGE.md"
+                self.assertIn(f"[2026-10-13 source dispositions]({link})", page.read_text())
+                self.assertIn("separate from the original frozen capture", page.read_text())
+                first = page.read_bytes()
+                render(self.package, destination, self.root)
+                self.assertEqual(page.read_bytes(), first)
+        self.assertEqual((self.package / "catalog.json").read_bytes(), catalog)
+
     def test_missing_coverage_file_fails_without_crashing(self):
         (self.package / "coverage.json").unlink()
         self.assert_failure("Missing coverage.json")

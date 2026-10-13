@@ -1,174 +1,96 @@
 # Research TODO
 
-This checklist records the work left at the archived research snapshot of October 11, 2026, at 18:30:51 UTC. It is not a live progress report. The wording was revised on October 12, 2026.
+This checklist records remaining work after the October 13, 2026, R36 Phase 1 closure. It uses saved reports, not live job status. Earlier launch checklists remain in the [October 11 snapshot](documentation_sources/versions/e3c486ef9cc77afcc1978e53ce4495ef1051a5b8d22cf31b9d627c72d4db029e.md) and the [dated archive](archive/2026-10-13/README.md).
 
-Use this page to review the remaining work, not to authorize new experiments. The original [research rules](documentation_sources/versions/6e710be8c33b05d77bf8f13b415b64028fcc13dc03d71defb304e6a7631c78f4.md) and approved experiment protocols still apply.
+Use [Notes and insights](NOTES_AND_INSIGHTS.md) for interpretation, [Experiments](EXPERIMENTS.md) for results, and [Methods](METHODS.md) for protocols. The [research guardrails](research_guardrails.md) govern new implementation. This checklist does not authorize experiments, data acquisition, or a change of method family.
 
-Start with [Notes and insights](NOTES_AND_INSIGHTS.md) for the reasoning. Use [Experiments](EXPERIMENTS.md) to look up results and [Methods](METHODS.md) to look up the exact protocols.
+## R36 Phase 1 is closed for scoped reporting
 
-## Priority 1. Finish the authorized R36 Phase 1
+The [completed findings](EXPERIMENTS.md#r36-completed) and [closure receipt](reviews/r36_closure_receipt.json) replace the old seed-43 and seed-44 launch tasks. Do not rerun completed work because an archived checkbox is open.
 
-R36 compares two training objectives, B and C, to test whether giving changed regions more weight helps the encoder represent observed change. [Methods](METHODS.md#r36-phase1) defines the four experiment arms and their required comparisons. This experiment observes both scans. It does not predict a future scan.
+- [x] Complete twelve final-epoch training arms, thirty source-only probes, and both development-cohort assessments.
+- [x] Preserve the bounded CPU recovery receipts without repeating GPU work.
+- [x] Correct nuisance-artifact identity and coverage checks, with rejection fixtures.
+- [x] Classify demonstrated adverse tradeoffs separately from overlapping intervals and missing evidence.
+- [x] Obtain the [independent scoped result review](reviews/r36_phase1_result_review.md).
+- [x] Complete the [independent artifact audit](reviews/r36_phase1_artifact_audit.md), including saved ridge replay and patient-level contrast recomputation.
+- [x] Present all arms and required companions in the [research page](research_run.html) and [aggregate measurements](r36_phase1_metrics.json).
 
-At the archived snapshot, all twelve training checkpoints and ten seed-42 readout models had passed local checks. Seed 43 was running. Seed 44 had not started. No comparison of model quality on the evaluation patients had been scored. Do not treat these statements as current job status.
+The primary C-versus-B encoder gain, D's nuisance tradeoff, and superiority over independent state differences remain INCONCLUSIVE. C passes the specified direct-volume retention margin against A. That is not a general state-improvement claim. No follow-up family is selected, and Phase 2 remains unauthorized.
 
-### Complete the remaining source-only readouts
+The earlier implementation review was not retrospective pre-training approval. Computational completion and reporting approval do not resolve target reliability, biological attribution, or untouched external validation.
 
-A readout is a model that extracts a measurement from the encoder's features. Here, the encoder stays fixed, and the readout learns only from the 52 source-training patients.
+## Priority 1. Resolve the limits on interpretation
 
-Complete the readouts under the approved recipe:
-
-- [ ] After the remote seed-43 job finishes, collect its outputs.
-- [ ] Check each readout's epoch-20 checkpoint against its encoder, feature view, protocol, row order, and complete finite training history.
-- [ ] Before starting seed 44, check the actual GPU quota and the remaining experiment allowance.
-- [ ] If a launch intent or push receipt already exists, reconnect to that job instead of starting another copy.
-- [ ] Collect and check the seed-44 outputs under the same rules.
-- [ ] Require all thirty correctly linked readout models before the complete comparison.
-- [ ] Record failed or incomplete work with its actual status.
-
-Use three seeds and exactly 20 epochs. Score the final epoch only. Do not retry failed arms, shorten training, score partial arms, or repeat completed launches.
-
-The total limit is 24 GPU-hours. Each session has a nine-hour maximum, and some follow-on jobs have tighter limits. This document does not authorize a new paid launch.
-
-### Close the reporting review findings
-
-The completed implementation review found risks in the reports. It did not establish a model failure or accept the scientific results. It also did not replace the required design review before training.
-
-Resolve the reporting checks before accepting an aggregate report:
-
-- [ ] Check each nuisance-test artifact's status, arm, seed, checkpoint, and readout identity.
-- [ ] Check that every required patient and perturbation condition is present exactly once.
-- [ ] Reject duplicate, missing, or mismatched reports.
-- [ ] Report demonstrated harm to state estimation, change estimation, or nuisance robustness as NOT VERIFIED.
-- [ ] Report overlapping confidence intervals or missing evidence as INCONCLUSIVE.
-- [ ] Update stale review-status records without implying that the results have been accepted.
-
-The [R36 protocol and recovery review](documentation_sources/supplementary/r36-protocol-recovery.md) gives the complete findings. It refers to `src/harness/analysis/delta_evaluation.py` in `world-model-r36`: lines 88-107 for nuisance aggregation, and lines 66-68 and 103-107 for negative verdicts. Those line numbers describe the reviewed revision, not a fresh code inspection.
-
-No corrupted evaluation report or harmful model tradeoff had been observed in the archived record. Review of this code is separate from review of these documents and from the pending scientific result review.
-
-### Produce the complete Phase 1 assessment
-
-Use the fixed development rows and the matched readouts described in [Methods](METHODS.md#r36-phase1). Complete the following reports:
-
-- [ ] Compare C with B using local linear readouts trained on the same 52 source patients, with each encoder held fixed.
-- [ ] Include original R35, continued state-only arm A, zero change, later-scan-only readouts, and differences between separate state estimates.
-- [ ] Do not score A's untrained change head.
-- [ ] Report balanced occupancy error with equal weight per patient.
-- [ ] Report changed and unchanged regions separately, including appearance, disappearance, sample counts, and groups defined from source-training data.
-- [ ] Report native log-volume errors for state and change, including final measured visits and genuinely empty compartments.
-- [ ] Keep the ridge-regression controls trained only on source patients, with validation grouped by patient.
-- [ ] Compare C with D for sensitivity to acquisition changes.
-- [ ] Report false change relative to the identity test, changes in state estimates, and the held-out resolution test separately.
-- [ ] Apply the fixed three-seed comparison, patient bootstrap, and adjusted confidence intervals.
-- [ ] Do not count seeds or voxels as independent patients.
-- [ ] Evaluate every source-trained readout on local SAILOR data without fitting to those evaluation patients or choosing models from their results.
-- [ ] Keep differences in label definitions, acquisition, and segmentation source visible in the transfer report.
-- [ ] Check saved predictions, weights, normalizers, protocols, model source, tensors, visits, and pair identities before accepting a score table.
-
-Keep every original eligible pair in the primary analysis. Keep the suspect contour outside the brain and the empty targets visible. Do not exclude cases after seeing which exclusions help a model.
-
-### Review and close Phase 1
-
-Complete the reporting and review steps in order:
-
-1. Obtain independent scientific result review after all required companion evaluations are complete. The earlier recovery review is not a result verdict.
-2. Publish the full results table for every arm and control, including negative, incomplete, and inconclusive outcomes.
-3. Distinguish a better encoder representation from a better nonlinear decoder. Distinguish observed change from future prediction.
-4. Append accepted findings and revised priorities to the execution and decision records.
-5. If the conclusions change, update `info/research_run.html` and inspect the rendered page.
-6. Present the Phase 1 report before choosing a follow-up method family.
-
-## Priority 2. Resolve the limits on interpretation
-
-These tasks remain open. They do not authorize data acquisition, new targets, or another model family.
+These tasks require approved study designs. They are not permission to acquire data or start training.
 
 ### Establish target reliability
 
-Before calling measured differences biological change, establish how reliable the masks and their alignment are:
+Before calling automated mask differences biological change, establish how reliable the targets are:
 
-- [ ] Propose a bounded expert review or independent repeat-annotation study.
-- [ ] Separate segmentation repeatability, correspondence between anatomical locations, registration error, and actual disease change.
+- [ ] Propose bounded expert adjudication or independent repeat annotations.
+- [ ] Separate segmentation repeatability, anatomical correspondence, registration error, and actual disease change.
 - [ ] Quantify partial boundary-detail loss at 96 cubed before proposing a native-grid experiment.
-- [ ] Keep absent-compartment failures and postoperative transitions visible.
+- [ ] Keep empty-compartment errors and postoperative transitions visible.
 
-The R36 audit found one native enhancing disagreement that disappeared completely after resizing. It did not establish widespread complete loss of change targets. Correct grids and native volumes do not establish accurate segmentation or reliable biological change.
+R36 found one native enhancing disagreement that disappeared completely after resizing. It did not establish widespread complete disappearance of change targets. Correct affines and native volumes do not prove accurate segmentation or biological correspondence. The suspect extracranial contour remains in the primary analysis.
 
-Get approval for the study's sample, annotations, cost, privacy handling, and scientific endpoint. SAILOR expert masks may help a local check, but their availability does not establish that both cohorts measure the same biological endpoint.
+Get approval for the sample, annotations, cost, privacy handling, and endpoint. Local SAILOR expert masks may support a bounded check. Their availability does not establish equivalent biological targets across cohorts.
 
-### Reserve genuinely independent validation
+### Reserve independent validation
 
-Choose and protect an independent test before making an independent-validation claim:
+Before claiming independent validation, reserve a compatible test that has not influenced development:
 
-- [ ] Choose a new external or hidden test with a fixed task and no prior model selection.
-- [ ] Check participant overlap, supplied preprocessing, label definitions, access, and data-use terms before assigning the cohort a role.
-- [ ] Independently verify the SAILOR clinical codebook before making a clinical RANO claim.
-- [ ] Label both the reused historical final13 and the repeatedly examined encoder-unseen LUMIERE patients as development data.
+- [ ] Specify a fixed task and a new external or hidden test.
+- [ ] Check participant overlap, preprocessing, label definitions, access, and data-use terms.
+- [ ] Verify the SAILOR clinical codebook independently before making a clinical RANO claim.
+- [ ] Continue to label the reused historical final13 and encoder-unseen LUMIERE assessments as development data.
 
-The tentative SAILOR mapping of codes 3 and 5 is not required for the current anatomical proxy task. No new acquisition, public upload, or acceptance of a data-use agreement is authorized here. The [external-supervision audit](documentation_sources/versions/636f0274c36efa3cee145c530acebff689d5961eff995269ecc3bc91d8c6d89e.md) lists candidate cohorts and access limits.
+SAILOR remains controlled-access development transfer. Its tentative codes 3 and 5 are not needed for the anatomical proxy task. No download, public upload, or data-use agreement is authorized here. The [external-supervision audit](documentation_sources/versions/636f0274c36efa3cee145c530acebff689d5961eff995269ecc3bc91d8c6d89e.md) lists historical candidate cohorts and access limits.
 
-## Priority 3. Maintain the consolidated research record
+## Priority 2. Decide the next scientific question before implementation
 
-Before any later consolidation, complete the document review:
+The [R36 interpretation](NOTES_AND_INSIGHTS.md#d58) separates the descriptive nonlinear-decoder benefit from the unresolved encoder hypothesis. The completed comparison does not select an architecture or authorize another experiment.
 
-- [ ] Review [Experiments](EXPERIMENTS.md) for preserved measurements, corrections, and negative outcomes.
-- [ ] Review [Methods](METHODS.md) for separation of current, historical, and proposed protocols, and for the historical decision and audit indexes.
-- [ ] Review [Notes and insights](NOTES_AND_INSIGHTS.md) for the reasoning and the limits of each conclusion.
-- [ ] Keep the section-level source mapping and historical identifiers intact when adding new findings.
-- [ ] Preserve exact copies of dirty and untracked sources. Git history alone does not preserve those files.
-- [ ] Update existing Markdown links and references in code-facing documentation before a later consolidation.
-- [ ] Keep `AGENTS.md`, the root `README.md`, CLI verification skills, and operating procedures discoverable.
+Before substantial research implementation:
 
-These four documents are the consolidated research record, promoted with the operator's approval. The [archive](archive/2026-10-12/README.md) preserves the original pages without changing their bytes. Main's intentional deletions of `info/notes.md` and `info/explainer.html` remain unchanged in that checkout. Their historical copies are archived here, not restored as current guidance. The old notes repeat R29 to R32, now indexed in Methods.
-
-## Separately gated work
+1. State the capability under test and the proposed information cutoff.
+2. Write the [experiment decision brief](research_guardrails.md#experiment-decision-brief).
+3. Include a materially different approach, a simple baseline, matched comparisons, costs, independent checks, falsifiers, and unknowns.
+4. Obtain the operator's decision on changes to scientific targets, method-family priorities, and what counts as success.
 
 ### R36 Phase 2 remains unauthorized
 
-Do not start Phase 2 without a separate operator decision. The [conditional dynamics proposal](METHODS.md#r36-phase2) requires source-validation selection rules, verified limits on information available at prediction time, and matched current-scan and history controls.
+The [conditional dynamics proposal](METHODS.md#r36-phase2) requires a separate operator decision. It is not an automatic continuation of Phase 1.
 
-For future prediction, exclude future scans, masks, volumes, embeddings, gaps ending at future visits, and future treatment from model inputs. Do not choose encoders using SAILOR results or the development assessment results. State the additional capability that a new experiment tests.
+Any future predictor must exclude future scans, masks, volumes, embeddings, gaps ending at future visits, and future treatment from inference inputs. Teacher observations can be training targets only. Selection cannot use SAILOR or the reused development assessment outcomes.
 
-### Other ideas remain candidates
+### Other ideas remain proposals
 
-Treat the following ideas as proposals, not approved next steps:
+The [synthetic-action proposal](METHODS.md#synthetic-actions) is unrun and unselected. Physical-coordinate and target-consistency checks must precede a training proposal.
 
-- The [action-conditioned representation brief](documentation_sources/versions/f3dad868d43b3aa2bf5f7913b3dfa2872cdf87a65fd9648b1eb9932e3f750855.md) proposes controlled synthetic changes to real MRI. It is unrun and unselected. Check physical coordinates and target consistency before proposing training.
-- Native-grid sampling, stronger encoders, different MRI-sequence fusion, and revised acquisition objectives are separate hypotheses. Do not bundle them into repairs to the fixed C-versus-B comparison.
-- A faithful pretrained comparator, a genuine reproduction of paired-scan assessment, and better clinical labels remain evidence gaps. Their historical RANO task does not make them the next R36 step.
-- Treatment-conditioned prediction and causal treatment effects are different questions. Observational SAILOR treatment tokens do not support claims about what would happen under an alternative treatment.
+Native-grid sampling, stronger encoders, different sequence fusion, and revised acquisition objectives are separate hypotheses. Do not bundle them into a repair of the completed C-versus-B comparison.
 
-Before substantial new research implementation, write the required brief. Include a materially different approach, a simple baseline, matched comparisons, cost, independent checks, and findings that would disprove the hypothesis. The operator decides changes to scientific targets and method-family priorities.
+A faithful pretrained comparator, a genuine reproduction of paired-scan assessment, and better clinical labels remain evidence gaps. Their historical RANO task does not make them the next R36 step. Treatment-conditioned prediction is also distinct from identifying causal treatment effects.
+
+## Priority 3. Maintain the consolidated research record
+
+Follow the [documentation procedure](../AGENTS.md#maintain-the-research-documentation):
+
+- [ ] Add measurements, corrections, and negative findings to Experiments with their historical IDs and evidence.
+- [ ] Add definitions and protocol changes to Methods. Add reasoning to Notes and insights. Keep this page limited to current actions and their authorization.
+- [ ] Reconcile new source records with existing coverage before archiving duplicates.
+- [ ] Preserve exact dirty or untracked bytes and record original paths and hashes.
+- [ ] Keep dates explicit when a new status supersedes an old runtime snapshot.
+- [ ] Check active links and code-facing references after relocation.
+- [ ] Keep operational guides, review evidence, aggregate metrics, and current presentation generators discoverable.
+
+[Source coverage](SOURCE_COVERAGE.md) describes the original 72-version capture and links the later update record. Existing archives, frozen sources, and accepted review evidence retain their exact bytes and scope. Documentation approval does not accept scientific results or authorize research execution.
 
 ## Closed work is not an active checklist
 
-Use [Experiments](EXPERIMENTS.md) to find completed pilots, readout tests, preprocessing and geometry audits, RANO comparators, P2 attempts, clean reruns, and the R35 comparison.
+[Experiments](EXPERIMENTS.md) records completed pilots, readouts, preprocessing and geometry audits, RANO comparators, P2 attempts, clean reruns, R35, and R36 Phase 1.
 
-Do not restart unchanged JEPA continuations, larger horizon heads, combined surgery and augmentation sweeps, transition-weighting sweeps, or frozen-feature combinations because an old checkbox is still open. A40 withdrew the learned P2.4 and adaptation forecasting claims. A41 and the completed clean reruns replace their old launch checklists.
+Do not restart unchanged JEPA continuations, larger horizon heads, combined surgery and augmentation sweeps, transition-weighting sweeps, or frozen-feature combinations because an old checkbox is open. A40 withdrew learned P2.4 and adaptation forecasting claims. A41 and the completed clean reruns replace their old launch checklists.
 
-Completed computation does not resolve biological validity, independent result review, or external validity.
-
-## Source and status provenance
-
-The work priorities come from [D55 to D57 and the decision history](documentation_sources/versions/2b7293c884e0e0aa9f1db178d13f55497d584cd7060c68c022436d47330bb63c.md), [the latest R36 directions](documentation_sources/versions/eade325e60cbeeb92dc5f6570520d8f502a519e846309ef5803b2bf7e1a2d094.md), and [the approved R36 handoff addendum](documentation_sources/versions/8fc1116f80667885774a5ce6a8fb9ec40f1e360d1f87867fefb81baf01118ab6.md).
-
-The newer [R36 execution record](documentation_sources/versions/51d6523f0da4b3d8745af10b79318fd684aba1fd9b47cc7d321e30df79984551.md) comes from `exp/r36-delta-objective` at `f4b96c0` and includes the 14:16 UTC resumption. The [older main-checkout record](documentation_sources/versions/4f80203aeaed182a3e106b44f5d066b213b65387a143d3979710282be6263077.md) ends at 04:04 UTC. Neither is a live monitor.
-
-The later 18:30:51 UTC snapshot came from `outputs/r36-delta-objective/continuation.json`. The [recovered receipt](documentation_sources/supplementary/r36-runtime-snapshot.json) preserves its exact excerpt, timestamp, and source-line hash from tool-result line 701 of the saved October 10 parent session. The earlier temporary copy is unavailable. This rewrite does not inspect the moving receipt, claim a later job state, or report a fresh quota balance. The receipt's generic review field does not reliably distinguish implementation review from scientific result review.
-
-Historical completion and withdrawal checks come from [the original TODO](documentation_sources/versions/c7c9fba4178609946f8fd4ce8b90af08b6a88392955d7f2e198aa2e02b14cc57.md), [clean rescues](documentation_sources/versions/eaca551880e0a9db5c4bdc7785e135675cd518ebfcd361d5aa482beca4f37dce.md), and [the R35 record](documentation_sources/versions/768fdfa0a9be4dc76e99fcef9ff971e26252d672e82b08267f5e9ea157ced0f3.md) at `2f6e1f5`.
-
-[Source coverage](SOURCE_COVERAGE.md) records every captured version and the operating documents kept separate. Research-source links point to fixed copies inside the repository. The archived originals remain byte-identical. Documentation promotion does not authorize research execution or accept scientific results.
-
-## Current R36 closure addendum, 2026-10-13
-
-This section supersedes the old launch and reporting checklist for completed work. Do not rerun the historical seed43/44 tasks above.
-
-- [x] Combine the three worktree branches and remaining decision trails on `integration/r36-report-closure`, with dirty-source preservation and immutable-source hash verification.
-- [x] Complete the twelve training arms, thirty source-only probes, and both developmental cohort assessments.
-- [x] Implement strict nuisance-artifact identity and coverage validation, with regression fixtures.
-- [x] Implement explicit negative D tradeoff classifications while retaining inconclusive intervals and missing evidence.
-- [x] Obtain the [independent scoped result review](reviews/r36_phase1_result_review.md) on the final reporting correction.
-- [x] Finish and record the [independent executable artifact audit](reviews/r36_phase1_artifact_audit.md), including binary binding, saved ridge replay, and raw-row bootstrap recomputation. The [closure receipt](reviews/r36_closure_receipt.json) binds both completed native runs.
-
-Read the [Phase 1 report](r36_phase1_report.md), [complete aggregate companions](r36_phase1_metrics.json), and [research page](research_run.html). The primary encoder gain, D tradeoff, and superiority over independent-state differences remain inconclusive. C's direct-volume retention margin passes. No method family or Phase 2 run is selected or authorized. Target reliability and untouched validation remain open.
+The October 11, 18:30:51 UTC receipt reported seed 43 running and seed 44 unlaunched. That remains true as a historical statement, not as the present TODO. The [saved runtime excerpt](documentation_sources/supplementary/r36-runtime-snapshot.json) retains its origin and timestamp. The [October 13 execution record](archive/2026-10-13/info/r36_delta_representation_results.md) and closure receipt explain the later completion without rewriting those old receipts.
