@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-10-13T03:48:02.741451+00:00",
+  "integration_branch": "integration/r36-report-closure",
+  "reviewed_source_commit": "c33a0a8",
+  "reporting_fix_commit": "ac931da",
+  "scientific_result_review": {
+    "run_id": "cb50a3c0-efb6-4b6d-9bd4-d35ecef2dbf9",
+    "native_status": "complete",
+    "verdict": "APPROVED_FOR_SCOPED_REPORT",
+    "reporting_patch": "OK"
+  },
+  "artifact_verification": {
+    "run_id": "21049a9b-3cca-4c7b-921f-d65a2491968d",
+    "native_status": "complete",
+    "verdict": "PASS",
+    "failed_assertions": 0,
+    "counts": {
+      "arm assessments": 15,
+      "assessment artifacts": 30,
+      "checkpoints": 12,
+      "lumiere_rows": 1755,
+      "lumiere_states": 2235,
+      "nuisance_rows": 1950,
+      "probe trainings": 30,
+      "probes": 30,
+      "ridge_receipts": 30,
+      "sailor_rows": 3630,
+      "sailor_states": 4035
+    }
+  },
+  "report_recovery": {
+    "source": "explicit child-written final report path from its exact session tool call at line145",
+    "session_id": "01a1315c-9b15-75e5-b85e-85dbb228f502",
+    "reason": "Child wrote the full report to a misrouted artifact directory. The correctly managed output contains its completion summary only. Exact full evidence is preserved here."
+  },
+  "evidence_sha256": {
+    "r36_phase1_result_review.md": "af9f6099e7daf09ebdb43ccff0b099bf81bfa804bfb1d29a8d72fe3a29479f82",
+    "r36_phase1_artifact_audit.md": "7417ed7b3046f1043cb127ffbfc4d405681a22d702d834d9cdd6969dacc991ef",
+    "evidence/r36_artifact_audit.py": "8ff9695261946573c329ee61180c9213c42bfed7b4d4f962791329418bb2034e",
+    "evidence/r36_artifact_audit_results.json": "764fde0831a4c9e47e1d86bd9dad2030fd3af6756c28c565759a86c3658c9696",
+    "evidence/r36_artifact_audit_console.json": "cacffcbab4560a0a3dfae672fa78756831319e2c00f5e81c899d980d7079e076"
+  },
+  "parent_verification": {
+    "discovered_tests": 105,
+    "delta_tests": 39,
+    "separate_harness_checks": 25,
+    "notebook_pairs": 17,
+    "frozen_source_versions": 72,
+    "archived_records": 37
+  },
+  "phase1_status": "COMPUTATION_AND_SCOPED_REPORT_REVIEW_COMPLETE",
+  "phase2": "NOT_AUTHORIZED",
+  "hypotheses": {
+    "C_vs_B_frozen_accessibility": "INCONCLUSIVE",
+    "D_nuisance_tradeoff": "INCONCLUSIVE",
+    "incremental_temporal_information": "INCONCLUSIVE",
+    "state_retention": "VERIFIED"
+  },
+  "residual_limits": [
+    "No retrospective pre-training approval",
+    "No expert segmentation-repeatability or biological attribution",
+    "No untouched external validation",
+    "No report-time replay of every dense occupancy prediction or PR/direction measure",
+    "Tensor-manifest provenance binding is not a fresh reread of every original MRI tensor"
+  ],
+  "raw_cli_status_note": "The aggregation CLI always writes review-pending status. This separately bound receipt records the completed native review and artifact audit; historical execution receipts are not overwritten."
+}

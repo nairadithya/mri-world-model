@@ -1,6 +1,6 @@
 # R36 Phase 1 report
 
-Status, October 13, 2026. Computation is complete. The final reporting corrections are implemented and tested. Independent result review and the full executable artifact audit are resuming after a provider usage-limit interruption. No scientific acceptance is claimed by this status.
+Status, October 13, 2026. Phase 1 computation and scoped reporting review are complete. The final reporting corrections passed independent review. The executable artifact audit passed with zero failed assertions. The [closure receipt](reviews/r36_closure_receipt.json) binds both completed native runs and their evidence. This approves reporting the bounded findings, not a representation-quality win or progression to Phase 2.
 
 ## Question and fixed comparison
 
@@ -14,7 +14,7 @@ LUMIERE assessment includes 149 visits from 26 encoder-unseen development patien
 
 ## Fixed hypothesis classifications
 
-These are the computed protocol classifications, pending the resumed independent checks.
+Independent result review and executable raw-row recomputation support these protocol classifications.
 
 | Hypothesis | Difference and family-adjusted interval | Classification |
 |---|---|---|
@@ -69,6 +69,12 @@ The saved metrics bind their inputs and generator by SHA256. Original private we
 
 ## Review and remaining gates
 
-The interrupted review draft was not accepted as a completed native run. Its two reporting notes prompted stronger manifest/visit binding and regression tests on the integration branch. The resumed native reviewer and verifier retain their original model/tool contracts. Their terminal results and exact checked scope must be recorded before closing this gate.
+The interrupted review draft was not accepted as a completed native run. Its two reporting notes prompted stronger manifest/visit binding and regression tests on the integration branch. The resumed native reviewer and verifier retained their original model/tool contracts and completed successfully.
+
+The [result reviewer](reviews/r36_phase1_result_review.md) returned APPROVED_FOR_SCOPED_REPORT and reporting-patch OK. The [artifact audit](reviews/r36_phase1_artifact_audit.md) verified 12 checkpoints, 30 probes, all 15 assessment sets, 1,950 nuisance rows, and 30 saved ridge bundles. Saved-coefficient replay and independent raw-row seed-mean bootstraps reproduced the report. Its [scratch source](reviews/evidence/r36_artifact_audit.py) and [aggregate results](reviews/evidence/r36_artifact_audit_results.json) are preserved as evidence, not a substitute for reading the audit's checked scope. Raw aggregation differs by about 1e-9 through floating-point reduction, without a conclusion change.
+
+The artifact audit binds declared tensor provenance; it does not newly replay every dense occupancy prediction, PR/direction measure, or original MRI tensor. The audit's managed output contained only a completion summary because its full report was written to a misrouted artifact directory. The parent recovered the exact final report from the child-recorded path, without changing its contents, and bound it by hash in the closure receipt.
+
+The raw CLI continues to label its aggregation review-pending because it does not consume review artifacts. The separate closure receipt and this report record completed review. Historical runtime receipts were not rewritten as if their old unavailable-review status were current.
 
 Independent review cannot provide retrospective pre-training approval. Expert target adjudication, segmentation repeatability, reliable biological attribution, and untouched external validation remain unavailable. No forecast result follows from this two-observation assessment. No follow-up family is selected, and Phase 2 remains unauthorized.

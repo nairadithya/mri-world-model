@@ -169,6 +169,6 @@ This section supersedes the old launch and reporting checklist for completed wor
 - [x] Implement strict nuisance-artifact identity and coverage validation, with regression fixtures.
 - [x] Implement explicit negative D tradeoff classifications while retaining inconclusive intervals and missing evidence.
 - [x] Obtain the [independent scoped result review](reviews/r36_phase1_result_review.md) on the final reporting correction.
-- [ ] Finish and record the independent executable artifact audit, including binary binding and saved ridge replay.
+- [x] Finish and record the [independent executable artifact audit](reviews/r36_phase1_artifact_audit.md), including binary binding, saved ridge replay, and raw-row bootstrap recomputation. The [closure receipt](reviews/r36_closure_receipt.json) binds both completed native runs.
 
 Read the [Phase 1 report](r36_phase1_report.md), [complete aggregate companions](r36_phase1_metrics.json), and [research page](research_run.html). The primary encoder gain, D tradeoff, and superiority over independent-state differences remain inconclusive. C's direct-volume retention margin passes. No method family or Phase 2 run is selected or authorized. Target reliability and untouched validation remain open.

@@ -1,0 +1,175 @@
+{
+  "fail_count": 0,
+  "failures": [],
+  "counts": {
+    "checkpoints": 12,
+    "probes": 30,
+    "probe trainings": 30,
+    "arm assessments": 15,
+    "assessment artifacts": 30,
+    "lumiere_rows": 1755,
+    "lumiere_states": 2235,
+    "sailor_rows": 3630,
+    "sailor_states": 4035,
+    "nuisance_rows": 1950,
+    "ridge_receipts": 30
+  },
+  "contrasts": {
+    "C-B": {
+      "difference": -0.003067227130126338,
+      "raw_95ci": [
+        -0.007161782561430298,
+        0.0014298980638225353
+      ],
+      "family_adjusted_ci": [
+        -0.007994767206108058,
+        0.0026435623475576696
+      ],
+      "patients": 23,
+      "draws": 10000,
+      "seed": 2026,
+      "family_size": 3
+    },
+    "C-A": {
+      "difference": 0.0019487065524685424,
+      "raw_95ci": [
+        -0.003196370080807587,
+        0.006849524963838663
+      ],
+      "family_adjusted_ci": [
+        -0.004489510692973135,
+        0.007941078341332303
+      ],
+      "patients": 23,
+      "draws": 10000,
+      "seed": 2026,
+      "family_size": 3
+    },
+    "D-C": {
+      "difference": 0.0024976120766381687,
+      "raw_95ci": [
+        0.00011407444803639202,
+        0.005063419222582344
+      ],
+      "family_adjusted_ci": [
+        -0.000373670118248159,
+        0.005686572985988219
+      ],
+      "patients": 23,
+      "draws": 10000,
+      "seed": 2026,
+      "family_size": 3
+    }
+  },
+  "state_C-A": {
+    "difference": -0.02977432633142891,
+    "raw_95ci": [
+      -0.06533622233772995,
+      0.007908876145428826
+    ],
+    "family_adjusted_ci": [
+      -0.07324387484417727,
+      0.017074217729868692
+    ],
+    "patients": 26,
+    "draws": 10000,
+    "seed": 2026,
+    "family_size": 3
+  },
+  "nuisance_trained_mean": {
+    "difference": -0.0002204197248479781,
+    "raw_95ci": [
+      -0.0003751567885979641,
+      -9.903073467316224e-05
+    ],
+    "family_adjusted_ci": [
+      -0.00041553320495748067,
+      -8.256487064779914e-05
+    ],
+    "patients": 26,
+    "draws": 10000,
+    "seed": 2026,
+    "family_size": 3
+  },
+  "state_D-C": {
+    "difference": 0.047504632791756714,
+    "raw_95ci": [
+      0.011438293513858196,
+      0.08901594892617257
+    ],
+    "family_adjusted_ci": [
+      0.004174547576787816,
+      0.0986864093913385
+    ],
+    "patients": 26,
+    "draws": 10000,
+    "seed": 2026,
+    "family_size": 3
+  },
+  "controls": {
+    "C": {
+      "target_only": {
+        "difference": -0.058957776004021065,
+        "raw_95ci": [
+          -0.0714295495243482,
+          -0.046376058439100434
+        ],
+        "family_adjusted_ci": [
+          -0.07426763572476351,
+          -0.04364117292761104
+        ],
+        "patients": 23,
+        "draws": 10000,
+        "seed": 2026,
+        "family_size": 3
+      },
+      "independent_state": {
+        "difference": 0.0035390019016921454,
+        "raw_95ci": [
+          -0.005829641021499952,
+          0.012024748706790553
+        ],
+        "family_adjusted_ci": [
+          -0.00802906626509534,
+          0.013839692916249384
+        ],
+        "patients": 23,
+        "draws": 10000,
+        "seed": 2026,
+        "family_size": 3
+      }
+    },
+    "D": {
+      "target_only": {
+        "difference": -0.05360597608395744,
+        "raw_95ci": [
+          -0.06602322318401217,
+          -0.04082479360019021
+        ],
+        "family_adjusted_ci": [
+          -0.06868826487935564,
+          -0.0380174236882673
+        ],
+        "patients": 23,
+        "draws": 10000,
+        "seed": 2026,
+        "family_size": 3
+      },
+      "independent_state": {
+        "difference": 0.00552820699849221,
+        "raw_95ci": [
+          -0.003551263074185385,
+          0.014360505322160383
+        ],
+        "family_adjusted_ci": [
+          -0.005650010614996991,
+          0.016472771549580094
+        ],
+        "patients": 23,
+        "draws": 10000,
+        "seed": 2026,
+        "family_size": 3
+      }
+    }
+  }
+}

@@ -1,6 +1,7 @@
 """Refresh the current R36 section and archive links from aggregate-only metrics."""
 import argparse
 import html
+import hashlib
 import json
 from pathlib import Path
 import re
@@ -44,7 +45,7 @@ def section(metrics, reviewed):
 <p>D reduces average trained-perturbation excess false change, but its intended tradeoff remains inconclusive. D minus C direct-state error is {dstate["difference"]:+.6f}, with adjusted interval [{dstate["family_adjusted_ci"][0]:+.6f}, {dstate["family_adjusted_ci"][1]:+.6f}]. State error and noise sensitivity worsen. The state interval overlaps the +0.05 allowance. The intensity transform is largely canceled by per-sequence standardization, so its near-zero drift is not evidence of learned intensity invariance. Held-out resolution remains a separate stress test.</p>
 <p>C and D show a descriptive nonlinear-decoder benefit over B, not the primary frozen-encoder gain. SAILOR frozen-difference errors exceed the independent-state controls in every arm. All SAILOR ridge-delta means exceed zero change. Empty compartments still have large errors; the complete aggregate companions include empty/nonempty visits, changed/unchanged partitions, appearance/disappearance, source-fixed change-size strata, scalar and ridge readouts, reversal, and nuisance responses.</p>
 <p>The target audit preserved 599 visits and 496 pairs without exclusions. Sparse changed occupancy motivates the experiment but does not prove background dilution caused R35's behavior. One native enhancing disagreement vanished after resizing. A suspect extracranial contour remains in the primary analysis. Anatomical correspondence, segmentation accuracy, repeatability, and biological attribution remain unknown.</p>
-<p class="source">Read the <a href="r36_delta_representation_results.md">R36 execution record</a>, <a href="r36_phase1_metrics.json">aggregate companions and input hashes</a>, and <a href="r36_delta_representation_handoff.md">locked experiment plan</a>. Implementation and records are combined on <code>integration/r36-report-closure</code>. No new forecast run or method family is authorized by this report.</p>
+<p class="source">Read the <a href="r36_phase1_report.md">Phase 1 report</a>, <a href="reviews/r36_closure_receipt.json">review completion receipt</a>, <a href="r36_phase1_metrics.json">aggregate companions and input hashes</a>, and <a href="r36_delta_representation_handoff.md">locked experiment plan</a>. Implementation and records are combined on <code>integration/r36-report-closure</code>. No new forecast run or method family is authorized by this report.</p>
 '''
 
 
@@ -72,4 +73,15 @@ if __name__ == "__main__":
     parser.add_argument("--metrics", type=Path, default=ROOT / "info/r36_phase1_metrics.json")
     parser.add_argument("--reviewed", action="store_true", help="Use only after the durable independent review receipt is recorded")
     args = parser.parse_args()
+    if args.reviewed:
+        directory = ROOT / "info/reviews"
+        receipt = json.loads((directory / "r36_closure_receipt.json").read_text())
+        review, audit = receipt["scientific_result_review"], receipt["artifact_verification"]
+        if (review["native_status"] != "complete" or review["verdict"] != "APPROVED_FOR_SCOPED_REPORT"
+                or audit["native_status"] != "complete" or audit["verdict"] != "PASS" or audit["failed_assertions"]):
+            raise ValueError("independent review and artifact audit must complete before marking the page reviewed")
+        for filename, expected in receipt["evidence_sha256"].items():
+            path = (directory / filename).resolve()
+            if not path.is_relative_to(directory.resolve()) or hashlib.sha256(path.read_bytes()).hexdigest() != expected:
+                raise ValueError("closure evidence bytes differ from the recorded receipt")
     refresh(ROOT / "info/research_run.html", json.loads(args.metrics.read_text()), args.reviewed)
