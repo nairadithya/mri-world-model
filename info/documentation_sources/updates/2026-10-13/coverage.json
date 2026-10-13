@@ -1,0 +1,165 @@
+{
+  "scope": "Ten relocated files at 36a9e28; distinct from the original frozen 72-version capture. Parent integration is not scientific acceptance.",
+  "records": [
+    {
+      "original_path": "info/r35_representation_comparison.md",
+      "sha256": "768fdfa0a9be4dc76e99fcef9ff971e26252d672e82b08267f5e9ea157ced0f3",
+      "bytes": 25880,
+      "captured_sources_with_identical_bytes": [
+        "S062"
+      ],
+      "archive_path": "info/archive/2026-10-13/info/r35_representation_comparison.md",
+      "destinations": [
+        "EXPERIMENTS.md",
+        "METHODS.md"
+      ],
+      "comparison_status": "already_covered",
+      "read_mode": "Full primary-source read",
+      "disposition": "Byte-identical to S062. Existing R35 findings, controls, numerical-repair chronology and limits remain in the canonical package. R36 review does not retroactively approve R35."
+    },
+    {
+      "original_path": "info/r36_delta_representation_handoff.md",
+      "sha256": "8fc1116f80667885774a5ce6a8fb9ec40f1e360d1f87867fefb81baf01118ab6",
+      "bytes": 33718,
+      "captured_sources_with_identical_bytes": [
+        "S063"
+      ],
+      "archive_path": "info/archive/2026-10-13/info/r36_delta_representation_handoff.md",
+      "destinations": [
+        "METHODS.md",
+        "TODO.md"
+      ],
+      "comparison_status": "already_covered",
+      "read_mode": "Full primary-source read",
+      "disposition": "Byte-identical to S063. Retain the fixed Phase1 recipe and conditional Phase2. Its PLAN ONLY header and later execution addendum are history. Completed launch tasks are no longer active."
+    },
+    {
+      "original_path": "info/r36_delta_representation_results.md",
+      "sha256": "84a7e2df9c7c9b463adfcf888c60797d85591e3ecafad02949cd43cd275ee746",
+      "bytes": 24370,
+      "captured_sources_with_identical_bytes": [],
+      "archive_path": "info/archive/2026-10-13/info/r36_delta_representation_results.md",
+      "destinations": [
+        "EXPERIMENTS.md",
+        "METHODS.md",
+        "TODO.md"
+      ],
+      "comparison_status": "incorporated",
+      "read_mode": "Full read and complete diff against S065",
+      "disposition": "Full read and complete diff against S065. Incorporate bounded CPU recovery, reporting corrections, completed review and artifact audit, observed-change classifications and remaining limits. Retain earlier receipts unchanged."
+    },
+    {
+      "original_path": "info/action_conditioned_representation_brief.md",
+      "sha256": "f3dad868d43b3aa2bf5f7913b3dfa2872cdf87a65fd9648b1eb9932e3f750855",
+      "bytes": 7551,
+      "captured_sources_with_identical_bytes": [
+        "S023"
+      ],
+      "archive_path": "info/archive/2026-10-13/info/action_conditioned_representation_brief.md",
+      "destinations": [
+        "METHODS.md",
+        "NOTES_AND_INSIGHTS.md",
+        "TODO.md"
+      ],
+      "comparison_status": "already_covered",
+      "read_mode": "Full primary-source read",
+      "disposition": "Byte-identical to S023. Preserve the unrun, unselected synthetic-action proposal and its geometry, leakage, nuisance and biological-validity limits."
+    },
+    {
+      "original_path": "info/r36_phase1_report.md",
+      "sha256": "3926efba37bc841fd9b8d0b5109f26ace9399dc83570d89ab6f9c22a1c3703eb",
+      "bytes": 9537,
+      "captured_sources_with_identical_bytes": [],
+      "archive_path": "info/archive/2026-10-13/info/r36_phase1_report.md",
+      "destinations": [
+        "EXPERIMENTS.md",
+        "METHODS.md",
+        "NOTES_AND_INSIGHTS.md",
+        "TODO.md"
+      ],
+      "comparison_status": "incorporated",
+      "read_mode": "Full primary-source read",
+      "disposition": "Full read. Incorporate all primary classifications, controls, measured D harm, empty targets, transfer negatives, audit limitations and reproduction rules. Archive the original narrative rather than maintain a second active report."
+    },
+    {
+      "original_path": "info/drafts/TODO.md",
+      "sha256": "e3c486ef9cc77afcc1978e53ce4495ef1051a5b8d22cf31b9d627c72d4db029e",
+      "bytes": 12364,
+      "captured_sources_with_identical_bytes": [
+        "S039"
+      ],
+      "archive_path": "info/archive/2026-10-13/info/drafts/TODO.md",
+      "destinations": [
+        "TODO.md"
+      ],
+      "comparison_status": "already_covered",
+      "read_mode": "Byte identity against frozen baseline",
+      "disposition": "Byte-identical to the corresponding frozen draft baseline. No new content. Retain original bytes in the archive and remove restored drafts from active navigation."
+    },
+    {
+      "original_path": "info/drafts/EXPERIMENTS.md",
+      "sha256": "376ef33c6235a3b4ac055340d2447d5f33d1b54abe2504c525a2e2330ee88904",
+      "bytes": 31091,
+      "captured_sources_with_identical_bytes": [
+        "S036"
+      ],
+      "archive_path": "info/archive/2026-10-13/info/drafts/EXPERIMENTS.md",
+      "destinations": [
+        "EXPERIMENTS.md"
+      ],
+      "comparison_status": "already_covered",
+      "read_mode": "Byte identity against frozen baseline",
+      "disposition": "Byte-identical to the corresponding frozen draft baseline. No new content. Retain original bytes in the archive and remove restored drafts from active navigation."
+    },
+    {
+      "original_path": "info/drafts/METHODS.md",
+      "sha256": "4152bf66cc81cd99bb7970ddaf52cffcdff59756fa1baf7a95e1cd349ef34352",
+      "bytes": 30992,
+      "captured_sources_with_identical_bytes": [
+        "S037"
+      ],
+      "archive_path": "info/archive/2026-10-13/info/drafts/METHODS.md",
+      "destinations": [
+        "METHODS.md"
+      ],
+      "comparison_status": "already_covered",
+      "read_mode": "Byte identity against frozen baseline",
+      "disposition": "Byte-identical to the corresponding frozen draft baseline. No new content. Retain original bytes in the archive and remove restored drafts from active navigation."
+    },
+    {
+      "original_path": "info/drafts/NOTES_AND_INSIGHTS.md",
+      "sha256": "7fb4e40c27dada7024a7cee70887a036cb98780d3b717cc25cccf3181d1a9fde",
+      "bytes": 33040,
+      "captured_sources_with_identical_bytes": [
+        "S038"
+      ],
+      "archive_path": "info/archive/2026-10-13/info/drafts/NOTES_AND_INSIGHTS.md",
+      "destinations": [
+        "NOTES_AND_INSIGHTS.md"
+      ],
+      "comparison_status": "already_covered",
+      "read_mode": "Byte identity against frozen baseline",
+      "disposition": "Byte-identical to the corresponding frozen draft baseline. No new content. Retain original bytes in the archive and remove restored drafts from active navigation."
+    },
+    {
+      "original_path": "info/r35_representation_results.html",
+      "sha256": "358f0d676245859ed2c12edd8b66984c4c8b075d0518d2570311c53524a4a24c",
+      "bytes": 12546,
+      "captured_sources_with_identical_bytes": [],
+      "archive_path": "info/archive/2026-10-13/info/r35_representation_results.html",
+      "destinations": [
+        "EXPERIMENTS.md",
+        "METHODS.md"
+      ],
+      "comparison_status": "incorporated",
+      "read_mode": "Read historical HTML and compare existing R35 coverage",
+      "disposition": "Historical presentation reviewed as source, not a newly reviewed R35 result. Its aggregate tables remain byte-identical in the archive; the canonical R35 section links the full historical tables. The generator now links canonical findings."
+    }
+  ],
+  "retained_evidence": [
+    "info/reviews/r36_phase1_result_review.md",
+    "info/reviews/r36_phase1_artifact_audit.md",
+    "info/reviews/r36_closure_receipt.json",
+    "info/r36_phase1_metrics.json"
+  ]
+}

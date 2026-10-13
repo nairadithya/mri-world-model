@@ -1,0 +1,230 @@
+{
+  "base_commit": "36a9e283a2f3f3504ae92ffbd6a5f4ec689e49cb",
+  "branch": "docs/r36-record-update",
+  "sources": [
+    {
+      "original_path": "info/r35_representation_comparison.md",
+      "sha256": "768fdfa0a9be4dc76e99fcef9ff971e26252d672e82b08267f5e9ea157ced0f3",
+      "bytes": 25880,
+      "captured_sources_with_identical_bytes": [
+        "S062"
+      ],
+      "archive_path": "info/archive/2026-10-13/info/r35_representation_comparison.md"
+    },
+    {
+      "original_path": "info/r36_delta_representation_handoff.md",
+      "sha256": "8fc1116f80667885774a5ce6a8fb9ec40f1e360d1f87867fefb81baf01118ab6",
+      "bytes": 33718,
+      "captured_sources_with_identical_bytes": [
+        "S063"
+      ],
+      "archive_path": "info/archive/2026-10-13/info/r36_delta_representation_handoff.md"
+    },
+    {
+      "original_path": "info/r36_delta_representation_results.md",
+      "sha256": "84a7e2df9c7c9b463adfcf888c60797d85591e3ecafad02949cd43cd275ee746",
+      "bytes": 24370,
+      "captured_sources_with_identical_bytes": [],
+      "archive_path": "info/archive/2026-10-13/info/r36_delta_representation_results.md"
+    },
+    {
+      "original_path": "info/action_conditioned_representation_brief.md",
+      "sha256": "f3dad868d43b3aa2bf5f7913b3dfa2872cdf87a65fd9648b1eb9932e3f750855",
+      "bytes": 7551,
+      "captured_sources_with_identical_bytes": [
+        "S023"
+      ],
+      "archive_path": "info/archive/2026-10-13/info/action_conditioned_representation_brief.md"
+    },
+    {
+      "original_path": "info/r36_phase1_report.md",
+      "sha256": "3926efba37bc841fd9b8d0b5109f26ace9399dc83570d89ab6f9c22a1c3703eb",
+      "bytes": 9537,
+      "captured_sources_with_identical_bytes": [],
+      "archive_path": "info/archive/2026-10-13/info/r36_phase1_report.md"
+    },
+    {
+      "original_path": "info/drafts/TODO.md",
+      "sha256": "e3c486ef9cc77afcc1978e53ce4495ef1051a5b8d22cf31b9d627c72d4db029e",
+      "bytes": 12364,
+      "captured_sources_with_identical_bytes": [
+        "S039"
+      ],
+      "archive_path": "info/archive/2026-10-13/info/drafts/TODO.md"
+    },
+    {
+      "original_path": "info/drafts/EXPERIMENTS.md",
+      "sha256": "376ef33c6235a3b4ac055340d2447d5f33d1b54abe2504c525a2e2330ee88904",
+      "bytes": 31091,
+      "captured_sources_with_identical_bytes": [
+        "S036"
+      ],
+      "archive_path": "info/archive/2026-10-13/info/drafts/EXPERIMENTS.md"
+    },
+    {
+      "original_path": "info/drafts/METHODS.md",
+      "sha256": "4152bf66cc81cd99bb7970ddaf52cffcdff59756fa1baf7a95e1cd349ef34352",
+      "bytes": 30992,
+      "captured_sources_with_identical_bytes": [
+        "S037"
+      ],
+      "archive_path": "info/archive/2026-10-13/info/drafts/METHODS.md"
+    },
+    {
+      "original_path": "info/drafts/NOTES_AND_INSIGHTS.md",
+      "sha256": "7fb4e40c27dada7024a7cee70887a036cb98780d3b717cc25cccf3181d1a9fde",
+      "bytes": 33040,
+      "captured_sources_with_identical_bytes": [
+        "S038"
+      ],
+      "archive_path": "info/archive/2026-10-13/info/drafts/NOTES_AND_INSIGHTS.md"
+    },
+    {
+      "original_path": "info/r35_representation_results.html",
+      "sha256": "358f0d676245859ed2c12edd8b66984c4c8b075d0518d2570311c53524a4a24c",
+      "bytes": 12546,
+      "captured_sources_with_identical_bytes": [],
+      "archive_path": "info/archive/2026-10-13/info/r35_representation_results.html"
+    }
+  ],
+  "protected_checkouts": [
+    {
+      "path": "/home/adithya/projects/world-model",
+      "head": "36a9e283a2f3f3504ae92ffbd6a5f4ec689e49cb",
+      "status": ""
+    },
+    {
+      "path": "/home/adithya/projects/world-model-docs",
+      "head": "e20e8e55681fb8921da006e5c10845fec229caa3",
+      "status": ""
+    },
+    {
+      "path": "/home/adithya/projects/world-model-r36",
+      "head": "2c1d77d161980a36f0ae47d21b8244df931ed5ad",
+      "status": " M AGENTS.md\n M info/decisions.md\n M info/directions.md\n D info/explainer.html\n M info/methodology_validity.md\n D info/notes.md\n M src/harness/analysis/delta_evaluation.py\n"
+    },
+    {
+      "path": "/home/adithya/projects/world-model-representations",
+      "head": "4743da742ef1f23d927b0c1b98a4b16c77f3a2e6",
+      "status": "?? .venv\n?? checkpoints\n?? data\n?? outputs\n"
+    }
+  ],
+  "immutable_sha256": {
+    "info/documentation_sources/versions/883e1ec8b8bcf46a3f3195d03800d90f91ddfdbb7f91abd4fdf628f433be97e5.md": "883e1ec8b8bcf46a3f3195d03800d90f91ddfdbb7f91abd4fdf628f433be97e5",
+    "info/documentation_sources/versions/bcac72661517b6aef6743244ebb1c9c459188acdee1c1dd526b495ee2b33bb0a.md": "bcac72661517b6aef6743244ebb1c9c459188acdee1c1dd526b495ee2b33bb0a",
+    "info/documentation_sources/versions/4a7defbca15a2ed95f988863a24ad44465210928a5e89796c19ee12e4ab4c794.md": "4a7defbca15a2ed95f988863a24ad44465210928a5e89796c19ee12e4ab4c794",
+    "info/documentation_sources/versions/13dbe34373467fe847c4ed3ff544c7228b092570be6b352a2e19cc4c9d3ffa45.md": "13dbe34373467fe847c4ed3ff544c7228b092570be6b352a2e19cc4c9d3ffa45",
+    "info/documentation_sources/versions/c71f6ff4fcf332b74565777ff3ef8fc33ba5368829692c73704a24211dc42116.md": "c71f6ff4fcf332b74565777ff3ef8fc33ba5368829692c73704a24211dc42116",
+    "info/documentation_sources/versions/5e5409445bd5d258f7b1bb090aaf316ff56241007f54f8173c1d180ba200bf3a.md": "5e5409445bd5d258f7b1bb090aaf316ff56241007f54f8173c1d180ba200bf3a",
+    "info/documentation_sources/versions/97afb43550bc7feac110eefa3277d8b8485e957bdec8dff6f9897e042851fedb.md": "97afb43550bc7feac110eefa3277d8b8485e957bdec8dff6f9897e042851fedb",
+    "info/documentation_sources/versions/a1f3b50120348c22bd0d02de180df52e4d798b9d5fa763e0c27a7e8872bb22a5.md": "a1f3b50120348c22bd0d02de180df52e4d798b9d5fa763e0c27a7e8872bb22a5",
+    "info/documentation_sources/versions/f56dab2c73a11d29aea114c22e1daeabee068c877d471b684c0b8aa66a971dfc.md": "f56dab2c73a11d29aea114c22e1daeabee068c877d471b684c0b8aa66a971dfc",
+    "info/documentation_sources/versions/b72ceb2da7c2ba695a4174a43643847c9fb27244c1785ff1a6acb5c898f2fb29.md": "b72ceb2da7c2ba695a4174a43643847c9fb27244c1785ff1a6acb5c898f2fb29",
+    "info/documentation_sources/versions/7d63fd3f44c1ed975ea9d1b860b597592902c503fbb3124145a01db17ee996dc.md": "7d63fd3f44c1ed975ea9d1b860b597592902c503fbb3124145a01db17ee996dc",
+    "info/documentation_sources/versions/e82ede5e41b034398b599f1f141ffa04335d47ad7d8e66761540a71ce2f72aaa.md": "e82ede5e41b034398b599f1f141ffa04335d47ad7d8e66761540a71ce2f72aaa",
+    "info/documentation_sources/versions/904659c6bdcfeff428d0bde5d406be42fdc4d004dc5c915d13c335a049add7a3.md": "904659c6bdcfeff428d0bde5d406be42fdc4d004dc5c915d13c335a049add7a3",
+    "info/documentation_sources/versions/e45ccd301fe0a119a2310f90c2c6f9fa43fa262af7c5ddc32efdcf775779b1b3.md": "e45ccd301fe0a119a2310f90c2c6f9fa43fa262af7c5ddc32efdcf775779b1b3",
+    "info/documentation_sources/versions/5d8b1b11c9e6dbb0be28d861a5ace37a570c1230fcc4632746b40426b3b3dce5.md": "5d8b1b11c9e6dbb0be28d861a5ace37a570c1230fcc4632746b40426b3b3dce5",
+    "info/documentation_sources/versions/c7c9fba4178609946f8fd4ce8b90af08b6a88392955d7f2e198aa2e02b14cc57.md": "c7c9fba4178609946f8fd4ce8b90af08b6a88392955d7f2e198aa2e02b14cc57",
+    "info/documentation_sources/versions/6c28bb95dc89e05742f41ae69a61f1bcbdd5f8d7a0eb3857055b0b2989a5ce9c.md": "6c28bb95dc89e05742f41ae69a61f1bcbdd5f8d7a0eb3857055b0b2989a5ce9c",
+    "info/documentation_sources/versions/7d6adbe335852289339963e40a758990e325c71fa6075e037037b4e613747cb5.md": "7d6adbe335852289339963e40a758990e325c71fa6075e037037b4e613747cb5",
+    "info/documentation_sources/versions/cbc9c0e336dab8f4b055c9a0897c0db4b7bbce920ab328701445cf299ba8984d.md": "cbc9c0e336dab8f4b055c9a0897c0db4b7bbce920ab328701445cf299ba8984d",
+    "info/documentation_sources/versions/2ddad8d48f3ebb0e89c6855d2c8da8e2762d8291664d49d38faab77851d72549.md": "2ddad8d48f3ebb0e89c6855d2c8da8e2762d8291664d49d38faab77851d72549",
+    "info/documentation_sources/versions/5c2b29fa7d10d546917b2240faee24aa8b8f6560172ab618bab3d4782e2bb2d9.md": "5c2b29fa7d10d546917b2240faee24aa8b8f6560172ab618bab3d4782e2bb2d9",
+    "info/documentation_sources/versions/6b7d9def32bbabf5f63dbac2126bb7b066d7b4606e54ebad6f56cd494f569d5f.md": "6b7d9def32bbabf5f63dbac2126bb7b066d7b4606e54ebad6f56cd494f569d5f",
+    "info/documentation_sources/versions/f3dad868d43b3aa2bf5f7913b3dfa2872cdf87a65fd9648b1eb9932e3f750855.md": "f3dad868d43b3aa2bf5f7913b3dfa2872cdf87a65fd9648b1eb9932e3f750855",
+    "info/documentation_sources/versions/5fe9df82e326552d35667a3b92cdd7977504ade9f3ceebb9298a8f41d0dbdf19.md": "5fe9df82e326552d35667a3b92cdd7977504ade9f3ceebb9298a8f41d0dbdf19",
+    "info/documentation_sources/versions/eaca551880e0a9db5c4bdc7785e135675cd518ebfcd361d5aa482beca4f37dce.md": "eaca551880e0a9db5c4bdc7785e135675cd518ebfcd361d5aa482beca4f37dce",
+    "info/documentation_sources/versions/2b7293c884e0e0aa9f1db178d13f55497d584cd7060c68c022436d47330bb63c.md": "2b7293c884e0e0aa9f1db178d13f55497d584cd7060c68c022436d47330bb63c",
+    "info/documentation_sources/versions/3717abf358c955772ee5eb3571c4aa0dcdb5c97637d99899a255927d21eeee3e.md": "3717abf358c955772ee5eb3571c4aa0dcdb5c97637d99899a255927d21eeee3e",
+    "info/documentation_sources/versions/3757850c1f2c602e1bc025675a52347d09c66700f8fa917279073550845f32f3.md": "3757850c1f2c602e1bc025675a52347d09c66700f8fa917279073550845f32f3",
+    "info/documentation_sources/versions/64414e220c402593df722fe70a71361a97c3d669b349c261d5fc281aab938602.md": "64414e220c402593df722fe70a71361a97c3d669b349c261d5fc281aab938602",
+    "info/documentation_sources/versions/919cb93f22b6b82b78558c3fa37786b5ea163f3911a7d9c5d8d0ad33bff9df80.md": "919cb93f22b6b82b78558c3fa37786b5ea163f3911a7d9c5d8d0ad33bff9df80",
+    "info/documentation_sources/versions/9c693cb9fda31211831d08c8004ace96ab9b629066bf6d4e4fd25989829ecc50.md": "9c693cb9fda31211831d08c8004ace96ab9b629066bf6d4e4fd25989829ecc50",
+    "info/documentation_sources/versions/2be6e4e222c5e3e4235dbe54e9d9d941ff0ad06bacd999a8f980d4e80fdd5071.md": "2be6e4e222c5e3e4235dbe54e9d9d941ff0ad06bacd999a8f980d4e80fdd5071",
+    "info/documentation_sources/versions/48f54a5c4241c65c1f3c023d0261f9a8398edb18a3b1b642ee6c534fd659e84a.md": "48f54a5c4241c65c1f3c023d0261f9a8398edb18a3b1b642ee6c534fd659e84a",
+    "info/documentation_sources/versions/4ae80f2d62b0a16ac6644e2b2faabd95d6fc40d94d8e0400cb886cd59216313b.md": "4ae80f2d62b0a16ac6644e2b2faabd95d6fc40d94d8e0400cb886cd59216313b",
+    "info/documentation_sources/versions/eade325e60cbeeb92dc5f6570520d8f502a519e846309ef5803b2bf7e1a2d094.md": "eade325e60cbeeb92dc5f6570520d8f502a519e846309ef5803b2bf7e1a2d094",
+    "info/documentation_sources/versions/376ef33c6235a3b4ac055340d2447d5f33d1b54abe2504c525a2e2330ee88904.md": "376ef33c6235a3b4ac055340d2447d5f33d1b54abe2504c525a2e2330ee88904",
+    "info/documentation_sources/versions/4152bf66cc81cd99bb7970ddaf52cffcdff59756fa1baf7a95e1cd349ef34352.md": "4152bf66cc81cd99bb7970ddaf52cffcdff59756fa1baf7a95e1cd349ef34352",
+    "info/documentation_sources/versions/7fb4e40c27dada7024a7cee70887a036cb98780d3b717cc25cccf3181d1a9fde.md": "7fb4e40c27dada7024a7cee70887a036cb98780d3b717cc25cccf3181d1a9fde",
+    "info/documentation_sources/versions/e3c486ef9cc77afcc1978e53ce4495ef1051a5b8d22cf31b9d627c72d4db029e.md": "e3c486ef9cc77afcc1978e53ce4495ef1051a5b8d22cf31b9d627c72d4db029e",
+    "info/documentation_sources/versions/224e30ddf098b5d0f70a6a8edb7ebda7f670fa26599a21726257309770fca964.md": "224e30ddf098b5d0f70a6a8edb7ebda7f670fa26599a21726257309770fca964",
+    "info/documentation_sources/versions/7873b012053d04798d82c190a754e9708031bedff4ce9cf4d2abb168553f4386.md": "7873b012053d04798d82c190a754e9708031bedff4ce9cf4d2abb168553f4386",
+    "info/documentation_sources/versions/636f0274c36efa3cee145c530acebff689d5961eff995269ecc3bc91d8c6d89e.md": "636f0274c36efa3cee145c530acebff689d5961eff995269ecc3bc91d8c6d89e",
+    "info/documentation_sources/versions/bd305198a22112d90d28cf638536c3638ff95806a6aeff087655acb8dea287d1.md": "bd305198a22112d90d28cf638536c3638ff95806a6aeff087655acb8dea287d1",
+    "info/documentation_sources/versions/ef50d853844e9c04d0dc4f8dc7b8fcdbdf1c9cf3234b5dd5dfc0951a3a58db18.md": "ef50d853844e9c04d0dc4f8dc7b8fcdbdf1c9cf3234b5dd5dfc0951a3a58db18",
+    "info/documentation_sources/versions/ad235fe7fd9dbc123dbc829a8242d3c11ce6427b241808ba661ac7ed0fb1db87.md": "ad235fe7fd9dbc123dbc829a8242d3c11ce6427b241808ba661ac7ed0fb1db87",
+    "info/documentation_sources/versions/4be6ffde8ccb321f263f3a3f91036667126a719401aa15b3a856b183208c6b47.md": "4be6ffde8ccb321f263f3a3f91036667126a719401aa15b3a856b183208c6b47",
+    "info/documentation_sources/versions/7bc218e8ef5fd2fdb22bc0ed7f5bab72c4b1d099f1f7f2c3145f6c3bca6f3472.md": "7bc218e8ef5fd2fdb22bc0ed7f5bab72c4b1d099f1f7f2c3145f6c3bca6f3472",
+    "info/documentation_sources/versions/e222fabaeb05f4d166a3d220a87398aa55b60e1697d479706b6e87d6bab71212.md": "e222fabaeb05f4d166a3d220a87398aa55b60e1697d479706b6e87d6bab71212",
+    "info/documentation_sources/versions/f33b11d3ab804d4b9bef473c0336e51db5afef9b8a0a8b8740e7d0cbbf38f105.md": "f33b11d3ab804d4b9bef473c0336e51db5afef9b8a0a8b8740e7d0cbbf38f105",
+    "info/documentation_sources/versions/bffc0ec9c04e09138faeb31fab3e9c7d4d22e7e7f52ea345904d71e041dbb45b.md": "bffc0ec9c04e09138faeb31fab3e9c7d4d22e7e7f52ea345904d71e041dbb45b",
+    "info/documentation_sources/versions/da674d536622373c6db154365a73c67d5fffcc9646a10713641169a0b5cb2130.md": "da674d536622373c6db154365a73c67d5fffcc9646a10713641169a0b5cb2130",
+    "info/documentation_sources/versions/91f9eb3a5aa50c35bb9d8d79dbcca3e76e61bc3c93b814a08ae82b0a34ca4d8d.md": "91f9eb3a5aa50c35bb9d8d79dbcca3e76e61bc3c93b814a08ae82b0a34ca4d8d",
+    "info/documentation_sources/versions/4c077cc0f084f2d14b48b4cf366088ff7c0dc11a6ed3bf8b5678cbea901e141d.md": "4c077cc0f084f2d14b48b4cf366088ff7c0dc11a6ed3bf8b5678cbea901e141d",
+    "info/documentation_sources/versions/b8c596145365e19fbea3ed86218b7b7d7a3131e0be6e60915409d0eddcfddf31.md": "b8c596145365e19fbea3ed86218b7b7d7a3131e0be6e60915409d0eddcfddf31",
+    "info/documentation_sources/versions/77de3ea25aa45d894d9577a96b69195912e6036883dace704af07b89de07843b.md": "77de3ea25aa45d894d9577a96b69195912e6036883dace704af07b89de07843b",
+    "info/documentation_sources/versions/9ea08b90cf4971fb7b85d4b150ef1317994f42aa2fca2f1c9c0f5de5424e38e4.md": "9ea08b90cf4971fb7b85d4b150ef1317994f42aa2fca2f1c9c0f5de5424e38e4",
+    "info/documentation_sources/versions/2b29cb9bf2068cc77c42960ed21f1fbcdb039dda4f0ffa32a3c17992bb9bdada.md": "2b29cb9bf2068cc77c42960ed21f1fbcdb039dda4f0ffa32a3c17992bb9bdada",
+    "info/documentation_sources/versions/3e07b40bdd3849468d6b4c5f52a2d997fb891e3497ccd3d7b23b43aff4980007.md": "3e07b40bdd3849468d6b4c5f52a2d997fb891e3497ccd3d7b23b43aff4980007",
+    "info/documentation_sources/versions/9392195ed8cf1ac4fea44e0347230844278803dbd3b21318ca48a6c7c0b2f841.md": "9392195ed8cf1ac4fea44e0347230844278803dbd3b21318ca48a6c7c0b2f841",
+    "info/documentation_sources/versions/d8e7bf20a34e6ee1186140c96bb090ed2df0a56f65f11ce140fe05acc4123436.md": "d8e7bf20a34e6ee1186140c96bb090ed2df0a56f65f11ce140fe05acc4123436",
+    "info/documentation_sources/versions/e29b2b676b2a9a2db5406419ce3e1ee0868b4548c26460bcca0feacaee462cdf.md": "e29b2b676b2a9a2db5406419ce3e1ee0868b4548c26460bcca0feacaee462cdf",
+    "info/documentation_sources/versions/768fdfa0a9be4dc76e99fcef9ff971e26252d672e82b08267f5e9ea157ced0f3.md": "768fdfa0a9be4dc76e99fcef9ff971e26252d672e82b08267f5e9ea157ced0f3",
+    "info/documentation_sources/versions/8fc1116f80667885774a5ce6a8fb9ec40f1e360d1f87867fefb81baf01118ab6.md": "8fc1116f80667885774a5ce6a8fb9ec40f1e360d1f87867fefb81baf01118ab6",
+    "info/documentation_sources/versions/4f80203aeaed182a3e106b44f5d066b213b65387a143d3979710282be6263077.md": "4f80203aeaed182a3e106b44f5d066b213b65387a143d3979710282be6263077",
+    "info/documentation_sources/versions/51d6523f0da4b3d8745af10b79318fd684aba1fd9b47cc7d321e30df79984551.md": "51d6523f0da4b3d8745af10b79318fd684aba1fd9b47cc7d321e30df79984551",
+    "info/documentation_sources/versions/6e710be8c33b05d77bf8f13b415b64028fcc13dc03d71defb304e6a7631c78f4.md": "6e710be8c33b05d77bf8f13b415b64028fcc13dc03d71defb304e6a7631c78f4",
+    "info/documentation_sources/versions/4d997fd0cbc3cca6862a1a6eb333bde54fa5f7a6c416cfbed5390983c7905797.md": "4d997fd0cbc3cca6862a1a6eb333bde54fa5f7a6c416cfbed5390983c7905797",
+    "info/documentation_sources/versions/89605d7963ba3e0f942e5feb416846a32faea82a277f1dbe008b0cd0a6b86068.md": "89605d7963ba3e0f942e5feb416846a32faea82a277f1dbe008b0cd0a6b86068",
+    "info/documentation_sources/versions/eca8302b4c0da4df15f1a8918164254666650e647632c098c025513f6ebe5061.md": "eca8302b4c0da4df15f1a8918164254666650e647632c098c025513f6ebe5061",
+    "info/documentation_sources/versions/775110c703c7f702ccf2c1dfc9e2504eb9fdb5303b8d5f2cfbbe3619a7cf6a12.md": "775110c703c7f702ccf2c1dfc9e2504eb9fdb5303b8d5f2cfbbe3619a7cf6a12",
+    "info/documentation_sources/versions/f9519fae5516ba946acba78908c36f41e9d095aa536a4924938820c9f4f976e7.md": "f9519fae5516ba946acba78908c36f41e9d095aa536a4924938820c9f4f976e7",
+    "info/documentation_sources/versions/c7aeeea2bff31ee76a1190a69a05ca48ec78fc476e89d3afc345d546074c3f0d.md": "c7aeeea2bff31ee76a1190a69a05ca48ec78fc476e89d3afc345d546074c3f0d",
+    "info/archive/2026-10-12/TODO.md": "c7c9fba4178609946f8fd4ce8b90af08b6a88392955d7f2e198aa2e02b14cc57",
+    "info/archive/2026-10-12/PROPOSAL.md": "e82ede5e41b034398b599f1f141ffa04335d47ad7d8e66761540a71ce2f72aaa",
+    "info/archive/2026-10-12/ASTRA_PROBE.md": "b72ceb2da7c2ba695a4174a43643847c9fb27244c1785ff1a6acb5c898f2fb29",
+    "info/archive/2026-10-12/K3_PROBE.md": "7d63fd3f44c1ed975ea9d1b860b597592902c503fbb3124145a01db17ee996dc",
+    "info/archive/2026-10-12/info/ablations.md": "2ddad8d48f3ebb0e89c6855d2c8da8e2762d8291664d49d38faab77851d72549",
+    "info/archive/2026-10-12/info/action_conditioned_representation_brief.md": "f3dad868d43b3aa2bf5f7913b3dfa2872cdf87a65fd9648b1eb9932e3f750855",
+    "info/archive/2026-10-12/info/anatomy_harmonization.md": "5fe9df82e326552d35667a3b92cdd7977504ade9f3ceebb9298a8f41d0dbdf19",
+    "info/archive/2026-10-12/info/clean_rescues.md": "eaca551880e0a9db5c4bdc7785e135675cd518ebfcd361d5aa482beca4f37dce",
+    "info/archive/2026-10-12/info/decisions.md": "2b7293c884e0e0aa9f1db178d13f55497d584cd7060c68c022436d47330bb63c",
+    "info/archive/2026-10-12/info/directions.md": "eade325e60cbeeb92dc5f6570520d8f502a519e846309ef5803b2bf7e1a2d094",
+    "info/archive/2026-10-12/info/eval_protocol.md": "7873b012053d04798d82c190a754e9708031bedff4ce9cf4d2abb168553f4386",
+    "info/archive/2026-10-12/info/external_supervision_audit.md": "636f0274c36efa3cee145c530acebff689d5961eff995269ecc3bc91d8c6d89e",
+    "info/archive/2026-10-12/info/frontier_lumiere.md": "bd305198a22112d90d28cf638536c3638ff95806a6aeff087655acb8dea287d1",
+    "info/archive/2026-10-12/info/harness_v2.md": "ad235fe7fd9dbc123dbc829a8242d3c11ce6427b241808ba661ac7ed0fb1db87",
+    "info/archive/2026-10-12/info/methodology_validity.md": "7bc218e8ef5fd2fdb22bc0ed7f5bab72c4b1d099f1f7f2c3145f6c3bca6f3472",
+    "info/archive/2026-10-12/info/methodology_validity_plan.md": "e222fabaeb05f4d166a3d220a87398aa55b60e1697d479706b6e87d6bab71212",
+    "info/archive/2026-10-12/info/notes.md": "f33b11d3ab804d4b9bef473c0336e51db5afef9b8a0a8b8740e7d0cbbf38f105",
+    "info/archive/2026-10-12/info/p0_audit.md": "da674d536622373c6db154365a73c67d5fffcc9646a10713641169a0b5cb2130",
+    "info/archive/2026-10-12/info/p0_refresh.md": "91f9eb3a5aa50c35bb9d8d79dbcca3e76e61bc3c93b814a08ae82b0a34ca4d8d",
+    "info/archive/2026-10-12/info/p1_anatomy_baselines.md": "4c077cc0f084f2d14b48b4cf366088ff7c0dc11a6ed3bf8b5678cbea901e141d",
+    "info/archive/2026-10-12/info/p1_baselines.md": "b8c596145365e19fbea3ed86218b7b7d7a3131e0be6e60915409d0eddcfddf31",
+    "info/archive/2026-10-12/info/p1_sota_audit.md": "77de3ea25aa45d894d9577a96b69195912e6036883dace704af07b89de07843b",
+    "info/archive/2026-10-12/info/p2_execution.md": "9ea08b90cf4971fb7b85d4b150ef1317994f42aa2fca2f1c9c0f5de5424e38e4",
+    "info/archive/2026-10-12/info/p2_lesion_architecture.md": "3e07b40bdd3849468d6b4c5f52a2d997fb891e3497ccd3d7b23b43aff4980007",
+    "info/archive/2026-10-12/info/p2_seed_sensitivity.md": "9392195ed8cf1ac4fea44e0347230844278803dbd3b21318ca48a6c7c0b2f841",
+    "info/archive/2026-10-12/info/pilot.md": "d8e7bf20a34e6ee1186140c96bb090ed2df0a56f65f11ce140fe05acc4123436",
+    "info/archive/2026-10-12/info/r36_delta_representation_handoff.md": "8fc1116f80667885774a5ce6a8fb9ec40f1e360d1f87867fefb81baf01118ab6",
+    "info/archive/2026-10-12/info/r36_delta_representation_results.md": "4f80203aeaed182a3e106b44f5d066b213b65387a143d3979710282be6263077",
+    "info/archive/2026-10-12/info/results.md": "89605d7963ba3e0f942e5feb416846a32faea82a277f1dbe008b0cd0a6b86068",
+    "info/archive/2026-10-12/info/stale_code_audit.md": "eca8302b4c0da4df15f1a8918164254666650e647632c098c025513f6ebe5061",
+    "info/archive/2026-10-12/info/methodology_validity_decisions.tsv": "bf8829b910053323231e8add333b2e0e806ea2f01e5b3a8555c2ab822e15e7d3",
+    "info/archive/2026-10-12/info/explainer.html": "c0edb1d7f41aeaa06b5cb990cc8610706ce1b3a34353d462021a9c628a015e97",
+    "info/archive/2026-10-12/info/overall_architecture.drawio": "910e8700de6e7f488f2031ff859c494a468d74738a2c0f7a62b850be837d6b72",
+    "info/archive/2026-10-12/info/overall_architecture_preview.png": "23a178c6025487e67110b8ff726d2246bab4ffa0c580eaaf7e0c41fb42abb9b7",
+    "info/archive/2026-10-12/info/presentation/23UG083 Review 2 Presentation - slide 3 revised.pptx": "8e28014e319a83b689f1df89671947fe1e41e40e92e19ab8e96a45d136b590cf",
+    "info/archive/2026-10-12/info/presentation/23UG083 Review 2 Presentation - slides 3 and 5 revised.pptx": "82905de64401c03e44f3c33cfc028b2954c6a77f58c6383570a260b2db31288a",
+    "info/archive/2026-10-12/info/presentation/23UG083 Review 2 Presentation.pptx": "da318c304c0d3a30e90f768ba84a864892ca8aadab2c5dd582e27628e347e1c8",
+    "info/reviews/r36_phase1_artifact_audit.md": "7417ed7b3046f1043cb127ffbfc4d405681a22d702d834d9cdd6969dacc991ef",
+    "info/reviews/r36_closure_receipt.json": "e32f74913dbbeadc68ecceaf70df800ebfaba40954dcee2f7f8a39b1cd2b4d6e",
+    "info/reviews/r36_phase1_result_review.md": "af9f6099e7daf09ebdb43ccff0b099bf81bfa804bfb1d29a8d72fe3a29479f82",
+    "info/reviews/evidence/r36_artifact_audit_results.json": "764fde0831a4c9e47e1d86bd9dad2030fd3af6756c28c565759a86c3658c9696",
+    "info/reviews/evidence/r36_artifact_audit.py": "8ff9695261946573c329ee61180c9213c42bfed7b4d4f962791329418bb2034e",
+    "info/reviews/evidence/r36_artifact_audit_console.json": "cacffcbab4560a0a3dfae672fa78756831319e2c00f5e81c899d980d7079e076",
+    "info/r36_phase1_metrics.json": "5fd08fb735011ab90203b1d79bee869e7c30aeae6f7c48315166fb53854660a6"
+  }
+}

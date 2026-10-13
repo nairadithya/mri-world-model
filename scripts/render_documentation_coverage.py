@@ -15,7 +15,7 @@ def render(package=PACKAGE, drafts=DRAFTS, root=ROOT):
         raise ValueError("Coverage must name every source exactly once")
     prefix = Path(os.path.relpath(package, drafts)).as_posix()
     text = ["# Source coverage", "",
-            "This ledger covers all 72 captured Markdown versions across 48 paths, ten branch refs, and three preexisting worktrees. It records parent comparisons, not scientific acceptance. The catalog fixes the capture scope and origins. No network fetch or research job was run.", "",
+            "This ledger covers the original 72 captured Markdown versions across 48 paths, ten frozen branch refs, and three preexisting worktrees. It records parent comparisons, not scientific acceptance. The catalog fixes the capture scope and origins. No network fetch or research job was run.", "",
             "The notes and experiments child reports were incomplete. The parent completed direct full reads or complete variant diffs before recording these dispositions. The contracts report was checked against frozen sources and its omissions were integrated. The first reviewer assessed the inventory only and returned BLOCKED before integration. A later independent review is a separate gate.", "",
             "Archived sources retain their exact bytes, including historical claims and embedded links that may no longer work. The consolidated research documents give the interpretation. Operational guides and CLI skills remain separate and discoverable.", "",
             "Token extraction in the catalog is a search aid, not a global identifier ontology. A42, A43, and A44 in S065 denote arm A at seeds 42, 43, and 44. They are not new ablation entries. D183 in S042 is part of a DOI, not decision D183.", "",
@@ -29,6 +29,13 @@ def render(package=PACKAGE, drafts=DRAFTS, root=ROOT):
     text += ["", "## Evidence and origins", "",
              "The [curated JSON ledger](../documentation_sources/coverage.json) records exact frozen source ranges, draft sections, read modes, and the person responsible. The [catalog](../documentation_sources/catalog.json) records every branch commit, blob, and live-worktree origin. The [supplementary manifest](../documentation_sources/supplementary/manifest.json) binds the recovered runtime receipt, protocol review, and worktree-creation evidence.", "",
              "Integrated comparisons are [notes](../documentation_sources/comparisons/notes.json), [experiments](../documentation_sources/comparisons/experiments.json), and [contracts](../documentation_sources/comparisons/contracts.json). Received child reports remain separately archived with their original limitations.", ""]
+    updates = sorted(package.glob("updates/*/coverage.json"))
+    if updates:
+        text += ["## Later source updates", "",
+                 "These update ledgers are separate from the original frozen capture. They record newly incorporated material and restored duplicates, not new scientific acceptance.", ""]
+        for update in updates:
+            text.append(f"- [{update.parent.name} source dispositions]({prefix}/{update.relative_to(package).as_posix()}).")
+        text.append("")
     (drafts / "SOURCE_COVERAGE.md").write_text("\n".join(text).replace("../documentation_sources/", prefix + "/"))
     slices = json.loads((package / "slices.json").read_text())
     output = package / "comparisons"

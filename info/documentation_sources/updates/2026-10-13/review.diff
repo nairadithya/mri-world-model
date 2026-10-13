@@ -1,0 +1,1237 @@
+diff --git a/AGENTS.md b/AGENTS.md
+index 7d55763..4eabc8a 100644
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -6,7 +6,7 @@ representations that preserve anatomical and pathological state and meaningful
+ longitudinal change while separating acquisition nuisance. The consolidated protocols in
+ `info/METHODS.md` describe scoped experiments, not a universal definition
+ or gate for representation quality. Read `info/TODO.md` for remaining work
+-at the dated research snapshot, and `info/EXPERIMENTS.md` for outcomes. Lesion awareness, JEPA, forecast
++at the latest recorded closure, and `info/EXPERIMENTS.md` for outcomes. Lesion awareness, JEPA, forecast
+ heads, and whole-brain methods are hypotheses, not the objective. See
+ [`info/research_guardrails.md`](info/research_guardrails.md) before substantial
+ research implementation. It sets binding decision and reporting requirements.
+@@ -60,6 +60,41 @@ See `info/README.md` for the documentation map. Read
+   hardcode numbers in a plot script.
+ - `data/`, `checkpoints/`, `.venv/`, `.env` — NEVER commit (gitignored).
+ 
++## Maintain the research documentation
++
++The four canonical pages own different kinds of content:
++
++- `info/TODO.md` lists current actions, blockers, and authorization. Date the status. Close completed tasks instead of leaving old launch instructions active.
++- `info/EXPERIMENTS.md` records measurements, controls, uncertainty, corrections, withdrawals, and negative or inconclusive outcomes.
++- `info/METHODS.md` defines terms, fixed protocols, evaluation rules, reproduction commands, and historical IDs.
++- `info/NOTES_AND_INSIGHTS.md` explains the reasoning and separates measured evidence from interpretation and unknowns.
++
++When new research documentation arrives:
++
++1. Read the prior session's final handoff and committed evidence. Compare the new record with the canonical pages and existing source coverage. Do not repeat completed experiments to reconstruct context.
++2. Put each new fact in its owning page. Preserve D, A, I, R, G, V, E, and K3 IDs. Add a date and source for every result or changed status. Retain the task, cohort, fitting budget, units, aggregation, and uncertainty beside a number.
++3. Preserve corrections, withdrawals, failed and incomplete work, and conflicting historical versions. A later dated finding supersedes an old status without rewriting the old receipt. Separate computational completion, documentation approval, scoped result review, and scientific success.
++4. Keep protocols and proposed work distinct. A documentation update does not authorize a new scientific target, method family, data acquisition, or Phase 2. Follow `info/research_guardrails.md` before implementation.
++5. Fold duplicate standalone narratives into the four pages. Before relocation, preserve exact dirty and untracked bytes. Move originals to a new `info/archive/YYYY-MM-DD/` directory with a README and `manifest.json`. Each record contains `original_path`, `archive_path`, and `sha256`. Never edit an existing archive, frozen source, or hash-bound review report.
++6. Record new source dispositions under `info/documentation_sources/updates/YYYY-MM-DD/`. Link that update from `info/SOURCE_COVERAGE.md`. Do not inflate or overwrite the original 72-version catalog to make it look current. Do not restore `info/drafts/` or create a second active result narrative.
++7. Keep operating guides, review evidence, closure receipts, and aggregate machine-readable measurements separate and discoverable. Preserve exact review verdicts, reviewed hashes, checked scope, and remaining limits. Approval of old hashes does not automatically cover rewritten text.
++8. Update active Markdown links, HTML links, and presentation generators after moving a file. Historical embedded links may remain broken inside immutable archives. Explain that limit in the archive README. Current navigation must work.
++9. Update `info/README.md` and this guide when ownership or maintenance changes. Write plain English, define technical shorthand, and do not replace actual symbols, paths, or metric names with vague prose.
++
++Verify the actual updated files before handing them back:
++
++```bash
++python3 -B -m unittest discover -s tests -p 'test_documentation*.py' -v
++python3 -B scripts/documentation_sources.py verify
++python3 -B scripts/render_documentation_coverage.py
++```
++
++Compile touched ordinary Python files. Keep edited notebook pairs synchronized. Check active links and archive hashes. If a plot or active HTML page changes, regenerate it from its existing inputs, render it, and inspect the pixels. Do not regenerate withdrawn findings as current evidence.
++
++For a substantive consolidation, obtain a fresh read-only comparison after the edited inputs are stable. Record its exact scope and verdict. Integrity tests and identifier-presence checks do not prove semantic completeness or scientific acceptance. Report any unavailable review rather than implying approval.
++
++Keep private participant inventories, raw images, predictions, tensors, and credentials out of committed documentation. Store only approved aggregate evidence and provenance. Do not control research processes or change shared outputs to finish a documentation task.
++
+ ## Setup
+ 
+ ```bash
+diff --git a/info/EXPERIMENTS.md b/info/EXPERIMENTS.md
+index 605189b..83daf2f 100644
+--- a/info/EXPERIMENTS.md
++++ b/info/EXPERIMENTS.md
+@@ -1,6 +1,6 @@
+ # Experiments and evidence
+ 
+-This reference records what the experiments measured and which claims remain valid. The wording was revised on October 12, 2026, using fixed copies of the original records. The latest R36 runtime snapshot remains October 11 at 18:30:51 UTC. This is not a live progress report.
++This reference records what the experiments measured and which claims remain valid. The October 13, 2026, update incorporates completed R36 Phase 1 findings and their independent review. The earlier October 11 runtime snapshots remain historical. This is a record of saved evidence, not a live progress report.
+ 
+ Use [Notes and insights](NOTES_AND_INSIGHTS.md) for the reasoning, [Methods](METHODS.md) for protocols and term definitions, and [TODO](TODO.md) for remaining work. The [archive](archive/2026-10-12/README.md) preserves the original records and their correction history.
+ 
+@@ -30,7 +30,7 @@ The full records are [P1 anatomy baselines](documentation_sources/versions/4c077
+ 
+ R35 completed a different task: state estimation and change between two observed scans. Its spatial model reduced in-domain automated-volume error. The dedicated paired head did not establish an advantage over subtracting separate state estimates. It did not establish nuisance separation or successful SAILOR transfer. It was neither forecasting nor validation of biological change. [The R35 section](#r35) gives the comparisons.
+ 
+-R36 Phase 1 was incomplete at the archived snapshot. Twelve training checkpoints and ten seed-42 source-trained readouts had passed local checks. No model-quality comparisons on evaluation patients had been scored. Seed 43 was running, seed 44 had not started, and Phase 2 was unauthorized. [The R36 section](#r36) records the dated status.
++R36 Phase 1 computation and scoped reporting review are complete. The primary C-versus-B encoder-accessibility result remains INCONCLUSIVE. C passes the specified direct-volume retention margin against A. D's nuisance tradeoff and added temporal information remain INCONCLUSIVE. Descriptive nonlinear-head gains do not replace the encoder comparison. [The completed R36 findings](#r36-completed) retain the controls, measured harms, and audit limits. Phase 2 remains unauthorized.
+ 
+ ### Explicit withdrawals and limits
+ 
+@@ -332,6 +332,8 @@ A38's physical-history residual MLP had LUMIERE MAE 1.5405 and SAILOR MAE 1.2143
+ 
+ R35 is a completed comparison of MRI-only spatial state and observed-pair representations, originating in sibling worktree `world-model-representations` at revision `2f6e1f5a65be4ccbceac6de706b537de8b695faa`. Its report is the frozen [branch-only R35 record](documentation_sources/versions/768fdfa0a9be4dc76e99fcef9ff971e26252d672e82b08267f5e9ea157ced0f3.md), captured as S062 with branch and live-worktree origins.
+ 
++The [archived R35 presentation](archive/2026-10-13/info/r35_representation_results.html) retains the full historical direct-head, transfer-budget, and nuisance tables. Its old review-status statements are not current R36 guidance.
++
+ The study used 65 encoder-training patients and 26 encoder-unseen LUMIERE patients, with an internal training and validation split. The seeds were 42, 43, and 44. The learned state encoder received dense supervision and native log-volume targets.
+ 
+ Pair models used two observed scans and their measured change. The results therefore concern state estimation and observed change, not forecasting. The fixed reference used BRAINIAC without clinical inputs.
+@@ -376,11 +378,115 @@ The aggregate gain does not resolve these absent-compartment failures.
+ 
+ R35 artifacts passed model, feature, row, and patient-disjointness checks. All twelve corrected arms completed 240 epochs, with 74,592 successful updates and 48 AMP backoffs. The first candidate run was invalidated by float16 dense-loss reduction overflow. A later AMP lifecycle failure occurred before a completed candidate epoch. Corrected finite-reduction and backoff-ordering artifacts are the graded runs. Earlier caches lack a creation-time MRI-byte fingerprint. Completion-time tensor hashes do not retroactively supply one. It did not establish biological validity, segmentation repeatability, nuisance invariance, or untouched external generalization. No future prediction claim follows.
+ 
+-## R36: delta-representation experiment status
++## R36 observed-change evidence
+ 
+ <a id="r36"></a>
+ 
+-### R36 Phase 1 incomplete
++<a id="r36-completed"></a>
++
++### Completed Phase 1 findings, October 13, 2026
++
++All twelve training arms and thirty source-only probes completed the locked final-epoch recipe. Both development assessments completed, including bounded CPU recovery of interrupted seed-44 work. No GPU work was repeated for reporting closure. Each arm recorded 5,940 real-pair exposures, with 5,928 to 5,936 successful updates after disclosed AMP skips.
++
++Both scans are observed inputs. This experiment tests access to observed change, not future prediction. C versus B is the primary objective-only comparison. A controls continued state-only training, original R35 is the initialization reference, and D adds nuisance constraints. All readouts use the matched source52 budget.
++
++LUMIERE includes 149 visits from 26 encoder-unseen development patients and 117 pairs from 23 patients. SAILOR includes 269 visits and 242 pairs from 27 development subjects. No SAILOR fitting or checkpoint selection occurred. Neither cohort is untouched independent validation.
++
++#### Fixed hypothesis classifications
++
++Differences are candidate minus comparator. Intervals are the locked family-three adjusted paired-patient intervals. The report averages patient errors over seeds 42, 43, and 44, not predictions from an ensemble. It uses 10,000 patient-bootstrap draws and seed 2026. The intervals describe these fitted seeds, not unrestricted training-seed uncertainty.
++
++| Endpoint | Difference | Adjusted interval | Classification |
++|---|---:|---|---|
++| C minus B frozen local occupancy MAE | -0.003067 | [-0.007995, +0.002644] | INCONCLUSIVE |
++| C minus A direct native log-volume state MAE | -0.029774 | [-0.073244, +0.017074] | VERIFIED against the +0.05 retention allowance |
++| D nuisance tradeoff | Trained-perturbation excess falls, but state retention is unresolved | State interval overlaps +0.05 | INCONCLUSIVE |
++| Added observed temporal information | C and D beat target-only probes, but not independent-state differences conclusively | See the controls below | INCONCLUSIVE |
++
++C minus B's raw 95% interval also crosses zero, at [-0.007162, +0.001430]. Failure to establish a gain is not proof of equivalence or universal representation failure. C's retention result is noninferiority on the specified direct-volume endpoint. It is not a verified improvement or retention of every anatomical capability.
++
++#### All encoder arms and local controls
++
++State columns are native `log1p`-volume MAE. Other columns are balanced signed-occupancy MAE. Values are three-seed mean patient-uniform errors. Companion tables are descriptive, not new selected hypothesis tests. A and original R35 have no graded nonlinear change head.
++
++LUMIERE has zero-change occupancy MAE 0.484840.
++
++| Arm | Direct state | Frozen difference | Independent-state difference | Target-only | Nonlinear change head |
++|---|---:|---:|---:|---:|---:|
++| A | 0.929272 | 0.376955 | 0.376293 | 0.437612 | not graded |
++| B | 0.994212 | 0.381971 | 0.376508 | 0.440397 | 0.483508 |
++| C | 0.899498 | 0.378904 | 0.375365 | 0.437862 | 0.270405 |
++| D | 0.947002 | 0.381402 | 0.375873 | 0.435008 | 0.274940 |
++| R35 | 1.114490 | 0.373396 | 0.375064 | 0.440490 | not graded |
++
++SAILOR has zero-change occupancy MAE 0.469092.
++
++| Arm | Direct state | Frozen difference | Independent-state difference | Target-only | Nonlinear change head |
++|---|---:|---:|---:|---:|---:|
++| A | 2.209396 | 0.423821 | 0.396249 | 0.480684 | not graded |
++| B | 2.279716 | 0.436557 | 0.395125 | 0.483279 | 0.468779 |
++| C | 2.117310 | 0.431323 | 0.391896 | 0.483676 | 0.342619 |
++| D | 2.154923 | 0.436907 | 0.394481 | 0.490904 | 0.340042 |
++| R35 | 2.240098 | 0.438596 | 0.397776 | 0.470256 | not graded |
++
++C and D improve the descriptive nonlinear change-head error relative to B. That is a decoder result, not the primary frozen-encoder gain. On SAILOR, every frozen difference probe has higher descriptive error than its independent-state control.
++
++The LUMIERE temporal controls use the same occupancy endpoint and 23 pair-bearing patients:
++
++| Candidate minus control | Difference | Adjusted interval |
++|---|---:|---|
++| C minus target-only | -0.058958 | [-0.074268, -0.043641] |
++| C minus independent-state difference | +0.003539 | [-0.008029, +0.013840] |
++| D minus target-only | -0.053606 | [-0.068688, -0.038017] |
++| D minus independent-state difference | +0.005528 | [-0.005650, +0.016473] |
++
++Beating target-only is insufficient when the independent-state control is not beaten conclusively.
++
++#### Source52 ridge companions
++
++The following values are native log-volume state and change MAEs from source-only ridge fits. These are separate readouts from the direct state heads and occupancy probes above.
++
++| Arm | LUMIERE state | LUMIERE change | SAILOR state | SAILOR change |
++|---|---:|---:|---:|---:|
++| A | 0.887015 | 1.189453 | 2.180392 | 0.983491 |
++| B | 0.937617 | 1.230057 | 2.207182 | 1.006660 |
++| C | 0.897726 | 1.165711 | 2.051489 | 0.969616 |
++| D | 0.915186 | 1.171241 | 2.065202 | 0.963816 |
++| R35 | 1.031088 | 1.273334 | 1.952590 | 0.980395 |
++
++Zero native-volume change scores 1.544612 in LUMIERE and 0.943004 in SAILOR. Every SAILOR ridge-change mean exceeds zero change. These controls do not establish a transfer gain.
++
++#### D's unresolved tradeoff includes measured harm
++
++D minus C mean excess false change over identity, averaged across noise, intensity, and bias, is -0.000220 with adjusted interval [-0.000416, -0.000083]. Bias excess falls by -0.000691, with interval [-0.001278, -0.000277]. Noise excess rises by +0.0000301, with interval [+0.0000182, +0.0000436]. Held-out resolution excess is -0.000575, with interval [-0.001358, +0.000106].
++
++D minus C direct-state error rises by +0.047505, with interval [+0.004175, +0.098686]. This establishes worsening. The interval overlaps the locked +0.05 allowance, so it does not demonstrate violation of that specific margin. The intended state-preserving tradeoff remains INCONCLUSIVE, not VERIFIED.
++
++Per-sequence foreground standardization largely cancels the affine-intensity transform. Near-zero intensity drift is not evidence of learned intensity invariance. The locked stress is retained with this limitation rather than replaced after observing results.
++
++#### Target and empty-compartment limits
++
++The target audit retains all 599 visits and 496 usable pairs without model-selected exclusions. Sparse changed occupancy motivated balancing. It did not establish background dilution as the cause of earlier failures. One native enhancing disagreement disappeared completely after resizing. Partial boundary-detail loss remains unquantified.
++
++Empty compartments still have large state errors. The reviewer reports C42 LUMIERE empty-compartment MAEs of 3.8969, 3.0033, and 7.9117 for core, enhancement, and edema. Empty-target coverage is 7, 22, and 5 LUMIERE visits, and 58, 28, and 1 SAILOR visits. Sparse support limits interpretation. No-positive AUPRC cases remain empty, not perfect scores.
++
++The [aggregate companions](r36_phase1_metrics.json) retain changed and unchanged partitions, appearance and disappearance, both-empty pairs, source-fixed change-size groups, native scalar change, ridge readouts, reversal, and nuisance responses. Partition summaries are supported-pair pooled means, not the primary patient-uniform endpoint. A post-hoc within-patient permutation tests visit specificity, not biological change.
++
++Correct affines and native volumes do not establish accurate segmentation or anatomical correspondence. The suspect extracranial contour remains in the primary analysis. Automated differences are not expert-verified biological change. No repeatability estimate or noise ceiling is available.
++
++#### Independent review and scoped closure
++
++The [result reviewer](reviews/r36_phase1_result_review.md) returned APPROVED_FOR_SCOPED_REPORT and reporting-patch OK. The [artifact audit](reviews/r36_phase1_artifact_audit.md) passed with zero failed assertions. The [closure receipt](reviews/r36_closure_receipt.json) binds both completed native runs and the unchanged recovered audit report.
++
++The audit checked twelve checkpoints, thirty probes, all fifteen assessment sets, 1,950 nuisance rows, and thirty saved ridge bundles. Saved-coefficient replay and independent raw-row seed-mean bootstraps reproduced the classifications. Floating-point reduction differences of about 1e-9 did not change conclusions.
++
++The audit binds declared tensor provenance. It does not newly replay every dense occupancy prediction, precision-recall or direction measure, or original MRI tensor. The [reporting rules and reproduction commands](METHODS.md#r36-phase1) retain that scope. The raw aggregation CLI still labels reports review-pending because it does not consume review evidence. The separate closure receipt records completed review.
++
++Failed initial review runs were not accepted. The resumed native runs completed under their original contracts. Independent review cannot provide retrospective pre-training approval, expert biological validation, or untouched external validation. No forecast or general representation-quality claim follows, and Phase 2 remains unauthorized. The [original report](archive/2026-10-13/info/r36_phase1_report.md) and [execution chronology](archive/2026-10-13/info/r36_delta_representation_results.md) retain their exact bytes.
++
++### Historical execution through October 11
++
++Phase 1 was incomplete in the following dated receipts. The [completed findings](#r36-completed) supersede their open launch and review tasks, not their historical facts.
+ 
+ The newer execution record is [R36 results](documentation_sources/versions/51d6523f0da4b3d8745af10b79318fd684aba1fd9b47cc7d321e30df79984551.md), from sibling worktree `world-model-r36` at revision `f4b96c00dd5d79c59ba02d186e024ff747f690ad`. The captured newer record is S065. S064 preserves the older main-checkout version, which ends before the later check-ins.
+ 
+@@ -425,15 +531,3 @@ A1 to A41 are preserved above as an index; full setups, tables, and correction h
+ The historical SAILOR reprocess procedure is preserved at [reprocess guide](documentation_sources/versions/c7aeeea2bff31ee76a1190a69a05ca48ec78fc476e89d3afc345d546074c3f0d.md). Its intended question was whether matching the LUMIERE preprocessing contract would restore dynamics transfer. A19's same-code reprocess did not flip the persistence gate; A21's skull-out readout-recovery interpretation was subsequently withdrawn because the rebuilt cache did not reproduce it. A23's rebuilt same-space ratios remain the relevant historical evidence. Reprocessing details and limitations remain in the guide and A18 to A24.
+ 
+ Numeric claims in this document are scoped to the stated cache, task, cohort, and aggregation. Patient-level bootstrap intervals do not account for readout training-seed uncertainty unless stated. Developmental SAILOR transfer is not untouched external validation. Historical rows and scores are retained as history where corrected, invalid, or withdrawn; they must not be silently promoted to current evidence.
+-
+-## R36 completed assessment, 2026-10-13
+-
+-This addendum supersedes the earlier execution snapshots, not their historical evidence. All twelve final training arms and thirty source-only probes are present. Both development-cohort assessments completed, including bounded CPU recovery of the interrupted seed44 work. No GPU work was repeated for this reporting closure.
+-
+-The primary C minus B frozen local MAE difference is -0.003067, with family-three adjusted paired-patient interval [-0.007995, +0.002644]. Frozen accessibility remains INCONCLUSIVE. C passes the locked direct-volume state-retention margin against A. Added observed temporal information remains INCONCLUSIVE because neither C nor D establishes superiority over independent decoded-state differences. D reduces its aggregate trained-perturbation false-change endpoint but worsens state error and noise sensitivity; the intended retention tradeoff remains INCONCLUSIVE.
+-
+-The nonlinear change heads improve descriptively under C and D. That is not evidence of the primary encoder gain. Negative developmental SAILOR controls, large empty-compartment errors, and the ineffective standardized affine-intensity stress remain visible in the [complete report](r36_phase1_report.md) and [aggregate companions](r36_phase1_metrics.json).
+-
+-The [independent result reviewer](reviews/r36_phase1_result_review.md) approved the scoped report and final reporting patch. The full executable artifact audit is tracked separately in the report. No global quality, biological-change, or forecasting verdict follows. Phase 2 remains unauthorized.
+-
+-The [executable artifact audit](reviews/r36_phase1_artifact_audit.md) subsequently passed with zero failed assertions, including checkpoint/probe bytes, exact assessment identities, nuisance checks, saved ridge replay, and independent raw-row bootstrap regeneration. The [closure receipt](reviews/r36_closure_receipt.json) binds both completed native runs. Phase 1 scoped reporting is complete; the unavailable biological and independent-validation prerequisites remain named rather than declared satisfied.
+\ No newline at end of file
+diff --git a/info/METHODS.md b/info/METHODS.md
+index bb3d3a7..3b3ba4e 100644
+--- a/info/METHODS.md
++++ b/info/METHODS.md
+@@ -1,6 +1,6 @@
+ # Methods
+ 
+-This reference defines the methods, evaluation rules, and historical IDs used in the project. The wording was revised on October 12, 2026, using fixed copies of the research records. It does not change the approved protocols or update job status.
++This reference defines the methods, evaluation rules, and historical IDs used in the project. The October 13, 2026, update incorporates the completed R36 reporting rules and review scope. It does not change the locked experiment, refresh live job status, or authorize new research.
+ 
+ Use [Notes and insights](NOTES_AND_INSIGHTS.md) for the reasoning, [Experiments](EXPERIMENTS.md) for results, and [TODO](TODO.md) for remaining steps. Detailed frozen experiment contracts remain binding. The [archive](archive/2026-10-12/README.md) preserves the original records.
+ 
+@@ -200,6 +200,10 @@ R36 tests whether giving changed regions more weight during training makes chang
+ 
+ The primary comparison is C versus B, using matched local linear readouts trained on the 52 source patients. A continues state-only training. Original R35 is the starting encoder. D tests the added nuisance constraint. Better observed-change estimates do not establish better future prediction.
+ 
++Phase 1 computation and independently reviewed scoped reporting are complete as recorded on October 13, 2026. The [closure receipt](reviews/r36_closure_receipt.json) binds the completed result review and artifact audit. [Experiments](EXPERIMENTS.md#r36-completed) records the classifications. Reporting completion does not establish an encoder gain, biological validity, or future prediction. Phase 2 remains unauthorized.
++
++### Historical execution snapshot
++
+ Phase 1 was authorized but incomplete at the October 11, 2026, 18:30:51 UTC snapshot. The seed-43 source-trained readouts were running. Seed 44 had not started. No comparison of model quality on evaluation patients existed.
+ 
+ The completed implementation review was neither design approval before training nor acceptance of scientific results. Checks on nuisance-report identity and classification of harmful tradeoffs remained open. Phase 2 was not authorized. These statements describe the archived snapshot, not current progress. [TODO](TODO.md) owns the remaining actions, and [R36 evidence](EXPERIMENTS.md#r36) owns the execution receipt.
+@@ -313,6 +317,42 @@ The +0.05 margins are research decisions, not clinical thresholds. The family-th
+ 
+ Wide intervals or missing evidence produce INCONCLUSIVE results. Demonstrated harmful tradeoffs produce NOT VERIFIED results. A gain from a nonlinear head alone establishes a decoder benefit, not an encoder improvement. Before a D-versus-C verdict, report generation checks the identity of every required nuisance artifact and complete coverage of patients and conditions.
+ 
++### Reporting validation and independent audit
++
++The corrected nuisance validator checks complete status and exact arm and seed identity. It hashes actual final checkpoint and difference-probe bytes and binds the corresponding evaluation provenance. It also checks prepared metadata, the canonical tensor-manifest hash, and exact patient, first-visit, and condition tuples.
++
++Every required tuple occurs exactly once. Errors and state drift are finite and nonnegative. Excess false change equals the perturbation error minus identity error, and condition summaries agree with their rows. Duplicate, missing, substituted, or mismatched evidence is rejected.
++
++The D classifier returns NOT VERIFIED for demonstrated aggregate nuisance worsening or a demonstrated state or change margin violation. It returns VERIFIED only when nuisance benefit and both retention criteria hold. An interval overlapping a margin, or missing evidence, leaves the result INCONCLUSIVE. A positive error interval can establish worsening without establishing violation of the +0.05 allowance.
++
++`tests/test_delta_reporting.py` covers successful, adverse, margin-violating, overlapping, and missing-evidence cases. It includes 18 identity, coverage, and metric tamper cases, plus replacement of actual checkpoint and probe bytes. `tests/test_delta_summary.py` checks aggregate shapes, privacy filtering, and presentation scope. The final reporting correction is `ac931da`.
++
++The [result review](reviews/r36_phase1_result_review.md) approves the bounded interpretation and reporting patch. It did not independently recompute binary hashes, replay models, regenerate bootstraps, or execute tests. The separate [artifact audit](reviews/r36_phase1_artifact_audit.md) checked twelve checkpoints, thirty probes, fifteen assessment sets, 1,950 nuisance rows, and thirty ridge bundles. It replayed saved ridge coefficients and independently recomputed seed-mean paired-patient contrasts from raw rows. Floating-point reduction changed aggregates by about 1e-9 without changing conclusions.
++
++The audit binds declared tensor provenance. It does not newly replay every dense occupancy prediction, precision-recall or direction measure, or original MRI tensor. Its [saved source](reviews/evidence/r36_artifact_audit.py), [aggregate results](reviews/evidence/r36_artifact_audit_results.json), and [console summary](reviews/evidence/r36_artifact_audit_console.json) retain the checked scope. No expert target adjudication or untouched external validation follows from those checks.
++
++The failed initial native reviews were not accepted. The resumed reviewer and verifier completed under their original model and tool contracts. The verifier's full report was recovered from its exact child-recorded path after an output-routing error. The closure receipt binds its unchanged bytes. A completion summary alone was not accepted as the audit.
++
++The raw aggregation CLI does not consume review artifacts and still labels reports review-pending. The separate closure receipt records completed review. Do not rewrite historical runtime receipts to hide that distinction.
++
++### Reproduce the saved aggregation
++
++The following commands require the existing private artifacts in the execution environment. They aggregate saved results, not new training or inference. They are reference commands, not work performed by this documentation update.
++
++```bash
++.venv/bin/python -B -m unittest discover -s tests -p 'test_delta*.py' -v
++.venv/bin/python scripts/harness.py delta-representation report \
++  --results outputs/r36-delta-objective/matched-final \
++  --contract outputs/r36-delta-objective/qa/r36_contract.json \
++  --out results/r36-report-reproduction.json
++.venv/bin/python scripts/summarize_delta_representation.py \
++  --results outputs/r36-delta-objective/matched-final \
++  --report results/r36-report-reproduction.json \
++  --out results/r36-public-metrics.json
++```
++
++[Aggregate metrics](r36_phase1_metrics.json) retain input and generator hashes. Original weights, predictions, tensors, and participant inventories remain under ignored outputs. The full [archived Phase 1 report](archive/2026-10-13/info/r36_phase1_report.md) preserves the original reproduction record.
++
+ ### Resource, privacy, and review guardrails
+ 
+ The total Phase 1 ceiling is 24 GPU-hours and the per-session ceiling is nine hours, subject to a fresh quota check. Training inputs are existing private LUMIERE data only. No SAILOR upload, new acquisition, public push, deployment, or data-use agreement is authorized. Incomplete arms remain incomplete; do not grade partial arms, retry a failed arm, change the recipe, duplicate a launch, or exceed the ceiling. Preserve incomplete outputs and stop on identity, geometry, target-QA, or nonfinite-gradient failures.
+@@ -354,6 +394,8 @@ The proposed evaluation includes patient-uniform forecast MAE and a probability
+ 
+ Multi-step rollout is a separate later capability. Forecast gains do not establish causal treatment effects or validate plans for alternative treatment.
+ 
++<a id="synthetic-actions"></a>
++
+ ## Proposed action-conditioned synthetic work
+ 
+ Action-conditioned synthetic representation work remains proposed, not selected or authorized. The research brief at [`action_conditioned_representation_brief.md`](documentation_sources/versions/f3dad868d43b3aa2bf5f7913b3dfa2872cdf87a65fd9648b1eb9932e3f750855.md) describes a possible hypothesis. It does not replace the current objective, establish biological action labels, or authorize implementation. Any future proposal must specify operator approval, cutoff-valid actions, matched controls, nuisance checks, and falsifiers before execution. Do not imply that an action-conditioned experiment is the chosen next method.
+@@ -445,6 +487,7 @@ This compact ledger records historical decisions and their current interpretive
+ | D55 | Objective is broader than current method | Governing research principle. |
+ | D56 | Whole-cohort source-grid QA | Integrity result only; not segmentation accuracy, repeatability, biological change, or forecasting benefit. |
+ | D57 | Execute matched R36 objective contrast | Phase 1 authorization only; no Phase 2 authorization and no result acceptance implied. |
++| D58 | Separate decoder benefit from encoder progression | Completed R36 interpretation. Frozen accessibility and D's tradeoff remain inconclusive. C passes the specified direct-volume retention margin, not a general quality test. See [Notes](NOTES_AND_INSIGHTS.md#d58). |
+ 
+ ## Direction and audit indexes
+ 
+@@ -562,4 +605,4 @@ R1 to R28 are historical proposals and follow-ups catalogued in [directions.md](
+ | R33 | Bounded clean-data rescue matrix. Seven GPU arms completed without reaching pooled anatomy persistence. A40 withdrew leaked forecasts; A41 retained separate latent diagnostics. |
+ | R34 | Coordinate, chronology, and checkpoint repairs. Structural implementation review closed. Whole-cohort source-grid QA passed, but biological and repeatability limits remain. |
+ | R35 | State, observed-change, and nuisance representation comparison. Completed corrected sibling record; bounded as described above. |
+-| R36 | Delta-representation objective contrast. Phase 1 incomplete at snapshot; Phase 2 unauthorized. |
++| R36 | Delta-representation objective contrast. Phase 1 incomplete at the October 11 snapshot. Computation and scoped reporting closed October 13; primary encoder gain remains inconclusive. Phase 2 unauthorized. |
+diff --git a/info/NOTES_AND_INSIGHTS.md b/info/NOTES_AND_INSIGHTS.md
+index afa38e0..91c6a1d 100644
+--- a/info/NOTES_AND_INSIGHTS.md
++++ b/info/NOTES_AND_INSIGHTS.md
+@@ -2,7 +2,7 @@
+ 
+ Why have the experiments not yet established useful prediction of glioma change? This page explains what the results mean, why several earlier claims were withdrawn, and what the remaining experiments can test.
+ 
+-The explanation uses fixed copies of the research records. The wording was revised on October 12, 2026, but the latest R36 runtime snapshot is still October 11 at 18:30:51 UTC. No job status or scientific result was updated for this rewrite.
++The October 13, 2026, update explains the completed R36 Phase 1 findings and their scoped review. Earlier runtime snapshots remain dated history, not live job status. No new experiment was run for this documentation update.
+ 
+ Use [Experiments](EXPERIMENTS.md) for measurements, [Methods](METHODS.md) for exact protocols and historical IDs, and [TODO](TODO.md) for remaining work. The [archive](archive/2026-10-12/README.md) preserves the original records and their correction history.
+ 
+@@ -52,7 +52,7 @@ R36's target audit found that the median changed region occupied less than 0.5%
+ 
+ A whole-grid loss gives most of its weight to unchanged voxels because they are far more numerous. R36 tests whether giving changed and unchanged regions equal weight helps the encoder preserve change information.
+ 
+-That is a testable hypothesis. The audit does not prove that sparse change caused the earlier failures, that most change disappeared during resizing, or that balanced training will improve the representation. The [R36 execution record](documentation_sources/versions/51d6523f0da4b3d8745af10b79318fd684aba1fd9b47cc7d321e30df79984551.md) supplies the audit evidence.
++That was a testable hypothesis. The completed comparison improves the descriptive nonlinear decoder but does not verify the primary frozen-encoder gain. The audit does not prove that sparse change caused earlier failures or that most change disappeared during resizing. The [R36 execution record](documentation_sources/versions/51d6523f0da4b3d8745af10b79318fd684aba1fd9b47cc7d321e30df79984551.md) supplies the audit evidence.
+ 
+ ### A measurement pipeline is useful even when forecasting fails
+ 
+@@ -108,7 +108,9 @@ Its RANO code mapping is empirical and lacks independent codebook confirmation.
+ 
+ SAILOR is controlled-access data. It remains local. The [Methods reference](METHODS.md) defines the source-trained transfer protocols and privacy limits.
+ 
+-### R35 completion and R36 execution are not forecast verdicts
++### Completed observed-change experiments are not forecasts
++
++R36 Phase 1 computation and scoped reporting review are now complete. Its [current interpretation](#d58) replaces the old launch and reporting tasks below. It does not establish a frozen-encoder gain or future predictability.
+ 
+ R35 completed its corrected state, observed-change, and nuisance comparison. It did not show that a paired head beats independent state differences, and it did not test future prediction.
+ 
+@@ -181,10 +183,18 @@ R33's [clean reruns](documentation_sources/versions/eaca551880e0a9db5c4bdc7785e1
+ 
+ This rewrite does not restore the deleted `notes.md` or `explainer.html`, authorize old proposals, or independently verify the literature.
+ 
+-## D58. Keep the R36 decoder finding separate from encoder progression, 2026-10-13
++<a id="d58"></a>
++
++## D58. Keep the R36 decoder finding separate from encoder progression, October 13, 2026
+ 
+ R36's completed assessment does not establish the primary frozen-encoder benefit of balanced change supervision. C retains the specified direct-volume state endpoint relative to A, but that narrow noninferiority result is not universal representation quality. The trained nonlinear heads improve descriptively while the frozen C-versus-B interval crosses zero. Both observations must remain in the record.
+ 
+ D reduces the mean trained-perturbation excess false-change endpoint, but worsens direct-state error and noise sensitivity. The state interval overlaps the allowed margin, so the intended tradeoff is inconclusive. A favorable aggregate cannot erase these negative companions. The affine-intensity stress is largely canceled by standardization and cannot establish learned scanner invariance.
+ 
+-The [Phase 1 report](r36_phase1_report.md) and [independent result review](reviews/r36_phase1_result_review.md) support this scoped interpretation. No follow-up method family is selected. Any new dynamics experiment needs the separately approved contract and operator decision. Expert target reliability and genuinely independent validation remain unresolved.
++C and D beat matched target-only occupancy probes. Neither establishes superiority over independent decoded-state differences. This limits the claim that a specialized paired representation adds useful observed temporal information. On developmental SAILOR, every frozen difference probe has higher descriptive error than its independent-state control, and every source52 ridge-change mean exceeds zero change.
++
++Failure to establish C's primary gain is not proof that B and C are equivalent or that useful MRI representations are impossible. Passing C's direct-volume retention margin is also not proof that every anatomical capability is retained. The comparisons answer narrower questions than the research objective.
++
++The [completed findings](EXPERIMENTS.md#r36-completed), [independent result review](reviews/r36_phase1_result_review.md), and [closure receipt](reviews/r36_closure_receipt.json) support this interpretation. The separate artifact audit reproduces the bounded classifications. It does not newly replay all dense predictions or establish biological correctness. Reporting approval cannot provide retrospective pre-training approval.
++
++My reading is that the frozen-accessibility hypothesis remains unresolved, while the decoder responds to balanced supervision. Those are different findings. Neither selects a follow-up method family. Any new dynamics experiment needs a separately approved contract and operator decision. Expert target reliability and genuinely independent validation remain unresolved. Phase 2 remains unauthorized.
+diff --git a/info/README.md b/info/README.md
+index c237c68..d3469cb 100644
+--- a/info/README.md
++++ b/info/README.md
+@@ -1,34 +1,40 @@
+ # Research documentation
+ 
+-The four consolidated documents are the starting point for the research record:
++The four canonical documents own the research record:
+ 
+-- [Notes and insights](NOTES_AND_INSIGHTS.md) explains the research questions, findings, and limits.
+-- [Experiments](EXPERIMENTS.md) records measurements, corrections, withdrawals, and incomplete results.
+-- [Methods](METHODS.md) defines terms, protocols, and historical decision and audit IDs.
+-- [Research TODO](TODO.md) lists the remaining work at the archived research snapshot.
++- [Notes and insights](NOTES_AND_INSIGHTS.md) explains the questions, findings, and limits.
++- [Experiments](EXPERIMENTS.md) records measurements, controls, corrections, and withdrawals.
++- [Methods](METHODS.md) defines terms, protocols, reproduction commands, and historical IDs.
++- [Research TODO](TODO.md) lists current remaining work and its authorization.
+ 
+-R36 runtime statements in the consolidated documents describe October 11, 2026, at 18:30:51 UTC unless a later addendum says otherwise. They are not live job status. The [R36 execution record](r36_delta_representation_results.md) preserves later progress. The [Phase 1 report](r36_phase1_report.md) and [independent result review](reviews/r36_phase1_result_review.md) record the completed assessment and its scope. Document approval does not accept scientific results or authorize Phase 2.
++The latest R36 closure is October 13, 2026. Phase 1 computation and scoped reporting review are complete. The primary encoder gain remains inconclusive, C passes the specified direct-volume retention margin, and Phase 2 remains unauthorized. [Completed findings](EXPERIMENTS.md#r36-completed) and [D58 interpretation](NOTES_AND_INSIGHTS.md#d58) explain those distinctions. Earlier October 11 runtime snapshots remain historical, not live job status.
++
++## Evidence and presentation
++
++The [current research page](research_run.html) presents the aggregate findings. Its generator is `scripts/refresh_research_run.py`. [Aggregate R36 measurements](r36_phase1_metrics.json) retain all arms, companions, and input hashes.
++
++The [independent result review](reviews/r36_phase1_result_review.md), [artifact audit](reviews/r36_phase1_artifact_audit.md), and [closure receipt](reviews/r36_closure_receipt.json) retain their exact bytes and checked scope. They permit bounded reporting, not global representation-quality, biological-change, or forecasting claims.
+ 
+ ## Source history
+ 
+-[Source coverage](SOURCE_COVERAGE.md) maps all 72 captured Markdown versions across 48 paths and ten frozen branch refs. The [source catalog](documentation_sources/catalog.json) records their origins. Research citations use immutable source copies so conflicting branch versions and dirty or untracked records remain traceable.
++[Source coverage](SOURCE_COVERAGE.md) maps the original 72 captured Markdown versions across 48 paths and ten frozen branch refs. The [catalog](documentation_sources/catalog.json) records their origins. That is a dated capture, not a count of every later document.
+ 
+-The [October 12 archive](archive/2026-10-12/README.md) contains 32 original research records and five supporting presentation assets moved without changing their bytes. Their old plans and conclusions are historical. Later corrections and withdrawals take priority when interpreting them.
++The [October 13 update](documentation_sources/updates/2026-10-13/coverage.json) maps the newly incorporated records and restored duplicates. The [October 13 archive](archive/2026-10-13/README.md) preserves ten relocated files. The [October 12 archive](archive/2026-10-12/README.md) preserves 32 earlier research records and five presentation assets. Both retain original bytes.
+ 
+-The [preparation record](documentation_sources/checkpoint.md) records comparisons, reviews, writing changes, and verification limits. A documentation check is not scientific acceptance.
++Old plans, runtime claims, and embedded links are historical. Later corrections govern interpretation. The [original preparation record](documentation_sources/checkpoint.md) and [new update plan](documentation_sources/updates/2026-10-13/plan.md) disclose review and verification limits.
+ 
+-## Operating guides and binding rules
++## Operating guides and maintenance
+ 
+-Operating documents remain separate:
++Keep operating documents separate:
+ 
+ - [Project README](../README.md) covers setup and common commands.
+-- [Agent instructions](../AGENTS.md) define repository development and verification rules.
++- [Agent documentation procedure](../AGENTS.md#maintain-the-research-documentation) defines ownership, archival, and update checks.
+ - [Research guardrails](research_guardrails.md) define the objective and required experiment decision brief.
+-- [Preprocessing](preprocessing.md) defines the BRAINIAC input pipeline.
++- [Preprocessing](preprocessing.md) defines BRAINIAC inputs.
+ - [SAILOR reprocessing](../src/preprocessing/reprocess_sailor.md) preserves that procedure and its limits.
+-- [Acquisition scripts](../scripts/README.md) document data access tools.
+-- [CLI verification skill](../.agents/skills/verify-world-model-cli/SKILL.md) defines command discovery and bounded execution checks.
++- [Acquisition scripts](../scripts/README.md) describe data access tools.
++- [CLI verification skill](../.agents/skills/verify-world-model-cli/SKILL.md) defines real command-line checks.
+ 
+-Add new measurements to Experiments, their reasoning to Notes and insights, and protocol changes to Methods. Preserve historical IDs and corrections. Keep the archive and frozen source bytes unchanged.
++Add measurements to Experiments, reasoning to Notes and insights, protocols to Methods, and actions to TODO. Keep historical IDs, corrections, archive bytes, and review scope intact. Do not create a second active research narrative.
+ 
+-Regenerate the coverage page with `python3 scripts/render_documentation_coverage.py`. Verify the current four-document package with `python3 scripts/documentation_sources.py verify`.
++Regenerate original coverage with `python3 -B scripts/render_documentation_coverage.py`. Verify the canonical package and all archives with `python3 -B scripts/documentation_sources.py verify`. The later update's reproducible checks are documented in its plan. Passing these checks is not scientific acceptance.
+diff --git a/info/SOURCE_COVERAGE.md b/info/SOURCE_COVERAGE.md
+index 738e0c9..6112a1a 100644
+--- a/info/SOURCE_COVERAGE.md
++++ b/info/SOURCE_COVERAGE.md
+@@ -1,6 +1,6 @@
+ # Source coverage
+ 
+-This ledger covers all 72 captured Markdown versions across 48 paths, ten branch refs, and three preexisting worktrees. It records parent comparisons, not scientific acceptance. The catalog fixes the capture scope and origins. No network fetch or research job was run.
++This ledger covers the original 72 captured Markdown versions across 48 paths, ten frozen branch refs, and three preexisting worktrees. It records parent comparisons, not scientific acceptance. The catalog fixes the capture scope and origins. No network fetch or research job was run.
+ 
+ The notes and experiments child reports were incomplete. The parent completed direct full reads or complete variant diffs before recording these dispositions. The contracts report was checked against frozen sources and its omissions were integrated. The first reviewer assessed the inventory only and returned BLOCKED before integration. A later independent review is a separate gate.
+ 
+@@ -90,3 +90,9 @@ Token extraction in the catalog is a search aid, not a global identifier ontolog
+ The [curated JSON ledger](documentation_sources/coverage.json) records exact frozen source ranges, draft sections, read modes, and the person responsible. The [catalog](documentation_sources/catalog.json) records every branch commit, blob, and live-worktree origin. The [supplementary manifest](documentation_sources/supplementary/manifest.json) binds the recovered runtime receipt, protocol review, and worktree-creation evidence.
+ 
+ Integrated comparisons are [notes](documentation_sources/comparisons/notes.json), [experiments](documentation_sources/comparisons/experiments.json), and [contracts](documentation_sources/comparisons/contracts.json). Received child reports remain separately archived with their original limitations.
++
++## Later source updates
++
++These update ledgers are separate from the original frozen capture. They record newly incorporated material and restored duplicates, not new scientific acceptance.
++
++- [2026-10-13 source dispositions](documentation_sources/updates/2026-10-13/coverage.json).
+diff --git a/info/TODO.md b/info/TODO.md
+index 6f6bebc..a387e62 100644
+--- a/info/TODO.md
++++ b/info/TODO.md
+@@ -1,174 +1,96 @@
+ # Research TODO
+ 
+-This checklist records the work left at the archived research snapshot of October 11, 2026, at 18:30:51 UTC. It is not a live progress report. The wording was revised on October 12, 2026.
++This checklist records remaining work after the October 13, 2026, R36 Phase 1 closure. It uses saved reports, not live job status. Earlier launch checklists remain in the [October 11 snapshot](documentation_sources/versions/e3c486ef9cc77afcc1978e53ce4495ef1051a5b8d22cf31b9d627c72d4db029e.md) and the [dated archive](archive/2026-10-13/README.md).
+ 
+-Use this page to review the remaining work, not to authorize new experiments. The original [research rules](documentation_sources/versions/6e710be8c33b05d77bf8f13b415b64028fcc13dc03d71defb304e6a7631c78f4.md) and approved experiment protocols still apply.
++Use [Notes and insights](NOTES_AND_INSIGHTS.md) for interpretation, [Experiments](EXPERIMENTS.md) for results, and [Methods](METHODS.md) for protocols. The [research guardrails](research_guardrails.md) govern new implementation. This checklist does not authorize experiments, data acquisition, or a change of method family.
+ 
+-Start with [Notes and insights](NOTES_AND_INSIGHTS.md) for the reasoning. Use [Experiments](EXPERIMENTS.md) to look up results and [Methods](METHODS.md) to look up the exact protocols.
++## R36 Phase 1 is closed for scoped reporting
+ 
+-## Priority 1. Finish the authorized R36 Phase 1
++The [completed findings](EXPERIMENTS.md#r36-completed) and [closure receipt](reviews/r36_closure_receipt.json) replace the old seed-43 and seed-44 launch tasks. Do not rerun completed work because an archived checkbox is open.
+ 
+-R36 compares two training objectives, B and C, to test whether giving changed regions more weight helps the encoder represent observed change. [Methods](METHODS.md#r36-phase1) defines the four experiment arms and their required comparisons. This experiment observes both scans. It does not predict a future scan.
++- [x] Complete twelve final-epoch training arms, thirty source-only probes, and both development-cohort assessments.
++- [x] Preserve the bounded CPU recovery receipts without repeating GPU work.
++- [x] Correct nuisance-artifact identity and coverage checks, with rejection fixtures.
++- [x] Classify demonstrated adverse tradeoffs separately from overlapping intervals and missing evidence.
++- [x] Obtain the [independent scoped result review](reviews/r36_phase1_result_review.md).
++- [x] Complete the [independent artifact audit](reviews/r36_phase1_artifact_audit.md), including saved ridge replay and patient-level contrast recomputation.
++- [x] Present all arms and required companions in the [research page](research_run.html) and [aggregate measurements](r36_phase1_metrics.json).
+ 
+-At the archived snapshot, all twelve training checkpoints and ten seed-42 readout models had passed local checks. Seed 43 was running. Seed 44 had not started. No comparison of model quality on the evaluation patients had been scored. Do not treat these statements as current job status.
++The primary C-versus-B encoder gain, D's nuisance tradeoff, and superiority over independent state differences remain INCONCLUSIVE. C passes the specified direct-volume retention margin against A. That is not a general state-improvement claim. No follow-up family is selected, and Phase 2 remains unauthorized.
+ 
+-### Complete the remaining source-only readouts
++The earlier implementation review was not retrospective pre-training approval. Computational completion and reporting approval do not resolve target reliability, biological attribution, or untouched external validation.
+ 
+-A readout is a model that extracts a measurement from the encoder's features. Here, the encoder stays fixed, and the readout learns only from the 52 source-training patients.
++## Priority 1. Resolve the limits on interpretation
+ 
+-Complete the readouts under the approved recipe:
+-
+-- [ ] After the remote seed-43 job finishes, collect its outputs.
+-- [ ] Check each readout's epoch-20 checkpoint against its encoder, feature view, protocol, row order, and complete finite training history.
+-- [ ] Before starting seed 44, check the actual GPU quota and the remaining experiment allowance.
+-- [ ] If a launch intent or push receipt already exists, reconnect to that job instead of starting another copy.
+-- [ ] Collect and check the seed-44 outputs under the same rules.
+-- [ ] Require all thirty correctly linked readout models before the complete comparison.
+-- [ ] Record failed or incomplete work with its actual status.
+-
+-Use three seeds and exactly 20 epochs. Score the final epoch only. Do not retry failed arms, shorten training, score partial arms, or repeat completed launches.
+-
+-The total limit is 24 GPU-hours. Each session has a nine-hour maximum, and some follow-on jobs have tighter limits. This document does not authorize a new paid launch.
+-
+-### Close the reporting review findings
+-
+-The completed implementation review found risks in the reports. It did not establish a model failure or accept the scientific results. It also did not replace the required design review before training.
+-
+-Resolve the reporting checks before accepting an aggregate report:
+-
+-- [ ] Check each nuisance-test artifact's status, arm, seed, checkpoint, and readout identity.
+-- [ ] Check that every required patient and perturbation condition is present exactly once.
+-- [ ] Reject duplicate, missing, or mismatched reports.
+-- [ ] Report demonstrated harm to state estimation, change estimation, or nuisance robustness as NOT VERIFIED.
+-- [ ] Report overlapping confidence intervals or missing evidence as INCONCLUSIVE.
+-- [ ] Update stale review-status records without implying that the results have been accepted.
+-
+-The [R36 protocol and recovery review](documentation_sources/supplementary/r36-protocol-recovery.md) gives the complete findings. It refers to `src/harness/analysis/delta_evaluation.py` in `world-model-r36`: lines 88-107 for nuisance aggregation, and lines 66-68 and 103-107 for negative verdicts. Those line numbers describe the reviewed revision, not a fresh code inspection.
+-
+-No corrupted evaluation report or harmful model tradeoff had been observed in the archived record. Review of this code is separate from review of these documents and from the pending scientific result review.
+-
+-### Produce the complete Phase 1 assessment
+-
+-Use the fixed development rows and the matched readouts described in [Methods](METHODS.md#r36-phase1). Complete the following reports:
+-
+-- [ ] Compare C with B using local linear readouts trained on the same 52 source patients, with each encoder held fixed.
+-- [ ] Include original R35, continued state-only arm A, zero change, later-scan-only readouts, and differences between separate state estimates.
+-- [ ] Do not score A's untrained change head.
+-- [ ] Report balanced occupancy error with equal weight per patient.
+-- [ ] Report changed and unchanged regions separately, including appearance, disappearance, sample counts, and groups defined from source-training data.
+-- [ ] Report native log-volume errors for state and change, including final measured visits and genuinely empty compartments.
+-- [ ] Keep the ridge-regression controls trained only on source patients, with validation grouped by patient.
+-- [ ] Compare C with D for sensitivity to acquisition changes.
+-- [ ] Report false change relative to the identity test, changes in state estimates, and the held-out resolution test separately.
+-- [ ] Apply the fixed three-seed comparison, patient bootstrap, and adjusted confidence intervals.
+-- [ ] Do not count seeds or voxels as independent patients.
+-- [ ] Evaluate every source-trained readout on local SAILOR data without fitting to those evaluation patients or choosing models from their results.
+-- [ ] Keep differences in label definitions, acquisition, and segmentation source visible in the transfer report.
+-- [ ] Check saved predictions, weights, normalizers, protocols, model source, tensors, visits, and pair identities before accepting a score table.
+-
+-Keep every original eligible pair in the primary analysis. Keep the suspect contour outside the brain and the empty targets visible. Do not exclude cases after seeing which exclusions help a model.
+-
+-### Review and close Phase 1
+-
+-Complete the reporting and review steps in order:
+-
+-1. Obtain independent scientific result review after all required companion evaluations are complete. The earlier recovery review is not a result verdict.
+-2. Publish the full results table for every arm and control, including negative, incomplete, and inconclusive outcomes.
+-3. Distinguish a better encoder representation from a better nonlinear decoder. Distinguish observed change from future prediction.
+-4. Append accepted findings and revised priorities to the execution and decision records.
+-5. If the conclusions change, update `info/research_run.html` and inspect the rendered page.
+-6. Present the Phase 1 report before choosing a follow-up method family.
+-
+-## Priority 2. Resolve the limits on interpretation
+-
+-These tasks remain open. They do not authorize data acquisition, new targets, or another model family.
++These tasks require approved study designs. They are not permission to acquire data or start training.
+ 
+ ### Establish target reliability
+ 
+-Before calling measured differences biological change, establish how reliable the masks and their alignment are:
++Before calling automated mask differences biological change, establish how reliable the targets are:
+ 
+-- [ ] Propose a bounded expert review or independent repeat-annotation study.
+-- [ ] Separate segmentation repeatability, correspondence between anatomical locations, registration error, and actual disease change.
++- [ ] Propose bounded expert adjudication or independent repeat annotations.
++- [ ] Separate segmentation repeatability, anatomical correspondence, registration error, and actual disease change.
+ - [ ] Quantify partial boundary-detail loss at 96 cubed before proposing a native-grid experiment.
+-- [ ] Keep absent-compartment failures and postoperative transitions visible.
++- [ ] Keep empty-compartment errors and postoperative transitions visible.
+ 
+-The R36 audit found one native enhancing disagreement that disappeared completely after resizing. It did not establish widespread complete loss of change targets. Correct grids and native volumes do not establish accurate segmentation or reliable biological change.
++R36 found one native enhancing disagreement that disappeared completely after resizing. It did not establish widespread complete disappearance of change targets. Correct affines and native volumes do not prove accurate segmentation or biological correspondence. The suspect extracranial contour remains in the primary analysis.
+ 
+-Get approval for the study's sample, annotations, cost, privacy handling, and scientific endpoint. SAILOR expert masks may help a local check, but their availability does not establish that both cohorts measure the same biological endpoint.
++Get approval for the sample, annotations, cost, privacy handling, and endpoint. Local SAILOR expert masks may support a bounded check. Their availability does not establish equivalent biological targets across cohorts.
+ 
+-### Reserve genuinely independent validation
++### Reserve independent validation
+ 
+-Choose and protect an independent test before making an independent-validation claim:
++Before claiming independent validation, reserve a compatible test that has not influenced development:
+ 
+-- [ ] Choose a new external or hidden test with a fixed task and no prior model selection.
+-- [ ] Check participant overlap, supplied preprocessing, label definitions, access, and data-use terms before assigning the cohort a role.
+-- [ ] Independently verify the SAILOR clinical codebook before making a clinical RANO claim.
+-- [ ] Label both the reused historical final13 and the repeatedly examined encoder-unseen LUMIERE patients as development data.
++- [ ] Specify a fixed task and a new external or hidden test.
++- [ ] Check participant overlap, preprocessing, label definitions, access, and data-use terms.
++- [ ] Verify the SAILOR clinical codebook independently before making a clinical RANO claim.
++- [ ] Continue to label the reused historical final13 and encoder-unseen LUMIERE assessments as development data.
+ 
+-The tentative SAILOR mapping of codes 3 and 5 is not required for the current anatomical proxy task. No new acquisition, public upload, or acceptance of a data-use agreement is authorized here. The [external-supervision audit](documentation_sources/versions/636f0274c36efa3cee145c530acebff689d5961eff995269ecc3bc91d8c6d89e.md) lists candidate cohorts and access limits.
++SAILOR remains controlled-access development transfer. Its tentative codes 3 and 5 are not needed for the anatomical proxy task. No download, public upload, or data-use agreement is authorized here. The [external-supervision audit](documentation_sources/versions/636f0274c36efa3cee145c530acebff689d5961eff995269ecc3bc91d8c6d89e.md) lists historical candidate cohorts and access limits.
+ 
+-## Priority 3. Maintain the consolidated research record
++## Priority 2. Decide the next scientific question before implementation
+ 
+-Before any later consolidation, complete the document review:
++The [R36 interpretation](NOTES_AND_INSIGHTS.md#d58) separates the descriptive nonlinear-decoder benefit from the unresolved encoder hypothesis. The completed comparison does not select an architecture or authorize another experiment.
+ 
+-- [ ] Review [Experiments](EXPERIMENTS.md) for preserved measurements, corrections, and negative outcomes.
+-- [ ] Review [Methods](METHODS.md) for separation of current, historical, and proposed protocols, and for the historical decision and audit indexes.
+-- [ ] Review [Notes and insights](NOTES_AND_INSIGHTS.md) for the reasoning and the limits of each conclusion.
+-- [ ] Keep the section-level source mapping and historical identifiers intact when adding new findings.
+-- [ ] Preserve exact copies of dirty and untracked sources. Git history alone does not preserve those files.
+-- [ ] Update existing Markdown links and references in code-facing documentation before a later consolidation.
+-- [ ] Keep `AGENTS.md`, the root `README.md`, CLI verification skills, and operating procedures discoverable.
++Before substantial research implementation:
+ 
+-These four documents are the consolidated research record, promoted with the operator's approval. The [archive](archive/2026-10-12/README.md) preserves the original pages without changing their bytes. Main's intentional deletions of `info/notes.md` and `info/explainer.html` remain unchanged in that checkout. Their historical copies are archived here, not restored as current guidance. The old notes repeat R29 to R32, now indexed in Methods.
+-
+-## Separately gated work
++1. State the capability under test and the proposed information cutoff.
++2. Write the [experiment decision brief](research_guardrails.md#experiment-decision-brief).
++3. Include a materially different approach, a simple baseline, matched comparisons, costs, independent checks, falsifiers, and unknowns.
++4. Obtain the operator's decision on changes to scientific targets, method-family priorities, and what counts as success.
+ 
+ ### R36 Phase 2 remains unauthorized
+ 
+-Do not start Phase 2 without a separate operator decision. The [conditional dynamics proposal](METHODS.md#r36-phase2) requires source-validation selection rules, verified limits on information available at prediction time, and matched current-scan and history controls.
+-
+-For future prediction, exclude future scans, masks, volumes, embeddings, gaps ending at future visits, and future treatment from model inputs. Do not choose encoders using SAILOR results or the development assessment results. State the additional capability that a new experiment tests.
+-
+-### Other ideas remain candidates
++The [conditional dynamics proposal](METHODS.md#r36-phase2) requires a separate operator decision. It is not an automatic continuation of Phase 1.
+ 
+-Treat the following ideas as proposals, not approved next steps:
++Any future predictor must exclude future scans, masks, volumes, embeddings, gaps ending at future visits, and future treatment from inference inputs. Teacher observations can be training targets only. Selection cannot use SAILOR or the reused development assessment outcomes.
+ 
+-- The [action-conditioned representation brief](documentation_sources/versions/f3dad868d43b3aa2bf5f7913b3dfa2872cdf87a65fd9648b1eb9932e3f750855.md) proposes controlled synthetic changes to real MRI. It is unrun and unselected. Check physical coordinates and target consistency before proposing training.
+-- Native-grid sampling, stronger encoders, different MRI-sequence fusion, and revised acquisition objectives are separate hypotheses. Do not bundle them into repairs to the fixed C-versus-B comparison.
+-- A faithful pretrained comparator, a genuine reproduction of paired-scan assessment, and better clinical labels remain evidence gaps. Their historical RANO task does not make them the next R36 step.
+-- Treatment-conditioned prediction and causal treatment effects are different questions. Observational SAILOR treatment tokens do not support claims about what would happen under an alternative treatment.
++### Other ideas remain proposals
+ 
+-Before substantial new research implementation, write the required brief. Include a materially different approach, a simple baseline, matched comparisons, cost, independent checks, and findings that would disprove the hypothesis. The operator decides changes to scientific targets and method-family priorities.
++The [synthetic-action proposal](METHODS.md#synthetic-actions) is unrun and unselected. Physical-coordinate and target-consistency checks must precede a training proposal.
+ 
+-## Closed work is not an active checklist
+-
+-Use [Experiments](EXPERIMENTS.md) to find completed pilots, readout tests, preprocessing and geometry audits, RANO comparators, P2 attempts, clean reruns, and the R35 comparison.
+-
+-Do not restart unchanged JEPA continuations, larger horizon heads, combined surgery and augmentation sweeps, transition-weighting sweeps, or frozen-feature combinations because an old checkbox is still open. A40 withdrew the learned P2.4 and adaptation forecasting claims. A41 and the completed clean reruns replace their old launch checklists.
+-
+-Completed computation does not resolve biological validity, independent result review, or external validity.
++Native-grid sampling, stronger encoders, different sequence fusion, and revised acquisition objectives are separate hypotheses. Do not bundle them into a repair of the completed C-versus-B comparison.
+ 
+-## Source and status provenance
++A faithful pretrained comparator, a genuine reproduction of paired-scan assessment, and better clinical labels remain evidence gaps. Their historical RANO task does not make them the next R36 step. Treatment-conditioned prediction is also distinct from identifying causal treatment effects.
+ 
+-The work priorities come from [D55 to D57 and the decision history](documentation_sources/versions/2b7293c884e0e0aa9f1db178d13f55497d584cd7060c68c022436d47330bb63c.md), [the latest R36 directions](documentation_sources/versions/eade325e60cbeeb92dc5f6570520d8f502a519e846309ef5803b2bf7e1a2d094.md), and [the approved R36 handoff addendum](documentation_sources/versions/8fc1116f80667885774a5ce6a8fb9ec40f1e360d1f87867fefb81baf01118ab6.md).
+-
+-The newer [R36 execution record](documentation_sources/versions/51d6523f0da4b3d8745af10b79318fd684aba1fd9b47cc7d321e30df79984551.md) comes from `exp/r36-delta-objective` at `f4b96c0` and includes the 14:16 UTC resumption. The [older main-checkout record](documentation_sources/versions/4f80203aeaed182a3e106b44f5d066b213b65387a143d3979710282be6263077.md) ends at 04:04 UTC. Neither is a live monitor.
++## Priority 3. Maintain the consolidated research record
+ 
+-The later 18:30:51 UTC snapshot came from `outputs/r36-delta-objective/continuation.json`. The [recovered receipt](documentation_sources/supplementary/r36-runtime-snapshot.json) preserves its exact excerpt, timestamp, and source-line hash from tool-result line 701 of the saved October 10 parent session. The earlier temporary copy is unavailable. This rewrite does not inspect the moving receipt, claim a later job state, or report a fresh quota balance. The receipt's generic review field does not reliably distinguish implementation review from scientific result review.
++Follow the [documentation procedure](../AGENTS.md#maintain-the-research-documentation):
+ 
+-Historical completion and withdrawal checks come from [the original TODO](documentation_sources/versions/c7c9fba4178609946f8fd4ce8b90af08b6a88392955d7f2e198aa2e02b14cc57.md), [clean rescues](documentation_sources/versions/eaca551880e0a9db5c4bdc7785e135675cd518ebfcd361d5aa482beca4f37dce.md), and [the R35 record](documentation_sources/versions/768fdfa0a9be4dc76e99fcef9ff971e26252d672e82b08267f5e9ea157ced0f3.md) at `2f6e1f5`.
++- [ ] Add measurements, corrections, and negative findings to Experiments with their historical IDs and evidence.
++- [ ] Add definitions and protocol changes to Methods. Add reasoning to Notes and insights. Keep this page limited to current actions and their authorization.
++- [ ] Reconcile new source records with existing coverage before archiving duplicates.
++- [ ] Preserve exact dirty or untracked bytes and record original paths and hashes.
++- [ ] Keep dates explicit when a new status supersedes an old runtime snapshot.
++- [ ] Check active links and code-facing references after relocation.
++- [ ] Keep operational guides, review evidence, aggregate metrics, and current presentation generators discoverable.
+ 
+-[Source coverage](SOURCE_COVERAGE.md) records every captured version and the operating documents kept separate. Research-source links point to fixed copies inside the repository. The archived originals remain byte-identical. Documentation promotion does not authorize research execution or accept scientific results.
++[Source coverage](SOURCE_COVERAGE.md) describes the original 72-version capture and links the later update record. Existing archives, frozen sources, and accepted review evidence retain their exact bytes and scope. Documentation approval does not accept scientific results or authorize research execution.
+ 
+-## Current R36 closure addendum, 2026-10-13
++## Closed work is not an active checklist
+ 
+-This section supersedes the old launch and reporting checklist for completed work. Do not rerun the historical seed43/44 tasks above.
++[Experiments](EXPERIMENTS.md) records completed pilots, readouts, preprocessing and geometry audits, RANO comparators, P2 attempts, clean reruns, R35, and R36 Phase 1.
+ 
+-- [x] Combine the three worktree branches and remaining decision trails on `integration/r36-report-closure`, with dirty-source preservation and immutable-source hash verification.
+-- [x] Complete the twelve training arms, thirty source-only probes, and both developmental cohort assessments.
+-- [x] Implement strict nuisance-artifact identity and coverage validation, with regression fixtures.
+-- [x] Implement explicit negative D tradeoff classifications while retaining inconclusive intervals and missing evidence.
+-- [x] Obtain the [independent scoped result review](reviews/r36_phase1_result_review.md) on the final reporting correction.
+-- [x] Finish and record the [independent executable artifact audit](reviews/r36_phase1_artifact_audit.md), including binary binding, saved ridge replay, and raw-row bootstrap recomputation. The [closure receipt](reviews/r36_closure_receipt.json) binds both completed native runs.
++Do not restart unchanged JEPA continuations, larger horizon heads, combined surgery and augmentation sweeps, transition-weighting sweeps, or frozen-feature combinations because an old checkbox is open. A40 withdrew learned P2.4 and adaptation forecasting claims. A41 and the completed clean reruns replace their old launch checklists.
+ 
+-Read the [Phase 1 report](r36_phase1_report.md), [complete aggregate companions](r36_phase1_metrics.json), and [research page](research_run.html). The primary encoder gain, D tradeoff, and superiority over independent-state differences remain inconclusive. C's direct-volume retention margin passes. No method family or Phase 2 run is selected or authorized. Target reliability and untouched validation remain open.
++The October 11, 18:30:51 UTC receipt reported seed 43 running and seed 44 unlaunched. That remains true as a historical statement, not as the present TODO. The [saved runtime excerpt](documentation_sources/supplementary/r36-runtime-snapshot.json) retains its origin and timestamp. The [October 13 execution record](archive/2026-10-13/info/r36_delta_representation_results.md) and closure receipt explain the later completion without rewriting those old receipts.
+diff --git a/info/documentation_sources/comparisons/contracts.json b/info/documentation_sources/comparisons/contracts.json
+index 4da9542..d9cbcc8 100644
+--- a/info/documentation_sources/comparisons/contracts.json
++++ b/info/documentation_sources/comparisons/contracts.json
+@@ -14,7 +14,7 @@
+       ],
+       "evidence": [
+         "S023: info/documentation_sources/versions/f3dad868d43b3aa2bf5f7913b3dfa2872cdf87a65fd9648b1eb9932e3f750855.md:1-61; complete source read.",
+-        "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++        "TODO.md: R36 Phase 1 is closed for scoped reporting; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+         "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+         "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+       ],
+@@ -35,6 +35,12 @@
+         "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+         "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+         "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
++      ],
++      "evidence_before_october13_update": [
++        "S023: info/documentation_sources/versions/f3dad868d43b3aa2bf5f7913b3dfa2872cdf87a65fd9648b1eb9932e3f750855.md:1-61; complete source read.",
++        "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++        "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
++        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+       ]
+     },
+     {
+@@ -347,7 +353,7 @@
+       ],
+       "evidence": [
+         "S063: info/documentation_sources/versions/8fc1116f80667885774a5ce6a8fb9ec40f1e360d1f87867fefb81baf01118ab6.md:1-290; complete source read.",
+-        "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++        "TODO.md: R36 Phase 1 is closed for scoped reporting; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+         "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+         "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+       ],
+@@ -368,6 +374,12 @@
+         "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+         "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+         "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
++      ],
++      "evidence_before_october13_update": [
++        "S063: info/documentation_sources/versions/8fc1116f80667885774a5ce6a8fb9ec40f1e360d1f87867fefb81baf01118ab6.md:1-290; complete source read.",
++        "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++        "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
++        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+       ]
+     },
+     {
+diff --git a/info/documentation_sources/comparisons/notes.json b/info/documentation_sources/comparisons/notes.json
+index 61a3887..8221de4 100644
+--- a/info/documentation_sources/comparisons/notes.json
++++ b/info/documentation_sources/comparisons/notes.json
+@@ -95,7 +95,7 @@
+       ],
+       "evidence": [
+         "S015: info/documentation_sources/versions/5d8b1b11c9e6dbb0be28d861a5ace37a570c1230fcc4632746b40426b3b3dce5.md:1-350; complete variant diff.",
+-        "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++        "TODO.md: R36 Phase 1 is closed for scoped reporting; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+         "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+         "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+       ],
+@@ -116,6 +116,12 @@
+         "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+         "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+         "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
++      ],
++      "evidence_before_october13_update": [
++        "S015: info/documentation_sources/versions/5d8b1b11c9e6dbb0be28d861a5ace37a570c1230fcc4632746b40426b3b3dce5.md:1-350; complete variant diff.",
++        "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++        "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
++        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+       ]
+     },
+     {
+@@ -131,7 +137,7 @@
+       ],
+       "evidence": [
+         "S016: info/documentation_sources/versions/c7c9fba4178609946f8fd4ce8b90af08b6a88392955d7f2e198aa2e02b14cc57.md:1-368; complete source read.",
+-        "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++        "TODO.md: R36 Phase 1 is closed for scoped reporting; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+         "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+         "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+       ],
+@@ -152,6 +158,12 @@
+         "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+         "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+         "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
++      ],
++      "evidence_before_october13_update": [
++        "S016: info/documentation_sources/versions/c7c9fba4178609946f8fd4ce8b90af08b6a88392955d7f2e198aa2e02b14cc57.md:1-368; complete source read.",
++        "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++        "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
++        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+       ]
+     },
+     {
+diff --git a/info/documentation_sources/coverage.json b/info/documentation_sources/coverage.json
+index 9031782..866f86e 100644
+--- a/info/documentation_sources/coverage.json
++++ b/info/documentation_sources/coverage.json
+@@ -131,7 +131,7 @@
+     ],
+     "evidence": [
+       "S006: info/documentation_sources/versions/5e5409445bd5d258f7b1bb090aaf316ff56241007f54f8173c1d180ba200bf3a.md:1-33; complete source read.",
+-      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "TODO.md: R36 Phase 1 is closed for scoped reporting; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+     ],
+     "source_range": [
+@@ -149,6 +149,11 @@
+       "S006: info/documentation_sources/versions/5e5409445bd5d258f7b1bb090aaf316ff56241007f54f8173c1d180ba200bf3a.md:1-33; complete source read.",
+       "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
++    ],
++    "evidence_before_october13_update": [
++      "S006: info/documentation_sources/versions/5e5409445bd5d258f7b1bb090aaf316ff56241007f54f8173c1d180ba200bf3a.md:1-33; complete source read.",
++      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+     ]
+   },
+   {
+@@ -316,7 +321,7 @@
+     ],
+     "evidence": [
+       "S013: info/documentation_sources/versions/904659c6bdcfeff428d0bde5d406be42fdc4d004dc5c915d13c335a049add7a3.md:1-175; complete source read.",
+-      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "TODO.md: R36 Phase 1 is closed for scoped reporting; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+     ],
+     "source_range": [
+@@ -334,6 +339,11 @@
+       "S013: info/documentation_sources/versions/904659c6bdcfeff428d0bde5d406be42fdc4d004dc5c915d13c335a049add7a3.md:1-175; complete source read.",
+       "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
++    ],
++    "evidence_before_october13_update": [
++      "S013: info/documentation_sources/versions/904659c6bdcfeff428d0bde5d406be42fdc4d004dc5c915d13c335a049add7a3.md:1-175; complete source read.",
++      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+     ]
+   },
+   {
+@@ -348,7 +358,7 @@
+     ],
+     "evidence": [
+       "S014: info/documentation_sources/versions/e45ccd301fe0a119a2310f90c2c6f9fa43fa262af7c5ddc32efdcf775779b1b3.md:1-58; complete source read.",
+-      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "TODO.md: R36 Phase 1 is closed for scoped reporting; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+     ],
+     "source_range": [
+@@ -366,6 +376,11 @@
+       "S014: info/documentation_sources/versions/e45ccd301fe0a119a2310f90c2c6f9fa43fa262af7c5ddc32efdcf775779b1b3.md:1-58; complete source read.",
+       "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
++    ],
++    "evidence_before_october13_update": [
++      "S014: info/documentation_sources/versions/e45ccd301fe0a119a2310f90c2c6f9fa43fa262af7c5ddc32efdcf775779b1b3.md:1-58; complete source read.",
++      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+     ]
+   },
+   {
+@@ -381,7 +396,7 @@
+     ],
+     "evidence": [
+       "S015: info/documentation_sources/versions/5d8b1b11c9e6dbb0be28d861a5ace37a570c1230fcc4632746b40426b3b3dce5.md:1-350; complete variant diff.",
+-      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "TODO.md: R36 Phase 1 is closed for scoped reporting; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+       "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+     ],
+@@ -402,6 +417,12 @@
+       "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+       "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
++    ],
++    "evidence_before_october13_update": [
++      "S015: info/documentation_sources/versions/5d8b1b11c9e6dbb0be28d861a5ace37a570c1230fcc4632746b40426b3b3dce5.md:1-350; complete variant diff.",
++      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
++      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+     ]
+   },
+   {
+@@ -417,7 +438,7 @@
+     ],
+     "evidence": [
+       "S016: info/documentation_sources/versions/c7c9fba4178609946f8fd4ce8b90af08b6a88392955d7f2e198aa2e02b14cc57.md:1-368; complete source read.",
+-      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "TODO.md: R36 Phase 1 is closed for scoped reporting; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+       "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+     ],
+@@ -438,6 +459,12 @@
+       "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+       "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
++    ],
++    "evidence_before_october13_update": [
++      "S016: info/documentation_sources/versions/c7c9fba4178609946f8fd4ce8b90af08b6a88392955d7f2e198aa2e02b14cc57.md:1-368; complete source read.",
++      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
++      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+     ]
+   },
+   {
+@@ -452,7 +479,7 @@
+     ],
+     "evidence": [
+       "S017: info/documentation_sources/versions/6c28bb95dc89e05742f41ae69a61f1bcbdd5f8d7a0eb3857055b0b2989a5ce9c.md:1-37; complete source read.",
+-      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "TODO.md: R36 Phase 1 is closed for scoped reporting; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+     ],
+     "source_range": [
+@@ -470,6 +497,11 @@
+       "S017: info/documentation_sources/versions/6c28bb95dc89e05742f41ae69a61f1bcbdd5f8d7a0eb3857055b0b2989a5ce9c.md:1-37; complete source read.",
+       "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
++    ],
++    "evidence_before_october13_update": [
++      "S017: info/documentation_sources/versions/6c28bb95dc89e05742f41ae69a61f1bcbdd5f8d7a0eb3857055b0b2989a5ce9c.md:1-37; complete source read.",
++      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+     ]
+   },
+   {
+@@ -484,7 +516,7 @@
+     ],
+     "evidence": [
+       "S018: info/documentation_sources/versions/7d6adbe335852289339963e40a758990e325c71fa6075e037037b4e613747cb5.md:1-41; complete variant diff.",
+-      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "TODO.md: R36 Phase 1 is closed for scoped reporting; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+     ],
+     "source_range": [
+@@ -502,6 +534,11 @@
+       "S018: info/documentation_sources/versions/7d6adbe335852289339963e40a758990e325c71fa6075e037037b4e613747cb5.md:1-41; complete variant diff.",
+       "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
++    ],
++    "evidence_before_october13_update": [
++      "S018: info/documentation_sources/versions/7d6adbe335852289339963e40a758990e325c71fa6075e037037b4e613747cb5.md:1-41; complete variant diff.",
++      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+     ]
+   },
+   {
+@@ -516,7 +553,7 @@
+     ],
+     "evidence": [
+       "S019: info/documentation_sources/versions/cbc9c0e336dab8f4b055c9a0897c0db4b7bbce920ab328701445cf299ba8984d.md:1-20; complete variant diff.",
+-      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "TODO.md: R36 Phase 1 is closed for scoped reporting; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+     ],
+     "source_range": [
+@@ -534,6 +571,11 @@
+       "S019: info/documentation_sources/versions/cbc9c0e336dab8f4b055c9a0897c0db4b7bbce920ab328701445cf299ba8984d.md:1-20; complete variant diff.",
+       "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
++    ],
++    "evidence_before_october13_update": [
++      "S019: info/documentation_sources/versions/cbc9c0e336dab8f4b055c9a0897c0db4b7bbce920ab328701445cf299ba8984d.md:1-20; complete variant diff.",
++      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+     ]
+   },
+   {
+@@ -630,7 +672,7 @@
+     ],
+     "evidence": [
+       "S023: info/documentation_sources/versions/f3dad868d43b3aa2bf5f7913b3dfa2872cdf87a65fd9648b1eb9932e3f750855.md:1-61; complete source read.",
+-      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "TODO.md: R36 Phase 1 is closed for scoped reporting; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+       "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+     ],
+@@ -651,6 +693,12 @@
+       "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+       "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
++    ],
++    "evidence_before_october13_update": [
++      "S023: info/documentation_sources/versions/f3dad868d43b3aa2bf5f7913b3dfa2872cdf87a65fd9648b1eb9932e3f750855.md:1-61; complete source read.",
++      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
++      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+     ]
+   },
+   {
+@@ -991,7 +1039,7 @@
+     ],
+     "evidence": [
+       "S036: info/documentation_sources/versions/376ef33c6235a3b4ac055340d2447d5f33d1b54abe2504c525a2e2330ee88904.md:1-197; complete source read.",
+-      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "TODO.md: R36 Phase 1 is closed for scoped reporting; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+       "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+       "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+@@ -1015,6 +1063,13 @@
+       "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+       "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
++    ],
++    "evidence_before_october13_update": [
++      "S036: info/documentation_sources/versions/376ef33c6235a3b4ac055340d2447d5f33d1b54abe2504c525a2e2330ee88904.md:1-197; complete source read.",
++      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
++      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
++      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+     ]
+   },
+   {
+@@ -1031,7 +1086,7 @@
+     ],
+     "evidence": [
+       "S037: info/documentation_sources/versions/4152bf66cc81cd99bb7970ddaf52cffcdff59756fa1baf7a95e1cd349ef34352.md:1-193; complete source read.",
+-      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "TODO.md: R36 Phase 1 is closed for scoped reporting; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+       "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+       "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+@@ -1055,6 +1110,13 @@
+       "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+       "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
++    ],
++    "evidence_before_october13_update": [
++      "S037: info/documentation_sources/versions/4152bf66cc81cd99bb7970ddaf52cffcdff59756fa1baf7a95e1cd349ef34352.md:1-193; complete source read.",
++      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
++      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
++      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+     ]
+   },
+   {
+@@ -1071,7 +1133,7 @@
+     ],
+     "evidence": [
+       "S038: info/documentation_sources/versions/7fb4e40c27dada7024a7cee70887a036cb98780d3b717cc25cccf3181d1a9fde.md:1-265; complete source read.",
+-      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "TODO.md: R36 Phase 1 is closed for scoped reporting; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+       "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+       "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+@@ -1095,6 +1157,13 @@
+       "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+       "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
++    ],
++    "evidence_before_october13_update": [
++      "S038: info/documentation_sources/versions/7fb4e40c27dada7024a7cee70887a036cb98780d3b717cc25cccf3181d1a9fde.md:1-265; complete source read.",
++      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
++      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
++      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+     ]
+   },
+   {
+@@ -1111,7 +1180,7 @@
+     ],
+     "evidence": [
+       "S039: info/documentation_sources/versions/e3c486ef9cc77afcc1978e53ce4495ef1051a5b8d22cf31b9d627c72d4db029e.md:1-116; complete source read.",
+-      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "TODO.md: R36 Phase 1 is closed for scoped reporting; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+       "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+       "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+@@ -1135,6 +1204,13 @@
+       "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+       "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
++    ],
++    "evidence_before_october13_update": [
++      "S039: info/documentation_sources/versions/e3c486ef9cc77afcc1978e53ce4495ef1051a5b8d22cf31b9d627c72d4db029e.md:1-116; complete source read.",
++      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "EXPERIMENTS.md: Current evidence and withdrawals; Historical experiment index; Clean rescues and observation-validity repairs; Current RANO-free anatomy evidence; R35: observed state, observed change, and nuisance; R36: delta-representation experiment status",
++      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
++      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+     ]
+   },
+   {
+@@ -1771,7 +1847,7 @@
+     ],
+     "evidence": [
+       "S063: info/documentation_sources/versions/8fc1116f80667885774a5ce6a8fb9ec40f1e360d1f87867fefb81baf01118ab6.md:1-290; complete source read.",
+-      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "TODO.md: R36 Phase 1 is closed for scoped reporting; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+       "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+     ],
+@@ -1792,6 +1868,12 @@
+       "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+       "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
++    ],
++    "evidence_before_october13_update": [
++      "S063: info/documentation_sources/versions/8fc1116f80667885774a5ce6a8fb9ec40f1e360d1f87867fefb81baf01118ab6.md:1-290; complete source read.",
++      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
++      "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+     ]
+   },
+   {
+@@ -1968,7 +2050,7 @@
+     ],
+     "evidence": [
+       "S070: info/documentation_sources/versions/775110c703c7f702ccf2c1dfc9e2504eb9fdb5303b8d5f2cfbbe3619a7cf6a12.md:1-80; complete source read.",
+-      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "TODO.md: R36 Phase 1 is closed for scoped reporting; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+     ],
+     "source_range": [
+@@ -1986,6 +2068,11 @@
+       "S070: info/documentation_sources/versions/775110c703c7f702ccf2c1dfc9e2504eb9fdb5303b8d5f2cfbbe3619a7cf6a12.md:1-80; complete source read.",
+       "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
++    ],
++    "evidence_before_october13_update": [
++      "S070: info/documentation_sources/versions/775110c703c7f702ccf2c1dfc9e2504eb9fdb5303b8d5f2cfbbe3619a7cf6a12.md:1-80; complete source read.",
++      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+     ]
+   },
+   {
+@@ -2000,7 +2087,7 @@
+     ],
+     "evidence": [
+       "S071: info/documentation_sources/versions/f9519fae5516ba946acba78908c36f41e9d095aa536a4924938820c9f4f976e7.md:1-61; complete variant diff.",
+-      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "TODO.md: R36 Phase 1 is closed for scoped reporting; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+     ],
+     "source_range": [
+@@ -2018,6 +2105,11 @@
+       "S071: info/documentation_sources/versions/f9519fae5516ba946acba78908c36f41e9d095aa536a4924938820c9f4f976e7.md:1-61; complete variant diff.",
+       "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+       "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
++    ],
++    "evidence_before_october13_update": [
++      "S071: info/documentation_sources/versions/f9519fae5516ba946acba78908c36f41e9d095aa536a4924938820c9f4f976e7.md:1-61; complete variant diff.",
++      "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
++      "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes"
+     ]
+   },
+   {
+diff --git a/info/documentation_sources/verification.json b/info/documentation_sources/verification.json
+index a05d32c..6b8c078 100644
+--- a/info/documentation_sources/verification.json
++++ b/info/documentation_sources/verification.json
+@@ -2,14 +2,14 @@
+   "status": "PASS",
+   "source_versions": 72,
+   "branch_refs": 10,
+-  "local_links_checked": 384,
++  "local_links_checked": 392,
+   "supplementary_files_checked": 3,
+-  "archive_records_checked": 37,
++  "archive_records_checked": 47,
+   "draft_sha256": {
+-    "TODO.md": "ec58352b117103c6c8e97e80931a5ec54130f3c53bb94c46754f5e155ae06d7b",
+-    "EXPERIMENTS.md": "331b47f74b14be11b9e64e60eecb550eeafe2583ca98aa0b3027924d55b4abd1",
+-    "METHODS.md": "7aecc56f60f088d043b613a2ed2e75d749f292ad360375ad621fabc0d44813aa",
+-    "NOTES_AND_INSIGHTS.md": "1db8fef55108700f6b13a6f18091933891beb1a37a0cb7dd6d2f0e0def9ce40b"
++    "TODO.md": "f02e73f8e587b7745c2db7c6d7026efb0bf4284ddf2e64fdaf65eb470315a189",
++    "EXPERIMENTS.md": "efed6787606e69988e9b906cce7594429a09a202951a831ed9f3749a203312ce",
++    "METHODS.md": "1968a9ab5df9dd756fc4c8f17773a41f204ac9d7989465c1659c08a99686b6c1",
++    "NOTES_AND_INSIGHTS.md": "3c970ddda98c3d5a971312e523e6d0fcd9a73bc367be2be081645aa7252a6ed2"
+   },
+   "errors": [],
+   "scope": "Frozen source, supplementary and archive bytes, checked coverage records, baseline identifier presence, and draft link portability. This is not scientific acceptance or a semantic completeness proof."
+diff --git a/scripts/refresh_research_run.py b/scripts/refresh_research_run.py
+index 3681bed..8f4af4e 100644
+--- a/scripts/refresh_research_run.py
++++ b/scripts/refresh_research_run.py
+@@ -45,7 +45,7 @@ def section(metrics, reviewed):
+ <p>D reduces average trained-perturbation excess false change, but its intended tradeoff remains inconclusive. D minus C direct-state error is {dstate["difference"]:+.6f}, with adjusted interval [{dstate["family_adjusted_ci"][0]:+.6f}, {dstate["family_adjusted_ci"][1]:+.6f}]. State error and noise sensitivity worsen. The state interval overlaps the +0.05 allowance. The intensity transform is largely canceled by per-sequence standardization, so its near-zero drift is not evidence of learned intensity invariance. Held-out resolution remains a separate stress test.</p>
+ <p>C and D show a descriptive nonlinear-decoder benefit over B, not the primary frozen-encoder gain. SAILOR frozen-difference errors exceed the independent-state controls in every arm. All SAILOR ridge-delta means exceed zero change. Empty compartments still have large errors; the complete aggregate companions include empty/nonempty visits, changed/unchanged partitions, appearance/disappearance, source-fixed change-size strata, scalar and ridge readouts, reversal, and nuisance responses.</p>
+ <p>The target audit preserved 599 visits and 496 pairs without exclusions. Sparse changed occupancy motivates the experiment but does not prove background dilution caused R35's behavior. One native enhancing disagreement vanished after resizing. A suspect extracranial contour remains in the primary analysis. Anatomical correspondence, segmentation accuracy, repeatability, and biological attribution remain unknown.</p>
+-<p class="source">Read the <a href="r36_phase1_report.md">Phase 1 report</a>, <a href="reviews/r36_closure_receipt.json">review completion receipt</a>, <a href="r36_phase1_metrics.json">aggregate companions and input hashes</a>, and <a href="r36_delta_representation_handoff.md">locked experiment plan</a>. Implementation and records are combined on <code>integration/r36-report-closure</code>. No new forecast run or method family is authorized by this report.</p>
++<p class="source">Read the <a href="EXPERIMENTS.md#r36-completed">completed Phase 1 findings</a>, <a href="reviews/r36_closure_receipt.json">review completion receipt</a>, <a href="r36_phase1_metrics.json">aggregate companions and input hashes</a>, and <a href="METHODS.md#r36-phase1">locked experiment protocol</a>. Implementation and records are combined on <code>integration/r36-report-closure</code>. No new forecast run or method family is authorized by this report.</p>
+ '''
+ 
+ 
+diff --git a/scripts/render_documentation_coverage.py b/scripts/render_documentation_coverage.py
+index 689d2ac..5bb9e5b 100644
+--- a/scripts/render_documentation_coverage.py
++++ b/scripts/render_documentation_coverage.py
+@@ -15,7 +15,7 @@ def render(package=PACKAGE, drafts=DRAFTS, root=ROOT):
+         raise ValueError("Coverage must name every source exactly once")
+     prefix = Path(os.path.relpath(package, drafts)).as_posix()
+     text = ["# Source coverage", "",
+-            "This ledger covers all 72 captured Markdown versions across 48 paths, ten branch refs, and three preexisting worktrees. It records parent comparisons, not scientific acceptance. The catalog fixes the capture scope and origins. No network fetch or research job was run.", "",
++            "This ledger covers the original 72 captured Markdown versions across 48 paths, ten frozen branch refs, and three preexisting worktrees. It records parent comparisons, not scientific acceptance. The catalog fixes the capture scope and origins. No network fetch or research job was run.", "",
+             "The notes and experiments child reports were incomplete. The parent completed direct full reads or complete variant diffs before recording these dispositions. The contracts report was checked against frozen sources and its omissions were integrated. The first reviewer assessed the inventory only and returned BLOCKED before integration. A later independent review is a separate gate.", "",
+             "Archived sources retain their exact bytes, including historical claims and embedded links that may no longer work. The consolidated research documents give the interpretation. Operational guides and CLI skills remain separate and discoverable.", "",
+             "Token extraction in the catalog is a search aid, not a global identifier ontology. A42, A43, and A44 in S065 denote arm A at seeds 42, 43, and 44. They are not new ablation entries. D183 in S042 is part of a DOI, not decision D183.", "",
+@@ -29,6 +29,13 @@ def render(package=PACKAGE, drafts=DRAFTS, root=ROOT):
+     text += ["", "## Evidence and origins", "",
+              "The [curated JSON ledger](../documentation_sources/coverage.json) records exact frozen source ranges, draft sections, read modes, and the person responsible. The [catalog](../documentation_sources/catalog.json) records every branch commit, blob, and live-worktree origin. The [supplementary manifest](../documentation_sources/supplementary/manifest.json) binds the recovered runtime receipt, protocol review, and worktree-creation evidence.", "",
+              "Integrated comparisons are [notes](../documentation_sources/comparisons/notes.json), [experiments](../documentation_sources/comparisons/experiments.json), and [contracts](../documentation_sources/comparisons/contracts.json). Received child reports remain separately archived with their original limitations.", ""]
++    updates = sorted(package.glob("updates/*/coverage.json"))
++    if updates:
++        text += ["## Later source updates", "",
++                 "These update ledgers are separate from the original frozen capture. They record newly incorporated material and restored duplicates, not new scientific acceptance.", ""]
++        for update in updates:
++            text.append(f"- [{update.parent.name} source dispositions]({prefix}/{update.relative_to(package).as_posix()}).")
++        text.append("")
+     (drafts / "SOURCE_COVERAGE.md").write_text("\n".join(text).replace("../documentation_sources/", prefix + "/"))
+     slices = json.loads((package / "slices.json").read_text())
+     output = package / "comparisons"
+diff --git a/scripts/render_representation_report.py b/scripts/render_representation_report.py
+index b314c72..0eb8221 100644
+--- a/scripts/render_representation_report.py
++++ b/scripts/render_representation_report.py
+@@ -79,7 +79,7 @@ body{margin:0;color:#20242b;background:#fff;font:16px/1.5 system-ui,sans-serif}m
+ '''
+     document += ''.join(sections)
+     document += '<section><h2>Remaining evidence limits</h2><ul>' + ''.join(f'<li>{html.escape(x)}.</li>' for x in r["blocked"]) + '</ul></section>'
+-    document += '<p class="foot">Generated by <code>scripts/render_representation_report.py</code> from the verified R35 summary. Saved model weights, row predictions, and input digests remain local. <a href="r35_representation_comparison.md">Experiment contract and chronological record</a>.</p></main></body></html>\n'
++    document += '<p class="foot">Generated by <code>scripts/render_representation_report.py</code> from the verified R35 summary. Saved model weights, row predictions, and input digests remain local. <a href="EXPERIMENTS.md#r35">Consolidated findings and historical record</a>.</p></main></body></html>\n'
+     Path(out).write_text(document)
+ 
+ 
+diff --git a/tests/test_documentation_sources.py b/tests/test_documentation_sources.py
+index 5e10581..b4949bc 100644
+--- a/tests/test_documentation_sources.py
++++ b/tests/test_documentation_sources.py
+@@ -59,6 +59,25 @@ class DocumentationSourcesTests(unittest.TestCase):
+     def test_complete_fixture_passes(self):
+         self.assertEqual(self.report()["errors"], [])
+ 
++    def test_renderer_keeps_later_updates_separate_and_is_idempotent(self):
++        from render_documentation_coverage import render
++        (self.package / "slices.json").write_text(json.dumps({"notes": [], "experiments": [], "contracts": []}))
++        catalog = (self.package / "catalog.json").read_bytes()
++        update = self.package / "updates/2026-10-13/coverage.json"
++        update.parent.mkdir(parents=True)
++        update.write_text(json.dumps({"records": []}))
++        for destination, link in ((self.drafts, "../documentation_sources/updates/2026-10-13/coverage.json"),
++                                  (self.root / "info", "documentation_sources/updates/2026-10-13/coverage.json")):
++            with self.subTest(destination=destination):
++                render(self.package, destination, self.root)
++                page = destination / "SOURCE_COVERAGE.md"
++                self.assertIn(f"[2026-10-13 source dispositions]({link})", page.read_text())
++                self.assertIn("separate from the original frozen capture", page.read_text())
++                first = page.read_bytes()
++                render(self.package, destination, self.root)
++                self.assertEqual(page.read_bytes(), first)
++        self.assertEqual((self.package / "catalog.json").read_bytes(), catalog)
++
+     def test_missing_coverage_file_fails_without_crashing(self):
+         (self.package / "coverage.json").unlink()
+         self.assert_failure("Missing coverage.json")

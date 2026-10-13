@@ -1,0 +1,101 @@
+{
+  "recorded_utc": "2026-10-13T04:07:10.810529+00:00",
+  "base_commit": "36a9e283a2f3f3504ae92ffbd6a5f4ec689e49cb",
+  "scope": "Five standalone research narratives, four restored historical drafts, and the R35 presentation. Original bytes are immutable. Current review evidence, aggregate metrics, operating guides and research_run.html remain at their existing paths. No private data or research outputs are moved.",
+  "records": [
+    {
+      "original_path": "info/r35_representation_comparison.md",
+      "sha256": "768fdfa0a9be4dc76e99fcef9ff971e26252d672e82b08267f5e9ea157ced0f3",
+      "bytes": 25880,
+      "captured_sources_with_identical_bytes": [
+        "S062"
+      ],
+      "archive_path": "info/archive/2026-10-13/info/r35_representation_comparison.md",
+      "tracked_at_base": true
+    },
+    {
+      "original_path": "info/r36_delta_representation_handoff.md",
+      "sha256": "8fc1116f80667885774a5ce6a8fb9ec40f1e360d1f87867fefb81baf01118ab6",
+      "bytes": 33718,
+      "captured_sources_with_identical_bytes": [
+        "S063"
+      ],
+      "archive_path": "info/archive/2026-10-13/info/r36_delta_representation_handoff.md",
+      "tracked_at_base": true
+    },
+    {
+      "original_path": "info/r36_delta_representation_results.md",
+      "sha256": "84a7e2df9c7c9b463adfcf888c60797d85591e3ecafad02949cd43cd275ee746",
+      "bytes": 24370,
+      "captured_sources_with_identical_bytes": [],
+      "archive_path": "info/archive/2026-10-13/info/r36_delta_representation_results.md",
+      "tracked_at_base": true
+    },
+    {
+      "original_path": "info/action_conditioned_representation_brief.md",
+      "sha256": "f3dad868d43b3aa2bf5f7913b3dfa2872cdf87a65fd9648b1eb9932e3f750855",
+      "bytes": 7551,
+      "captured_sources_with_identical_bytes": [
+        "S023"
+      ],
+      "archive_path": "info/archive/2026-10-13/info/action_conditioned_representation_brief.md",
+      "tracked_at_base": true
+    },
+    {
+      "original_path": "info/r36_phase1_report.md",
+      "sha256": "3926efba37bc841fd9b8d0b5109f26ace9399dc83570d89ab6f9c22a1c3703eb",
+      "bytes": 9537,
+      "captured_sources_with_identical_bytes": [],
+      "archive_path": "info/archive/2026-10-13/info/r36_phase1_report.md",
+      "tracked_at_base": true
+    },
+    {
+      "original_path": "info/drafts/TODO.md",
+      "sha256": "e3c486ef9cc77afcc1978e53ce4495ef1051a5b8d22cf31b9d627c72d4db029e",
+      "bytes": 12364,
+      "captured_sources_with_identical_bytes": [
+        "S039"
+      ],
+      "archive_path": "info/archive/2026-10-13/info/drafts/TODO.md",
+      "tracked_at_base": true
+    },
+    {
+      "original_path": "info/drafts/EXPERIMENTS.md",
+      "sha256": "376ef33c6235a3b4ac055340d2447d5f33d1b54abe2504c525a2e2330ee88904",
+      "bytes": 31091,
+      "captured_sources_with_identical_bytes": [
+        "S036"
+      ],
+      "archive_path": "info/archive/2026-10-13/info/drafts/EXPERIMENTS.md",
+      "tracked_at_base": true
+    },
+    {
+      "original_path": "info/drafts/METHODS.md",
+      "sha256": "4152bf66cc81cd99bb7970ddaf52cffcdff59756fa1baf7a95e1cd349ef34352",
+      "bytes": 30992,
+      "captured_sources_with_identical_bytes": [
+        "S037"
+      ],
+      "archive_path": "info/archive/2026-10-13/info/drafts/METHODS.md",
+      "tracked_at_base": true
+    },
+    {
+      "original_path": "info/drafts/NOTES_AND_INSIGHTS.md",
+      "sha256": "7fb4e40c27dada7024a7cee70887a036cb98780d3b717cc25cccf3181d1a9fde",
+      "bytes": 33040,
+      "captured_sources_with_identical_bytes": [
+        "S038"
+      ],
+      "archive_path": "info/archive/2026-10-13/info/drafts/NOTES_AND_INSIGHTS.md",
+      "tracked_at_base": true
+    },
+    {
+      "original_path": "info/r35_representation_results.html",
+      "sha256": "358f0d676245859ed2c12edd8b66984c4c8b075d0518d2570311c53524a4a24c",
+      "bytes": 12546,
+      "captured_sources_with_identical_bytes": [],
+      "archive_path": "info/archive/2026-10-13/info/r35_representation_results.html",
+      "tracked_at_base": true
+    }
+  ]
+}

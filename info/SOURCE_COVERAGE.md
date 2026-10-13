@@ -1,6 +1,6 @@
 # Source coverage
 
-This ledger covers all 72 captured Markdown versions across 48 paths, ten branch refs, and three preexisting worktrees. It records parent comparisons, not scientific acceptance. The catalog fixes the capture scope and origins. No network fetch or research job was run.
+This ledger covers the original 72 captured Markdown versions across 48 paths, ten frozen branch refs, and three preexisting worktrees. It records parent comparisons, not scientific acceptance. The catalog fixes the capture scope and origins. No network fetch or research job was run.
 
 The notes and experiments child reports were incomplete. The parent completed direct full reads or complete variant diffs before recording these dispositions. The contracts report was checked against frozen sources and its omissions were integrated. The first reviewer assessed the inventory only and returned BLOCKED before integration. A later independent review is a separate gate.
 
@@ -90,3 +90,9 @@ Token extraction in the catalog is a search aid, not a global identifier ontolog
 The [curated JSON ledger](documentation_sources/coverage.json) records exact frozen source ranges, draft sections, read modes, and the person responsible. The [catalog](documentation_sources/catalog.json) records every branch commit, blob, and live-worktree origin. The [supplementary manifest](documentation_sources/supplementary/manifest.json) binds the recovered runtime receipt, protocol review, and worktree-creation evidence.
 
 Integrated comparisons are [notes](documentation_sources/comparisons/notes.json), [experiments](documentation_sources/comparisons/experiments.json), and [contracts](documentation_sources/comparisons/contracts.json). Received child reports remain separately archived with their original limitations.
+
+## Later source updates
+
+These update ledgers are separate from the original frozen capture. They record newly incorporated material and restored duplicates, not new scientific acceptance.
+
+- [2026-10-13 source dispositions](documentation_sources/updates/2026-10-13/coverage.json).

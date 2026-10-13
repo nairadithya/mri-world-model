@@ -14,7 +14,7 @@
       ],
       "evidence": [
         "S023: info/documentation_sources/versions/f3dad868d43b3aa2bf5f7913b3dfa2872cdf87a65fd9648b1eb9932e3f750855.md:1-61; complete source read.",
-        "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+        "TODO.md: R36 Phase 1 is closed for scoped reporting; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
         "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
         "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
       ],
@@ -33,6 +33,12 @@
       "evidence_before_promotion": [
         "S023: info/documentation_sources/versions/f3dad868d43b3aa2bf5f7913b3dfa2872cdf87a65fd9648b1eb9932e3f750855.md:1-61; complete source read.",
         "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+        "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+      ],
+      "evidence_before_october13_update": [
+        "S023: info/documentation_sources/versions/f3dad868d43b3aa2bf5f7913b3dfa2872cdf87a65fd9648b1eb9932e3f750855.md:1-61; complete source read.",
+        "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
         "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
         "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
       ]
@@ -347,7 +353,7 @@
       ],
       "evidence": [
         "S063: info/documentation_sources/versions/8fc1116f80667885774a5ce6a8fb9ec40f1e360d1f87867fefb81baf01118ab6.md:1-290; complete source read.",
-        "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
+        "TODO.md: R36 Phase 1 is closed for scoped reporting; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
         "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
         "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
       ],
@@ -366,6 +372,12 @@
       "evidence_before_promotion": [
         "S063: info/documentation_sources/versions/8fc1116f80667885774a5ce6a8fb9ec40f1e360d1f87867fefb81baf01118ab6.md:1-290; complete source read.",
         "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Review the four-document drafts; Closed work is not an active checklist; Source and status provenance",
+        "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
+        "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
+      ],
+      "evidence_before_october13_update": [
+        "S063: info/documentation_sources/versions/8fc1116f80667885774a5ce6a8fb9ec40f1e360d1f87867fefb81baf01118ab6.md:1-290; complete source read.",
+        "TODO.md: Priority 1. Finish the authorized R36 Phase 1; Priority 3. Maintain the consolidated research record; Closed work is not an active checklist; Source and status provenance",
         "METHODS.md: Research objective and scope; Data, geometry, labels, and timing contracts; Historical frozen RANO protocol; R36 locked Phase 1; Operational references retained separately; Provenance, reporting, and limitations; Historical decisions, proposals, and audits; Decision ledger; Direction and audit indexes",
         "NOTES_AND_INSIGHTS.md: Research objective and interpretation; Corrections, withdrawals, and current evidence; Audits, alternatives, and methodological lessons; Historical identifiers and source records"
       ]
