@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 import sys
 import tempfile
@@ -8,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import numpy as np
 
 from scripts.report_representation_run import aggregate, compare, load_predictions
+from scripts.render_representation_report import render
 
 
 class RepresentationReportTests(unittest.TestCase):
@@ -39,6 +41,36 @@ class RepresentationReportTests(unittest.TestCase):
         records[0]["prediction"][0, 0] = np.nan
         with self.assertRaisesRegex(ValueError, "invalid prediction"):
             aggregate(records, "prediction", True)
+
+    def test_renderer_includes_independent_state_and_training_mean_controls(self):
+        def metric(value):
+            return {"seed_mean_patient_uniform_mae": value}
+
+        state = metric(1.0)
+        zero = metric(0.0)
+        direct = {"arms": {"state": {"state": state, "state_mean": state,
+                                    "independent_decoder_difference": zero, "zero": zero}},
+                  "comparisons": {}, "frozen_source52": state}
+        change = {name: zero for name in ("zero", "difference", "concatenation", "later_only")}
+        change.update(independent_state_difference=metric(0.5678), train_mean_change=metric(0.6543))
+        summary = {"LUMIERE_direct": direct, "SAILOR_direct": direct,
+                   "SAILOR_source_readouts": {"26": {"state": {"state": state, "state_mean": state,
+                                                              "observed_change": change}}},
+                   "LUMIERE_nuisance": {}, "seeds": [42], "blocked": [],
+                   "state_audits": {f"{cohort}/seed42/{arm}":
+                                    {"state_patient_uniform_mae": 1.0, "within_patient_shuffled_mae": 2.0}
+                                    for cohort in ("LUMIERE", "SAILOR")
+                                    for arm in ("state", "paired", "later_only", "frozen")}}
+        with tempfile.TemporaryDirectory() as tmp:
+            source, output = Path(tmp) / "summary.json", Path(tmp) / "report.html"
+            source.write_text(json.dumps(summary))
+            render(str(source), str(output))
+            document = output.read_text()
+        self.assertIn("<th>Independent state difference</th>", document)
+        self.assertIn("<th>Train-mean change</th>", document)
+        self.assertIn("<td>0.5678</td>", document)
+        self.assertIn("<td>0.6543</td>", document)
+        self.assertIn("family-12 intervals", document)
 
     def test_row_order_mismatch_is_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:

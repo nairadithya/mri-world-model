@@ -15,6 +15,8 @@ The [current research page](research_run.html) presents the aggregate findings. 
 
 The [independent result review](reviews/r36_phase1_result_review.md), [artifact audit](reviews/r36_phase1_artifact_audit.md), and [closure receipt](reviews/r36_closure_receipt.json) retain their exact bytes and checked scope. They permit bounded reporting, not global representation-quality, biological-change, or forecasting claims.
 
+R35 computation and scoped result review also closed on October 13, 2026. Its [result review](reviews/r35_result_review.md), [corrected audit](reviews/r35_artifact_audit.md), [closure receipt](reviews/r35_closure_receipt.json), and [evidence guide](reviews/evidence/r35/README.md) preserve the checked scope and prior audit corrections. [Canonical findings](EXPERIMENTS.md#r35) retain unresolved paired benefit, failed or unresolved developmental transfer, and target/provenance limits. Earlier unavailable-review statements remain historical.
+
 ## Source history
 
 [Source coverage](SOURCE_COVERAGE.md) maps the original 72 captured Markdown versions across 48 paths and ten frozen branch refs. The [catalog](documentation_sources/catalog.json) records their origins. That is a dated capture, not a count of every later document.

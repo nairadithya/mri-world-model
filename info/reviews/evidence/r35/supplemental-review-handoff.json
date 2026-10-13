@@ -1,0 +1,36 @@
+{
+  "created_utc": "2026-10-13T08:02:08.370190+00:00",
+  "repo": "/home/adithya/projects/world-model",
+  "head": "b6b20c8d8254788a8e6888bd795eda68ccb61867",
+  "barrier": "released; parent will not edit these inputs during final review",
+  "changed_inputs_sha256": {
+    "info/EXPERIMENTS.md": "82310109def49794d166733052a27b3bb6a86625468036e9987287518f3ccec7",
+    "scripts/render_representation_report.py": "c82a99cc7bff5045105108a8c428434e0bd44061ce24d28eba5a6bfb64e8cbd2",
+    "tests/test_representation_report.py": "f97b4a1fb210b32a751373df0931265cfeb08f9d489d7ac28a766848877d3b12"
+  },
+  "verification_run": "0db7e492-ddaf-4b9a-9782-6c43e448020e",
+  "verification_report": "/tmp/r35-closure-review/received/corrected-artifact-verification.md",
+  "verification_sha256": "a1c285876bd7c8713e5ce5f60915c8d4129463a787072ae38daa60411eb69eb5",
+  "initial_review": "/tmp/r35-closure-review/received/initial-result-review.md",
+  "patch": "/tmp/r35-closure-review/reporting-corrections.diff",
+  "rendered_controls": "/tmp/r35-closure-review/render/controls.png",
+  "parent_checks": "5 report tests, py_compile and diff check pass; real saved-summary successor HTML rendered and controls inspected; archived HTML unchanged; no new science verdict inferred",
+  "audit_challenge_review": "/tmp/r35-closure-review/received/audit-challenge-result-review.md",
+  "supplemental_evidence_sha256": {
+    "/tmp/r35-closure-review/supplemental_r35.py": "e99cb3c4ee9e77583e7b3ef3d2e1166a3b0a73c3eb1d444616831af3a83d63c7",
+    "/tmp/r35-closure-review/supplemental_r35.output.txt": "46f3720412631440e11ca945aeb3ea72a31aa7ca27dd5003d393c6b1780ec9ac",
+    "/tmp/r35-closure-review/correct_independent.py.receipt.json": "45e661fa89342f53409adcba7104840e31f1c3a1eb60be8494d4645c8f7d307e",
+    "/tmp/r35-closure-review/correct_independent.py.stdout.txt": "d1d992b488cbdb2067573813e1d27bef521aace14b4202eaa704e8714b53d503",
+    "/tmp/r35-closure-review/correct_independent.py.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/r35-closure-review/correct_independent.py.exit.txt": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "/tmp/r35-closure-review/contrast_extra.py.receipt.json": "c0a0940c1196e2264fe7381e1b0836730ec12e72edf88a57f17f3f2fe3700d10",
+    "/tmp/r35-closure-review/contrast_extra.py.stdout.txt": "83334f4af0c1dabf9e1d7aaa320451b7477413d6876dacbf9752ae8691ed4b35",
+    "/tmp/r35-closure-review/contrast_extra.py.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/r35-closure-review/contrast_extra.py.exit.txt": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "/tmp/r35-closure-review/metrics_r35.py.receipt.json": "5c52b3fc1ac9d6698f475e1add4b3f7dae67e353454673274b95a162bdd76fb6",
+    "/tmp/r35-closure-review/metrics_r35.py.stdout.txt": "cbd0af7de833c474285a749819a49941cd198207268fca71fb6e38df7f0ebeb7",
+    "/tmp/r35-closure-review/metrics_r35.py.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/r35-closure-review/metrics_r35.py.exit.txt": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "provenance_scope_clarification": "Reference checkpoint equality is declared metadata equality to recorded clean-reference digest, not newly rehashed checkpoint bytes. Reference features current digest checked, but absent from original228-file manifest. No retroactive MRI-byte binding or shuffle replay."
+}

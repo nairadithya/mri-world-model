@@ -1,0 +1,106 @@
+diff --git a/info/EXPERIMENTS.md b/info/EXPERIMENTS.md
+index 83daf2f..3f574c5 100644
+--- a/info/EXPERIMENTS.md
++++ b/info/EXPERIMENTS.md
+@@ -336,6 +336,8 @@ The [archived R35 presentation](archive/2026-10-13/info/r35_representation_resul
+ 
+ The study used 65 encoder-training patients and 26 encoder-unseen LUMIERE patients, with an internal training and validation split. The seeds were 42, 43, and 44. The learned state encoder received dense supervision and native log-volume targets.
+ 
++The seed-average confidence intervals below are descriptive patient bootstraps, not additional prespecified success criteria. Intervals are ordinary 95% intervals unless explicitly labeled family-12 adjusted. Neither seeds nor visits are independent bootstrap units.
++
+ Pair models used two observed scans and their measured change. The results therefore concern state estimation and observed change, not forecasting. The fixed reference used BRAINIAC without clinical inputs.
+ 
+ Across three seeds, direct spatial-state volume estimation had MAE 1.1145 on 149 visits from 26 patients. The fixed encoder with scalar-volume supervision scored 1.5000. The difference was −0.3855 [−0.5185, −0.2481].
+@@ -360,7 +362,7 @@ Independent state differences had observed-change MAE 0.9665 versus zero change
+ 
+ The frozen nested-CV state control scored 1.6008 versus a fold-trained mean of 1.8359, with paired difference -0.2351 [-0.4280, -0.0423]. Frozen feature differences scored 1.5272 versus zero change 1.5446, with the interval crossing zero. A source52 scalar-supervision control scored 1.5000 versus source mean 1.7051. These readout budgets differ and cannot be selected after inspecting query outcomes.
+ 
+-In LUMIERE, the paired head beat the later-scan-only head: MAE 1.2696 versus 1.4381, difference -0.1685 [-0.3438, -0.0155]. It did not beat independent state differences. On SAILOR, the later-scan-only comparison interval crossed zero.
++In LUMIERE, the paired head had lower error than the later-scan-only head: MAE 1.2696 versus 1.4381, difference -0.1685. Its ordinary 95% interval [-0.3438, -0.0155] excludes zero, but its family-12 adjusted interval [-0.4258, +0.0495] crosses zero. On SAILOR, paired minus later-only error was -0.1446, with ordinary interval [-0.2546, -0.0331] and family-12 adjusted interval [-0.3001, +0.0224]. Thus neither cohort resolves this contrast after that adjustment. The paired head did not establish an advantage over independent state differences.
+ 
+ Source26 and source52 state ridge MAEs were 1.9715 and 1.9525. Neither established an advantage over its matched mean predictor.
+ 
+diff --git a/scripts/render_representation_report.py b/scripts/render_representation_report.py
+index 0eb8221..ce173ba 100644
+--- a/scripts/render_representation_report.py
++++ b/scripts/render_representation_report.py
+@@ -35,7 +35,7 @@ def render(source: str, out: str) -> None:
+                         f'[{value["family12_adjusted_ci"][0]:.4f}, {value["family12_adjusted_ci"][1]:.4f}]']
+                        for name, value in d["comparisons"].items()]
+         sections.append(table(["Candidate minus control", "MAE difference", "Patient 95% interval", "Family-12 interval"], comparisons) + '</section>')
+-    sections.append('<section><h2>Fixed LUMIERE ridge readouts on SAILOR</h2><p>Each readout is fitted only on the named source patient budget. Every feature view is reported. No SAILOR labels select a regularizer, epoch, or model.</p>')
++    sections.append('<section><h2>Fixed LUMIERE ridge readouts on SAILOR</h2><p>Each readout is fitted only on the named source patient budget. All saved feature views, independent-state differences, training-mean change, and zero-change controls are reported. No SAILOR labels select a regularizer, epoch, or model.</p>')
+     for budget, arms in r["SAILOR_source_readouts"].items():
+         rows = []
+         for arm, scored in arms.items():
+@@ -44,11 +44,13 @@ def render(source: str, out: str) -> None:
+                          changes["difference"]["seed_mean_patient_uniform_mae"],
+                          changes["concatenation"]["seed_mean_patient_uniform_mae"],
+                          changes["later_only"]["seed_mean_patient_uniform_mae"],
+-                         changes.get("learned_pair", {}).get("seed_mean_patient_uniform_mae", "Not applicable")])
++                         changes.get("learned_pair", {}).get("seed_mean_patient_uniform_mae", "Not applicable"),
++                         changes["independent_state_difference"]["seed_mean_patient_uniform_mae"],
++                         changes["train_mean_change"]["seed_mean_patient_uniform_mae"]])
+         baseline = arms["state"]
+         zero = baseline["observed_change"]["zero"]["seed_mean_patient_uniform_mae"]
+-        rows.append(["Source mean and zero change", baseline["state_mean"]["seed_mean_patient_uniform_mae"], zero, zero, zero, zero])
+-        sections.append(f'<h3>{budget} source patients</h3>' + table(["Model arm", "State", "Feature difference", "Concatenation", "Later only", "Learned pair"], rows))
++        rows.append(["Source mean and zero change", baseline["state_mean"]["seed_mean_patient_uniform_mae"], zero, zero, zero, zero, zero, zero])
++        sections.append(f'<h3>{budget} source patients</h3>' + table(["Model arm", "State", "Feature difference", "Concatenation", "Later only", "Learned pair", "Independent state difference", "Train-mean change"], rows))
+     sections.append('</section><section><h2>All declared acquisition perturbations</h2><p>One fixed visit per LUMIERE evaluation patient. Ground-truth physical change is zero. Readouts are the same patient-held-out ridge models used for real observed change. Affine intensity invariance follows input standardization, not a learned robustness result.</p>')
+     rows = []
+     for arm, conditions in r["LUMIERE_nuisance"].items():
+diff --git a/tests/test_representation_report.py b/tests/test_representation_report.py
+index e1b6547..5a9d77a 100644
+--- a/tests/test_representation_report.py
++++ b/tests/test_representation_report.py
+@@ -1,3 +1,4 @@
++import json
+ from pathlib import Path
+ import sys
+ import tempfile
+@@ -8,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+ import numpy as np
+ 
+ from scripts.report_representation_run import aggregate, compare, load_predictions
++from scripts.render_representation_report import render
+ 
+ 
+ class RepresentationReportTests(unittest.TestCase):
+@@ -40,6 +42,36 @@ class RepresentationReportTests(unittest.TestCase):
+         with self.assertRaisesRegex(ValueError, "invalid prediction"):
+             aggregate(records, "prediction", True)
+ 
++    def test_renderer_includes_independent_state_and_training_mean_controls(self):
++        def metric(value):
++            return {"seed_mean_patient_uniform_mae": value}
++
++        state = metric(1.0)
++        zero = metric(0.0)
++        direct = {"arms": {"state": {"state": state, "state_mean": state,
++                                    "independent_decoder_difference": zero, "zero": zero}},
++                  "comparisons": {}, "frozen_source52": state}
++        change = {name: zero for name in ("zero", "difference", "concatenation", "later_only")}
++        change.update(independent_state_difference=metric(0.5678), train_mean_change=metric(0.6543))
++        summary = {"LUMIERE_direct": direct, "SAILOR_direct": direct,
++                   "SAILOR_source_readouts": {"26": {"state": {"state": state, "state_mean": state,
++                                                              "observed_change": change}}},
++                   "LUMIERE_nuisance": {}, "seeds": [42], "blocked": [],
++                   "state_audits": {f"{cohort}/seed42/{arm}":
++                                    {"state_patient_uniform_mae": 1.0, "within_patient_shuffled_mae": 2.0}
++                                    for cohort in ("LUMIERE", "SAILOR")
++                                    for arm in ("state", "paired", "later_only", "frozen")}}
++        with tempfile.TemporaryDirectory() as tmp:
++            source, output = Path(tmp) / "summary.json", Path(tmp) / "report.html"
++            source.write_text(json.dumps(summary))
++            render(str(source), str(output))
++            document = output.read_text()
++        self.assertIn("<th>Independent state difference</th>", document)
++        self.assertIn("<th>Train-mean change</th>", document)
++        self.assertIn("<td>0.5678</td>", document)
++        self.assertIn("<td>0.6543</td>", document)
++        self.assertIn("family-12 intervals", document)
++
+     def test_row_order_mismatch_is_rejected(self):
+         with tempfile.TemporaryDirectory() as tmp:
+             base = {"state_truth": np.zeros((2, 3)), "change_truth": np.zeros((1, 3)),

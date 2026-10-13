@@ -332,9 +332,11 @@ A38's physical-history residual MLP had LUMIERE MAE 1.5405 and SAILOR MAE 1.2143
 
 R35 is a completed comparison of MRI-only spatial state and observed-pair representations, originating in sibling worktree `world-model-representations` at revision `2f6e1f5a65be4ccbceac6de706b537de8b695faa`. Its report is the frozen [branch-only R35 record](documentation_sources/versions/768fdfa0a9be4dc76e99fcef9ff971e26252d672e82b08267f5e9ea157ced0f3.md), captured as S062 with branch and live-worktree origins.
 
-The [archived R35 presentation](archive/2026-10-13/info/r35_representation_results.html) retains the full historical direct-head, transfer-budget, and nuisance tables. Its old review-status statements are not current R36 guidance.
+The [archived R35 presentation](archive/2026-10-13/info/r35_representation_results.html) retains the full historical direct-head, transfer-budget, and nuisance tables. Its old review-status statements remain historical. The dated R35 closure below records the later accepted review.
 
 The study used 65 encoder-training patients and 26 encoder-unseen LUMIERE patients, with an internal training and validation split. The seeds were 42, 43, and 44. The learned state encoder received dense supervision and native log-volume targets.
+
+The seed-average confidence intervals below are descriptive patient bootstraps, not additional prespecified success criteria. Intervals are ordinary 95% intervals unless explicitly labeled family-12 adjusted. Neither seeds nor visits are independent bootstrap units.
 
 Pair models used two observed scans and their measured change. The results therefore concern state estimation and observed change, not forecasting. The fixed reference used BRAINIAC without clinical inputs.
 
@@ -360,7 +362,7 @@ Independent state differences had observed-change MAE 0.9665 versus zero change 
 
 The frozen nested-CV state control scored 1.6008 versus a fold-trained mean of 1.8359, with paired difference -0.2351 [-0.4280, -0.0423]. Frozen feature differences scored 1.5272 versus zero change 1.5446, with the interval crossing zero. A source52 scalar-supervision control scored 1.5000 versus source mean 1.7051. These readout budgets differ and cannot be selected after inspecting query outcomes.
 
-In LUMIERE, the paired head beat the later-scan-only head: MAE 1.2696 versus 1.4381, difference -0.1685 [-0.3438, -0.0155]. It did not beat independent state differences. On SAILOR, the later-scan-only comparison interval crossed zero.
+In LUMIERE, the paired head had lower error than the later-scan-only head: MAE 1.2696 versus 1.4381, difference -0.1685. Its ordinary 95% interval [-0.3438, -0.0155] excludes zero, but its family-12 adjusted interval [-0.4258, +0.0495] crosses zero. On SAILOR, paired minus later-only error was -0.1446, with ordinary interval [-0.2546, -0.0331] and family-12 adjusted interval [-0.3001, +0.0224]. Thus neither cohort resolves this contrast after that adjustment. The paired head did not establish an advantage over independent state differences.
 
 Source26 and source52 state ridge MAEs were 1.9715 and 1.9525. Neither established an advantage over its matched mean predictor.
 
@@ -377,6 +379,14 @@ Empty-target state errors were large:
 The aggregate gain does not resolve these absent-compartment failures.
 
 R35 artifacts passed model, feature, row, and patient-disjointness checks. All twelve corrected arms completed 240 epochs, with 74,592 successful updates and 48 AMP backoffs. The first candidate run was invalidated by float16 dense-loss reduction overflow. A later AMP lifecycle failure occurred before a completed candidate epoch. Corrected finite-reduction and backoff-ordering artifacts are the graded runs. Earlier caches lack a creation-time MRI-byte fingerprint. Completion-time tensor hashes do not retroactively supply one. It did not establish biological validity, segmentation repeatability, nuisance invariance, or untouched external generalization. No future prediction claim follows.
+
+### R35 scoped result review closed on October 13, 2026
+
+The [independent scientific result review](reviews/r35_result_review.md) returned `APPROVED_FOR_SCOPED_REPORT`. The [corrected artifact audit](reviews/r35_artifact_audit.md) returned `PASS_FOR_SCOPED_REPORT`. The [closure receipt](reviews/r35_closure_receipt.json) binds the exact reports, native runs, and [executed evidence](reviews/evidence/r35/README.md). R35 computation and scoped result review are closed. Lower in-domain automated-volume error is reportable; paired-model benefit, successful transfer, biological validity, and future forecasting are not established.
+
+The reviewer found that the earlier audit overstated exact nuisance membership, reference provenance/budget checks, and source prediction-to-summary binding. Executed supplemental assertions resolved those defects with zero failures. The corrected report also retains separate numerical stdout, stderr, and exit receipts. Initial blocked reviews and the challenged audit remain unchanged historical evidence.
+
+All 228 private manifest artifacts remained unchanged. The reference feature cache was absent from that original manifest; its current digest does not establish historical stability. Reference checkpoint checks compare recorded metadata, not newly hashed checkpoint bytes. Earlier MRI-byte provenance, new dense behavioral replay, independently replayed shuffle values, target reliability, and untouched validation remain unavailable. Raw saved review-status fields and archived reports retain their original dates; this separate receipt records accepted closure. No new experiment or Phase 2 is authorized.
 
 ## R36 observed-change evidence
 

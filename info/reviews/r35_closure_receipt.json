@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-10-13T08:22:47.588767+00:00",
+  "integration_branch": "integration/r36-report-closure",
+  "reviewed_source_commit": "b6b20c8d8254788a8e6888bd795eda68ccb61867",
+  "workflow_run_id": "0a05a6cf-4e9c-4c0c-a091-f331f3625e02",
+  "status": "COMPUTATION_AND_SCOPED_REPORT_REVIEW_COMPLETE",
+  "scientific_result_review": {
+    "run_id": "537303c2-bb27-4239-a0cd-fbb4e70b5399",
+    "previous_run_ids": [
+      "533d7789-c01a-491d-aa28-5ad8a8bd35ef",
+      "8f92a886-4e53-4b72-9125-7c2b1b82a678"
+    ],
+    "native_status": "complete",
+    "verdict": "APPROVED_FOR_SCOPED_REPORT",
+    "report": "r35_result_review.md"
+  },
+  "artifact_verification": {
+    "run_id": "0db7e492-ddaf-4b9a-9782-6c43e448020e",
+    "previous_run_ids": [
+      "01a106ca-2f1c-4165-8866-e489053e6531",
+      "828aec09-7701-4576-806d-2d9371a0cee5"
+    ],
+    "native_status": "complete",
+    "verdict": "PASS_FOR_SCOPED_REPORT",
+    "report": "r35_artifact_audit.md",
+    "failed_assertions": 0,
+    "counts": {
+      "checkpoints": 12,
+      "epochs": 240,
+      "successful_updates": 74592,
+      "amp_backoffs": 48,
+      "candidate_prediction_archives": 48,
+      "replayed_readout_views": 122,
+      "nuisance_condition_maps": 65,
+      "state_audits": 24,
+      "source_summary_prediction_digests": 12,
+      "query_summary_digests": 24,
+      "frozen_reference_budgets": 2,
+      "unchanged_private_manifest_hashes": 228
+    }
+  },
+  "reviewed_public_inputs_before_dated_closure": {
+    "info/EXPERIMENTS.md": "82310109def49794d166733052a27b3bb6a86625468036e9987287518f3ccec7",
+    "scripts/render_representation_report.py": "c82a99cc7bff5045105108a8c428434e0bd44061ce24d28eba5a6bfb64e8cbd2",
+    "tests/test_representation_report.py": "f97b4a1fb210b32a751373df0931265cfeb08f9d489d7ac28a766848877d3b12"
+  },
+  "private_handoff": {
+    "path": "/tmp/r35-closure-review/handoff.json",
+    "sha256": "b55aaac09e837d1647adcf75c87366d354bfa7b536b4db94e804ae7b3c77118a",
+    "inventory_committed": false
+  },
+  "evidence_sha256": {
+    "r35_result_review.md": "230921929787aa86fddf556a8fbff9590e21c2fd8c782517e25ef818d3a195d6",
+    "r35_artifact_audit.md": "a1c285876bd7c8713e5ce5f60915c8d4129463a787072ae38daa60411eb69eb5",
+    "evidence/r35/audit-output.txt": "22b1cc9277a16c5555d5dad6f22b6bc1bf6baa0d3e05dcb75953f3dc64544ac0",
+    "evidence/r35/audit_r35.py": "fcf6f90a3b2702e643afe21c45ed6e123bb4ad2302a20f9f353397d348fbaa22",
+    "evidence/r35/contrast_extra.py": "9c831ea0fe500fdd763bafe8974f846b4b519883032aae13d67b5de5b21e0d44",
+    "evidence/r35/contrast_extra.py.exit.txt": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "evidence/r35/contrast_extra.py.receipt.json": "c0a0940c1196e2264fe7381e1b0836730ec12e72edf88a57f17f3f2fe3700d10",
+    "evidence/r35/contrast_extra.py.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/r35/contrast_extra.py.stdout.txt": "83334f4af0c1dabf9e1d7aaa320451b7477413d6876dacbf9752ae8691ed4b35",
+    "evidence/r35/controls.png": "6880093effe2225d7780585acf10cd4150d1e5f84d1f545701e02733f5ec036a",
+    "evidence/r35/correct_independent.py": "0d09e4885291bf8fa59526284ae5570ce5184b202a9a3afa9a961f625d931b3c",
+    "evidence/r35/correct_independent.py.exit.txt": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "evidence/r35/correct_independent.py.receipt.json": "45e661fa89342f53409adcba7104840e31f1c3a1eb60be8494d4645c8f7d307e",
+    "evidence/r35/correct_independent.py.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/r35/correct_independent.py.stdout.txt": "d1d992b488cbdb2067573813e1d27bef521aace14b4202eaa704e8714b53d503",
+    "evidence/r35/final-review-handoff.json": "7c11ffae706b59e085a82b8bc8a92d7d0a774fa1859a7c57fc4e95a5d2466815",
+    "evidence/r35/history/audit-challenge-result-review.md": "71f7211d438910c20548868cccbe93cf238c634a27fd6f4d0801f491b0a325e4",
+    "evidence/r35/history/initial-result-review.md": "0787b8d89b98ee52fb83bd10fe1f9832696c70df62c3d44aaa109c3e0105dddf",
+    "evidence/r35/history/superseded-artifact-verification.md": "646b92208b337bfd8bf9401108142528466c72355ef5c98eea46e74f0e907852",
+    "evidence/r35/metrics-output.txt": "cbd0af7de833c474285a749819a49941cd198207268fca71fb6e38df7f0ebeb7",
+    "evidence/r35/metrics_r35.py": "06215962301ae7259c9ef426601bdc0144f38e4b9cbf4196b8a01c83f2a5fe01",
+    "evidence/r35/metrics_r35.py.exit.txt": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "evidence/r35/metrics_r35.py.receipt.json": "5c52b3fc1ac9d6698f475e1add4b3f7dae67e353454673274b95a162bdd76fb6",
+    "evidence/r35/metrics_r35.py.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/r35/metrics_r35.py.stdout.txt": "cbd0af7de833c474285a749819a49941cd198207268fca71fb6e38df7f0ebeb7",
+    "evidence/r35/reporting-corrections.diff": "17a8eb1fa69a7becc8f7efa57cf7a004f38e7837803e4439d66ffa427dce0129",
+    "evidence/r35/reviewed-report.html": "ed42f18ef0d9e52d482010f1abdf02ce0c98c02ac0c24d322c9c03033383c9e4",
+    "evidence/r35/supplemental-review-handoff.json": "6642823208c5d30cf9b6a0243142ae4a95bfbafd517e44d317b7d89718dbb44c",
+    "evidence/r35/supplemental_r35.output.txt": "46f3720412631440e11ca945aeb3ea72a31aa7ca27dd5003d393c6b1780ec9ac",
+    "evidence/r35/supplemental_r35.py": "e99cb3c4ee9e77583e7b3ef3d2e1166a3b0a73c3eb1d444616831af3a83d63c7",
+    "evidence/r35/README.md": "fa3b249c50028c73a0d6a69bcc8429011e46e60a0367e4ded382aed72fd3dbe3",
+    "evidence/r35/parent-checks.json": "22e2877d0b75af9ca5a6ca227b3ddbdadee4cd67c1ca3fa7a8ff0934c368141d"
+  },
+  "accepted_claim": "Lower in-domain automated compartment-volume error for the tested dense-supervised MRI spatial-state pipeline. Dedicated paired benefit and successful transfer not established.",
+  "limits": [
+    "No biological validation, general encoder-quality or architecture-only superiority",
+    "Both scans are observed; no future forecasting claim",
+    "SAILOR and reused LUMIERE assessments remain development data, not untouched validation",
+    "Reference feature cache was absent from original228-file stability manifest; its current hash is not historical stability proof",
+    "Reference checkpoint metadata equality is not a fresh checkpoint-byte hash",
+    "Earlier caches lack creation-time MRI-byte fingerprints",
+    "No new dense behavioral prediction replay",
+    "Shuffle metrics and associations were not independently replayed",
+    "Automated target reliability and segmentation repeatability lack expert validation"
+  ],
+  "reference_feature_cache": {
+    "original_manifest_member": false,
+    "current_sha256": "00e4e21e530aea69263e6a89e48951139db5bc85852dc79e48681763b69cf919"
+  },
+  "historical_records": "Initial blocked review, audit challenge and superseded verifier report are preserved unchanged under evidence/r35/history. Original archives and R35 raw closure/status JSON remain historical.",
+  "research_execution": "No training, fitting, inference, acquisition or network upload; no new experiment or Phase2 authorized.",
+  "main_ref_before": "389b8aba3802d52f9ed9eb5508cbc26e6c6f9d97",
+  "parent_checks": "Recorded separately in evidence/r35/parent-checks.json after the dated canonical status updates. Those status updates do not revise the reviewed scientific findings."
+}

@@ -35,7 +35,7 @@ def render(source: str, out: str) -> None:
                         f'[{value["family12_adjusted_ci"][0]:.4f}, {value["family12_adjusted_ci"][1]:.4f}]']
                        for name, value in d["comparisons"].items()]
         sections.append(table(["Candidate minus control", "MAE difference", "Patient 95% interval", "Family-12 interval"], comparisons) + '</section>')
-    sections.append('<section><h2>Fixed LUMIERE ridge readouts on SAILOR</h2><p>Each readout is fitted only on the named source patient budget. Every feature view is reported. No SAILOR labels select a regularizer, epoch, or model.</p>')
+    sections.append('<section><h2>Fixed LUMIERE ridge readouts on SAILOR</h2><p>Each readout is fitted only on the named source patient budget. All saved feature views, independent-state differences, training-mean change, and zero-change controls are reported. No SAILOR labels select a regularizer, epoch, or model.</p>')
     for budget, arms in r["SAILOR_source_readouts"].items():
         rows = []
         for arm, scored in arms.items():
@@ -44,11 +44,13 @@ def render(source: str, out: str) -> None:
                          changes["difference"]["seed_mean_patient_uniform_mae"],
                          changes["concatenation"]["seed_mean_patient_uniform_mae"],
                          changes["later_only"]["seed_mean_patient_uniform_mae"],
-                         changes.get("learned_pair", {}).get("seed_mean_patient_uniform_mae", "Not applicable")])
+                         changes.get("learned_pair", {}).get("seed_mean_patient_uniform_mae", "Not applicable"),
+                         changes["independent_state_difference"]["seed_mean_patient_uniform_mae"],
+                         changes["train_mean_change"]["seed_mean_patient_uniform_mae"]])
         baseline = arms["state"]
         zero = baseline["observed_change"]["zero"]["seed_mean_patient_uniform_mae"]
-        rows.append(["Source mean and zero change", baseline["state_mean"]["seed_mean_patient_uniform_mae"], zero, zero, zero, zero])
-        sections.append(f'<h3>{budget} source patients</h3>' + table(["Model arm", "State", "Feature difference", "Concatenation", "Later only", "Learned pair"], rows))
+        rows.append(["Source mean and zero change", baseline["state_mean"]["seed_mean_patient_uniform_mae"], zero, zero, zero, zero, zero, zero])
+        sections.append(f'<h3>{budget} source patients</h3>' + table(["Model arm", "State", "Feature difference", "Concatenation", "Later only", "Learned pair", "Independent state difference", "Train-mean change"], rows))
     sections.append('</section><section><h2>All declared acquisition perturbations</h2><p>One fixed visit per LUMIERE evaluation patient. Ground-truth physical change is zero. Readouts are the same patient-held-out ridge models used for real observed change. Affine intensity invariance follows input standardization, not a learned robustness result.</p>')
     rows = []
     for arm, conditions in r["LUMIERE_nuisance"].items():

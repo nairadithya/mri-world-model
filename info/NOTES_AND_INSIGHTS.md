@@ -112,7 +112,7 @@ SAILOR is controlled-access data. It remains local. The [Methods reference](METH
 
 R36 Phase 1 computation and scoped reporting review are now complete. Its [current interpretation](#d58) replaces the old launch and reporting tasks below. It does not establish a frozen-encoder gain or future predictability.
 
-R35 completed its corrected state, observed-change, and nuisance comparison. It did not show that a paired head beats independent state differences, and it did not test future prediction.
+R35 completed its corrected state, observed-change, and nuisance comparison. Its [independent result review](reviews/r35_result_review.md) approved scoped reporting on October 13, 2026, after supplemental executable checks corrected the audit's overclaims. It did not show that a paired head beats independent state differences, and it did not test future prediction. The [closure receipt](reviews/r35_closure_receipt.json) preserves the provenance and target-reliability limits. Closing the review does not turn automated-volume proxy improvement into biological validation or architecture-only superiority.
 
 At the October 11, 18:30:51 UTC snapshot, R36 had all twelve final-epoch training checkpoints and ten seed-42 readouts locally validated. Seed 43 was running, and seed 44 had not started. No model-quality comparisons on the evaluation patients had been scored.
 

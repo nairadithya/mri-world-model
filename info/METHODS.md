@@ -184,11 +184,13 @@ R35, in sibling worktree `world-model-representations` at revision `2f6e1f5a65be
 
 The reference was the BRAINIAC backbone from the clean run without eventual survival as an input. The candidate spatial encoder received dense three-compartment mask supervision and native log-volume supervision.
 
-Paired, later-scan-only, and fixed-state controls tested contributions from the earlier scan and encoder adaptation. The comparison retained the 65 training patients and 26 encoder-unseen patients. The internal training and validation split used seed 2026. State and pair arms trained for 20 epochs.
+Paired, later-scan-only, and fixed-state controls tested contributions from the earlier scan and encoder adaptation. The comparison retained the 65 training patients and 26 encoder-unseen patients. The internal training and validation split used seed 2026, with 52 fitting patients and 13 checkpoint-selection patients. State and pair arms trained for 20 epochs. R35 grades validation-selected best checkpoints, not R36's final-epoch-20 recipe.
 
 Pair evaluation used the original consecutive eligible rows. Masks were training targets, not learned MRI inference inputs.
 
 The reference and learned candidate differ in pretraining history and dense-mask supervision. Their comparison does not isolate architecture causally. Frozen readouts fitted by nested patient CV on the 26 unseen patients are a separate protocol from source52 trained direct heads. SAILOR transfer retains both source26 and source52 ridge budgets. Budgets are compared like for like, not selected after inspection. Completed measurements and limitations belong in [R35 evidence](EXPERIMENTS.md#r35).
+
+R35 computation and scoped result review closed on October 13, 2026. The [result review](reviews/r35_result_review.md), [corrected audit](reviews/r35_artifact_audit.md), and [receipt](reviews/r35_closure_receipt.json) separate semantic approval from executable verification. The [saved evidence](reviews/evidence/r35/README.md) includes readout replay, exact nuisance membership, declared reference source/query provenance, summary prediction digests, and patient-level metric receipts. These checks do not supply original MRI-byte provenance, new dense behavioral or shuffle replay, or biological validation. The reference feature cache lacks an original-manifest stability hash; reference checkpoint equality remains metadata-level. Existing raw status fields remain historical.
 
 ## R36 locked Phase 1
 

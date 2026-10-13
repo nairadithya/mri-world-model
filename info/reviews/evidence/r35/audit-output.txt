@@ -1,0 +1,6 @@
+LUM_state_model 1.114490162191908 mean 1.7050593793528497 diff -0.590569217160942 CI [-0.7853986962253586, -0.39812898502155936]
+LUM_paired_pair_head 1.2696398413901633
+LUM_paired_zero 1.5446117730375022
+LUM_paired_independent_decoder_difference 1.2348222403659914
+COUNTS {"amp_backoffs": 48, "audit_hash_mismatches": 0, "checkpoints": 12, "epoch_rows": 240, "feature_files": 12, "nuisance_conditions": 65, "prediction_archives": 48, "replayed_views": 122, "state_audits": 24, "successful_updates": 74592}
+FAILURES 0

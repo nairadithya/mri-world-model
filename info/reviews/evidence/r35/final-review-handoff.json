@@ -1,0 +1,18 @@
+{
+  "created_utc": "2026-10-13T08:02:08.370190+00:00",
+  "repo": "/home/adithya/projects/world-model",
+  "head": "b6b20c8d8254788a8e6888bd795eda68ccb61867",
+  "barrier": "released; parent will not edit these inputs during final review",
+  "changed_inputs_sha256": {
+    "info/EXPERIMENTS.md": "82310109def49794d166733052a27b3bb6a86625468036e9987287518f3ccec7",
+    "scripts/render_representation_report.py": "c82a99cc7bff5045105108a8c428434e0bd44061ce24d28eba5a6bfb64e8cbd2",
+    "tests/test_representation_report.py": "f97b4a1fb210b32a751373df0931265cfeb08f9d489d7ac28a766848877d3b12"
+  },
+  "verification_run": "828aec09-7701-4576-806d-2d9371a0cee5",
+  "verification_report": "/tmp/r35-closure-review/received/artifact-verification.md",
+  "verification_sha256": "646b92208b337bfd8bf9401108142528466c72355ef5c98eea46e74f0e907852",
+  "initial_review": "/tmp/r35-closure-review/received/initial-result-review.md",
+  "patch": "/tmp/r35-closure-review/reporting-corrections.diff",
+  "rendered_controls": "/tmp/r35-closure-review/render/controls.png",
+  "parent_checks": "5 report tests, py_compile and diff check pass; real saved-summary successor HTML rendered and controls inspected; archived HTML unchanged; no new science verdict inferred"
+}

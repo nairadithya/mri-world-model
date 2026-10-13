@@ -1,8 +1,19 @@
 # Research TODO
 
-This checklist records remaining work after the October 13, 2026, R36 Phase 1 closure. It uses saved reports, not live job status. Earlier launch checklists remain in the [October 11 snapshot](documentation_sources/versions/e3c486ef9cc77afcc1978e53ce4495ef1051a5b8d22cf31b9d627c72d4db029e.md) and the [dated archive](archive/2026-10-13/README.md).
+This checklist records remaining work after the October 13, 2026, R35 scoped result-review and R36 Phase 1 closures. It uses saved reports, not live job status. Earlier launch checklists remain in the [October 11 snapshot](documentation_sources/versions/e3c486ef9cc77afcc1978e53ce4495ef1051a5b8d22cf31b9d627c72d4db029e.md) and the [dated archive](archive/2026-10-13/README.md).
 
 Use [Notes and insights](NOTES_AND_INSIGHTS.md) for interpretation, [Experiments](EXPERIMENTS.md) for results, and [Methods](METHODS.md) for protocols. The [research guardrails](research_guardrails.md) govern new implementation. This checklist does not authorize experiments, data acquisition, or a change of method family.
+
+## R35 computation and scoped result review are closed
+
+The [R35 findings](EXPERIMENTS.md#r35), [independent result review](reviews/r35_result_review.md), and [closure receipt](reviews/r35_closure_receipt.json) close the earlier review task.
+
+- [x] Complete the corrected training, transfer, nuisance, and control comparisons.
+- [x] Resolve the exact-membership, declared reference provenance, and summary-digest audit findings through executed supplemental checks.
+- [x] Correct interval wording and retain unfavorable shortcut controls in the aggregate presentation.
+- [x] Obtain independent approval for scoped reporting and preserve the audit, review history, and numerical receipts.
+
+No retraining or broad scientific rerun is needed to close this thread. Target reliability, historical MRI-byte provenance, unreplayed shuffle values, and untouched validation remain limits. No paired-model, transfer-success, forecasting, or general representation-quality claim follows. New experiments still need authorization.
 
 ## R36 Phase 1 is closed for scoped reporting
 
