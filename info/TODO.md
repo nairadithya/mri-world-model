@@ -159,3 +159,16 @@ The later 18:30:51 UTC snapshot came from `outputs/r36-delta-objective/continuat
 Historical completion and withdrawal checks come from [the original TODO](documentation_sources/versions/c7c9fba4178609946f8fd4ce8b90af08b6a88392955d7f2e198aa2e02b14cc57.md), [clean rescues](documentation_sources/versions/eaca551880e0a9db5c4bdc7785e135675cd518ebfcd361d5aa482beca4f37dce.md), and [the R35 record](documentation_sources/versions/768fdfa0a9be4dc76e99fcef9ff971e26252d672e82b08267f5e9ea157ced0f3.md) at `2f6e1f5`.
 
 [Source coverage](SOURCE_COVERAGE.md) records every captured version and the operating documents kept separate. Research-source links point to fixed copies inside the repository. The archived originals remain byte-identical. Documentation promotion does not authorize research execution or accept scientific results.
+
+## Current R36 closure addendum, 2026-10-13
+
+This section supersedes the old launch and reporting checklist for completed work. Do not rerun the historical seed43/44 tasks above.
+
+- [x] Combine the three worktree branches and remaining decision trails on `integration/r36-report-closure`, with dirty-source preservation and immutable-source hash verification.
+- [x] Complete the twelve training arms, thirty source-only probes, and both developmental cohort assessments.
+- [x] Implement strict nuisance-artifact identity and coverage validation, with regression fixtures.
+- [x] Implement explicit negative D tradeoff classifications while retaining inconclusive intervals and missing evidence.
+- [x] Obtain the [independent scoped result review](reviews/r36_phase1_result_review.md) on the final reporting correction.
+- [ ] Finish and record the independent executable artifact audit, including binary binding and saved ridge replay.
+
+Read the [Phase 1 report](r36_phase1_report.md), [complete aggregate companions](r36_phase1_metrics.json), and [research page](research_run.html). The primary encoder gain, D tradeoff, and superiority over independent-state differences remain inconclusive. C's direct-volume retention margin passes. No method family or Phase 2 run is selected or authorized. Target reliability and untouched validation remain open.

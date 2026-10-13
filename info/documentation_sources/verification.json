@@ -2,14 +2,14 @@
   "status": "PASS",
   "source_versions": 72,
   "branch_refs": 10,
-  "local_links_checked": 371,
+  "local_links_checked": 380,
   "supplementary_files_checked": 3,
   "archive_records_checked": 37,
   "draft_sha256": {
-    "TODO.md": "fa41f2fad5b7d5dc6729def8f06efb36e5ffbb944808aaa65efc0a83ffe6427d",
-    "EXPERIMENTS.md": "df50d6063aa7c846d0e4254f2822ad32e63e1f892d8a3c10180b6f1c311282bb",
+    "TODO.md": "69d19f5c1816b3409dba0bd82b57ea6a4cb1e8ef2a077144e31fb968792e1218",
+    "EXPERIMENTS.md": "cf1feed5285cbc234832fd08e21a242428f19998275e87fe750959944b9e4ef2",
     "METHODS.md": "7aecc56f60f088d043b613a2ed2e75d749f292ad360375ad621fabc0d44813aa",
-    "NOTES_AND_INSIGHTS.md": "52683e0d1b5e02be2051ed7a488aeff37b880d6b6032037b595141242e88d695"
+    "NOTES_AND_INSIGHTS.md": "1db8fef55108700f6b13a6f18091933891beb1a37a0cb7dd6d2f0e0def9ce40b"
   },
   "errors": [],
   "scope": "Frozen source, supplementary and archive bytes, checked coverage records, baseline identifier presence, and draft link portability. This is not scientific acceptance or a semantic completeness proof."

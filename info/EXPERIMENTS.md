@@ -425,3 +425,13 @@ A1 to A41 are preserved above as an index; full setups, tables, and correction h
 The historical SAILOR reprocess procedure is preserved at [reprocess guide](documentation_sources/versions/c7aeeea2bff31ee76a1190a69a05ca48ec78fc476e89d3afc345d546074c3f0d.md). Its intended question was whether matching the LUMIERE preprocessing contract would restore dynamics transfer. A19's same-code reprocess did not flip the persistence gate; A21's skull-out readout-recovery interpretation was subsequently withdrawn because the rebuilt cache did not reproduce it. A23's rebuilt same-space ratios remain the relevant historical evidence. Reprocessing details and limitations remain in the guide and A18 to A24.
 
 Numeric claims in this document are scoped to the stated cache, task, cohort, and aggregation. Patient-level bootstrap intervals do not account for readout training-seed uncertainty unless stated. Developmental SAILOR transfer is not untouched external validation. Historical rows and scores are retained as history where corrected, invalid, or withdrawn; they must not be silently promoted to current evidence.
+
+## R36 completed assessment, 2026-10-13
+
+This addendum supersedes the earlier execution snapshots, not their historical evidence. All twelve final training arms and thirty source-only probes are present. Both development-cohort assessments completed, including bounded CPU recovery of the interrupted seed44 work. No GPU work was repeated for this reporting closure.
+
+The primary C minus B frozen local MAE difference is -0.003067, with family-three adjusted paired-patient interval [-0.007995, +0.002644]. Frozen accessibility remains INCONCLUSIVE. C passes the locked direct-volume state-retention margin against A. Added observed temporal information remains INCONCLUSIVE because neither C nor D establishes superiority over independent decoded-state differences. D reduces its aggregate trained-perturbation false-change endpoint but worsens state error and noise sensitivity; the intended retention tradeoff remains INCONCLUSIVE.
+
+The nonlinear change heads improve descriptively under C and D. That is not evidence of the primary encoder gain. Negative developmental SAILOR controls, large empty-compartment errors, and the ineffective standardized affine-intensity stress remain visible in the [complete report](r36_phase1_report.md) and [aggregate companions](r36_phase1_metrics.json).
+
+The [independent result reviewer](reviews/r36_phase1_result_review.md) approved the scoped report and final reporting patch. The full executable artifact audit is tracked separately in the report. No global quality, biological-change, or forecasting verdict follows. Phase 2 remains unauthorized.

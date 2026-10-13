@@ -7,7 +7,7 @@ The four consolidated documents are the starting point for the research record:
 - [Methods](METHODS.md) defines terms, protocols, and historical decision and audit IDs.
 - [Research TODO](TODO.md) lists the remaining work at the archived research snapshot.
 
-R36 runtime statements in the consolidated documents describe October 11, 2026, at 18:30:51 UTC unless a later addendum says otherwise. They are not live job status. The [R36 execution record](r36_delta_representation_results.md) preserves later progress. Document approval does not accept scientific results or authorize Phase 2.
+R36 runtime statements in the consolidated documents describe October 11, 2026, at 18:30:51 UTC unless a later addendum says otherwise. They are not live job status. The [R36 execution record](r36_delta_representation_results.md) preserves later progress. The [Phase 1 report](r36_phase1_report.md) and [independent result review](reviews/r36_phase1_result_review.md) record the completed assessment and its scope. Document approval does not accept scientific results or authorize Phase 2.
 
 ## Source history
 

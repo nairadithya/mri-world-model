@@ -180,3 +180,11 @@ R33's [clean reruns](documentation_sources/versions/eaca551880e0a9db5c4bdc7785e1
 [Source coverage](SOURCE_COVERAGE.md) lists all captured branch and worktree versions and their dispositions. Research-source links point to fixed repository copies. Those copies retain original wording and embedded links, including outdated claims and links that may no longer work. They are historical evidence, not newly checked operating instructions.
 
 This rewrite does not restore the deleted `notes.md` or `explainer.html`, authorize old proposals, or independently verify the literature.
+
+## D58. Keep the R36 decoder finding separate from encoder progression, 2026-10-13
+
+R36's completed assessment does not establish the primary frozen-encoder benefit of balanced change supervision. C retains the specified direct-volume state endpoint relative to A, but that narrow noninferiority result is not universal representation quality. The trained nonlinear heads improve descriptively while the frozen C-versus-B interval crosses zero. Both observations must remain in the record.
+
+D reduces the mean trained-perturbation excess false-change endpoint, but worsens direct-state error and noise sensitivity. The state interval overlaps the allowed margin, so the intended tradeoff is inconclusive. A favorable aggregate cannot erase these negative companions. The affine-intensity stress is largely canceled by standardization and cannot establish learned scanner invariance.
+
+The [Phase 1 report](r36_phase1_report.md) and [independent result review](reviews/r36_phase1_result_review.md) support this scoped interpretation. No follow-up method family is selected. Any new dynamics experiment needs the separately approved contract and operator decision. Expert target reliability and genuinely independent validation remain unresolved.
