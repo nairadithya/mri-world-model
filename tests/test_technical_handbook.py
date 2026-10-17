@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -8,7 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 BUILDER = ROOT / "scripts/build_technical_handbook.py"
-PYTHON = "/home/adithya/projects/world-model/.venv/bin/python"
+PYTHON = sys.executable
 
 
 class TechnicalHandbookTest(unittest.TestCase):
@@ -82,11 +83,34 @@ class TechnicalHandbookTest(unittest.TestCase):
         self.chapter("02.html", "second", "Second", 'data-requires="later"')
         self.assertNotEqual(self.run_builder().returncode, 0)
 
+    def test_repository_links_and_html_fragments(self) -> None:
+        (self.root / "source.py").write_text("pass\n")
+        self.chapter("01.html", "first", "First", body='<a href="../source.py">source</a>')
+        self.assertEqual(self.run_builder().returncode, 0)
+        (self.root / "info/other.html").write_text('<h1 id="known">Other</h1>')
+        self.chapter("01.html", "first", "First", body='<a href="other.html#absent">bad</a>')
+        self.assertNotEqual(self.run_builder().returncode, 0)
+        self.chapter("01.html", "first", "First", body='<a href="other.html#known">good</a>')
+        self.assertEqual(self.run_builder().returncode, 0)
+        self.chapter("01.html", "first", "First", body='<a href="../../outside.txt">bad</a>')
+        result = self.run_builder()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("link escapes repository", result.stderr)
+
+    def test_navigation_escapes_authored_titles(self) -> None:
+        self.chapter("01.html", "first", "A &amp; B")
+        self.assertEqual(self.run_builder().returncode, 0)
+        output = (self.root / "info/technical_handbook.html").read_text()
+        self.assertIn('<span class="toc-number">1</span> A &amp; B</a>', output)
+
     def test_remote_assets_rejected_external_citation_allowed(self) -> None:
         self.chapter("01.html", "first", "First", body='<a href="https://example.org/paper">citation</a>')
         self.assertEqual(self.run_builder().returncode, 0)
-        self.chapter("01.html", "first", "First", body='<img src="https://example.org/image.png">')
-        self.assertNotEqual(self.run_builder().returncode, 0)
+        for body in ('<img src="https://example.org/image.png">',
+                     '<svg><image href="https://example.org/image.svg"/></svg>'):
+            with self.subTest(body=body):
+                self.chapter("01.html", "first", "First", body=body)
+                self.assertNotEqual(self.run_builder().returncode, 0)
 
 
 if __name__ == "__main__":

@@ -5,6 +5,7 @@ import hashlib
 import re
 import sys
 from dataclasses import dataclass
+from html import escape
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
@@ -106,10 +107,10 @@ def _navigation(chapters: list[Chapter]) -> str:
     groups = []
     for part, entries in parts:
         items = "".join(
-            f'<li><a href="#{chapter.id}"><span class="toc-number">{number}</span> {chapter.title}</a></li>'
+            f'<li><a href="#{escape(chapter.id, quote=True)}"><span class="toc-number">{number}</span> {escape(chapter.title)}</a></li>'
             for number, chapter in entries
         )
-        groups.append(f'<section class="toc-part"><h2>{part}</h2><ol class="toc-list">{items}</ol></section>')
+        groups.append(f'<section class="toc-part"><h2>{escape(part)}</h2><ol class="toc-list">{items}</ol></section>')
     return '<nav aria-label="Contents">' + "".join(groups) + "</nav>"
 
 
@@ -133,7 +134,7 @@ class LinkParser(HTMLParser):
         for key in ("href", "src", "action", "poster"):
             value = values.get(key)
             if value:
-                if key != "href" and urlsplit(value).scheme in {"http", "https"}:
+                if (key != "href" or tag != "a") and (urlsplit(value).scheme in {"http", "https"} or value.startswith("//")):
                     raise HandbookError(f"remote asset is forbidden: {value}")
                 self.links.append((key, value))
         if tag in {"script", "style", "link"}:
@@ -161,9 +162,8 @@ def _validate_links(root: Path, rendered: str) -> None:
         fragment = unquote(parsed.fragment)
         if parsed.path:
             target = (root / "info" / unquote(parsed.path)).resolve()
-            base = (root / "info").resolve()
-            if not target.is_relative_to(base):
-                raise HandbookError(f"link escapes repository documentation: {raw}")
+            if not target.is_relative_to(root.resolve()):
+                raise HandbookError(f"link escapes repository: {raw}")
             if not target.is_file():
                 raise HandbookError(f"missing local link target: {raw}")
             if fragment and target.suffix.lower() in {".md", ".markdown"}:
@@ -172,8 +172,15 @@ def _validate_links(root: Path, rendered: str) -> None:
                 headings = heading_ids(target.read_text(encoding="utf-8"))
                 if fragment not in headings:
                     raise HandbookError(f"missing Markdown fragment: {raw}")
-            elif fragment and target.resolve() == (root / "info/technical_handbook.html").resolve() and fragment not in ids:
-                raise HandbookError(f"missing HTML fragment: {raw}")
+            elif fragment and target.suffix.lower() == ".html":
+                target_parser = LinkParser()
+                if target == (root / "info/technical_handbook.html").resolve():
+                    target_ids = ids
+                else:
+                    target_parser.feed(target.read_text(encoding="utf-8"))
+                    target_ids = set(target_parser.ids)
+                if fragment not in target_ids:
+                    raise HandbookError(f"missing HTML fragment: {raw}")
         elif fragment and fragment not in ids:
             raise HandbookError(f"missing HTML fragment: {raw}")
 

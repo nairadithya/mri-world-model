@@ -1,0 +1,80 @@
+{
+  "recorded_utc": "2026-10-17T09:38:32.233228+00:00",
+  "scope": "Pre-review handbook build and documentation integrity. Not scientific acceptance, model inference, or new experiment execution.",
+  "full_unittest_tests": 122,
+  "handbook_tests": 7,
+  "documentation_tests": 24,
+  "notebook_pairs": 17,
+  "protected_file_hashes_checked": 223,
+  "protected_files_changed": 0,
+  "commands": [
+    {
+      "command": "python3 -B scripts/build_technical_handbook.py && python3 -B scripts/build_technical_handbook.py --check",
+      "outcome": "PASS"
+    },
+    {
+      "command": ".venv/bin/python -B -m unittest discover -s tests -v",
+      "outcome": "PASS",
+      "log": "/tmp/world-model-handbook-2026-10-17/full-tests.log"
+    },
+    {
+      "command": ".venv/bin/python -B -m unittest discover -s tests -p test_documentation*.py -v",
+      "outcome": "PASS"
+    },
+    {
+      "command": "python3 -B scripts/documentation_sources.py verify",
+      "outcome": "PASS"
+    },
+    {
+      "command": "python3 -B scripts/render_documentation_coverage.py",
+      "outcome": "PASS; no original frozen file changed"
+    },
+    {
+      "command": ".venv/bin/python -B scripts/check_notebook_pairs.py",
+      "outcome": "PASS"
+    },
+    {
+      "command": ".venv/bin/python -B -m py_compile scripts/build_technical_handbook.py tests/test_technical_handbook.py",
+      "outcome": "PASS"
+    }
+  ],
+  "rendering": {
+    "driver": "/tmp/world-model-handbook-2026-10-17/render-handbook.mjs",
+    "receipts": "/tmp/world-model-handbook-2026-10-17/render/browser-receipts.json",
+    "desktop_width": 1440,
+    "mobile_width": 390,
+    "browser_states": 9,
+    "print_pages": 50,
+    "pixel_review": "Parent inspected desktop cover/R35/R36/publication, mobile cover/tasks/R36/publication, and printed cover/tasks/R35/R36/publication samples. No visible clipping in inspected samples. Not exhaustive every-pixel or accessibility certification."
+  },
+  "sha256": {
+    "info/handbook/chapters/01-mri.html": "54221d5d84565f464584b8ef8ee9d885885279b4b95aaf07029ba88315296615",
+    "info/handbook/chapters/02-geometry.html": "0d7e4bbf99094859601ea266b38ef0cae728b7f278ec01c43edbf3220e13d522",
+    "info/handbook/chapters/03-tasks.html": "84011c9423b5803ad05ea39b5386e6c6405dcdfe4924febc9d2b16a415e1ddb0",
+    "info/handbook/chapters/04-representations.html": "99acf377a1afeedaf082e64ed3edc848266fe4e751e7eb5d75734b9f3e76f666",
+    "info/handbook/chapters/05-jepa.html": "19d860912bbfab22b1aaa4dbb83042e46c94a14a016be2c8277fcb31cfb75602",
+    "info/handbook/chapters/06-evaluation.html": "c748e622ee811652fe8e38f44acb516603f841a81d4817c05ef86ed436596196",
+    "info/handbook/chapters/07-metrics.html": "39e914c0a210f7917d7375c23b2b17bf50d093ef01bcca0fe933d3327f35e19d",
+    "info/handbook/chapters/08-uncertainty.html": "c077d4969e8fd5e97fcb9fa951198ea12da47caafb2af3e2fa8b29464ca1bb49",
+    "info/handbook/chapters/09-project-map.html": "93487b558446b78a8cb5f85af4608a7d45456418c568505bd03d4972d094c514",
+    "info/handbook/chapters/10-initial-jepa.html": "23602236583bebd2e95f27d19336b210a1de46a85395b05201f8a505d4297a11",
+    "info/handbook/chapters/11-readouts-transfer.html": "9383d31d35fefec5cfec921aa6bbc7b2acb4a412e4db9a128c6ba443ac10803d",
+    "info/handbook/chapters/12-forecasting.html": "5664d5b002bf1b892648ccdccc006a93599b82b3892d2a633547f5c8cb94fe43",
+    "info/handbook/chapters/13-rescues-validity.html": "a7c267c0b74f9965460bfaec352e9e3ecc792551c3bbf19ba146421b53808f9b",
+    "info/handbook/chapters/14-r35.html": "751e0de7f6527e293fed3f46c1acc8e4f73fcb29b701931e8c83656c701becef",
+    "info/handbook/chapters/15-r36.html": "51ddbb7677b39bc91438df0f3c869ff94b241f57de2f81b16ae01a0a0f60c936",
+    "info/handbook/chapters/16-index.html": "796d10621a12246c2642252c99293293ff814050003dc38a00c46a79a449e70b",
+    "info/handbook/chapters/17-publication.html": "e261a2bfc2fcfaa111fbc03e999902598cee9311c5cfa50d30707c936cc47d30",
+    "info/handbook/chapters/18-open-evidence.html": "b88a13d5b67e2cb8030564d7e08a209a08657b1c61c487e03f2880b9a0a6f179",
+    "info/handbook/chapters/19-references.html": "5203d24fd8208a7e6f698e5b334640c20a3983d146aff0a37397fc92a4fa0f6e",
+    "info/handbook/layout.html": "7503fa5d88fdaa71eb21550d0eadbe0b7d017febca3665f8c261ce7cd27033b0",
+    "info/handbook/README.md": "04f581c48c25d63e4556b7cc583b8165bbdb8b0eba84e6d33464d1bbb8c29379",
+    "info/technical_handbook.html": "c599e4d9f917d7099ad3cc3309f28b5cdf868a7c2f3e094aa58b795edce5c661",
+    "scripts/build_technical_handbook.py": "715d09b1f79bc87cabd272ebfb36e8f03771b5712ea47dc2118c752f07809c37",
+    "tests/test_technical_handbook.py": "0af7e68ebe50f1341a10c7db7db519d81f82d25732e1d33f5db36dd062eaf253",
+    "AGENTS.md": "45c7cd974e06a32c290edfc7d0412c6c0d2a6f9c4866a414cb858ea5159dfd90",
+    "README.md": "1e2f24fc896c8b07c79d09833287b3d12b40aab34f103eea6bf13a3f5383655f",
+    "info/README.md": "3aa469cdbac1738ea02c7da4670e615d22a464ef0e4d9163af994f22dd0ab275",
+    "info/SOURCE_COVERAGE.md": "f63c71128c0dbe1597999e1ef2ea2588890d83b9a0f212b2780e90c57b8612b7"
+  }
+}

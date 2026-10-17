@@ -5,6 +5,8 @@ Research code for longitudinal glioma MRI. Start with
 findings. [Experiments](info/EXPERIMENTS.md) records results and corrections,
 [Methods](info/METHODS.md) defines protocols, and
 [Research TODO](info/TODO.md) lists work left at the archived snapshot.
+The [HTML technical handbook](info/technical_handbook.html) teaches the background,
+explains the experiments, and separates supported publication claims from unsupported ones.
 The [research index](info/README.md) links the source history and operating guides.
 The [archive](info/archive/2026-10-12/README.md) preserves the original documentation.
 

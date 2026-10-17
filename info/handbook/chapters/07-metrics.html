@@ -1,0 +1,27 @@
+<section class="chapter" id="metrics" data-part="Foundations" data-requires="geometry tasks evaluation">
+<h2>Read the unit before the score</h2>
+<p class="lead">A small number can be a poor result, and a larger number can be a good one. The target, baseline, unit, and averaging rule decide what the score means.</p>
+<h3>Volumes and their logarithms</h3>
+<p><dfn>Mean absolute error</dfn>, or MAE, averages the absolute difference between prediction and target. Lower is better. Raw volume error measured in cubic millimeters emphasizes large lesions. The project commonly uses the natural logarithm of one plus the numerical volume in mm³, written <code>log1p(v)</code>. The added one keeps a genuinely empty compartment finite.</p>
+<div class="equation">s<sub>t</sub> = log(1 + v<sub>t</sub>)<br>Δs = s<sub>t+1</sub> − s<sub>t</sub><small>v is the numerical native volume in mm³. A log-volume change is not a raw-mm³ change, a clinical response category, or an exact physical growth rate.</small></div>
+<p>A log-volume MAE has log-volume units, not mm³. It compresses large numerical volumes and can make errors near a measured zero particularly consequential. Because <code>log1p</code> includes an additive one, it is not invariant to changing the unit used to express volume.</p>
+<h3>Local occupancy is a different outcome</h3>
+<p><dfn>Occupancy</dfn> records whether a voxel belongs to a compartment. A signed occupancy difference is later mask minus earlier mask. Values of +1 mark appearance, −1 mark disappearance, and 0 mark unchanged occupancy. It is not a difference between MRI intensities.</p>
+<p>A whole-grid loss averages errors over all voxels. If changed voxels are scarce, unchanged locations dominate it. A <dfn>balanced change error</dfn> first averages within the changed and unchanged groups, then gives the nonempty group means equal weight. If there are no changed voxels, only the unchanged group contributes. It is a declared research endpoint, not a clinical scale.</p>
+<p>A zero-change predictor can have deceptively low whole-grid error when little changes. A balanced endpoint makes changed regions count more. Neither weighting rule is universally correct. Each defines what the experiment values.</p>
+<h3>Pooling and patient weighting</h3>
+<div class="split"><div class="card"><span class="label">Pooled</span><p>Average all eligible observations together. A person with many visits contributes more weight.</p></div><div class="card"><span class="label">Patient-uniform</span><p>Average observations within each patient first, then average patient errors. Each person contributes equal weight.</p></div></div>
+<p>The chosen averaging target is the <dfn>estimand</dfn>. A result can change with the estimand without either calculation being erroneous. A persistence-relative error below one favors the model on its stated scoring rule; above one favors persistence. A patient-uniform average of within-patient ratios need not equal the ratio of two overall MAEs. Do not reconstruct a relative score by dividing adjacent table cells unless the protocol defines it that way.</p>
+<h3>Other metrics used in the history</h3>
+<div class="table-wrap"><table><thead><tr><th>Metric</th><th>What it asks</th><th>Important limit</th></tr></thead><tbody>
+<tr><td>Dice overlap</td><td>How much predicted and target masks overlap.</td><td>Empty-mask conventions matter. Overlap does not establish correct biology.</td></tr>
+<tr><td>R²</td><td>How squared prediction error compares with a specified mean predictor.</td><td>Negative values mean worse than that reference, not a negative amount of information.</td></tr>
+<tr><td>Spearman correlation</td><td>Whether predictions rank observations in a similar order to targets.</td><td>Good ranking does not guarantee calibrated values or low absolute error.</td></tr>
+<tr><td>Macro-F1</td><td>Average of class-specific F1 scores, with equal class weight. F1 combines precision and recall.</td><td>Not interchangeable with accuracy or balanced accuracy.</td></tr>
+<tr><td>Balanced accuracy</td><td>Average recall across classes.</td><td>A paper's balanced accuracy cannot be cited as macro-F1.</td></tr>
+<tr><td>AUC</td><td>How well a score ranks positive versus negative cases across thresholds.</td><td>A value near 0.5 does not establish useful binary discrimination.</td></tr>
+<tr><td>AUPRC</td><td>Area under the precision-recall curve for positive detection.</td><td>No-positive cases are empty, not automatically perfect scores.</td></tr>
+</tbody><caption>Metrics summarize different capabilities. Higher is better for the listed classification and overlap scores, while lower is better for error metrics.</caption></table></div>
+<p>For an error contrast, this handbook follows <strong>candidate minus comparator</strong>. A negative difference favors the candidate. For a macro-F1 difference, a positive difference favors the candidate. Always check the sign convention before interpreting an interval.</p>
+<p class="source">See <a href="EXPERIMENTS.md#how-the-results-are-reported">reporting conventions</a>, <a href="METHODS.md#terms">the methods glossary</a>, and <a href="METHODS.md#frozen-probe-outcomes-and-decision-margins">the R36 endpoint definition</a>.</p>
+</section>

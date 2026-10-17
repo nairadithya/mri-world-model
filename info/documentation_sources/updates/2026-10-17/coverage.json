@@ -1,0 +1,212 @@
+{
+  "schema": 1,
+  "date": "2026-10-17",
+  "scope": "Derivative HTML handbook and editorial publication assessment. No new measurements, source catalog entries, archive relocations or scientific approval. Original 72-version capture remains unchanged.",
+  "records": [
+    {
+      "sources": [
+        {
+          "path": "info/METHODS.md",
+          "sha256": "a6072a5b885e417710ed734c9365dfd9ba41b28e4c5c9ef4193193a15a93d5a8"
+        },
+        {
+          "path": "info/NOTES_AND_INSIGHTS.md",
+          "sha256": "9d7ff99452ae5cad134cce25b09436f148bdd7ecb81389108382a8ba7f1e1c76"
+        },
+        {
+          "path": "info/research_guardrails.md",
+          "sha256": "6e710be8c33b05d77bf8f13b415b64028fcc13dc03d71defb304e6a7631c78f4"
+        }
+      ],
+      "handbook_chapters": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "disposition": "Concept definitions and research scope. Educational paraphrase, not a new protocol.",
+      "comparison_status": "derived_explanation",
+      "read_mode": "Parent read of canonical pages with bounded read-only source packets and direct frozen-protocol checks"
+    },
+    {
+      "sources": [
+        {
+          "path": "info/EXPERIMENTS.md",
+          "sha256": "df61c56402b8a47a8c4556d20ebd5ba508f674ad2bb01e2587760a689ed78c55"
+        },
+        {
+          "path": "info/NOTES_AND_INSIGHTS.md",
+          "sha256": "9d7ff99452ae5cad134cce25b09436f148bdd7ecb81389108382a8ba7f1e1c76"
+        }
+      ],
+      "handbook_chapters": [
+        10,
+        11,
+        12,
+        13,
+        16
+      ],
+      "disposition": "Historical experiments, corrections, withdrawals and current-schema distinctions.",
+      "comparison_status": "derived_explanation",
+      "read_mode": "Parent read of canonical pages with bounded read-only source packets and direct frozen-protocol checks"
+    },
+    {
+      "sources": [
+        {
+          "path": "info/documentation_sources/versions/4c077cc0f084f2d14b48b4cf366088ff7c0dc11a6ed3bf8b5678cbea901e141d.md",
+          "sha256": "4c077cc0f084f2d14b48b4cf366088ff7c0dc11a6ed3bf8b5678cbea901e141d"
+        },
+        {
+          "path": "info/documentation_sources/versions/9ea08b90cf4971fb7b85d4b150ef1317994f42aa2fca2f1c9c0f5de5424e38e4.md",
+          "sha256": "9ea08b90cf4971fb7b85d4b150ef1317994f42aa2fca2f1c9c0f5de5424e38e4"
+        }
+      ],
+      "handbook_chapters": [
+        12
+      ],
+      "disposition": "P1 and P2 fit within locked encoder-unseen folds; transfer fits eligible encoder-unseen source patients. Not source52.",
+      "comparison_status": "derived_explanation",
+      "read_mode": "Parent read of canonical pages with bounded read-only source packets and direct frozen-protocol checks"
+    },
+    {
+      "sources": [
+        {
+          "path": "info/EXPERIMENTS.md",
+          "sha256": "df61c56402b8a47a8c4556d20ebd5ba508f674ad2bb01e2587760a689ed78c55"
+        },
+        {
+          "path": "info/METHODS.md",
+          "sha256": "a6072a5b885e417710ed734c9365dfd9ba41b28e4c5c9ef4193193a15a93d5a8"
+        },
+        {
+          "path": "info/reviews/r35_result_review.md",
+          "sha256": "230921929787aa86fddf556a8fbff9590e21c2fd8c782517e25ef818d3a195d6"
+        },
+        {
+          "path": "info/reviews/r35_artifact_audit.md",
+          "sha256": "a1c285876bd7c8713e5ce5f60915c8d4129463a787072ae38daa60411eb69eb5"
+        },
+        {
+          "path": "info/reviews/r35_closure_receipt.json",
+          "sha256": "e11e7d81299cccd3809751b746bc671de44a570a2b7774a809a510f2cd4bcc3c"
+        }
+      ],
+      "handbook_chapters": [
+        14,
+        17,
+        19
+      ],
+      "disposition": "Bounded R35 reporting, descriptive intervals, supervision confounding, paired controls, developmental transfer and audit limits.",
+      "comparison_status": "derived_explanation",
+      "read_mode": "Parent read of canonical pages with bounded read-only source packets and direct frozen-protocol checks"
+    },
+    {
+      "sources": [
+        {
+          "path": "info/EXPERIMENTS.md",
+          "sha256": "df61c56402b8a47a8c4556d20ebd5ba508f674ad2bb01e2587760a689ed78c55"
+        },
+        {
+          "path": "info/METHODS.md",
+          "sha256": "a6072a5b885e417710ed734c9365dfd9ba41b28e4c5c9ef4193193a15a93d5a8"
+        },
+        {
+          "path": "info/NOTES_AND_INSIGHTS.md",
+          "sha256": "9d7ff99452ae5cad134cce25b09436f148bdd7ecb81389108382a8ba7f1e1c76"
+        },
+        {
+          "path": "info/reviews/r36_phase1_result_review.md",
+          "sha256": "af9f6099e7daf09ebdb43ccff0b099bf81bfa804bfb1d29a8d72fe3a29479f82"
+        },
+        {
+          "path": "info/reviews/r36_phase1_artifact_audit.md",
+          "sha256": "7417ed7b3046f1043cb127ffbfc4d405681a22d702d834d9cdd6969dacc991ef"
+        },
+        {
+          "path": "info/reviews/r36_closure_receipt.json",
+          "sha256": "e32f74913dbbeadc68ecceaf70df800ebfaba40954dcee2f7f8a39b1cd2b4d6e"
+        },
+        {
+          "path": "info/r36_phase1_metrics.json",
+          "sha256": "5fd08fb735011ab90203b1d79bee869e7c30aeae6f7c48315166fb53854660a6"
+        }
+      ],
+      "handbook_chapters": [
+        15,
+        17,
+        19
+      ],
+      "disposition": "R36 primary frozen-probe contrast, direct-state retention margin, decoder companions and nuisance tradeoffs remain separate.",
+      "comparison_status": "derived_explanation",
+      "read_mode": "Parent read of canonical pages with bounded read-only source packets and direct frozen-protocol checks"
+    },
+    {
+      "sources": [
+        {
+          "path": "info/TODO.md",
+          "sha256": "f1918ebc4aea18ab94fe1d480ef765349865a5e76359827e8c6a5185f590be46"
+        },
+        {
+          "path": "info/research_guardrails.md",
+          "sha256": "6e710be8c33b05d77bf8f13b415b64028fcc13dc03d71defb304e6a7631c78f4"
+        }
+      ],
+      "handbook_chapters": [
+        17,
+        18,
+        19
+      ],
+      "disposition": "Publication judgments are editorial. Evidence requirements do not authorize new research, acquisition or Phase 2.",
+      "comparison_status": "derived_explanation",
+      "read_mode": "Parent read of canonical pages with bounded read-only source packets and direct frozen-protocol checks"
+    }
+  ],
+  "background_references": [
+    {
+      "title": "Current Clinical Brain Tumor Imaging",
+      "authors": "Villanueva-Meyer, Mabray and Cha",
+      "year": 2017,
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5581219/",
+      "retrieval": "Bibliographic identity checked through indexed search; direct full-page extraction unavailable. No verbatim passage used."
+    },
+    {
+      "title": "Coordinate systems and affines; Working with NIfTI images",
+      "authors": "NiBabel documentation contributors",
+      "url": "https://nipy.org/nibabel/coordinate_systems.html",
+      "retrieval": "Primary documentation fetched. Coordinate mapping does not establish registration accuracy."
+    },
+    {
+      "title": "RANO 2.0",
+      "authors": "Wen and colleagues",
+      "year": 2023,
+      "url": "https://doi.org/10.1200/JCO.23.01059",
+      "retrieval": "Bibliographic identity and broad clinical-context requirements checked through indexed records; direct full-text extraction unavailable. Does not validate historical project labels."
+    },
+    {
+      "title": "Self-Supervised Learning from Images with a Joint-Embedding Predictive Architecture",
+      "authors": "Assran and colleagues",
+      "year": 2023,
+      "url": "https://arxiv.org/abs/2301.08243",
+      "retrieval": "Original paper abstract fetched. Not longitudinal MRI validation."
+    },
+    {
+      "title": "LoRA: Low-Rank Adaptation of Large Language Models",
+      "authors": "Hu and colleagues",
+      "year": 2021,
+      "url": "https://arxiv.org/abs/2106.09685",
+      "retrieval": "Original paper abstract fetched. Not an MRI adaptation result."
+    },
+    {
+      "title": "Cross-validation iterators for grouped data",
+      "authors": "Scikit-learn documentation contributors",
+      "url": "https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation-iterators-for-grouped-data",
+      "retrieval": "Primary implementation documentation fetched; patient-grouped passage checked. Does not prescribe a universal estimand."
+    }
+  ],
+  "excluded_sources": "No withdrawn plot is reused. Bibliographic author error in one preliminary research packet was corrected against indexed primary metadata. Inaccessible full text is disclosed, not treated as a verified quotation."
+}

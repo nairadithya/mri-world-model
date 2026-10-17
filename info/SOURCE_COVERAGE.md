@@ -96,3 +96,4 @@ Integrated comparisons are [notes](documentation_sources/comparisons/notes.json)
 These update ledgers are separate from the original frozen capture. They record newly incorporated material and restored duplicates, not new scientific acceptance.
 
 - [2026-10-13 source dispositions](documentation_sources/updates/2026-10-13/coverage.json).
+- [2026-10-17 source dispositions](documentation_sources/updates/2026-10-17/coverage.json).
