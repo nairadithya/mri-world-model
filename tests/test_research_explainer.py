@@ -1,5 +1,6 @@
 import shutil
 import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -33,7 +34,7 @@ class ResearchExplainerVerifierTest(unittest.TestCase):
                 self.page(link), encoding="utf-8"
             )
             return subprocess.run(
-                ["python", "-B", str(root / "scripts" / SCRIPT.name)],
+                [sys.executable, "-B", str(root / "scripts" / SCRIPT.name)],
                 capture_output=True,
                 text=True,
                 check=False,
@@ -57,7 +58,7 @@ class ResearchExplainerVerifierTest(unittest.TestCase):
                 self.page("source.md#target"), encoding="utf-8"
             )
             result = subprocess.run(
-                ["python", "-B", str(root / "scripts" / SCRIPT.name)],
+                [sys.executable, "-B", str(root / "scripts" / SCRIPT.name)],
                 capture_output=True,
                 text=True,
                 check=False,

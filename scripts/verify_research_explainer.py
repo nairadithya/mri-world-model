@@ -2,6 +2,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 import re
 import sys
+from urllib.parse import urlsplit
 
 
 class ExplainerAudit(HTMLParser):
@@ -45,7 +46,10 @@ audit.close()
 expected_ids = set(range(1, 42))
 missing_ids = sorted(expected_ids - audit.experiment_ids)
 extra_ids = sorted(audit.experiment_ids - expected_ids)
-missing_links = [href for href in audit.local_links if not (page.parent / href).exists()]
+missing_links = [
+    href for href in audit.local_links
+    if not (page.parent / urlsplit(href).path).exists()
+]
 required_claims = ["0bed48b", "067ed6c", "768cd7e", "236352d", "A40", "A41", "0.334 ± 0.060", "0.309", "Readout seed and width alone", "pooled anatomy MAE", "No causal replacement score exists"]
 missing_claims = [claim for claim in required_claims if claim not in source]
 if audit.anchor_depth != 0:
