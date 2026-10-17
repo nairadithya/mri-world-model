@@ -1,0 +1,5 @@
+ts	phase	decision	why	evidence	result
+2026-10-17T09:15:05.133346+00:00	frame	Write a prerequisite-first HTML teaching guide, not a fifth canonical research ledger	The operator requested explanation and publication judgment while the four pages retain source authority	info/README.md; info/research_guardrails.md	open
+2026-10-17T09:15:05.133360+00:00	baseline	Preserve existing canonical pages, frozen sources, archives and review evidence	The handbook must not revise historical findings or approval scope	info/documentation_sources/updates/2026-10-17/handbook-baseline.json	saved 223 file hashes
+2026-10-17T09:20:29.882747+00:00	design	Use ordered HTML chapters with one deterministic builder and derived navigation	The chosen compiler avoids both a custom Markdown parser and a second chapter manifest	info/handbook/README.md	selected after two independent sketches
+2026-10-17T09:20:29.882755+00:00	sources	Keep publication recommendations separate from approved reporting claims	The evidence audit found no support for novelty or submission-readiness claims	info/reviews/r35_result_review.md; info/reviews/r36_phase1_result_review.md	bounded source packets complete
