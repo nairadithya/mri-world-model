@@ -10,7 +10,7 @@ One frozen, committed source of truth for probe evaluation:
   materialized in ``info/eval_folds.json`` and never re-drawn.
 - ``dev`` / ``final``— the val / test halves used for transfer reporting.
 
-Rules (see ``info/eval_protocol.md``):
+Rules (see ``info/archive/2026-10-12/info/eval_protocol.md``):
 
 1. No probe is trained or scored on an encoder-train patient when making a
    representation claim; ``assert_disjoint`` enforces this.

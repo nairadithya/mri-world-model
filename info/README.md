@@ -1,41 +1,42 @@
-# info/
+# Research documentation
 
-Decision log, ablation records, and pilot notes for the longitudinal-MRI
-world-model program. Code is the primary artifact; these docs exist to record
-*why* things are the way they are, with the evidence behind each call.
+The four canonical documents own the research record:
 
-- [`decisions.md`](decisions.md) — every significant decision, its rationale,
-  alternatives considered, and status (decided / provisional).
-- [`ablations.md`](ablations.md) — ablation/diagnostic experiments: setup,
-  numbers, and the inference drawn. Append-only; never rewrite old entries.
-- [`pilot.md`](pilot.md) — the CPU pilot protocol, live results, and the
-  scale-up verdict.
-- [`anatomy_harmonization.md`](anatomy_harmonization.md) — the active P0
-  `lesion-state-v1` target, timing, and pair contract.
-- [`p1_anatomy_baselines.md`](p1_anatomy_baselines.md) — the closed P1
-  prospective floor and negative JEPA result.
-- [`p2_execution.md`](p2_execution.md) — the active lesion-aware forecasting
-  program, staged gates, and evaluation contract.
-- [`stale_code_audit.md`](stale_code_audit.md) — code paths superseded by the
-  RANO-free endpoint and what remains reusable.
-- [`harness_v2.md`](harness_v2.md) — anatomy-first CLI and historical
-  checkpoint compatibility contract.
-- [`external_supervision_audit.md`](external_supervision_audit.md) — P2 cohort
-  roles, current access/storage blockers, and acquisition order.
-- [`p0_audit.md`](p0_audit.md) and [`p1_baselines.md`](p1_baselines.md) —
-  superseded RANO-era validity/baseline records retained for provenance.
-- [`eval_protocol.md`](eval_protocol.md) — the historical locked RANO readout
-  protocol; patient assignments remain reusable, but its task and metrics are
-  superseded for P2.
-- [`directions.md`](directions.md) — research directions and the current
-  ASTRA/K3 execution triage.
-- [`frontier_lumiere.md`](frontier_lumiere.md) — literature/benchmark frontier
-  and assessment-versus-forecasting caveats.
+- [Notes and insights](NOTES_AND_INSIGHTS.md) explains the questions, findings, and limits.
+- [Experiments](EXPERIMENTS.md) records measurements, controls, corrections, and withdrawals.
+- [Methods](METHODS.md) defines terms, protocols, reproduction commands, and historical IDs.
+- [Research TODO](TODO.md) lists current remaining work and its authorization.
 
-Conventions:
+The latest R36 closure is October 13, 2026. Phase 1 computation and scoped reporting review are complete. The primary encoder gain remains inconclusive, C passes the specified direct-volume retention margin, and Phase 2 remains unauthorized. [Completed findings](EXPERIMENTS.md#r36-completed) and [D58 interpretation](NOTES_AND_INSIGHTS.md#d58) explain those distinctions. Earlier October 11 runtime snapshots remain historical, not live job status.
 
-1. Each decision gets an ID (`D1`, `D2`, …), each ablation an ID (`A1`, …),
-   each inference an ID (`I1`, …). Reference IDs, not prose, when linking.
-2. Numbers beat adjectives. Record the measurement, the command or script
-   that produced it, and the date.
-3. A superseded decision is marked as such, never deleted.
+## Evidence and presentation
+
+The [current research page](research_run.html) presents the aggregate findings. Its generator is `scripts/refresh_research_run.py`. [Aggregate R36 measurements](r36_phase1_metrics.json) retain all arms, companions, and input hashes.
+
+The [independent result review](reviews/r36_phase1_result_review.md), [artifact audit](reviews/r36_phase1_artifact_audit.md), and [closure receipt](reviews/r36_closure_receipt.json) retain their exact bytes and checked scope. They permit bounded reporting, not global representation-quality, biological-change, or forecasting claims.
+
+R35 computation and scoped result review also closed on October 13, 2026. Its [result review](reviews/r35_result_review.md), [corrected audit](reviews/r35_artifact_audit.md), [closure receipt](reviews/r35_closure_receipt.json), and [evidence guide](reviews/evidence/r35/README.md) preserve the checked scope and prior audit corrections. [Canonical findings](EXPERIMENTS.md#r35) retain unresolved paired benefit, failed or unresolved developmental transfer, and target/provenance limits. Earlier unavailable-review statements remain historical.
+
+## Source history
+
+[Source coverage](SOURCE_COVERAGE.md) maps the original 72 captured Markdown versions across 48 paths and ten frozen branch refs. The [catalog](documentation_sources/catalog.json) records their origins. That is a dated capture, not a count of every later document.
+
+The [October 13 update](documentation_sources/updates/2026-10-13/coverage.json) maps the newly incorporated records and restored duplicates. The [October 13 archive](archive/2026-10-13/README.md) preserves ten relocated files. The [October 12 archive](archive/2026-10-12/README.md) preserves 32 earlier research records and five presentation assets. Both retain original bytes.
+
+Old plans, runtime claims, and embedded links are historical. Later corrections govern interpretation. The [original preparation record](documentation_sources/checkpoint.md) and [new update plan](documentation_sources/updates/2026-10-13/plan.md) disclose review and verification limits.
+
+## Operating guides and maintenance
+
+Keep operating documents separate:
+
+- [Project README](../README.md) covers setup and common commands.
+- [Agent documentation procedure](../AGENTS.md#maintain-the-research-documentation) defines ownership, archival, and update checks.
+- [Research guardrails](research_guardrails.md) define the objective and required experiment decision brief.
+- [Preprocessing](preprocessing.md) defines BRAINIAC inputs.
+- [SAILOR reprocessing](../src/preprocessing/reprocess_sailor.md) preserves that procedure and its limits.
+- [Acquisition scripts](../scripts/README.md) describe data access tools.
+- [CLI verification skill](../.agents/skills/verify-world-model-cli/SKILL.md) defines real command-line checks.
+
+Add measurements to Experiments, reasoning to Notes and insights, protocols to Methods, and actions to TODO. Keep historical IDs, corrections, archive bytes, and review scope intact. Do not create a second active research narrative.
+
+Regenerate original coverage with `python3 -B scripts/render_documentation_coverage.py`. Verify the canonical package and all archives with `python3 -B scripts/documentation_sources.py verify`. The later update's reproducible checks are documented in its plan. Passing these checks is not scientific acceptance.

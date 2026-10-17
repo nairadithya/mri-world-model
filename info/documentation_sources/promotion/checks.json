@@ -1,0 +1,397 @@
+{
+  "recorded_utc": "2026-10-12T17:28:49.228844+00:00",
+  "status": "PASS",
+  "authorization": "Operator requested a commit and archival after approving the wording. This does not authorize research execution, a push, merge, or scientific acceptance.",
+  "base_commit": "389b8aba3802d52f9ed9eb5508cbc26e6c6f9d97",
+  "branch": "docs/portable-research-records",
+  "planned_commit_subject": "consolidate research documentation and archive originals",
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_documentation*.py",
+        "-v"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "test_git_optional_locks_are_disabled (test_documentation_protection.DocumentationProtectionTests.test_git_optional_locks_are_disabled) ... ok\ntest_missing_file_and_unexpected_checkout_are_detected (test_documentation_protection.DocumentationProtectionTests.test_missing_file_and_unexpected_checkout_are_detected) ... ok\ntest_unchanged_and_changed_files_are_reported_without_writes (test_documentation_protection.DocumentationProtectionTests.test_unchanged_and_changed_files_are_reported_without_writes) ... ok\ntest_all_four_baseline_identifiers_are_checked (test_documentation_sources.DocumentationSourcesTests.test_all_four_baseline_identifiers_are_checked) ... ok\ntest_archived_originals_are_verified (test_documentation_sources.DocumentationSourcesTests.test_archived_originals_are_verified) ... ok\ntest_broken_targets_and_fragments_fail (test_documentation_sources.DocumentationSourcesTests.test_broken_targets_and_fragments_fail) ... ok\ntest_complete_fixture_passes (test_documentation_sources.DocumentationSourcesTests.test_complete_fixture_passes) ... ok\ntest_destinations_must_match_catalog_or_explain_override (test_documentation_sources.DocumentationSourcesTests.test_destinations_must_match_catalog_or_explain_override) ... ok\ntest_incomplete_comparisons_cannot_pass (test_documentation_sources.DocumentationSourcesTests.test_incomplete_comparisons_cannot_pass) ... ok\ntest_machine_local_and_sibling_targets_fail (test_documentation_sources.DocumentationSourcesTests.test_machine_local_and_sibling_targets_fail) ... ok\ntest_missing_and_duplicate_source_coverage_fail (test_documentation_sources.DocumentationSourcesTests.test_missing_and_duplicate_source_coverage_fail) ... ok\ntest_missing_baseline_fails (test_documentation_sources.DocumentationSourcesTests.test_missing_baseline_fails) ... ok\ntest_missing_coverage_file_fails_without_crashing (test_documentation_sources.DocumentationSourcesTests.test_missing_coverage_file_fails_without_crashing) ... ok\ntest_missing_draft_fails_without_crashing (test_documentation_sources.DocumentationSourcesTests.test_missing_draft_fails_without_crashing) ... ok\ntest_missing_human_coverage_fails (test_documentation_sources.DocumentationSourcesTests.test_missing_human_coverage_fails) ... ok\ntest_missing_or_modified_snapshot_fails (test_documentation_sources.DocumentationSourcesTests.test_missing_or_modified_snapshot_fails) ... ok\ntest_missing_supplementary_manifest_fails (test_documentation_sources.DocumentationSourcesTests.test_missing_supplementary_manifest_fails) ... ok\ntest_portable_links_follow_the_document_location (test_documentation_sources.DocumentationSourcesTests.test_portable_links_follow_the_document_location) ... ok\ntest_read_mode_and_evidence_are_required (test_documentation_sources.DocumentationSourcesTests.test_read_mode_and_evidence_are_required) ... ok\ntest_supplementary_bytes_are_verified (test_documentation_sources.DocumentationSourcesTests.test_supplementary_bytes_are_verified) ... ok\ntest_supplementary_path_must_stay_in_evidence_directory (test_documentation_sources.DocumentationSourcesTests.test_supplementary_path_must_stay_in_evidence_directory) ... ok\n\n----------------------------------------------------------------------\nRan 21 tests in 0.042s\n\nOK\n"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "py_compile",
+        "scripts/documentation_sources.py",
+        "scripts/check_documentation_protection.py",
+        "scripts/portable_documentation_links.py",
+        "scripts/render_documentation_coverage.py",
+        "tests/test_documentation_sources.py",
+        "tests/test_documentation_protection.py",
+        "src/data/eval_protocol.py",
+        "src/harness/encode/interface.py"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/adithya/projects/world-model/.venv/bin/python",
+        "-B",
+        "scripts/check_notebook_pairs.py"
+      ],
+      "returncode": 0,
+      "stdout": "Notebook pairs synchronized: 17\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "scripts/portable_documentation_links.py"
+      ],
+      "returncode": 0,
+      "stdout": "{\n  \"changed_drafts\": [],\n  \"applied\": false,\n  \"scope\": \"Research-source targets only. No source snapshot or protected worktree writes.\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "scripts/documentation_sources.py",
+        "verify"
+      ],
+      "returncode": 0,
+      "stdout": "{\n  \"status\": \"PASS\",\n  \"source_versions\": 72,\n  \"branch_refs\": 10,\n  \"local_links_checked\": 371,\n  \"supplementary_files_checked\": 3,\n  \"archive_records_checked\": 37,\n  \"draft_sha256\": {\n    \"TODO.md\": \"fa41f2fad5b7d5dc6729def8f06efb36e5ffbb944808aaa65efc0a83ffe6427d\",\n    \"EXPERIMENTS.md\": \"df50d6063aa7c846d0e4254f2822ad32e63e1f892d8a3c10180b6f1c311282bb\",\n    \"METHODS.md\": \"7aecc56f60f088d043b613a2ed2e75d749f292ad360375ad621fabc0d44813aa\",\n    \"NOTES_AND_INSIGHTS.md\": \"52683e0d1b5e02be2051ed7a488aeff37b880d6b6032037b595141242e88d695\"\n  },\n  \"errors\": [],\n  \"scope\": \"Frozen source, supplementary and archive bytes, checked coverage records, baseline identifier presence, and draft link portability. This is not scientific acceptance or a semantic completeness proof.\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "scripts/check_documentation_protection.py"
+      ],
+      "returncode": 0,
+      "stdout": "{\n  \"status\": \"UNCHANGED\",\n  \"branch_refs_match_capture\": true,\n  \"tracked_files_checked\": 799,\n  \"live_markdown_checks\": 115,\n  \"changes\": []\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--check",
+        "--",
+        ".",
+        ":!info/documentation_sources/received_reports/read-only-verification.md",
+        ":!info/documentation_sources/supplementary/r36-protocol-recovery.md",
+        ":!info/documentation_sources/versions/5c2b29fa7d10d546917b2240faee24aa8b8f6560172ab618bab3d4782e2bb2d9.md"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "verification": {
+    "status": "PASS",
+    "source_versions": 72,
+    "branch_refs": 10,
+    "local_links_checked": 371,
+    "supplementary_files_checked": 3,
+    "archive_records_checked": 37,
+    "draft_sha256": {
+      "TODO.md": "fa41f2fad5b7d5dc6729def8f06efb36e5ffbb944808aaa65efc0a83ffe6427d",
+      "EXPERIMENTS.md": "df50d6063aa7c846d0e4254f2822ad32e63e1f892d8a3c10180b6f1c311282bb",
+      "METHODS.md": "7aecc56f60f088d043b613a2ed2e75d749f292ad360375ad621fabc0d44813aa",
+      "NOTES_AND_INSIGHTS.md": "52683e0d1b5e02be2051ed7a488aeff37b880d6b6032037b595141242e88d695"
+    },
+    "errors": [],
+    "scope": "Frozen source, supplementary and archive bytes, checked coverage records, baseline identifier presence, and draft link portability. This is not scientific acceptance or a semantic completeness proof."
+  },
+  "archive_files": 37,
+  "archive_bytes_unchanged": true,
+  "library_logic_checks": [
+    {
+      "path": "src/data/eval_protocol.py",
+      "non_docstring_ast_unchanged": true
+    },
+    {
+      "path": "src/harness/encode/interface.py",
+      "non_docstring_ast_unchanged": true
+    }
+  ],
+  "notebook_checks": [
+    {
+      "path": "kaggle/hero_run.ipynb",
+      "executable_cells_unchanged": true,
+      "cell_ids_unchanged": true
+    },
+    {
+      "path": "kaggle/kernel-lora/lora_leg.ipynb",
+      "executable_cells_unchanged": true,
+      "cell_ids_unchanged": true
+    }
+  ],
+  "staged_files_before_this_check_record": [
+    ".agents/skills/verify-world-model-cli/SKILL.md",
+    ".agents/skills/verify-world-model-cli/features/README.md",
+    ".agents/skills/verify-world-model-cli/features/anatomy-manifest.md",
+    ".agents/skills/verify-world-model-cli/features/checkpoint-inspection.md",
+    ".agents/skills/verify-world-model-cli/features/list-capabilities.md",
+    "AGENTS.md",
+    "README.md",
+    "info/EXPERIMENTS.md",
+    "info/METHODS.md",
+    "info/NOTES_AND_INSIGHTS.md",
+    "info/README.md",
+    "info/SOURCE_COVERAGE.md",
+    "info/TODO.md",
+    "info/archive/2026-10-12/ASTRA_PROBE.md",
+    "info/archive/2026-10-12/K3_PROBE.md",
+    "info/archive/2026-10-12/PROPOSAL.md",
+    "info/archive/2026-10-12/README.md",
+    "info/archive/2026-10-12/TODO.md",
+    "info/archive/2026-10-12/info/ablations.md",
+    "info/archive/2026-10-12/info/action_conditioned_representation_brief.md",
+    "info/archive/2026-10-12/info/anatomy_harmonization.md",
+    "info/archive/2026-10-12/info/clean_rescues.md",
+    "info/archive/2026-10-12/info/decisions.md",
+    "info/archive/2026-10-12/info/directions.md",
+    "info/archive/2026-10-12/info/eval_protocol.md",
+    "info/archive/2026-10-12/info/explainer.html",
+    "info/archive/2026-10-12/info/external_supervision_audit.md",
+    "info/archive/2026-10-12/info/frontier_lumiere.md",
+    "info/archive/2026-10-12/info/harness_v2.md",
+    "info/archive/2026-10-12/info/methodology_validity.md",
+    "info/archive/2026-10-12/info/methodology_validity_decisions.tsv",
+    "info/archive/2026-10-12/info/methodology_validity_plan.md",
+    "info/archive/2026-10-12/info/notes.md",
+    "info/archive/2026-10-12/info/overall_architecture.drawio",
+    "info/archive/2026-10-12/info/overall_architecture_preview.png",
+    "info/archive/2026-10-12/info/p0_audit.md",
+    "info/archive/2026-10-12/info/p0_refresh.md",
+    "info/archive/2026-10-12/info/p1_anatomy_baselines.md",
+    "info/archive/2026-10-12/info/p1_baselines.md",
+    "info/archive/2026-10-12/info/p1_sota_audit.md",
+    "info/archive/2026-10-12/info/p2_execution.md",
+    "info/archive/2026-10-12/info/p2_lesion_architecture.md",
+    "info/archive/2026-10-12/info/p2_seed_sensitivity.md",
+    "info/archive/2026-10-12/info/pilot.md",
+    "info/archive/2026-10-12/info/presentation/23UG083 Review 2 Presentation - slide 3 revised.pptx",
+    "info/archive/2026-10-12/info/presentation/23UG083 Review 2 Presentation - slides 3 and 5 revised.pptx",
+    "info/archive/2026-10-12/info/presentation/23UG083 Review 2 Presentation.pptx",
+    "info/archive/2026-10-12/info/r36_delta_representation_handoff.md",
+    "info/archive/2026-10-12/info/r36_delta_representation_results.md",
+    "info/archive/2026-10-12/info/results.md",
+    "info/archive/2026-10-12/info/stale_code_audit.md",
+    "info/archive/2026-10-12/manifest.json",
+    "info/documentation_sources/catalog.json",
+    "info/documentation_sources/checkpoint.md",
+    "info/documentation_sources/comparison_contract.md",
+    "info/documentation_sources/comparisons/contracts.json",
+    "info/documentation_sources/comparisons/experiments.json",
+    "info/documentation_sources/comparisons/notes.json",
+    "info/documentation_sources/coverage.json",
+    "info/documentation_sources/decisions.tsv",
+    "info/documentation_sources/documentation_baseline_status.txt",
+    "info/documentation_sources/final_checks.json",
+    "info/documentation_sources/initial_main_status.txt",
+    "info/documentation_sources/plan.md",
+    "info/documentation_sources/pre_review_checks.json",
+    "info/documentation_sources/promotion/README.md",
+    "info/documentation_sources/protection_baseline.json",
+    "info/documentation_sources/protection_check.json",
+    "info/documentation_sources/received_reports/contracts.json",
+    "info/documentation_sources/received_reports/experiments.json",
+    "info/documentation_sources/received_reports/manifest.json",
+    "info/documentation_sources/received_reports/notes.json",
+    "info/documentation_sources/received_reports/portable-coverage.md",
+    "info/documentation_sources/received_reports/post-integration.md",
+    "info/documentation_sources/received_reports/read-only-verification.md",
+    "info/documentation_sources/review_handoff.json",
+    "info/documentation_sources/review_summary.md",
+    "info/documentation_sources/slices.json",
+    "info/documentation_sources/supplementary/manifest.json",
+    "info/documentation_sources/supplementary/r36-protocol-recovery.md",
+    "info/documentation_sources/supplementary/r36-runtime-snapshot.json",
+    "info/documentation_sources/supplementary/worktree-creation.json",
+    "info/documentation_sources/verification.json",
+    "info/documentation_sources/verifier_tests.json",
+    "info/documentation_sources/versions/13dbe34373467fe847c4ed3ff544c7228b092570be6b352a2e19cc4c9d3ffa45.md",
+    "info/documentation_sources/versions/224e30ddf098b5d0f70a6a8edb7ebda7f670fa26599a21726257309770fca964.md",
+    "info/documentation_sources/versions/2b29cb9bf2068cc77c42960ed21f1fbcdb039dda4f0ffa32a3c17992bb9bdada.md",
+    "info/documentation_sources/versions/2b7293c884e0e0aa9f1db178d13f55497d584cd7060c68c022436d47330bb63c.md",
+    "info/documentation_sources/versions/2be6e4e222c5e3e4235dbe54e9d9d941ff0ad06bacd999a8f980d4e80fdd5071.md",
+    "info/documentation_sources/versions/2ddad8d48f3ebb0e89c6855d2c8da8e2762d8291664d49d38faab77851d72549.md",
+    "info/documentation_sources/versions/3717abf358c955772ee5eb3571c4aa0dcdb5c97637d99899a255927d21eeee3e.md",
+    "info/documentation_sources/versions/3757850c1f2c602e1bc025675a52347d09c66700f8fa917279073550845f32f3.md",
+    "info/documentation_sources/versions/376ef33c6235a3b4ac055340d2447d5f33d1b54abe2504c525a2e2330ee88904.md",
+    "info/documentation_sources/versions/3e07b40bdd3849468d6b4c5f52a2d997fb891e3497ccd3d7b23b43aff4980007.md",
+    "info/documentation_sources/versions/4152bf66cc81cd99bb7970ddaf52cffcdff59756fa1baf7a95e1cd349ef34352.md",
+    "info/documentation_sources/versions/48f54a5c4241c65c1f3c023d0261f9a8398edb18a3b1b642ee6c534fd659e84a.md",
+    "info/documentation_sources/versions/4a7defbca15a2ed95f988863a24ad44465210928a5e89796c19ee12e4ab4c794.md",
+    "info/documentation_sources/versions/4ae80f2d62b0a16ac6644e2b2faabd95d6fc40d94d8e0400cb886cd59216313b.md",
+    "info/documentation_sources/versions/4be6ffde8ccb321f263f3a3f91036667126a719401aa15b3a856b183208c6b47.md",
+    "info/documentation_sources/versions/4c077cc0f084f2d14b48b4cf366088ff7c0dc11a6ed3bf8b5678cbea901e141d.md",
+    "info/documentation_sources/versions/4d997fd0cbc3cca6862a1a6eb333bde54fa5f7a6c416cfbed5390983c7905797.md",
+    "info/documentation_sources/versions/4f80203aeaed182a3e106b44f5d066b213b65387a143d3979710282be6263077.md",
+    "info/documentation_sources/versions/51d6523f0da4b3d8745af10b79318fd684aba1fd9b47cc7d321e30df79984551.md",
+    "info/documentation_sources/versions/5c2b29fa7d10d546917b2240faee24aa8b8f6560172ab618bab3d4782e2bb2d9.md",
+    "info/documentation_sources/versions/5d8b1b11c9e6dbb0be28d861a5ace37a570c1230fcc4632746b40426b3b3dce5.md",
+    "info/documentation_sources/versions/5e5409445bd5d258f7b1bb090aaf316ff56241007f54f8173c1d180ba200bf3a.md",
+    "info/documentation_sources/versions/5fe9df82e326552d35667a3b92cdd7977504ade9f3ceebb9298a8f41d0dbdf19.md",
+    "info/documentation_sources/versions/636f0274c36efa3cee145c530acebff689d5961eff995269ecc3bc91d8c6d89e.md",
+    "info/documentation_sources/versions/64414e220c402593df722fe70a71361a97c3d669b349c261d5fc281aab938602.md",
+    "info/documentation_sources/versions/6b7d9def32bbabf5f63dbac2126bb7b066d7b4606e54ebad6f56cd494f569d5f.md",
+    "info/documentation_sources/versions/6c28bb95dc89e05742f41ae69a61f1bcbdd5f8d7a0eb3857055b0b2989a5ce9c.md",
+    "info/documentation_sources/versions/6e710be8c33b05d77bf8f13b415b64028fcc13dc03d71defb304e6a7631c78f4.md",
+    "info/documentation_sources/versions/768fdfa0a9be4dc76e99fcef9ff971e26252d672e82b08267f5e9ea157ced0f3.md",
+    "info/documentation_sources/versions/775110c703c7f702ccf2c1dfc9e2504eb9fdb5303b8d5f2cfbbe3619a7cf6a12.md",
+    "info/documentation_sources/versions/77de3ea25aa45d894d9577a96b69195912e6036883dace704af07b89de07843b.md",
+    "info/documentation_sources/versions/7873b012053d04798d82c190a754e9708031bedff4ce9cf4d2abb168553f4386.md",
+    "info/documentation_sources/versions/7bc218e8ef5fd2fdb22bc0ed7f5bab72c4b1d099f1f7f2c3145f6c3bca6f3472.md",
+    "info/documentation_sources/versions/7d63fd3f44c1ed975ea9d1b860b597592902c503fbb3124145a01db17ee996dc.md",
+    "info/documentation_sources/versions/7d6adbe335852289339963e40a758990e325c71fa6075e037037b4e613747cb5.md",
+    "info/documentation_sources/versions/7fb4e40c27dada7024a7cee70887a036cb98780d3b717cc25cccf3181d1a9fde.md",
+    "info/documentation_sources/versions/883e1ec8b8bcf46a3f3195d03800d90f91ddfdbb7f91abd4fdf628f433be97e5.md",
+    "info/documentation_sources/versions/89605d7963ba3e0f942e5feb416846a32faea82a277f1dbe008b0cd0a6b86068.md",
+    "info/documentation_sources/versions/8fc1116f80667885774a5ce6a8fb9ec40f1e360d1f87867fefb81baf01118ab6.md",
+    "info/documentation_sources/versions/904659c6bdcfeff428d0bde5d406be42fdc4d004dc5c915d13c335a049add7a3.md",
+    "info/documentation_sources/versions/919cb93f22b6b82b78558c3fa37786b5ea163f3911a7d9c5d8d0ad33bff9df80.md",
+    "info/documentation_sources/versions/91f9eb3a5aa50c35bb9d8d79dbcca3e76e61bc3c93b814a08ae82b0a34ca4d8d.md",
+    "info/documentation_sources/versions/9392195ed8cf1ac4fea44e0347230844278803dbd3b21318ca48a6c7c0b2f841.md",
+    "info/documentation_sources/versions/97afb43550bc7feac110eefa3277d8b8485e957bdec8dff6f9897e042851fedb.md",
+    "info/documentation_sources/versions/9c693cb9fda31211831d08c8004ace96ab9b629066bf6d4e4fd25989829ecc50.md",
+    "info/documentation_sources/versions/9ea08b90cf4971fb7b85d4b150ef1317994f42aa2fca2f1c9c0f5de5424e38e4.md",
+    "info/documentation_sources/versions/a1f3b50120348c22bd0d02de180df52e4d798b9d5fa763e0c27a7e8872bb22a5.md",
+    "info/documentation_sources/versions/ad235fe7fd9dbc123dbc829a8242d3c11ce6427b241808ba661ac7ed0fb1db87.md",
+    "info/documentation_sources/versions/b72ceb2da7c2ba695a4174a43643847c9fb27244c1785ff1a6acb5c898f2fb29.md",
+    "info/documentation_sources/versions/b8c596145365e19fbea3ed86218b7b7d7a3131e0be6e60915409d0eddcfddf31.md",
+    "info/documentation_sources/versions/bcac72661517b6aef6743244ebb1c9c459188acdee1c1dd526b495ee2b33bb0a.md",
+    "info/documentation_sources/versions/bd305198a22112d90d28cf638536c3638ff95806a6aeff087655acb8dea287d1.md",
+    "info/documentation_sources/versions/bffc0ec9c04e09138faeb31fab3e9c7d4d22e7e7f52ea345904d71e041dbb45b.md",
+    "info/documentation_sources/versions/c71f6ff4fcf332b74565777ff3ef8fc33ba5368829692c73704a24211dc42116.md",
+    "info/documentation_sources/versions/c7aeeea2bff31ee76a1190a69a05ca48ec78fc476e89d3afc345d546074c3f0d.md",
+    "info/documentation_sources/versions/c7c9fba4178609946f8fd4ce8b90af08b6a88392955d7f2e198aa2e02b14cc57.md",
+    "info/documentation_sources/versions/cbc9c0e336dab8f4b055c9a0897c0db4b7bbce920ab328701445cf299ba8984d.md",
+    "info/documentation_sources/versions/d8e7bf20a34e6ee1186140c96bb090ed2df0a56f65f11ce140fe05acc4123436.md",
+    "info/documentation_sources/versions/da674d536622373c6db154365a73c67d5fffcc9646a10713641169a0b5cb2130.md",
+    "info/documentation_sources/versions/e222fabaeb05f4d166a3d220a87398aa55b60e1697d479706b6e87d6bab71212.md",
+    "info/documentation_sources/versions/e29b2b676b2a9a2db5406419ce3e1ee0868b4548c26460bcca0feacaee462cdf.md",
+    "info/documentation_sources/versions/e3c486ef9cc77afcc1978e53ce4495ef1051a5b8d22cf31b9d627c72d4db029e.md",
+    "info/documentation_sources/versions/e45ccd301fe0a119a2310f90c2c6f9fa43fa262af7c5ddc32efdcf775779b1b3.md",
+    "info/documentation_sources/versions/e82ede5e41b034398b599f1f141ffa04335d47ad7d8e66761540a71ce2f72aaa.md",
+    "info/documentation_sources/versions/eaca551880e0a9db5c4bdc7785e135675cd518ebfcd361d5aa482beca4f37dce.md",
+    "info/documentation_sources/versions/eade325e60cbeeb92dc5f6570520d8f502a519e846309ef5803b2bf7e1a2d094.md",
+    "info/documentation_sources/versions/eca8302b4c0da4df15f1a8918164254666650e647632c098c025513f6ebe5061.md",
+    "info/documentation_sources/versions/ef50d853844e9c04d0dc4f8dc7b8fcdbdf1c9cf3234b5dd5dfc0951a3a58db18.md",
+    "info/documentation_sources/versions/f33b11d3ab804d4b9bef473c0336e51db5afef9b8a0a8b8740e7d0cbbf38f105.md",
+    "info/documentation_sources/versions/f3dad868d43b3aa2bf5f7913b3dfa2872cdf87a65fd9648b1eb9932e3f750855.md",
+    "info/documentation_sources/versions/f56dab2c73a11d29aea114c22e1daeabee068c877d471b684c0b8aa66a971dfc.md",
+    "info/documentation_sources/versions/f9519fae5516ba946acba78908c36f41e9d095aa536a4924938820c9f4f976e7.md",
+    "info/documentation_sources/writing_revision/README.md",
+    "info/documentation_sources/writing_revision/baseline.json",
+    "info/documentation_sources/writing_revision/before/EXPERIMENTS.md",
+    "info/documentation_sources/writing_revision/before/METHODS.md",
+    "info/documentation_sources/writing_revision/before/NOTES_AND_INSIGHTS.md",
+    "info/documentation_sources/writing_revision/before/TODO.md",
+    "info/documentation_sources/writing_revision/checks.json",
+    "info/preprocessing.md",
+    "info/research_guardrails.md",
+    "kaggle/hero_run.ipynb",
+    "kaggle/hero_run.py",
+    "kaggle/kernel-lora/lora_leg.ipynb",
+    "kaggle/kernel-lora/lora_leg.py",
+    "scripts/README.md",
+    "scripts/check_documentation_protection.py",
+    "scripts/documentation_sources.py",
+    "scripts/portable_documentation_links.py",
+    "scripts/render_documentation_coverage.py",
+    "src/data/eval_protocol.py",
+    "src/harness/encode/interface.py",
+    "src/preprocessing/reprocess_sailor.md",
+    "tests/test_documentation_protection.py",
+    "tests/test_documentation_sources.py"
+  ],
+  "forbidden_staged_paths": [],
+  "whitespace_exceptions": [
+    {
+      "path": "info/documentation_sources/received_reports/read-only-verification.md",
+      "sha256": "a15e76a022ec132305ce856708764a205898b6e63a0958dbe92ac9505f8b08f7",
+      "reason": "Unchanged byte-exact received evidence or frozen source; Markdown hard breaks or original EOF whitespace retained."
+    },
+    {
+      "path": "info/documentation_sources/supplementary/r36-protocol-recovery.md",
+      "sha256": "3e2cdf0b91e615e76d728be9564150d3c6862846e6f43b7dc85f4453cc7412cc",
+      "reason": "Unchanged byte-exact received evidence or frozen source; Markdown hard breaks or original EOF whitespace retained."
+    },
+    {
+      "path": "info/documentation_sources/versions/5c2b29fa7d10d546917b2240faee24aa8b8f6560172ab618bab3d4782e2bb2d9.md",
+      "sha256": "5c2b29fa7d10d546917b2240faee24aa8b8f6560172ab618bab3d4782e2bb2d9",
+      "reason": "Unchanged byte-exact received evidence or frozen source; Markdown hard breaks or original EOF whitespace retained."
+    }
+  ],
+  "protection_status": "UNCHANGED",
+  "protection_recorded_utc": "2026-10-12T17:28:49.091907+00:00",
+  "scope": "Documentation migration, exact archive preservation, and structural checks only. Prior independent review covers earlier hashes, not this migration. Historical embedded archive links and external URLs are not repaired or network-verified. No figure bytes or plot metrics changed.",
+  "operating_and_index_link_checks": [
+    {
+      "path": "README.md",
+      "parsed_links": 11,
+      "errors": []
+    },
+    {
+      "path": "AGENTS.md",
+      "parsed_links": 1,
+      "errors": []
+    },
+    {
+      "path": "scripts/README.md",
+      "parsed_links": 1,
+      "errors": []
+    },
+    {
+      "path": "info/README.md",
+      "parsed_links": 15,
+      "errors": []
+    },
+    {
+      "path": "info/research_guardrails.md",
+      "parsed_links": 0,
+      "errors": []
+    },
+    {
+      "path": "info/preprocessing.md",
+      "parsed_links": 0,
+      "errors": []
+    },
+    {
+      "path": "src/preprocessing/reprocess_sailor.md",
+      "parsed_links": 0,
+      "errors": []
+    },
+    {
+      "path": "info/archive/2026-10-12/README.md",
+      "parsed_links": 6,
+      "errors": []
+    },
+    {
+      "path": "info/documentation_sources/checkpoint.md",
+      "parsed_links": 8,
+      "errors": []
+    },
+    {
+      "path": "info/documentation_sources/promotion/README.md",
+      "parsed_links": 2,
+      "errors": []
+    }
+  ]
+}

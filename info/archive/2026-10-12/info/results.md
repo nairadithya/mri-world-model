@@ -1,0 +1,605 @@
+# Results: JEPA world model over longitudinal glioma MRI
+
+**Status (2026-09-06):** Training is finished. The final model is the full-cohort
+champion from the first full-scale training leg (best validation loss 0.0081 at
+epoch ~7–8, held-out test loss 0.0074). Throughout, a run must (a) lower loss,
+(b) keep collapse monitors healthy, and (c) beat the persistence baseline. All
+follow-up training attempts failed that contract, so no further gradient steps
+are planned. Remaining work is evaluation and writeup.
+
+**Update (2026-09-12):** the evaluation was re-based on a locked, leak-free
+protocol (`info/eval_protocol.md`; A25) and the downstream push was run through
+the SOTA plan. Every representation-side lever came back negative — interface
+variants (A26), temporal task-training (A27), LoRA finetuning (A28), and three
+from-scratch supervised CNN comparators (A29–A31) — while the frozen JEPA
+trajectory representation beats them all in-domain and cross-site. The 0.33 CV
+and 0.45 single-split numbers in this document are superseded by the locked
+numbers; see "Locked protocol and the SOTA push" below.
+
+This document is the plain-language record of what was trained, what worked,
+what failed, and what each check taught us. The working notes with internal
+reference IDs live in `info/`; this file stands alone and does not use those IDs.
+
+## Current validity reset (2026-09-14)
+
+The historical tables below remain useful development history, but they are
+not all current citable results. K3/A23/A24 corrected the SAILOR phantom-input
+and mixed-space issues: same-space SAILOR dynamics lose to persistence by
+**7.1–10.5×**, while the in-domain gate is pooled-nonsignificant and wins only
+on the selected test patient-uniform aggregation (**41/91** patient wins
+overall). The old “82/91” and “~5×” headlines must not be reused.
+
+ASTRA also split the program into distinct tasks: observed-scan response
+assessment, past-only future forecasting, future-anatomy forecasting, and
+surprise/change detection. Published paired-scan assessment scores are not
+thresholds for the past-only forecast task. The corrected AUC implementation
+currently gives LUMIERE persistence-error **0.4574** and JEPA-error **0.4973**
+(on legacy cached rows); old 0.77/0.87 surprise values are withdrawn pending
+current-schema re-runs. The historical final split is development evidence,
+not a new holdout. See `info/p0_audit.md`, `info/p1_baselines.md`, and
+`info/eval_protocol.md` for the active status and blocked items.
+
+No broad JEPA training sweep is planned before the survival-free row/label
+contract, prospective baseline suite, and a matched assessment benchmark pass.
+
+---
+
+## Glossary
+
+- **JEPA (Joint-Embedding Predictive Architecture):** instead of generating the
+  next MRI scan pixel-by-pixel, the model predicts the *learned representation*
+  (a compact numeric summary vector) of the next visit. The loss measures how
+  close the prediction is to the true next-visit representation.
+- **Latent / embedding / representation:** used interchangeably here — the
+  numeric vector the network computes to summarize a scan or a patient history.
+- **Cosine loss:** `1 − cosine similarity` between predicted and true vectors.
+  It is 0 for a perfect prediction and ~1.0 for random guessing. Because vectors
+  are normalized first, the model cannot cheat by shrinking everything to zero.
+- **Persistence baseline:** the trivial predictor "next visit = last visit."
+  Any real dynamics model must beat it; otherwise it has learned nothing beyond
+  "nothing changes." This is the single most important gate in the project.
+- **Collapse and its monitors:** a JEPA model can cheat by mapping every scan to
+  the same constant vector (loss looks great, representation is useless). Two
+  monitors detect this: **target std** (spread of the target representations —
+  healthy when well above 0) and **effective rank** (how many independent
+  directions the representations use — healthy when above 1). A falling loss
+  with sick monitors proves nothing.
+- **EMA target encoder:** the "true next-visit representation" comes from a twin
+  copy of the image encoder whose weights trail the main network via an
+  exponential moving average, with no gradients flowing through it. This
+  stop-gradient twin is what prevents collapse.
+- **BRAINIAC:** a published 3D vision transformer pretrained on ~32,000 brain
+  MRIs. It reads one MRI sequence per forward pass and outputs a 768-number
+  summary. We use it as our scan reader.
+- **LoRA (low-rank adapters):** small trainable matrices added to a frozen
+  backbone, so only ~1.2M of 86M parameters change. This keeps the 32,000-scan
+  prior intact while letting the model learn change-sensitivity.
+- **Prefix-wise targets:** from a patient with visits 1..T, every prefix
+  (visits 1..t) predicts visit t+1. One patient yields T−1 training targets
+  instead of one — a ~4–6× multiplier on short sequences.
+- **RANO:** the expert rating of tumour response at a visit: PD (progressive
+  disease — tumour grew or new lesions), SD (stable disease), PR (partial
+  response — shrank substantially), CR (complete response — disappeared), plus
+  surgical states Pre-Op / Post-Op that are not response ratings.
+- **Macro-F1:** classification score that averages performance equally across
+  classes. Required here because PD dominates (~64% of LUMIERE labels); plain
+  accuracy rewards always guessing PD (a 65% "majority" floor that means nothing).
+- **Cross-validation (CV), patient-wise:** split patients (never visits) into 5
+  folds, train and score 5 times, report mean ± spread. The only honest headline
+  on 49 test visits, where a single lucky split can inflate scores.
+- **Ridge regression:** linear probing with a penalty that keeps weights small.
+  Mandatory when fitting ~1,152 features on ~450 samples; plain least squares
+  explodes (we measured R² ≈ −100).
+- **Surprise (prediction error):** the model's error predicting the next visit.
+  Large surprise means "this visit defied the patient's predicted trajectory" —
+  a candidate early-warning signal for progression.
+- **MNI registration / skull-stripping / 96³:** standard preprocessing that puts
+  every scan in the same coordinate frame and size the backbone expects.
+- **AUC:** for a pair of visits where one progresses and one does not, the
+  probability the model assigns higher surprise to the progressing one
+  (0.5 = chance, 1.0 = perfect).
+- **R²:** fraction of volume variance a probe explains (0 = no better than
+  predicting the mean, negative = worse).
+- **Frozen probe:** the encoder weights are locked and only a small readout
+  (linear layer or 2-layer MLP) trains on top — this tests what the
+  representation already knows, without task-specific tuning.
+- **Drift:** cosine distance between two representations — consecutive visits,
+  or a real scan vs noise. The ruler for "is there signal here."
+- **GRU:** a small recurrent network used as a classical dynamics baseline; the
+  transformer must beat it to justify its complexity.
+- **MLP:** a small feed-forward network (one or two layers) used for clinical
+  encoders, the predictor, and probe readouts.
+- **Champion / best.pt / last.pt:** after every epoch the trainer saves both
+  the current weights (`last.pt`) and the lowest-validation weights seen so far
+  (`best.pt`). The champion is the `best.pt` kept as the final model — never
+  the last, which may hold overfit tail-epoch weights.
+
+## Data and model in one paragraph
+
+Training corpus: **LUMIERE**, 91 glioblastoma patients with longitudinal MRI
+during chemo-radiotherapy and variable follow-up intervals (four sequences per
+visit: CT1, T1, T2, FLAIR), 616 expert RANO ratings, demographics, and
+acquisition parameters. Held-out evaluation:
+**SAILOR**, 27 high-grade-glioma patients with 3–19 timepoints each, richer
+annotations (treatment status, expert plus automated tissue masks, survival).
+The model: BRAINIAC reads each available sequence; per-visit latents average
+over present modalities; clinical measurements pass through small MLPs; the two
+branches are normalized and concatenated; a temporal transformer with
+visit-gap (time-delta) encodings summarizes history; a predictor forecasts the
+next visit's representation, trained with cosine loss against the EMA target.
+Splits are patient-level (65 train / 13 validation / 13 test) — no patient ever
+spans splits.
+
+---
+
+## Scorecard
+
+Historical headline per question. "Hero split" means the single fixed
+13-patient test split; "CV" means 5-fold patient-wise cross-validation. The
+current validity reset above overrides any legacy number not backed by a
+current-schema manifest.
+
+| Question | Honest result | Detail and caveat |
+|---|---|---|
+| Does the dynamics model beat persistence in-domain? | **Not as a general claim: test pooled is non-significant; only the selected test patient-uniform cell is significant** | Same-space A24: test pooled 0.0070 vs 0.0088, paired difference −0.0017 [−0.0072,+0.0012]; test patient-uniform 0.0074 vs 0.0160, difference −0.0086 [−0.0182,−0.0009]. Train pooled is significantly worse; overall pooled is 0.0080 vs 0.0069 and patient wins are 41/91. |
+| Does the frozen representation encode progression status? | **Modestly in legacy development data: 0.309 within-unseen CV, 0.408 transfer** | These are A25 locked-protocol development numbers, not a final prospective claim: the old cache includes the pre-survival-free schema and the historical final slice is no longer untouched. The readout seed/width also spans roughly 0.34–0.45. |
+ | Does prediction surprise anticipate progression? | **Unresolved after metric repair; legacy surprise AUCs are withdrawn** | Corrected legacy-cache AUCs are persistence 0.4574 and JEPA 0.4973 for next-visit PD. Lead-time and SAILOR surprise require current-schema re-runs. Do not call contemporaneous surprise early warning. |
+| Does the latent encode tumour size? | **Weakly: readout R² ≈ 0.15 (mean error 1.26 vs 1.38 for predicting the mean, log-mm³); forecasting next-visit size loses to persistence (1.52 vs 1.07, forecast R² ≈ 0.04)** | Tumour volumes come from automated (not expert) masks. Size signal exists but is diffuse; volumes evolve slowly, so "same as last visit" wins. |
+| Do dynamics transfer across site/scanner/protocol? | **No for same-space latent dynamics; readout transfer is developmental evidence only** | A23/A24 same-space SAILOR ratios are 7.1× (derivatives), 10.5× (skull-in), and 8.95× (skull-out). A23's rebuilt derivatives transfer readout is F1 0.357, but the SAILOR codebook is empirical and the old surprise numbers require corrected current-schema re-runs. The mechanism is sharper than “scale”: SAILOR prediction norms are 4.92× true norms with direction cosine 0.105; a scalar-gain diagnostic nearly closes the error gap, but it is not a deployable forecast. |
+
+Disease-mismatch check (is SAILOR a different disease?): no, mostly. SAILOR
+is 23 glioblastomas + 4 grade-III gliomas (Hovden's own slides); LUMIERE is
+91 glioblastomas, same Stupp protocol both, median overall survival nearly
+identical (16.7 vs 19 months). Grade mix is exonerated as the cause:
+per-subject persistence error is uniformly tiny (~0.002–0.005) across all 27
+SAILOR subjects regardless of survival — 4-month and 91-month survivors
+alike, long-OS mean only 2× below short-OS, both an order of magnitude under
+JEPA's 0.03. The real disease-related difference is *phase*, not entity:
+LUMIERE densely samples the volatile early on-treatment window (weekly,
+PD 64%); SAILOR sparsely spans the full course including long stable
+maintenance stretches (SD 48%). Same disease, different chapter — plus one
+unverified suspect: SAILOR's PLHM longitudinal intensity normalization is
+designed to make visits comparable and may itself dampen visit-to-visit
+change signal. |
+| Did task-specific fine-tuning help? | **No: CV F1 unchanged (0.328 vs 0.334) while dynamics error grew ~2.5× (0.0081 → 0.0191)** | The joint RANO fine-tune tilted the encoder toward the classifier without adding generalizable signal. Champion weights stand untouched. |
+
+Reference numbers for the field: published 4-class RANO prediction on similar
+data peaks at macro-F1 0.50 (Tikhonov, hybrid network + volumetry + gradient
+boosting, patient-wise CV; TRACE 0.477). Matoso's "0.51" is *balanced
+accuracy*, not macro-F1 (median F1 0.13), so it is not comparable — see
+`frontier_lumiere.md`. On the locked protocol our frozen-encoder readout is
+0.309 within-unseen CV and 0.408 transfer to the 26 (A25) — no task training,
+no volumetry — a real but modest signal, best read as the price of
+task-blindness rather than a failure; the readout seed alone spans 0.34–0.45
+(A27).
+
+Fix attempt (gap-conditioned head applied cross-site, zero training,
+`scripts/sailor_gap_probe.py`): the LUMIERE-trained gap head beats the
+champion 1-step head on SAILOR in every gap bin (0-21d: 0.0245 vs 0.0284;
+61-180d: 0.0220 vs 0.0283 — ~15–20% better, and its error no longer sits
+flat). But it still loses to persistence ~5–8× everywhere (0.0049/0.0026/
+0.0035/0.0047). Time-awareness was indeed part of the failure — and fixing
+it isn't enough. The residual is feature-level shift: SAILOR latents live in
+a quieter neighborhood than LUMIERE dynamics expect. Per the pre-registered
+reading this localizes the failure below the head and ends spending on it:
+remaining options (site shrinkage, adapters on N=27) concede the transfer
+claim rather than rescue it.
+
+---
+
+## The training story, run by run
+
+### Run 1 — CPU pilot on 5 patients, corrupt weights (invalid, discarded)
+
+Setup: 5 most-imaged patients, 4 train / 1 validation, 5 epochs, learning rate
+1e-4, batch size 1, CPU. The vision backbone was loaded from a community
+re-upload of the weights rather than the authors' official file.
+
+What happened: validation loss fell 0.37 → 0.03 — while both collapse monitors
+read sick the entire time (target std 0.0024, rank ~1.1). Diagnosis (confirmed
+by the weight audit below): the re-uploaded weights output nearly identical
+vectors for MRI, pure noise, and all-zeros input while internal activations
+blew up ~150×. Key names matched 137/137, so the loader reported success; the
+corruption was silent. The heads then learned the only thing downstream of
+constant features — a constant — and the loss "improved" toward predicting it.
+
+Lesson, now a repo rule: **key-name matching does not validate a weight port.**
+Any third-party checkpoint must pass behavioral probes (real scan vs noise must
+produce clearly different outputs) before training. Checkpoints from this run
+were deleted.
+
+### Run 2 — CPU pilot on 5 patients, official weights (learning proven, gate not met)
+
+Same protocol with the authors' official weights. Pre-training audit showed
+small but real longitudinal signal (mean consecutive-visit drift 0.0046).
+Validation loss fell 0.43 → 0.056 with healthy monitors throughout (std 0.079,
+rank 2.2).
+
+Verdict against the triple gate from the top of this file: (a) loss 0.43 → 0.056,
+pass; (b) monitors healthy (std 0.079, rank 2.2), pass; (c) beats persistence,
+fail as expected on 4 training patients (trained 0.0576 vs persistence 0.0043
+on near-static targets). The loop provably learns real dynamics on real
+preprocessed data; scale is the gate, not a redesign.
+
+### Run 3 — Extended 25-epoch pilot, same 5 patients (epochs are spent)
+
+Question: does the Run-2 gap close with more epochs? Best validation 0.0093,
+plateauing from epoch ~13 with healthy monitors. Per-patient JEPA vs persistence:
+first win (patient 073: 0.0042 vs 0.0045) and one near-tie (031: 0.0051 vs
+0.0043), but the mean (0.0110 vs 0.0043) still loses — and the single held-out
+patient (029: 0.0262 vs 0.0040) is the worst by far: the model fit
+training-patient dynamics, not general ones.
+
+Verdict: the gap narrowed ~13× → ~2.5×, but epochs stopped helping at ~13.
+The remaining lever is more patients, i.e. the full-cohort GPU run.
+
+### Run 4 — Full-cohort first leg on a free Kaggle GPU (the champion)
+
+Setup: all 91 patients (65 train / 13 validation / 13 test), batch size 1, 30
+epochs, learning rate 1e-4 with 5-epoch warmup (config default), official
+weights, mixed precision (FP16). Preprocessing (2,051 volumes, 0 failures —
+2,487 final sequence files across all 91 patients) had been completed locally
+beforehand. We keep the lowest-validation checkpoint (`best.pt`); `last.pt`
+(final epoch) is retained only for resume mechanics.
+
+Trajectory: validation 0.0830 → 0.0089 (epoch 5) → **0.0081 (epoch ~7–8)** →
+0.0129 → 0.0316 → 0.0510 → 0.0667 → 0.0704 (epoch 30). U-shaped: the optimum
+sits at epoch ~7–8, then steady overfit climb while training loss holds flat.
+Monitors healthy throughout (std 0.085→0.29, rank 1.7→2.5 — drift, not
+collapse). Held-out test scorecard on the best checkpoint: loss 0.0074.
+
+Evaluation over all 91 patients: mean predicted error 0.0081 vs persistence
+0.0218 (~2.7×), wins on 82/91, biggest on the most dynamic patients. This is
+the first clean beat of the mandatory baseline, with exactly the right pattern
+(described in the scorecard). **This checkpoint is the final model.**
+
+Practical rule established here: always resume from the best checkpoint, never
+the last — the last holds overfit tail weights.
+
+### Run 5 — Resume champion at 5× lower learning rate (the optimum is not holdable)
+
+Setup: resume the 0.0081 champion with fresh optimizer state, flat learning
+rate 2e-5, 30 more epochs — against Run 4's decaying 1e-4 schedule. Validation
+rose monotonically 0.0089 → 0.031 plateau; the champion was never touched.
+Monitors stayed healthy — drift, not collapse.
+
+Verdict: two schedules (decaying 1e-4 tail in Run 4, flat 2e-5 here), same
+direction. Continued gradient steps cannot hold or improve the epoch-7–8 basin —
+drift starts in epoch 1 even at barely-above-zero learning rates, so it is the
+direction, not the step size. Leading suspect: resuming discards the optimizer momentum that
+held the narrow basin, and single-patient batches eject the weights from it
+immediately. **No more long fine-tuning legs.** All remaining effort pivots to
+held-out evaluation and writeup.
+
+### Run 6 — Joint dynamics-plus-RANO fine-tune (failed its gate, champion stands)
+
+Motivation: the frozen representation trails supervised literature (~0.17 F1
+gap), arguably the price of never training for the task. Plan: fine-tune the
+champion for 10 epochs at tiny learning rate (5e-6) with extra classification
+heads predicting next-visit response (4-class, progression-vs-rest, and
+response-vs-stable framings), loss = dynamics + classification.
+
+What happened: the classification losses did drop (4-class 3.08 → 0.37,
+progression 0.53 → 0.23) — but dynamics error more than doubled (0.0081 →
+0.0191; pure-dynamics validation 0.0205, test 0.0174) while persistence stood
+still, collapsing the margin. Patient-level losses multiplied. The frozen-probe
+re-check with the new encoder: single-split F1 rose 0.448 → 0.509, but
+cross-validation sat at 0.328 vs 0.334 pre-tune — **unchanged**. The
+single-split gain was split luck, the same trap that inflated the original
+0.45.
+
+Verdict: the fine-tune tilted the encoder toward the classifier (single-split
+numbers dance) without adding generalizable signal, and charged ~2.5× dynamics
+error. A from-scratch joint run (a full GPU session, same pressure, more
+instability) is not earned. The champion stands untouched.
+
+---
+
+## Failures, each explained
+
+1. **Silent weight corruption (Run 1).** Community weights, matching keys,
+   degenerate outputs. Caught only by behavioral probes. Rule: official weights
+   only, verified by real-vs-noise drift.
+2. **Collapse misread.** Run 1's falling loss with sick monitors looked like
+   training until the weight audit proved the features were constant and the
+   monitors had been right all along. Rule: a falling loss alone proves nothing;
+   monitors decide.
+3. **Overfit tail (Run 4).** Validation U-shape with the optimum at epoch ~7–8 of
+   30; the last checkpoint is overfit weights. Rule: keep the best, resume from
+   the best, label every downloaded file with leg, epoch, and validation score
+   (a resume leg's best file once overwrote the staged champion — recovered
+   from the prior session's copy).
+4. **Unresumable optimum (Run 5).** Setup: two full 30-epoch schedules from the
+   same champion — Run 4's decaying 1e-4 tail and Run 5's flat 2e-5 with fresh
+   optimizer state. Both ascend from epoch 1 (Run 4's tail → 0.0704, Run 5 →
+   0.031 plateau) with healthy monitors throughout. Same direction at two step
+   sizes means retraining ejects the weights from a narrow basin the resumed
+   optimizer cannot re-enter. Rule: no more long fine-tuning legs once two
+   schedules agree.
+5. **Task-tuning damage (Run 6).** Classification pressure without
+   generalization gain, at 2.5× dynamics cost. Single-split improvements that
+   vanish under CV are luck, not learning.
+6. **Single-split luck (probes).** The headline 0.45 sits above every CV fold
+   (0.25–0.42). Only cross-validated numbers are reported as results.
+7. **Least-squares blowup (volume probes).** Plain regression on 1,152 features
+   / 450 samples gave R² ≈ −100. Ridge penalty plus standardization is mandatory
+   in this regime — and the tuned penalty (very heavy) itself reveals how
+   diffuse the size signal is.
+8. **NaN-poisoned new site (SAILOR).** Bias-corrected files carry background
+   NaNs (up to 79% of voxels in ~200 sessions), which poisoned the first cache
+   into NaN latents. The adapter now prefers the base variants (fully finite)
+   and finite-checks any new site before first encoding.
+9. **GPU memory cliff.** A long-history patient overflowed 16 GB twice — first
+   in the vision backbone, then in the temporal encoder. Fixed with gradient
+   checkpointing (recompute activations during backpropagation instead of
+   holding them: identical math at ~30–40% slower steps). A batch containing
+   the longest history is the worst case; passing it clears the run.
+10. **Phantom infrastructure bug.** An 8-worker preprocess crash looked like a
+    code bug; a clean 4-worker rerun was flawless. The crashes were collateral
+    from a killed process group whose orphaned workers were still saturating
+    the machine. Lesson: check for orphaned workers before blaming the code.
+
+## Diagnostics and ablations, each explained
+
+- **Random-initialization sanity.** Untrained model scores ~0.978 (chance ≈
+  1.0), training step plus target-network update run clean. The harness can
+  resolve a learning signal when one exists.
+- **Weight-port comparison.** Official weights discriminate real vs noise
+  (drift 0.07) and sequences from each other; the re-upload does not (0.0002,
+  identical outputs). This is the evidence behind the official-only rule.
+- **Pooling choice.** First-token vs average pooling show near-identical
+  consecutive-visit drift (CT1 0.000022 vs 0.000019, T1 0.000021 vs 0.000019,
+  T2 0.000031 vs 0.000028, FLAIR 0.000024 vs 0.000020) — keep the authors'
+  convention; pooling carries no extra longitudinal signal.
+- **Preprocessing fidelity.** Full pipeline vs resize-plus-normalize show
+  overlapping drift ranges (raw 0.000024–0.000036 vs preprocessed
+  0.000021–0.000031): preprocessing preserves whatever the backbone can see
+  and matches the authors' transforms line-for-line.
+- **Frozen-backbone check.** Fresh vs trained backbones give identical drift
+  (0.000036) and feature spread (1.0832) to 6 decimals — training never
+  touched the backbone (frozen by design plus tiny adapter movement), so early
+  collapse signatures localized correctly to the heads.
+- **Persistence, GRU, clinical-only floors.** Untrained dynamics score ~1.0
+  (chance); persistence sits at 0.0043 on pilot data — the gate the model must
+  and eventually does clear at scale.
+- **Snapshot → history → forecast probes.** Single-visit features (F1 0.31) →
+  history summaries (0.33) → forecast-state features (CV 0.33, single-split
+  0.45): response ratings are trajectory labels, useful only with time, and the
+  temporal transformer beats raw visit-to-visit differences (0.24). Futures read
+  nonlinearly (only the forecast state benefits from a multilayer probe).
+- **Binary framing note.** Near-minority classes have 1–2 test samples — their
+  recalls are noise. The clinical question is progression-vs-not; 4-class
+  framing undersells the model.
+- **Volume framings.** Total automated-mask volume reads weakly (R² ≈ 0.15)
+  and forecasts worse than persistence. Enhancing-core-only and growth-rate
+  framings remain open but low-priority.
+
+## Downstream findings in brief (historical; validity reset applies)
+
+- **Progression readout (LUMIERE):** frozen history summaries separate
+  progression (recall 0.72) from stable (0.64), far above demographics (~0.17)
+  — unsupervised dynamics learned progression structure for free, at the
+  trajectory level (not single snapshots, not volume).
+- **Surprise signal (baselined):** prediction error anticipates progression
+  (AUC 0.77 in-domain over 393 pairs, 0.87 cross-site over 240) — but trivial
+  persistence error reaches 0.75/0.86 on the identical pairs
+  (`scripts/persistence_baseline.py`). The signal is change-detection, not
+  JEPA-specific. Partial exception: response transitions surprise JEPA most
+  (PR 0.0088, CR 0.0115) while CR surprises persistence least (0.0031) —
+  rare-transition signal raw change misses, on n=20–27 samples.
+- **Cross-site (SAILOR): failure localized, then rescued.** Zero-training
+  dynamics lose ~5× while readouts transfer (F1 0.37, surprise-AUC 0.87) —
+  but the cause is not the interval (stratified: persistence wins every gap
+  bin; both cohorts' median gaps sit ~80–90d) and not the disease (same
+  Stupp GBM both sides). Three follow-ups pin it down: (a) refitting only a
+  small velocity field on SAILOR beats persistence ~10% on held-out subjects
+  — the failure is dynamics *scale*, fixable on-site with 27 patients, and
+  treatment-phase labels add nothing (exact tie); (b) CORAL covariance
+  matching alone cuts the frozen head's error 2.4× with zero training — most
+  of the failure is second-order statistics, not representation; (c) the
+  damping is measurable before any network: consecutive-visit image change
+  is 0.24 on SAILOR vs 0.76 on LUMIERE with no overlap, implicating the
+  PLHM normalization step. Net: the representation was never the problem;
+  scale (refit), statistics (align), and inputs (damped) were.
+
+## Conclusions (historical; validity reset applies)
+
+1. The same-space gate is **not a general persistence win**: test pooled is
+   non-significant, the selected test patient-uniform cell wins, and the
+   overall patient win count is 41/91. The old mixed-space and 82/91 claims
+   are superseded by A24.
+2. The frozen history representation carried modest progression signal in
+   legacy development data (A25: 0.309 within-unseen CV, 0.408 transfer), but
+   those values are not a final prospective claim. Surprise AUC rankings are
+   withdrawn pending the corrected current-schema re-run.
+3. Further LUMIERE gradient steps are exhausted *at batch 1*: resumed
+   training cannot hold the optimum, and task-tuning damages dynamics
+   without generalizable gain. But accumulation changes the verdict:
+   pair-weighted accum-8 holds the basin ~6 epochs and exploits below the
+   champion (0.0077 vs 0.0081) before ejecting on the same U-shape — so
+   short accum-8 legs with best-tracking are legitimate; long legs and
+   batch-1 are not.
+4. The honest numbers are the cross-validated ones. Every single-split
+   headline in this project so far has been the lucky end of a wide spread.
+5. Volume is the weak half: weakly readable, not forecastable beyond
+   persistence. The thesis holds at trajectory level, not size level.
+6. The cross-site story is a **developmental failure of same-space
+   dynamics**: persistence wins by 7–10.5× after the A23/A24 correction.
+   Gain/direction decomposition localizes the failure to a large scalar
+   overshoot plus weak direction, but readout/codebook and surprise conclusions
+   need the P0 current-schema rerun. This does not justify another broad
+   encoder sweep.
+
+## Follow-up: multi-horizon forecasting (gate passed, full run open)
+
+Instead of predicting only the next visit, predict visit t+n for every future
+n from each history state — with two design rules: the predictor is
+**horizon-conditioned** (input is state plus the day-gap to the target; one
+output cannot fit N different futures without collapsing to their average) and
+the loss is **horizon-weighted** (each pair counts 1/n, so closer futures
+dominate). Tested with the encoder frozen via `scripts/horizon_probe.py`
+(2,793 valid pairs; 2,204 train / 259 val / 330 test):
+
+- Persistence error grows only ~2× from n=1 (0.0065) to n≥6 (~0.013): modest
+  headroom, targets stay near-static even far out.
+- The weighted probe beats persistence at **every** horizon on test (e.g. n=1:
+  0.0050 vs 0.0088; n=5: 0.0065 vs 0.0134; n=9: 0.0116 vs 0.0190) — and its
+  n=1 error (0.0050) beats the champion's own 1-step predictor (test 0.0074),
+  suggesting the head benefits from multi-horizon data. Caveat: far-horizon
+  test pairs are few (6–13 pairs at n=8–11); val shows a mild overfit tail.
+- Gate verdict: **passed.** A full Kaggle run with a horizon-conditioned head
+  and 1/n weighting is earned; the probe result is the baseline it must beat.
+
+Hero-run leg (2026-09-06, Kaggle T4, launched programmatically — see
+`AGENTS.md`): resumed the 0.0081 champion, 30 epochs at LR 2e-5, batch 1.
+Resume listed exactly the 14 fresh `horizon_*` keys. Val: 0.49 → 0.072 →
+best **0.0170 at epoch 4**, then slow rise to ~0.029 plateau; monitors
+healthy throughout (std 0.08→0.16, rank ~2 — drift, not collapse). Test
+0.0147. (Val/test here are 1/n-weighted multi-horizon losses — not
+comparable to 1-step or probe numbers; the gate is the per-horizon table.)
+
+Per-horizon test eval of the trained leg (`scripts/horizon_eval.py`, same
+pairs both sides):
+
+| n | pairs | trained leg | persistence | frozen probe (reference) |
+|---|---|---|---|---|
+| 1 | 71 | 0.0137 (loses) | 0.0088 | **0.0050** |
+| 2 | 58 | 0.0133 (loses) | 0.0079 | — |
+| 3 | 48 | 0.0139 (tie) | 0.0083 | — |
+| 4 | 40 | **0.0144** | 0.0109 | — |
+| 5 | 33 | **0.0157** | 0.0134 | 0.0065 |
+| 6–7 | 26/19 | **wins** | — | — |
+| 8–11 | 13/9/6/4 | **wins** (thin counts) | — | — |
+
+Gate verdict: **FAILED where it matters most.** Joint encoder+head training
+bought far-horizon wins (n≥4) but damaged near horizons ~2.7× vs the frozen
+probe (n=1: 0.0137 vs 0.0050) and ~1.9× vs the champion's own 1-step head
+(0.0074). Same moral as the aux fine-tune: training the encoder tilts it —
+here toward far-horizon targets — while the frozen encoder plus a trained
+head keeps near accuracy. The production multi-horizon predictor is therefore
+the frozen probe head, not this leg. No further GPU legs; a head-only
+(frozen-encoder) training with more capacity is the cheap open option.
+
+Head-to-head re-gate vs the champion (frozen encoders, identical protocols,
+`checkpoints/horizon_probe_cache.pt` re-encoded from the leg's weights):
+
+| Task | Champion | Horizon leg | Reading |
+|---|---|---|---|
+| RANO states_forecast-mlp, hero split (n=49) | F1 0.448 | F1 0.358 | Noise band either way — splits this small swing ±0.1 |
+| Same, 5-fold patient-wise CV (the honest number) | 0.334±0.060 | 0.323±0.054 | **No difference.** Tilt neither helped nor destroyed progression signal |
+| Volume readout (log-mm³, ridge λ=1000) | R2 0.15, MAE 1.26 vs 1.38 | R2 0.153, MAE 1.26 vs 1.38 | **Identical** — size signal untouched |
+| Volume forecast vs persistence | loses (1.52 vs 1.07) | loses (1.53 vs 1.07) | **Identically uncompetitive** |
+
+Bottom line: worse at the highest-weight horizon, identical on every
+downstream probe, better only at far horizons. The leg is a narrow
+long-range forecaster, not a better representation.
+
+Weighting-unit check (`--weight inv_gap_err` in the probe script): visit
+count n conflates 1–1085 days at n=1 alone, so day-gap weighting was tested
+— but short gaps are the *hardest* pairs (0–8d persistence err 0.0108, mostly
+surgery transitions; 30–60d is easiest at 0.0069), giving 1/gap the wrong
+sign. Empirical gap-bin weights (1/mean-bin-persistence-err) span only 1.7×
+and match the 1/n run to ±0.0001 at every horizon (n=1: 0.0051 vs 0.0050).
+Weighting unit is second-order; 1/n stays (monotonic in difficulty,
+validated). Day gaps matter for predictor *conditioning* (already in both
+probe and head — SAILOR n=1 ≈ 14 days ≈ LUMIERE n=2), not for weighting.
+
+Head-only sweep, frozen champion (all local CPU, `scripts/horizon_probe.py`
+`--hidden/--layers/--epochs/--per-horizon`; test errors, persistence in
+brackets):
+
+| config | n=1 | n=2 | n=5 | n=7 |
+|---|---|---|---|---|
+| baseline 1024-wide ×2 layers, 300ep | **0.0050** (0.0088) | **0.0048** (0.0079) | **0.0065** (0.0134) | 0.0087 (0.0142) |
+| bigger 2048×3, 300ep | 0.0057 | 0.0054 | 0.0070 | 0.0096 |
+| longer 1024×2, 600ep | 0.0054 | 0.0053 | 0.0068 | 0.0089 |
+| per-horizon dedicated heads | 0.0052 | 0.0051 | 0.0063 | **0.0073** |
+
+Verdict: the small joint head is the ceiling. Bigger/longer both overfit
+(train keeps falling, val rises — same signature as every full training
+run); per-horizon heads win only at n≥7 on 4–19 test pairs (noise). 0.0050
+stands as the production n=1 number. No capacity, time, or specialization
+variant opens headroom a GPU leg could exploit — the multi-horizon story is
+closed: frozen champion + small joint head, best at every horizon that has
+the counts to matter.
+
+## Locked protocol and the SOTA push (2026-09-11/12)
+
+Every single-split claim above was re-based on a locked, pre-registered protocol
+(`info/eval_protocol.md`): fixed patient-wise folds over the 26 encoder-unseen
+patients, paired patient-cluster bootstrap CIs, and a reserved `final` slice
+touched once. Honest frozen-champion numbers: **0.309 within-unseen CV**
+[0.255, 0.358]; **0.408 transfer** to the 26; readout seed alone spans
+0.34–0.45 (A25/A27), so the old single-split 0.45 was the lucky tail.
+
+The SOTA plan was then run, each step judged on that protocol:
+
+- **Interface (A26).** ROI/mask pooling, per-modality fusion, and explicit
+  DeepBraTumIA volumetry — none beat the whole-brain mean state; volumetry was
+  *significantly worse* than the learned state (0.236/0.248 vs 0.309/0.408).
+  The interface is not the binding constraint.
+- **Objective (A27/A28).** Supervised task-training of the temporal stack
+  overfits (best dev at epoch 1; final 0.311 vs 0.343 frozen); a properly
+  trained LoRA vision finetune (split head/rep LRs, augmentation, JEPA
+  regularizer) does not improve the representation (within-unseen 0.289 vs
+  0.309; final 0.400 vs 0.448/0.39). The frozen representation is at its
+  data-limited ceiling.
+- **Supervised comparator (A29–A31).** Three from-scratch CNN comparators
+  (3D visit-pair, 2D whole-brain slices, 2D tumor-ROI) all collapse to the
+  majority class (final 0.182–0.222) and lose to JEPA at every SAILOR K-shot
+  point. A32: these were not faithful reproductions of Matoso's recipe
+  (under-trained, different preprocessing, no weighted sampler), but Matoso's
+  own faithful best is weak (balanced accuracy 0.51, F1 0.13), so the macro-F1
+  gap is radiomics/data, not training length.
+- **Radiomics/growth comparator (A35).** A 22-d volumetry+growth feature set
+  (region log-volumes, log-growth, ratios, nadir-relative; DeepBraTumIA /
+  ONCO masks) reaches Tikhonov's volumes+growth ablation level (transfer final
+  0.41 vs their 0.45) but trails frozen JEPA everywhere (CV 0.217 vs 0.309;
+  every SAILOR K). The remaining 0.50 gap is the full >4,800-feature radiomics
+  + CatBoost — not a representation the JEPA encoder is missing.
+
+Net: the value is the pretrained representation, not further training on 91
+patients. The remaining levers are external longitudinal data (Step 5) or
+hand-engineered radiomics — not more LUMIERE gradient steps. Plot:
+`info/plots/cross_site_adapt.png`.
+
+## Open work (not claimed)
+
+- Cross-site volume probes from expert/automated masks; enhancing-core and
+  growth-rate framings.
+- Acquisition-confound correction, uncertainty/calibration — untouched by
+  design; this program stopped at dynamics plus probing.
+- Closed since writing: interval-stratified cross-site comparison (regime
+  exonerated, representation indicted — then refined: dynamics SCALE, A15);
+  persistence-error baselines for both surprise AUCs (signal =
+  change-detection); treatment-as-action modeling (A15: wired, tested,
+  no gain — site refit, not treatment, flips the gate); lead-time surprise
+  (A13: no JEPA lead advantage); same-space dynamics gate (A8 addendum).
+
+## Reproducing this
+
+```bash
+# Pilot (CPU): 5 richest patients, same code path as the full-cohort run
+python scripts/run_train.py --config config/pilot.yaml \
+  --patients Patient-067 Patient-031 Patient-073 Patient-078 Patient-029 --no-wandb
+# Smoke test, no weights or data needed
+python scripts/run_train.py --epochs 1 --batch-size 1 --no-wandb --random-init
+# Downstream probes (CPU, frozen champion; --encode builds the latent cache once,
+# the second flag runs the analysis — run with both the first time)
+python scripts/probe_rano.py --encode --probe --cv   # cross-validated progression readout (--cv for the honest number)
+python scripts/surprise_signal.py                    # error-anticipates-progression AUC
+python scripts/volume_probe.py                       # automated-mask volumetry
+python scripts/sailor_eval.py --encode --eval        # cross-site evaluation
+```
+
+Probe and eval scripts default to `--champion checkpoints/champion_0.0081.pt`
+(the downloaded first-leg best, validation 0.0081 — rename your download to
+match, or pass `--champion <path>`); caches default to
+`checkpoints/probe_cache.pt` and `checkpoints/sailor_cache.pt`. Full-scale
+training needs a GPU (~6 h all-in on a free Kaggle T4, batch size 1 on 16 GB;
+see `kaggle/hero_run.py`, the notebook source of truth).
+
+Final model: first-leg best checkpoint (validation 0.0081, test 0.0074).
+Local prerequisites — official weights at `checkpoints/BrainIAC.ckpt`,
+preprocessed volumes, metadata CSVs, MNI template — are gitignored and
+documented in `README.md`, never committed.

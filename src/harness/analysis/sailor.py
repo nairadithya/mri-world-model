@@ -32,6 +32,7 @@ from torch.utils.data import DataLoader
 from src.data.collate import make_collate
 from src.data.sailor import SAILORDataset
 from src.model.jepa_model import JEPAWorldModel
+from src.harness.checkpoints import validate_temporal_semantics
 from src.harness import provenance as prov_mod
 
 from src.harness.data.tasks import RANO_PROBE_NAMES, rows_for  # noqa: E402
@@ -49,6 +50,7 @@ def encode_sailor(cfg, champion_path, cache_path, root=SAILOR_ROOT):
                         collate_fn=make_collate(size))
     model = JEPAWorldModel(cfg)
     ckpt = torch.load(champion_path, map_location="cpu", weights_only=False)
+    validate_temporal_semantics(model, ckpt)
     model.load_state_dict(ckpt["model"], strict=False)
     model.eval()
     for p in model.parameters():
@@ -125,8 +127,9 @@ def eval_pairs(cfg, champion_path, root=SAILOR_ROOT):
     loader = DataLoader(ds, batch_size=1, shuffle=False, num_workers=0,
                         collate_fn=make_collate(size))
     model = JEPAWorldModel(cfg)
-    model.load_state_dict(torch.load(champion_path, map_location="cpu")["model"],
-                          strict=False)
+    ckpt = torch.load(champion_path, map_location="cpu", weights_only=False)
+    validate_temporal_semantics(model, ckpt)
+    model.load_state_dict(ckpt["model"], strict=False)
     model.eval()
     je, pe, n = _pairs_same_space(model, loader)
     print(f"(a) SAILOR pairs (same-space): n={n} "
@@ -141,8 +144,9 @@ def eval_all(cfg, champion_path, cache_path, lum_cache_path, root=SAILOR_ROOT):
     loader = DataLoader(ds, batch_size=1, shuffle=False, num_workers=0,
                         collate_fn=make_collate(size))
     model = JEPAWorldModel(cfg)
-    model.load_state_dict(torch.load(champion_path, map_location="cpu")["model"],
-                          strict=False)
+    ckpt = torch.load(champion_path, map_location="cpu", weights_only=False)
+    validate_temporal_semantics(model, ckpt)
+    model.load_state_dict(ckpt["model"], strict=False)
     model.eval()
 
     je, pe, n = _pairs_same_space(model, loader)

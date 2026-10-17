@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "source_versions": 72,
+  "branch_refs": 10,
+  "local_links_checked": 392,
+  "supplementary_files_checked": 3,
+  "archive_records_checked": 47,
+  "draft_sha256": {
+    "TODO.md": "f02e73f8e587b7745c2db7c6d7026efb0bf4284ddf2e64fdaf65eb470315a189",
+    "EXPERIMENTS.md": "efed6787606e69988e9b906cce7594429a09a202951a831ed9f3749a203312ce",
+    "METHODS.md": "1968a9ab5df9dd756fc4c8f17773a41f204ac9d7989465c1659c08a99686b6c1",
+    "NOTES_AND_INSIGHTS.md": "3c970ddda98c3d5a971312e523e6d0fcd9a73bc367be2be081645aa7252a6ed2"
+  },
+  "errors": [],
+  "scope": "Frozen source, supplementary and archive bytes, checked coverage records, baseline identifier presence, and draft link portability. This is not scientific acceptance or a semantic completeness proof."
+}

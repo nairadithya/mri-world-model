@@ -144,7 +144,7 @@ pipeline damping in image space. Full 27-subject run COMPLETE
 (`checkpoints/raw_mni_deltas.pt`, n=939): raw median 0.673 vs MNI 0.173
 (~3.9×); per-slot T1c 0.676/0.153, T1 0.737/0.120, T2 0.637/0.246 (damps
 least, heavy MNI tail p90 1.03), Flair 0.649/0.195. Full numbers +
-inference: `info/ablations.md` A18. Standing scope: total pipeline effect
+inference: `info/archive/2026-10-12/info/ablations.md` A18. Standing scope: total pipeline effect
 (upper bound — raw carries position/skull signal registration legitimately
 removes), not PLHM-alone. Follow-through: A19 (same-contract reprocess —
 gate unflipped, readouts dropped on skull-retained inputs), A21 (real

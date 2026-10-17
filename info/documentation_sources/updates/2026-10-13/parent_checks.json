@@ -1,0 +1,89 @@
+{
+  "date": "2026-10-13T05:12:09.425056+00:00",
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "info/documentation_sources/updates/2026-10-13/check_update.py"
+      ],
+      "returncode": 0,
+      "stdout": "{\n  \"status\": \"PASS\",\n  \"relocated_sources\": 10,\n  \"immutable_files\": 116,\n  \"published_arm_rows\": 10,\n  \"published_ridge_rows\": 5,\n  \"published_contrast_rows\": 6,\n  \"protected_checkouts\": 4,\n  \"errors\": [],\n  \"scope\": \"File integrity, source dispositions, published metric associations, and protected HEAD/status equality. Not semantic completeness, ignored-output integrity, process state, or scientific acceptance.\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_documentation*.py",
+        "-v"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "test_git_optional_locks_are_disabled (test_documentation_protection.DocumentationProtectionTests.test_git_optional_locks_are_disabled) ... ok\ntest_missing_file_and_unexpected_checkout_are_detected (test_documentation_protection.DocumentationProtectionTests.test_missing_file_and_unexpected_checkout_are_detected) ... ok\ntest_unchanged_and_changed_files_are_reported_without_writes (test_documentation_protection.DocumentationProtectionTests.test_unchanged_and_changed_files_are_reported_without_writes) ... ok\ntest_all_four_baseline_identifiers_are_checked (test_documentation_sources.DocumentationSourcesTests.test_all_four_baseline_identifiers_are_checked) ... ok\ntest_archived_originals_are_verified (test_documentation_sources.DocumentationSourcesTests.test_archived_originals_are_verified) ... ok\ntest_broken_targets_and_fragments_fail (test_documentation_sources.DocumentationSourcesTests.test_broken_targets_and_fragments_fail) ... ok\ntest_complete_fixture_passes (test_documentation_sources.DocumentationSourcesTests.test_complete_fixture_passes) ... ok\ntest_destinations_must_match_catalog_or_explain_override (test_documentation_sources.DocumentationSourcesTests.test_destinations_must_match_catalog_or_explain_override) ... ok\ntest_incomplete_comparisons_cannot_pass (test_documentation_sources.DocumentationSourcesTests.test_incomplete_comparisons_cannot_pass) ... ok\ntest_machine_local_and_sibling_targets_fail (test_documentation_sources.DocumentationSourcesTests.test_machine_local_and_sibling_targets_fail) ... ok\ntest_missing_and_duplicate_source_coverage_fail (test_documentation_sources.DocumentationSourcesTests.test_missing_and_duplicate_source_coverage_fail) ... ok\ntest_missing_baseline_fails (test_documentation_sources.DocumentationSourcesTests.test_missing_baseline_fails) ... ok\ntest_missing_coverage_file_fails_without_crashing (test_documentation_sources.DocumentationSourcesTests.test_missing_coverage_file_fails_without_crashing) ... ok\ntest_missing_draft_fails_without_crashing (test_documentation_sources.DocumentationSourcesTests.test_missing_draft_fails_without_crashing) ... ok\ntest_missing_human_coverage_fails (test_documentation_sources.DocumentationSourcesTests.test_missing_human_coverage_fails) ... ok\ntest_missing_or_modified_snapshot_fails (test_documentation_sources.DocumentationSourcesTests.test_missing_or_modified_snapshot_fails) ... ok\ntest_missing_supplementary_manifest_fails (test_documentation_sources.DocumentationSourcesTests.test_missing_supplementary_manifest_fails) ... ok\ntest_portable_links_follow_the_document_location (test_documentation_sources.DocumentationSourcesTests.test_portable_links_follow_the_document_location) ... ok\ntest_read_mode_and_evidence_are_required (test_documentation_sources.DocumentationSourcesTests.test_read_mode_and_evidence_are_required) ... ok\ntest_renderer_keeps_later_updates_separate_and_is_idempotent (test_documentation_sources.DocumentationSourcesTests.test_renderer_keeps_later_updates_separate_and_is_idempotent) ... ok\ntest_supplementary_bytes_are_verified (test_documentation_sources.DocumentationSourcesTests.test_supplementary_bytes_are_verified) ... ok\ntest_supplementary_path_must_stay_in_evidence_directory (test_documentation_sources.DocumentationSourcesTests.test_supplementary_path_must_stay_in_evidence_directory) ... ok\n\n----------------------------------------------------------------------\nRan 22 tests in 0.024s\n\nOK\n"
+    },
+    {
+      "command": [
+        "/home/adithya/projects/world-model/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_delta_summary.py",
+        "-v"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "test_changed_support_and_nonfinite_values_fail (test_delta_summary.SummaryTests.test_changed_support_and_nonfinite_values_fail) ... ok\ntest_page_does_not_turn_completion_into_success (test_delta_summary.SummaryTests.test_page_does_not_turn_completion_into_success) ... ok\ntest_seed_errors_are_averaged_without_patient_records (test_delta_summary.SummaryTests.test_seed_errors_are_averaged_without_patient_records) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 0.000s\n\nOK\n"
+    },
+    {
+      "command": [
+        "/home/adithya/projects/world-model/.venv/bin/python",
+        "-B",
+        "scripts/check_notebook_pairs.py"
+      ],
+      "returncode": 0,
+      "stdout": "Notebook pairs synchronized: 17\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "documentation_verifier": {
+    "status": "PASS",
+    "source_versions": 72,
+    "branch_refs": 10,
+    "local_links_checked": 392,
+    "supplementary_files_checked": 3,
+    "archive_records_checked": 47,
+    "draft_sha256": {
+      "TODO.md": "f02e73f8e587b7745c2db7c6d7026efb0bf4284ddf2e64fdaf65eb470315a189",
+      "EXPERIMENTS.md": "efed6787606e69988e9b906cce7594429a09a202951a831ed9f3749a203312ce",
+      "METHODS.md": "1968a9ab5df9dd756fc4c8f17773a41f204ac9d7989465c1659c08a99686b6c1",
+      "NOTES_AND_INSIGHTS.md": "3c970ddda98c3d5a971312e523e6d0fcd9a73bc367be2be081645aa7252a6ed2"
+    },
+    "errors": [],
+    "scope": "Frozen source, supplementary and archive bytes, checked coverage records, baseline identifier presence, and draft link portability. This is not scientific acceptance or a semantic completeness proof."
+  },
+  "python_files_compiled": 5,
+  "active_html_only_two_navigation_replacements": true,
+  "rendered_visual_scope": "Parent inspected pixels 0-3600 at 1100px width, including both R36 tables, qualifications and changed navigation. No visible clipping or overlap.",
+  "scope": "Focused checks; no training, private artifact audit, or independent scientific acceptance."
+}

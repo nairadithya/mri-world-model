@@ -1,0 +1,60 @@
+{
+  "completed_at": "2026-10-13T05:18:44.242815+00:00",
+  "workflow_run": "7e9cab70-c801-41c9-b76c-e62d14a0d896",
+  "verifier_run": "011a9eff-8d66-405b-9ea2-a5bc62e16362",
+  "reviewer_original_run": "cd1c2c5c-6349-4aa4-874c-2580486b6ef0",
+  "reviewer_resumed_run": "8fc4fa91-a0bb-46a6-b343-14cc59bf55a2",
+  "handoff_sha256": "7e52c0d13474f0afacc186e5d0e3a8b88e6969394d5d8f31cfe40f836d6e36ec",
+  "verification": "PASS",
+  "documentation_verdict": "APPROVED_FOR_DOCUMENTATION_UPDATE",
+  "reviewed_inputs_still_matching": 44,
+  "outputs": {
+    "independent-verification.json": {
+      "sha256": "89bceb543532265706c1c5435445a966e7dc2658c6dd6ec1ab6dd250ae343970",
+      "original_output_path": "/home/adithya/.pi/agent/sessions/--home-adithya-projects-world-model--/subagent-artifacts/outputs/7e9cab70-c801-41c9-b76c-e62d14a0d896/documentation-update/independent-verification.json",
+      "repository_path": "info/documentation_sources/updates/2026-10-13/independent-verification.json"
+    },
+    "independent-review.md": {
+      "sha256": "57fc724d1c012a8f3f1368012e0d95e5a69b6ca204a61f94af6d974bed7dc0b4",
+      "original_output_path": "/home/adithya/.pi/agent/sessions/--home-adithya-projects-world-model--/subagent-artifacts/outputs/7e9cab70-c801-41c9-b76c-e62d14a0d896/documentation-update/independent-review-rerun.md",
+      "repository_path": "info/documentation_sources/updates/2026-10-13/independent-review.md"
+    },
+    "review-workflow-receipt.json": {
+      "sha256": "6376e7187d6e35241dc58f37825111a64e85a33d6f1c3dea08f74cdc41c7c824",
+      "original_output_path": "/tmp/pi-subagents-uid-1000/async-subagent-runs/7e9cab70-c801-41c9-b76c-e62d14a0d896/workflow-receipt.json",
+      "repository_path": "info/documentation_sources/updates/2026-10-13/review-workflow-receipt.json"
+    }
+  },
+  "final_documentation_checks": {
+    "status": "PASS",
+    "source_versions": 72,
+    "branch_refs": 10,
+    "local_links_checked": 392,
+    "supplementary_files_checked": 3,
+    "archive_records_checked": 47,
+    "draft_sha256": {
+      "TODO.md": "f02e73f8e587b7745c2db7c6d7026efb0bf4284ddf2e64fdaf65eb470315a189",
+      "EXPERIMENTS.md": "efed6787606e69988e9b906cce7594429a09a202951a831ed9f3749a203312ce",
+      "METHODS.md": "1968a9ab5df9dd756fc4c8f17773a41f204ac9d7989465c1659c08a99686b6c1",
+      "NOTES_AND_INSIGHTS.md": "3c970ddda98c3d5a971312e523e6d0fcd9a73bc367be2be081645aa7252a6ed2"
+    },
+    "errors": [],
+    "scope": "Frozen source, supplementary and archive bytes, checked coverage records, baseline identifier presence, and draft link portability. This is not scientific acceptance or a semantic completeness proof."
+  },
+  "final_update_checks": {
+    "status": "PASS",
+    "relocated_sources": 10,
+    "immutable_files": 116,
+    "published_arm_rows": 10,
+    "published_ridge_rows": 5,
+    "published_contrast_rows": 6,
+    "protected_checkouts": 4,
+    "errors": [],
+    "scope": "File integrity, source dispositions, published metric associations, and protected HEAD/status equality. Not semantic completeness, ignored-output integrity, process state, or scientific acceptance."
+  },
+  "diff_whitespace": "PASS",
+  "post_review_changes": "Added byte-exact received reports, original workflow receipt, and this completion record only. None of the 44 bound inputs or handoff bytes changed. These administrative additions are not represented as independently reviewed text.",
+  "review_scope": "Actual complete canonical pages and bounded diff, full newly incorporated source narratives and prior scoped reviews, navigation and maintenance procedure. Not a fresh full reread of all original 72 versions. Exact scope and limits are in the received report.",
+  "evidence_whitespace": "The received independent-review.md preserves its original two-space Markdown hard line break. Do not normalize byte-exact review evidence.",
+  "authorization": "Documentation only. No new scientific acceptance, Phase2, commit, push or merge."
+}

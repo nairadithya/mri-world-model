@@ -1,8 +1,18 @@
 # AGENTS.md — working guide for this repo
 
-Research repo: JEPA world models over longitudinal glioma MRI (LUMIERE
-training corpus, SAILOR held-out eval). Read `PROPOSAL.md` for the science
-and `info/` for why things are the way they are.
+Research repo: longitudinal glioma MRI using LUMIERE for development and
+SAILOR for developmental transfer. The research objective is useful MRI
+representations that preserve anatomical and pathological state and meaningful
+longitudinal change while separating acquisition nuisance. The consolidated protocols in
+`info/METHODS.md` describe scoped experiments, not a universal definition
+or gate for representation quality. Read `info/TODO.md` for remaining work
+at the latest recorded closure, and `info/EXPERIMENTS.md` for outcomes. Lesion awareness, JEPA, forecast
+heads, and whole-brain methods are hypotheses, not the objective. See
+[`info/research_guardrails.md`](info/research_guardrails.md) before substantial
+research implementation. It sets binding decision and reporting requirements.
+`info/archive/2026-10-12/PROPOSAL.md` preserves the original JEPA hypothesis.
+See `info/README.md` for the documentation map. Read
+`info/NOTES_AND_INSIGHTS.md` for the reasoning and interpretation.
 
 ## Layout
 
@@ -39,12 +49,51 @@ and `info/` for why things are the way they are.
   `kernel-lora/` (supervised vision finetune, `harness.py train lora`) and
   `kernel-cnn/` (supervised ResNet-18 comparator, `harness.py train cnn3d`)
   are the current pushable legs.
-- `info/` — decision log (`decisions.md`, IDs D0–), ablations (`ablations.md`,
-  IDs A–/I–), pilot notes (`pilot.md`). Append-only; reference IDs.
+- `info/` contains the consolidated `TODO.md`, `EXPERIMENTS.md`, `METHODS.md`,
+  and `NOTES_AND_INSIGHTS.md`. Keep historical D, A, I, R, G, V, E, and K3 IDs.
+  Add new results and corrections without erasing earlier findings.
+  `info/archive/2026-10-12/` preserves original records byte-for-byte.
+  `info/documentation_sources/` preserves cross-branch snapshots and provenance.
+  Archived originals and frozen source snapshots are immutable.
   Plot numbers live in `info/plots/metrics.json` (single source of truth);
   `info/plots/make_plots.py` regenerates every plot from it — never
   hardcode numbers in a plot script.
 - `data/`, `checkpoints/`, `.venv/`, `.env` — NEVER commit (gitignored).
+
+## Maintain the research documentation
+
+The four canonical pages own different kinds of content:
+
+- `info/TODO.md` lists current actions, blockers, and authorization. Date the status. Close completed tasks instead of leaving old launch instructions active.
+- `info/EXPERIMENTS.md` records measurements, controls, uncertainty, corrections, withdrawals, and negative or inconclusive outcomes.
+- `info/METHODS.md` defines terms, fixed protocols, evaluation rules, reproduction commands, and historical IDs.
+- `info/NOTES_AND_INSIGHTS.md` explains the reasoning and separates measured evidence from interpretation and unknowns.
+
+When new research documentation arrives:
+
+1. Read the prior session's final handoff and committed evidence. Compare the new record with the canonical pages and existing source coverage. Do not repeat completed experiments to reconstruct context.
+2. Put each new fact in its owning page. Preserve D, A, I, R, G, V, E, and K3 IDs. Add a date and source for every result or changed status. Retain the task, cohort, fitting budget, units, aggregation, and uncertainty beside a number.
+3. Preserve corrections, withdrawals, failed and incomplete work, and conflicting historical versions. A later dated finding supersedes an old status without rewriting the old receipt. Separate computational completion, documentation approval, scoped result review, and scientific success.
+4. Keep protocols and proposed work distinct. A documentation update does not authorize a new scientific target, method family, data acquisition, or Phase 2. Follow `info/research_guardrails.md` before implementation.
+5. Fold duplicate standalone narratives into the four pages. Before relocation, preserve exact dirty and untracked bytes. Move originals to a new `info/archive/YYYY-MM-DD/` directory with a README and `manifest.json`. Each record contains `original_path`, `archive_path`, and `sha256`. Never edit an existing archive, frozen source, or hash-bound review report.
+6. Record new source dispositions under `info/documentation_sources/updates/YYYY-MM-DD/`. Link that update from `info/SOURCE_COVERAGE.md`. Do not inflate or overwrite the original 72-version catalog to make it look current. Do not restore `info/drafts/` or create a second active result narrative.
+7. Keep operating guides, review evidence, closure receipts, and aggregate machine-readable measurements separate and discoverable. Preserve exact review verdicts, reviewed hashes, checked scope, and remaining limits. Approval of old hashes does not automatically cover rewritten text.
+8. Update active Markdown links, HTML links, and presentation generators after moving a file. Historical embedded links may remain broken inside immutable archives. Explain that limit in the archive README. Current navigation must work.
+9. Update `info/README.md` and this guide when ownership or maintenance changes. Write plain English, define technical shorthand, and do not replace actual symbols, paths, or metric names with vague prose.
+
+Verify the actual updated files before handing them back:
+
+```bash
+python3 -B -m unittest discover -s tests -p 'test_documentation*.py' -v
+python3 -B scripts/documentation_sources.py verify
+python3 -B scripts/render_documentation_coverage.py
+```
+
+Compile touched ordinary Python files. Keep edited notebook pairs synchronized. Check active links and archive hashes. If a plot or active HTML page changes, regenerate it from its existing inputs, render it, and inspect the pixels. Do not regenerate withdrawn findings as current evidence.
+
+For a substantive consolidation, obtain a fresh read-only comparison after the edited inputs are stable. Record its exact scope and verdict. Integrity tests and identifier-presence checks do not prove semantic completeness or scientific acceptance. Report any unavailable review rather than implying approval.
+
+Keep private participant inventories, raw images, predictions, tensors, and credentials out of committed documentation. Store only approved aggregate evidence and provenance. Do not control research processes or change shared outputs to finish a documentation task.
 
 ## Setup
 
@@ -58,7 +107,7 @@ uv sync --extra viewer   # + playwright for the shot_viewer screenshot check
 Activate the venv (`source .venv/bin/activate`) or prefix commands with
 `uv run`. Notes: uv resolves CPU-only `torch` from the PyTorch index and
 mechanically excludes `torchvision` (a skewed build breaks the `peft` import
-with a misleading error; see D16/D37 in `info/decisions.md`). The `dev` extra
+with a misleading error; see D16 and D37 in `info/METHODS.md`). The `dev` extra
 supplies `jupytext` — run notebook regeneration through the venv
 (`uv run --extra dev jupytext --to ipynb <file>.py`, or `.venv/bin/jupytext`),
 never by hand-editing the `.ipynb` JSON. You additionally
@@ -142,11 +191,13 @@ NiiVue 0.69 API gotchas (each cost a blank canvas, found via `shot_viewer.py`):
 - Passing option objects with a `name` breaks `getFileExt(name||url)`; load by
   `{url}` only, then set `name`/`colormap`/`opacity` on `nv.volumes[i]`.
 
-## Figure review (plots + `explainer.html`)
+## Figure review
 
-Plots are generated from `metrics.json` and `explainer.html` embeds them, so a
-plot change is only verified by rendering it and **looking at the pixels** (the
-image-aware read tool). The playwright *module* is not installed — use the
+Plots are generated from `metrics.json`. The historical `explainer.html` is
+archived at `info/archive/2026-10-12/info/explainer.html` and includes withdrawn
+claims. It is not a current presentation. For any active plot or HTML page,
+verification requires rendering it and looking at the pixels with the
+image-aware read tool. The playwright *module* is not installed — use the
 Chromium binary the view_scans dev tooling cached:
 
 ```bash
@@ -154,7 +205,7 @@ python info/plots/make_plots.py          # regenerate png + pdf
 CHROME=$(ls ~/.cache/ms-playwright/chromium-*/chrome-linux64/chrome | head -1)
 "$CHROME" --headless --no-sandbox --disable-gpu --hide-scrollbars \
   --virtual-time-budget=8000 --window-size=1000,16000 \
-  --screenshot=/tmp/explainer.png "file://$PWD/info/explainer.html"
+  --screenshot=/tmp/explainer.png "file://$PWD/info/archive/2026-10-12/info/explainer.html"
 python3 -c "from PIL import Image; Image.open('/tmp/explainer.png').crop((0,400,1000,1200)).save('/tmp/crop.png')"  # then read the crop
 ```
 
@@ -187,11 +238,13 @@ Rules, all earned:
 7. Persist trained weights, not just scores, whenever a follow-up might need
    predictions (`src/harness/train/field.py` saved scores only; recovering field
    predictions cost a full refit — now `checkpoints/field_models.pt`).
-8. Update the record with the result: every experiment lands in `info/` (new
-   D/A/R ID, append-only) and, when plots or conclusions change,
-   `info/explainer.html` too. An unlogged result might as well not have happened.
+8. Record every experiment in `info/EXPERIMENTS.md` with its D, A, or R ID.
+   Add reasoning to `info/NOTES_AND_INSIGHTS.md` and protocol changes to
+   `info/METHODS.md`. Preserve earlier outcomes and corrections. Update the
+   current research presentation when conclusions change. Do not restore the
+   archived explainer as current guidance.
 
-## Gotchas (earned the hard way — see info/ablations.md)
+## Gotchas (see the historical IDs in info/EXPERIMENTS.md)
 
 - **Weights**: use official `BrainIAC.ckpt` only. Community ports can be
   silently corrupt (matching key names, degenerate outputs). Verify any
@@ -203,7 +256,7 @@ Rules, all earned:
   every loss pair.
 - **Probes**: single-split probe numbers are noise, and the legacy all-91
   `--cv` leaks encoder-train patients into probe folds (K3-16) — use the locked
-  protocol (`info/eval_protocol.md`, `--cv-unseen`); even the readout seed
+  protocol (`info/METHODS.md#historical-rano`, `--cv-unseen`); even the readout seed
   alone spans 0.34–0.45 (A27). Ridge + CV-λ mandatory above ~100-d features
   (plain LSQ on 1152-d/450-row gives R²≈−100).
 - **SAILOR**: `-icor` files carry background NaNs (~200 sessions, up to 79%
@@ -239,7 +292,7 @@ Rules, all earned:
   (`sailor_request_access.py`), not a token bug.
 - **Scale**: checkpoints are ~1.5GB each; batch 4 fits 24GB VRAM
   (chunked encoding). No GPU on the dev host — pilot on CPU, hero run
-  needs one (≈6 h all-in, see `info/pilot.md` scale-up checklist).
+  needs one (≈6 h all-in, see `info/archive/2026-10-12/info/pilot.md` scale-up checklist).
 
 ## Programmatic Kaggle runs (verified 2026-09-06, horizon leg)
 
@@ -296,3 +349,9 @@ Rules, all earned:
 - Plot/HTML changes: regenerate (`make_plots.py`) and review the rendered png
   or page with an image-aware read (see Figure review) — code review alone is
   not evidence that a figure fits.
+
+## Enforced agent rules
+
+| Rule | Enforcement |
+|---|---|
+| Kaggle `.py` notebook sources and executable `.ipynb` pairs must stay synchronized; `.py` is the source of truth. | `python scripts/check_notebook_pairs.py` (also run in `.github/workflows/notebook-pairs.yml`); regression fixture: `tests/test_notebook_pair_check.py`. |

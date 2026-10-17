@@ -37,6 +37,7 @@ from ...data.collate import make_collate
 from ...data.sailor import SAILORDataset, TREATMENT_NAMES
 from ...model.dynamics_field import PatientTempo, VelocityField, integrate
 from ...model.jepa_model import JEPAWorldModel
+from ...harness.checkpoints import validate_temporal_semantics
 from ..eval.metrics import auc_mann_whitney
 
 SAILOR_ROOT = "data/sailor/sailor_ebrains_pseud/derivatives/mni2009c-n-s"
@@ -52,6 +53,7 @@ def encode_all(cfg, champion_path, cache_path, subjects=None):
 
     model = JEPAWorldModel(cfg)
     ckpt = torch.load(champion_path, map_location="cpu", weights_only=False)
+    validate_temporal_semantics(model, ckpt)
     model.load_state_dict(ckpt["model"], strict=False)
     model.eval()
     for p in model.parameters():

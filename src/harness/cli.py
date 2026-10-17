@@ -39,6 +39,7 @@ TRAIN_MODULES = {
     "cnn3d": "src.harness.train.cnn3d:main",
     "cnn2d": "src.harness.train.cnn2d:main",
     "lesion": "src.harness.train.lesion:main",
+    "rescues": "src.harness.train.rescues:main",
 }
 
 # Active anatomy workflows.
@@ -78,6 +79,8 @@ LEGACY_RUN_MODULES = {
     "sailor-gap": "src.harness.analysis.sailor_gap:main",
     "sailor-interval": "src.harness.analysis.sailor_interval:main",
     "freeze": "src.harness.analysis.freeze:main",
+    "clean-rescues": "src.harness.analysis.clean_rescues:main",
+    "head-rescues": "src.harness.analysis.head_rescues:main",
     "lock": "src.harness.data.lock:main",
     "manifest": "src.harness.data.manifest:main",
 }
@@ -92,6 +95,8 @@ usage: harness.py <command> [options]
 
   anatomy manifest [options]    build/audit lesion-state-v1 rows
   anatomy baseline [options]    run the continuous prospective floor
+  representation <command>      R35 state and observed-change experiments
+  delta-representation <command> R36 signed-difference objective experiments
   checkpoint inspect PATH       inspect checkpoint format and legacy contents
   list                          show active anatomy workflows
   legacy <command> [options]    old list/encode/eval/train/run interface
@@ -108,6 +113,8 @@ def cmd_list(_args) -> None:
     _log("harness:    anatomy-v2")
     _log("anatomy:    manifest, features, baseline, residual, fusion, coverage, "
          "lesion-encode, lesion-eval, lesion-decode, lesion-transfer, lesion-adapt")
+    _log("representation: export, prepare, controls, supervised-controls, smoke, reference, train, cached-transfer, transfer")
+    _log("delta-representation: audit, smoke, train, encode, probe, eval, nuisance, transfer, ridge, report")
     _log("checkpoint: inspect")
     _log("legacy:     list, encode, eval, train, run")
 
@@ -378,6 +385,10 @@ def main(argv=None) -> None:
         cmd_list(rest)
     elif cmd == "anatomy":
         cmd_anatomy(rest)
+    elif cmd == "representation":
+        _dispatch_entry("src.harness.analysis.representation:main", rest)
+    elif cmd == "delta-representation":
+        _dispatch_entry("src.harness.analysis.delta_representation:main", rest)
     elif cmd == "checkpoint":
         cmd_checkpoint(rest)
     elif cmd == "legacy":

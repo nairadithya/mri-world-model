@@ -1,0 +1,3 @@
+REFERENCE_FEATURES_SHA256 00e4e21e530aea69263e6a89e48951139db5bc85852dc79e48681763b69cf919
+COUNTS {"nuisance_maps": 65, "private_hashes": 228, "query_summary_digests": 24, "reference_budgets": 2, "source_summary_digests": 12}
+ASSERTION_FAILURES 0

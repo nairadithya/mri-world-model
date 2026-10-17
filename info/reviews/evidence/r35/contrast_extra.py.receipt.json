@@ -1,0 +1,9 @@
+{
+  "command": "/home/adithya/projects/world-model/.venv/bin/python -B /tmp/r35-closure-review/contrast_extra.py",
+  "cwd": "/home/adithya/projects/world-model",
+  "exit_path": "/tmp/r35-closure-review/contrast_extra.py.exit.txt",
+  "exit_status": 0,
+  "source_sha256": "9c831ea0fe500fdd763bafe8974f846b4b519883032aae13d67b5de5b21e0d44",
+  "stderr_path": "/tmp/r35-closure-review/contrast_extra.py.stderr.txt",
+  "stdout_path": "/tmp/r35-closure-review/contrast_extra.py.stdout.txt"
+}

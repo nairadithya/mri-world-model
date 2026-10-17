@@ -1,0 +1,97 @@
+{
+  "recorded_utc": "2026-10-13T08:32:50.630251+00:00",
+  "status": "PASS_FOR_CURRENT_R35_CLOSURE",
+  "attribution": "Parent repository verification. Scientific acceptance remains the independently bound result review.",
+  "tests": {
+    "representation_and_reporting": 21,
+    "documentation": 22,
+    "r35_closure": 4,
+    "delta_summary": 3,
+    "total": 50
+  },
+  "notebook_pairs": 17,
+  "py_compile": [
+    "scripts/render_representation_report.py",
+    "tests/test_representation_report.py",
+    "tests/test_r35_closure.py"
+  ],
+  "diff_check": "PASS",
+  "canonical_documentation": {
+    "status": "PASS",
+    "source_versions": 72,
+    "branch_refs": 10,
+    "local_links_checked": 405,
+    "supplementary_files_checked": 3,
+    "archive_records_checked": 47,
+    "draft_sha256": {
+      "TODO.md": "f1918ebc4aea18ab94fe1d480ef765349865a5e76359827e8c6a5185f590be46",
+      "EXPERIMENTS.md": "df61c56402b8a47a8c4556d20ebd5ba508f674ad2bb01e2587760a689ed78c55",
+      "METHODS.md": "a6072a5b885e417710ed734c9365dfd9ba41b28e4c5c9ef4193193a15a93d5a8",
+      "NOTES_AND_INSIGHTS.md": "9d7ff99452ae5cad134cce25b09436f148bdd7ecb81389108382a8ba7f1e1c76"
+    },
+    "errors": [],
+    "scope": "Frozen source, supplementary and archive bytes, checked coverage records, baseline identifier presence, and draft link portability. This is not scientific acceptance or a semantic completeness proof."
+  },
+  "additional_active_links_checked": 34,
+  "unchanged_immutable_update_files": 116,
+  "unchanged_private_artifacts": 228,
+  "bound_public_evidence_files": 30,
+  "rendered_report_matches_reviewed_snapshot": true,
+  "reference_feature_current_hash_matches_verifier": true,
+  "historical_update_checker": {
+    "exit_status": 1,
+    "report": {
+      "status": "FAIL",
+      "relocated_sources": 10,
+      "immutable_files": 116,
+      "published_arm_rows": 10,
+      "published_ridge_rows": 5,
+      "published_contrast_rows": 6,
+      "protected_checkouts": 4,
+      "errors": [
+        "Protected checkout HEAD or status changed: /home/adithya/projects/world-model"
+      ],
+      "scope": "File integrity, source dispositions, published metric associations, and protected HEAD/status equality. Not semantic completeness, ignored-output integrity, process state, or scientific acceptance."
+    },
+    "explanation": "Its pre-integration protected checkout baseline is dated history. Only this operator-authorized integration checkout changed. The 116 immutable files, published associations, and three unrelated protected siblings remain unchanged. No historical baseline was rewritten."
+  },
+  "sibling_worktrees": [
+    {
+      "worktree": "world-model-docs",
+      "head": "e20e8e55681fb8921da006e5c10845fec229caa3",
+      "head_and_status_unchanged": true
+    },
+    {
+      "worktree": "world-model-r36",
+      "head": "2c1d77d161980a36f0ae47d21b8244df931ed5ad",
+      "head_and_status_unchanged": true
+    },
+    {
+      "worktree": "world-model-representations",
+      "head": "4743da742ef1f23d927b0c1b98a4b16c77f3a2e6",
+      "head_and_status_unchanged": true
+    },
+    {
+      "worktree": "world-model-docs-update",
+      "head": "a1a9d1d679729c54a10f5e87bb0d9d2fb4815a31",
+      "head_and_clean_status_unchanged_since_approved_integration": true
+    }
+  ],
+  "main_ref_unchanged": "389b8aba3802d52f9ed9eb5508cbc26e6c6f9d97",
+  "canonical_closure_update_sha256": {
+    "info/EXPERIMENTS.md": "df61c56402b8a47a8c4556d20ebd5ba508f674ad2bb01e2587760a689ed78c55",
+    "info/METHODS.md": "a6072a5b885e417710ed734c9365dfd9ba41b28e4c5c9ef4193193a15a93d5a8",
+    "info/NOTES_AND_INSIGHTS.md": "9d7ff99452ae5cad134cce25b09436f148bdd7ecb81389108382a8ba7f1e1c76",
+    "info/TODO.md": "f1918ebc4aea18ab94fe1d480ef765349865a5e76359827e8c6a5185f590be46",
+    "info/README.md": "a9dbf329439068b7e74ef616d90e239e88b020e1f54553090e2639b2c625c974"
+  },
+  "no_new_training_fitting_acquisition_or_network": true,
+  "staged_diff_check": {
+    "status": "PASS_OUTSIDE_BYTE_PRESERVED_EVIDENCE",
+    "preserved_exceptions": {
+      "info/reviews/evidence/r35/reporting-corrections.diff": "Eleven blank context lines contain the mandatory diff context marker. The original reviewed patch retains its bytes.",
+      "info/reviews/r35_result_review.md": "One original Markdown hard line break contains two trailing spaces. The approved review retains its bytes."
+    },
+    "scope": "All other staged files pass git diff --cached --check. These twelve warnings are evidence formatting, not code or canonical-document whitespace."
+  }
+}

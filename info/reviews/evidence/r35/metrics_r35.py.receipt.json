@@ -1,0 +1,9 @@
+{
+  "command": "/home/adithya/projects/world-model/.venv/bin/python -B /tmp/r35-closure-review/metrics_r35.py",
+  "cwd": "/home/adithya/projects/world-model",
+  "exit_path": "/tmp/r35-closure-review/metrics_r35.py.exit.txt",
+  "exit_status": 0,
+  "source_sha256": "06215962301ae7259c9ef426601bdc0144f38e4b9cbf4196b8a01c83f2a5fe01",
+  "stderr_path": "/tmp/r35-closure-review/metrics_r35.py.stderr.txt",
+  "stdout_path": "/tmp/r35-closure-review/metrics_r35.py.stdout.txt"
+}

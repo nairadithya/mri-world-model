@@ -1,0 +1,34 @@
+{
+  "recorded_utc": "2026-10-12T12:08:29.295841+00:00",
+  "scope": "Verifier regression fixtures and Python compilation only. Not draft completeness or scientific acceptance.",
+  "results": [
+    {
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_documentation_sources.py",
+        "-v"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "test_all_four_baseline_identifiers_are_checked (test_documentation_sources.DocumentationSourcesTests.test_all_four_baseline_identifiers_are_checked) ... ok\ntest_broken_targets_and_fragments_fail (test_documentation_sources.DocumentationSourcesTests.test_broken_targets_and_fragments_fail) ... ok\ntest_complete_fixture_passes (test_documentation_sources.DocumentationSourcesTests.test_complete_fixture_passes) ... ok\ntest_destinations_must_match_catalog_or_explain_override (test_documentation_sources.DocumentationSourcesTests.test_destinations_must_match_catalog_or_explain_override) ... ok\ntest_incomplete_comparisons_cannot_pass (test_documentation_sources.DocumentationSourcesTests.test_incomplete_comparisons_cannot_pass) ... ok\ntest_machine_local_and_sibling_targets_fail (test_documentation_sources.DocumentationSourcesTests.test_machine_local_and_sibling_targets_fail) ... ok\ntest_missing_and_duplicate_source_coverage_fail (test_documentation_sources.DocumentationSourcesTests.test_missing_and_duplicate_source_coverage_fail) ... ok\ntest_missing_baseline_fails (test_documentation_sources.DocumentationSourcesTests.test_missing_baseline_fails) ... ok\ntest_missing_coverage_file_fails_without_crashing (test_documentation_sources.DocumentationSourcesTests.test_missing_coverage_file_fails_without_crashing) ... ok\ntest_missing_draft_fails_without_crashing (test_documentation_sources.DocumentationSourcesTests.test_missing_draft_fails_without_crashing) ... ok\ntest_missing_human_coverage_fails (test_documentation_sources.DocumentationSourcesTests.test_missing_human_coverage_fails) ... ok\ntest_missing_or_modified_snapshot_fails (test_documentation_sources.DocumentationSourcesTests.test_missing_or_modified_snapshot_fails) ... ok\ntest_read_mode_and_evidence_are_required (test_documentation_sources.DocumentationSourcesTests.test_read_mode_and_evidence_are_required) ... ok\n\n----------------------------------------------------------------------\nRan 13 tests in 0.022s\n\nOK\n"
+    },
+    {
+      "command": [
+        "python3",
+        "-m",
+        "py_compile",
+        "scripts/documentation_sources.py",
+        "tests/test_documentation_sources.py"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}

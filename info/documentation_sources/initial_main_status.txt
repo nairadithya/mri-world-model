@@ -1,0 +1,18 @@
+ M AGENTS.md
+ M README.md
+ M info/README.md
+ M info/decisions.md
+ M info/directions.md
+ D info/explainer.html
+ M info/methodology_validity.md
+ D info/notes.md
+ M scripts/README.md
+?? .agents/
+?? .audit/
+?? info/action_conditioned_representation_brief.md
+?? info/drafts/
+?? info/r36_delta_representation_handoff.md
+?? info/r36_delta_representation_results.md
+?? info/research_guardrails.md
+?? info/research_run.html
+?? scripts/verify_research_explainer.py

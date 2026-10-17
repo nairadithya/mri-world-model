@@ -1,0 +1,14 @@
+[
+  {
+    "path": "info/documentation_sources/supplementary/r36-protocol-recovery.md",
+    "sha256": "3e2cdf0b91e615e76d728be9564150d3c6862846e6f43b7dc85f4453cc7412cc"
+  },
+  {
+    "path": "info/documentation_sources/supplementary/r36-runtime-snapshot.json",
+    "sha256": "0ad51d24c7882ecb322470493b379e1c489dd4d85306eb823007d79cbdad423a"
+  },
+  {
+    "path": "info/documentation_sources/supplementary/worktree-creation.json",
+    "sha256": "b942b60f2c9d9c4d61628beb783f2515f20573f82961164a13d5deca51e93599"
+  }
+]

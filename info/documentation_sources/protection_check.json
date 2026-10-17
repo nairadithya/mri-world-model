@@ -1,0 +1,658 @@
+{
+  "recorded_utc": "2026-10-12T17:28:49.091907+00:00",
+  "status": "UNCHANGED",
+  "baseline_utc": "2026-10-12T11:53:54.241430+00:00",
+  "worktrees": [
+    {
+      "worktree": "world-model",
+      "baseline_head": "389b8aba3802d52f9ed9eb5508cbc26e6c6f9d97",
+      "current_head": "389b8aba3802d52f9ed9eb5508cbc26e6c6f9d97",
+      "head_equal": true,
+      "status_equal": true,
+      "current_status": " M AGENTS.md\n M README.md\n M info/README.md\n M info/decisions.md\n M info/directions.md\n D info/explainer.html\n M info/methodology_validity.md\n D info/notes.md\n M scripts/README.md\n?? .agents/\n?? .audit/\n?? info/action_conditioned_representation_brief.md\n?? info/drafts/\n?? info/r36_delta_representation_handoff.md\n?? info/r36_delta_representation_results.md\n?? info/research_guardrails.md\n?? info/research_run.html\n?? scripts/verify_research_explainer.py\n",
+      "tracked_files_checked": 254,
+      "changed_files": []
+    },
+    {
+      "worktree": "world-model-r36",
+      "baseline_head": "f4b96c00dd5d79c59ba02d186e024ff747f690ad",
+      "current_head": "f4b96c00dd5d79c59ba02d186e024ff747f690ad",
+      "head_equal": true,
+      "status_equal": true,
+      "current_status": " M .audit/r36-delta-objective.tsv\n M AGENTS.md\n M info/decisions.md\n M info/directions.md\n D info/explainer.html\n M info/methodology_validity.md\n D info/notes.md\n",
+      "tracked_files_checked": 279,
+      "changed_files": []
+    },
+    {
+      "worktree": "world-model-representations",
+      "baseline_head": "2f6e1f5a65be4ccbceac6de706b537de8b695faa",
+      "current_head": "2f6e1f5a65be4ccbceac6de706b537de8b695faa",
+      "head_equal": true,
+      "status_equal": true,
+      "current_status": "?? .audit/\n?? .venv\n?? checkpoints\n?? data\n?? outputs\n",
+      "tracked_files_checked": 266,
+      "changed_files": []
+    }
+  ],
+  "live_markdown_checks": [
+    {
+      "id": "S001",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S002",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S003",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S004",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S005",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S006",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S007",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S008",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S008",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S010",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S010",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S010",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S011",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S011",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S011",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S012",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S012",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S012",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S013",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S013",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S014",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S016",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S016",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S016",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S017",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S018",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S018",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S020",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S020",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S020",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S023",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S024",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S024",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S024",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S025",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S025",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S025",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S026",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S026",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S031",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S032",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S035",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S035",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S036",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S037",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S038",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S039",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S041",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S041",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S041",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S042",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S042",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S042",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S043",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S043",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S043",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S045",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S045",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S045",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S046",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S047",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S047",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S048",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S048",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S048",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S049",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S051",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S051",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S051",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S052",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S052",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S052",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S053",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S053",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S053",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S054",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S054",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S054",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S055",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S055",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S055",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S056",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S056",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S056",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S058",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S058",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S058",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S059",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S059",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S059",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S060",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S060",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S060",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S061",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S061",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S061",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S062",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S063",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S063",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S064",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S065",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S066",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S066",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S068",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S068",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S068",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S069",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S069",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S069",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S070",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S071",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S071",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    },
+    {
+      "id": "S072",
+      "worktree": "world-model",
+      "matches_capture": true
+    },
+    {
+      "id": "S072",
+      "worktree": "world-model-r36",
+      "matches_capture": true
+    },
+    {
+      "id": "S072",
+      "worktree": "world-model-representations",
+      "matches_capture": true
+    }
+  ],
+  "branch_refs_match_capture": true,
+  "current_refs": [
+    {
+      "ref": "refs/heads/exp/clean-data-rescues",
+      "commit": "067ed6c59a5cce84e65c1389ec1b1a0d0337f88d"
+    },
+    {
+      "ref": "refs/heads/exp/lesion-seed-sensitivity",
+      "commit": "0bed48b0c4a4da68a1fd2ec2dcfafca78314c2b8"
+    },
+    {
+      "ref": "refs/heads/exp/methodology-validity",
+      "commit": "2fe799be43f1dd5ee4415e78197d4bdc3d85a8b8"
+    },
+    {
+      "ref": "refs/heads/exp/r36-delta-objective",
+      "commit": "f4b96c00dd5d79c59ba02d186e024ff747f690ad"
+    },
+    {
+      "ref": "refs/heads/exp/representation-comparison",
+      "commit": "2f6e1f5a65be4ccbceac6de706b537de8b695faa"
+    },
+    {
+      "ref": "refs/heads/exp/validity-temporal",
+      "commit": "33b62210d1d0d06ff912c108ca5a759f31ef6e56"
+    },
+    {
+      "ref": "refs/heads/exp/validity-temporal-loaders",
+      "commit": "8ad4f8196c8cb330244fdbb55b7c6339899f0f76"
+    },
+    {
+      "ref": "refs/heads/main",
+      "commit": "389b8aba3802d52f9ed9eb5508cbc26e6c6f9d97"
+    },
+    {
+      "ref": "refs/remotes/origin/exp/p0-clean",
+      "commit": "0e912a748388df5b2787ed9722bdace043f02341"
+    },
+    {
+      "ref": "refs/remotes/origin/main",
+      "commit": "0bed48b0c4a4da68a1fd2ec2dcfafca78314c2b8"
+    }
+  ],
+  "scope": "Protected checkout HEAD, Git status, baseline tracked-file bytes, and captured live Markdown. Git optional locks disabled. No process controls or experiment-output traversal. Changes may belong to the concurrent owner; this comparison does not attribute them. Shared outputs and process state are not certified by file equality."
+}

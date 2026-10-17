@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "matchedInputs": 44,
+  "errors": [],
+  "checks": [
+    "Assigned repository: /home/adithya/projects/world-model-docs-update; branch docs/r36-record-update; HEAD 36a9e283a2f3f3504ae92ffbd6a5f4ec689e49cb matches handoff. Handoff does not declare a base SHA; no base assertion made.",
+    "SHA256 review_handoff.json independently computed as 7e52c0d13474f0afacc186e5d0e3a8b88e6969394d5d8f31cfe40f836d6e36ec, exact expected match.",
+    "All 44 handoff inputs_sha256 entries independently recomputed before and after checks; zero mismatches at both points.",
+    "python3 -B info/documentation_sources/updates/2026-10-13/check_update.py — exit 0, PASS; 10 relocated sources, 116 immutable files, 10 published arm rows, 5 ridge rows, 6 contrast rows, 4 protected checkouts, no errors.",
+    "Pure verifier command `python3 -B -c \"import importlib.util; s=importlib.util.spec_from_file_location('documentation_sources','scripts/documentation_sources.py'); m=importlib.util.module_from_spec(s); s.loader.exec_module(m); print(m.verify())\"` — exit 0, PASS; 72 source versions, 10 branch refs, 392 local links checked, 3 supplementary files, 47 archive records, no errors. CLI intentionally not used.",
+    "python3 -B -m unittest discover -s tests -p 'test_documentation*.py' -v — exit 0; 22 tests passed.",
+    "/home/adithya/projects/world-model/.venv/bin/python -B -m unittest discover -s tests -p 'test_delta_summary.py' -v — exit 0; 3 tests passed.",
+    "/home/adithya/projects/world-model/.venv/bin/python -B scripts/check_notebook_pairs.py — exit 0; 17 pairs synchronized.",
+    "GIT_OPTIONAL_LOCKS=0 git diff --check — exit 0; no whitespace errors.",
+    "negative_checks.json recorded checker SHA256 matches current check_update.py SHA256 (0e9c26f44d39d55cdcf1e09f7377f474dbd41d09ee452cd1bb7eadac395d1cb6); all six recorded fixture cases passed. This is recorded fixture evidence, separate from the checks independently executed in this run.",
+    "Final 44-entry hash recheck passed. Worktree status remains consistent with the initial dirty state; verification produced no tracked-source modifications."
+  ],
+  "scope": "Read-only mechanical verification of the provided handoff-bound inputs, update checker, pure documentation verifier, requested unit tests, notebook-pair check, diff whitespace, and recorded negative fixtures. Executed in the assigned repository at HEAD 36a9e283a2f3f3504ae92ffbd6a5f4ec689e49cb. No source, refs, generated artifacts, or datasets modified.",
+  "residualRisks": [
+    "No base SHA was provided in the handoff, so only repository, branch, and head identity were verified.",
+    "Recorded negative fixture results were inspected and their checker binding confirmed; fixture cases were not rerun independently.",
+    "This is mechanical verification only: it does not establish semantic completeness, scientific acceptance, ignored-output integrity, or research-process state."
+  ]
+}

@@ -1,0 +1,51 @@
+[
+  {
+    "path": "info/documentation_sources/received_reports/notes.json",
+    "sha256": "add4fa9065f1369bc160a7f11f454bc38779b94b338f45b91c0b97bd1c400d41",
+    "workflow_run": "228d83b7-31ac-4005-9057-7bc41d45d463",
+    "child_run": "8b4e4b7e-e188-4720-99ba-4729ae068ca0",
+    "managed_output_relative_path": "comparison/notes.json",
+    "disposition": "Incomplete coverage. Not accepted."
+  },
+  {
+    "path": "info/documentation_sources/received_reports/experiments.json",
+    "sha256": "5c050212a28bca906cf43687e379ce7a147c156a3c9c8a3d16b7b3a1e3ca5dbd",
+    "workflow_run": "228d83b7-31ac-4005-9057-7bc41d45d463",
+    "child_run": "d8df77b2-c773-4453-bdee-1496cd9b4129",
+    "managed_output_relative_path": "comparison/experiments.json",
+    "disposition": "Truncated reads. Not accepted as complete coverage."
+  },
+  {
+    "path": "info/documentation_sources/received_reports/contracts.json",
+    "sha256": "188ad844eed974ba33d07c83268266d3986a6f4da8d6545f3fa300cdbea3289f",
+    "workflow_run": "228d83b7-31ac-4005-9057-7bc41d45d463",
+    "child_run": "e4c30ab6-6d51-4332-a9d5-3952de5f7340",
+    "managed_output_relative_path": "comparison/contracts.json",
+    "disposition_at_receipt": "Returned comparison. Parent disposition pending.",
+    "disposition": "Parent checked against frozen sources and integrated omissions. See comparisons/contracts.json and the 2026-10-12T14:58:16Z comparison row in decisions.tsv."
+  },
+  {
+    "path": "info/documentation_sources/received_reports/portable-coverage.md",
+    "sha256": "50ba62239aaab0386223b12187ec2f3e80cef09b38b8818b98ea99774d6f3282",
+    "workflow_run": "228d83b7-31ac-4005-9057-7bc41d45d463",
+    "child_run": "1fac6107-a02e-4784-b708-e76e1daed6f8",
+    "managed_output_relative_path": "review/portable-coverage.md",
+    "disposition": "BLOCKED. Frozen inventory findings only. Review barrier was never released."
+  },
+  {
+    "path": "info/documentation_sources/received_reports/post-integration.md",
+    "sha256": "add391e9a2f57ece4dac9221400bf9bc8734a3759d3c495779d7d4fff4e09a2f",
+    "workflow_run": "c030b3d6-3a26-4478-8d2f-727dd59f70de",
+    "child_run": "b1a0ce8d-0a2b-41e8-92e9-2a7e88e161dc",
+    "managed_output_relative_path": "review/post-integration.md",
+    "disposition": "APPROVED_FOR_OPERATOR_REVIEW. Targeted semantic reread plus complete disposition-record review. Not full independent source reread, scientific acceptance, or canonical promotion."
+  },
+  {
+    "path": "info/documentation_sources/received_reports/read-only-verification.md",
+    "sha256": "a15e76a022ec132305ce856708764a205898b6e63a0958dbe92ac9505f8b08f7",
+    "workflow_run": "c030b3d6-3a26-4478-8d2f-727dd59f70de",
+    "child_run": "72549214-d21b-4ff6-9fea-c9fc1731b2d6",
+    "managed_output_relative_path": "review/read-only-verification.md",
+    "disposition": "PASS+NOTES. Independently matched 109 input digests, reran 19 tests, and ran the pure verifier. Documentation integrity only."
+  }
+]

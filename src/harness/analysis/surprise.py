@@ -20,6 +20,7 @@ from torch.utils.data import DataLoader
 from src.data.collate import make_collate
 from src.data.dataset import LUMIEREDataset
 from src.model.jepa_model import JEPAWorldModel
+from src.harness.checkpoints import validate_temporal_semantics
 
 from src.harness.data.tasks import RANO_PROBE_MAP  # noqa: E402
 from src.harness.eval.metrics import auc_mann_whitney  # noqa: E402,F401
@@ -43,7 +44,9 @@ def main(argv=None):
                         collate_fn=make_collate(size))
 
     model = JEPAWorldModel(cfg)
-    model.load_state_dict(torch.load(args.champion, map_location="cpu")["model"])
+    ckpt = torch.load(args.champion, map_location="cpu")
+    validate_temporal_semantics(model, ckpt)
+    model.load_state_dict(ckpt["model"])
     model.eval()
 
     errs, y_bin, y_4 = [], [], []

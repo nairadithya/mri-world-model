@@ -33,6 +33,7 @@ model:
     vision_dim: 768
     clinical_dim: 384
   temporal:
+    time_basis: previous_gap
     d_model: 1152
     nhead: 8
     num_layers: 6

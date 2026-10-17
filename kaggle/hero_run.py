@@ -26,7 +26,7 @@
 # 1. This notebook, GPU enabled: install → clone → wire paths → train.
 # 2. First session: set `EPOCHS = 30`, run the training cell. Outputs persist to `/kaggle/working`.
 # 3. Later sessions: attach the previous session's output as `prev-checkpoints`, run the **resume** cell with a higher `EPOCHS`.
-# 4. After every session, paste the `val epoch` lines into `info/pilot.md` (Run 4+) back home — results tie to commits, per repo convention 4.
+# 4. After every session, add the `val epoch` lines to `info/EXPERIMENTS.md` with the run's commit hash.
 
 # %% [markdown]
 # ## Step 0 — one-time: create the input dataset (on kaggle.com, 5 min)
@@ -203,7 +203,11 @@ common = dict(meta_dir=cfg['data']['meta_dir'], processed_root=cfg['data']['root
               min_visits=cfg['data'].get('min_visits', 2))
 collate = make_collate(size)
 model = JEPAWorldModel(cfg)
-model.load_state_dict(torch.load('/kaggle/working/checkpoints/best.pt', map_location='cpu')['model'], strict=False)
+from src.harness.checkpoints import validate_temporal_semantics
+checkpoint = torch.load('/kaggle/working/checkpoints/best.pt', map_location='cpu', weights_only=False)
+validate_temporal_semantics(model, checkpoint)
+model.load_state_dict(checkpoint['model'], strict=False)
+del checkpoint
 model.eval().to(device)
 by_n = {}
 pats = sorted(os.listdir(cfg['data']['root']))
@@ -231,7 +235,7 @@ for n_ in sorted(by_n):
 # ## After each session
 #
 # 1. `/kaggle/working/checkpoints/best.pt` + `last.pt` are your outputs — download them, or save the version to attach as `prev-checkpoints` next time.
-# 2. Run the notes cell, then copy `/kaggle/working/run_notes.md` home into `info/pilot.md` (new Run section, with this notebook's commit hash).
+# 2. Run the notes cell, then add `/kaggle/working/run_notes.md` to `info/EXPERIMENTS.md` with this notebook's commit hash.
 # 3. Gate (repo A7): JEPA mean vs persistence 0.0043 — plus the train/val generalization gap. Run the eval cell below for the per-patient table.
 
 # %%
@@ -253,7 +257,11 @@ common = dict(meta_dir=cfg['data']['meta_dir'], processed_root=cfg['data']['root
                 min_visits=cfg['data'].get('min_visits', 2))
 collate = make_collate(size)
 model = JEPAWorldModel(cfg)
-model.load_state_dict(torch.load('/kaggle/working/checkpoints/best.pt', map_location='cpu')['model'], strict=False)  # champion predates rano_heads (D25)
+from src.harness.checkpoints import validate_temporal_semantics
+checkpoint = torch.load('/kaggle/working/checkpoints/best.pt', map_location='cpu', weights_only=False)
+validate_temporal_semantics(model, checkpoint)
+model.load_state_dict(checkpoint['model'], strict=False)
+del checkpoint
 model.eval().to(device)
 pers = PersistenceBaseline(model.projector)
 pats = sorted(os.listdir(cfg['data']['root']))
@@ -279,7 +287,7 @@ print(f'MEAN over {n} patients: JEPA={J / n:.4f} persist={P / n:.4f}')
 #
 # Parses every `train_ep*.log` into one paste-ready file:
 # `/kaggle/working/run_notes.md`. It persists as session output — download it
-# or copy its printed contents straight into `info/pilot.md` back home.
+# or copy its printed contents into `info/EXPERIMENTS.md` back home.
 
 # %%
 import datetime, glob, os, re, subprocess, yaml

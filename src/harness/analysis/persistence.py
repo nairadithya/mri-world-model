@@ -30,6 +30,7 @@ from torch.utils.data import DataLoader
 from src.data.collate import make_collate
 from src.data.sailor import SAILORDataset
 from src.model.jepa_model import JEPAWorldModel
+from src.harness.checkpoints import validate_temporal_semantics
 
 from .surprise import auc_mann_whitney  # noqa: E402
 
@@ -99,6 +100,7 @@ def sailor_encode(cfg, champion_path, cache_path):
                         collate_fn=make_collate(size))
     model = JEPAWorldModel(cfg)
     ckpt = torch.load(champion_path, map_location="cpu", weights_only=False)
+    validate_temporal_semantics(model, ckpt)
     model.load_state_dict(ckpt["model"], strict=False)
     model.eval()
     for p in model.parameters():

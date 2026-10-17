@@ -81,15 +81,21 @@ def train(
     )
     if resume_opt_state is not None:
         # G8/R11: continue with the resumed momentum instead of fresh.
-        # State tensors are moved to the training device explicitly
-        # (load_state_dict does not remap them); group mismatch raises LOUD.
-        for s in resume_opt_state.get("state", {}).values():
-            for k, v in s.items():
-                if torch.is_tensor(v):
-                    s[k] = v.to(device)
+        # load_state_dict RE-CASTS every state tensor to the param's device,
+        # and at this point params are still on CPU (model.to(device) happens
+        # below) — a pre-load .to(device) is silently undone and the first
+        # Adam step then lerps cuda grads against cpu momentum (basin
+        # loaded_accum1 crash). So load first, re-map AFTER, and verify.
         opt.load_state_dict(resume_opt_state)
+        moved = 0
+        for s in opt.state.values():
+            for k, v in s.items():
+                if torch.is_tensor(v) and v.device != device:
+                    s[k] = v.to(device)
+                    moved += 1
         print(f"loaded optimizer state "
-              f"({len(resume_opt_state.get('state', {}))} tensors; "
+              f"({len(resume_opt_state.get('state', {}))} entries; "
+              f"{moved} tensors moved to {device}; "
               f"schedule still restarts per config)")
     use_amp = tr.get("use_amp", True) and device.type == "cuda"
     scaler = torch.amp.GradScaler("cuda", enabled=use_amp)

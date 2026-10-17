@@ -1,0 +1,9 @@
+{
+  "command": "/home/adithya/projects/world-model/.venv/bin/python -B /tmp/r35-closure-review/correct_independent.py",
+  "cwd": "/home/adithya/projects/world-model",
+  "exit_path": "/tmp/r35-closure-review/correct_independent.py.exit.txt",
+  "exit_status": 0,
+  "source_sha256": "0d09e4885291bf8fa59526284ae5570ce5184b202a9a3afa9a961f625d931b3c",
+  "stderr_path": "/tmp/r35-closure-review/correct_independent.py.stderr.txt",
+  "stdout_path": "/tmp/r35-closure-review/correct_independent.py.stdout.txt"
+}

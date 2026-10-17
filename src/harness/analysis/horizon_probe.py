@@ -38,6 +38,7 @@ from torch.utils.data import DataLoader
 from src.harness.data.builder import build_datasets
 from src.data.collate import make_collate
 from src.model.jepa_model import JEPAWorldModel
+from src.harness.checkpoints import validate_temporal_semantics
 from src.harness.train.latent import GapHeadPredictor as HorizonPredictor  # noqa: E402,F401
 
 
@@ -50,6 +51,7 @@ def encode_all(cfg, champion_path, cache_path):
     model = JEPAWorldModel(cfg)
     ckpt = torch.load(champion_path, map_location="cpu", weights_only=False)
     # Champion predates the RANO heads: missing rano_heads.* keys are expected.
+    validate_temporal_semantics(model, ckpt)
     model.load_state_dict(ckpt["model"], strict=False)
     model.eval()
     for p in model.parameters():
