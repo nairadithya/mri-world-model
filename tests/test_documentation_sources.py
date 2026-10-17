@@ -3,6 +3,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -58,6 +59,38 @@ class DocumentationSourcesTests(unittest.TestCase):
 
     def test_complete_fixture_passes(self):
         self.assertEqual(self.report()["errors"], [])
+
+    def test_cli_verify_prints_report_without_writing_receipt(self):
+        import shutil
+        script_dir = self.root / "scripts"
+        script_dir.mkdir()
+        script = script_dir / "documentation_sources.py"
+        shutil.copy(ROOT / "scripts/documentation_sources.py", script)
+        package = self.root / "info/documentation_sources"
+        result = subprocess.run([sys.executable, "-B", str(script), "verify"],
+                                capture_output=True, text=True)
+        report = json.loads(result.stdout)
+        receipt = package / "verification.json"
+        self.assertEqual(result.returncode, 0)
+        self.assertEqual(report["status"], "PASS")
+        self.assertFalse(receipt.exists())
+
+    def test_cli_verify_failure_preserves_existing_receipt(self):
+        import shutil
+        script_dir = self.root / "scripts"
+        script_dir.mkdir()
+        script = script_dir / "documentation_sources.py"
+        shutil.copy(ROOT / "scripts/documentation_sources.py", script)
+        receipt = self.package / "verification.json"
+        sentinel = b"historical receipt\\x00bytes\\n"
+        receipt.write_bytes(sentinel)
+        (self.drafts / "TODO.md").unlink()
+        result = subprocess.run([sys.executable, "-B", str(script), "verify"],
+                                capture_output=True, text=True)
+        report = json.loads(result.stdout)
+        self.assertEqual(result.returncode, 1)
+        self.assertEqual(report["status"], "FAIL")
+        self.assertEqual(receipt.read_bytes(), sentinel)
 
     def test_renderer_keeps_later_updates_separate_and_is_idempotent(self):
         from render_documentation_coverage import render
