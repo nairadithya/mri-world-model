@@ -1,0 +1,14 @@
+{
+  "scope": "Initial independent review of befff344ee9b41e365ec34664671ee5c346ae28f. Subsequent teaching and mobile fixes require a separate fresh re-check.",
+  "verdicts": {
+    "scientific": "APPROVED_FOR_HANDBOOK",
+    "pedagogy": "NEEDS_FIXES",
+    "verification": "PASS"
+  },
+  "correction": "The execution report says the retained print PDF is 8 pages. Parent pdfinfo and print text established 50 pages for that edition. Preserve the report unchanged; this note corrects the page-count assertion, not its command outcomes.",
+  "sha256": {
+    "initial-verification.md": "cf5feb631f3cbfa8aab9fa917baf9d19590b75b4e103fc1960b5891b652a7567",
+    "initial-scientific.md": "e2cd53a0c054324c8d977151df6b44abad29bb56fdcdcb5e8ef065ec5adf5c26",
+    "initial-pedagogy.md": "6773ccea9746a7002cf7156db3de14bed6677a50f3c332b7f9ef020555ccb8c0"
+  }
+}

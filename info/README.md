@@ -1,5 +1,7 @@
 # Research documentation
 
+Start with the [HTML technical handbook](technical_handbook.html) for a prerequisite-first primer, a detailed experiment account, and a candid publication assessment. It is an educational guide, not a fifth result ledger. Its [maintenance guide](handbook/README.md) defines the deterministic build and review procedure.
+
 The four canonical documents own the research record:
 
 - [Notes and insights](NOTES_AND_INSIGHTS.md) explains the questions, findings, and limits.

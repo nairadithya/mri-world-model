@@ -1,0 +1,81 @@
+{
+  "schema": 1,
+  "recorded_utc": "2026-10-17T10:10:03.601836+00:00",
+  "reviewed_source_commit": "c78a9cfb9283f2b3995360e8a77f7a4c360876f4",
+  "original_full_comparison_commit": "befff344ee9b41e365ec34664671ee5c346ae28f",
+  "source_base_commit": "9c806078354088a05ef976909cd31ce20a592f99",
+  "status": "APPROVED_FOR_HANDBOOK",
+  "scope": "Detailed educational explanation and editorial publication judgment. Original full source comparison plus fresh bounded re-check of revised definitions, glossary, mobile caveats, print navigation and appended trail corrections. Not new scientific, clinical, novelty, venue or submission approval.",
+  "scientific_review": {
+    "model": "openai-codex/gpt-6.1-sol:high",
+    "run_id": "f5c2ca75-3cab-46f6-87bf-6c34404ef53b",
+    "verdict": "APPROVED_FOR_HANDBOOK",
+    "report": "reviews/final-scientific.md"
+  },
+  "pedagogy_and_trail_review": {
+    "model": "opencode-go/deepseek-v4.1-flash:medium",
+    "run_id": "671ca478-da77-4831-bd94-a0f1ed0be27f",
+    "verdict": "APPROVED_FOR_HANDBOOK",
+    "report": "reviews/final-pedagogy.md"
+  },
+  "execution_verification": {
+    "run_id": "26f469a0-0dcb-4d31-a3ef-5353851361cd",
+    "verdict": "PASS",
+    "checked_commit": "befff344ee9b41e365ec34664671ee5c346ae28f",
+    "report": "reviews/initial-verification.md",
+    "limit": "Final revision checks are separately parent-executed in final-checks.json. The independent verifier did not execute the revised head. Its 8-page print assertion is corrected in initial-receipt.json."
+  },
+  "required_findings_remaining": 0,
+  "remaining_limits": [
+    "Intermediate viewport widths were not visually certified; the special stacked publication layout applies at widths up to 520px.",
+    "Printed contents lists chapter numbers, not per-chapter page references.",
+    "Pixel and accessibility checks are sampled, not exhaustive.",
+    "Two clinical background full texts were not extractable; no external quotation or literature novelty claim is made.",
+    "Semantic and publication guidance remains bounded by the canonical research records, target reliability limits and developmental cohorts."
+  ],
+  "parent_final_checks": {
+    "full_tests": 122,
+    "documentation_tests": 24,
+    "handbook_tests": 7,
+    "notebook_pairs": 17,
+    "protected_sources_checked": 223,
+    "protected_sources_changed": 0,
+    "rendered_browser_states": 12,
+    "print_pages": 53
+  },
+  "reviewed_input_sha256": {
+    "info/handbook/chapters/01-mri.html": "54221d5d84565f464584b8ef8ee9d885885279b4b95aaf07029ba88315296615",
+    "info/handbook/chapters/02-geometry.html": "6b3e7fee3fab01807c70ed4f6a648ca3f5e436103ba67d7956036eb118a0f63c",
+    "info/handbook/chapters/03-tasks.html": "3edb6ab526c28c21d1532d34320b1245be1e5b29c4a20fc9272bc7f50f48d6f8",
+    "info/handbook/chapters/04-representations.html": "98d81fff734dc92c4dbcde1fedb4bab9bc6ab8cf680bee54b4184cbdeee36d17",
+    "info/handbook/chapters/05-jepa.html": "d31cb107a8acc70524bc9bd797eddc0cf124eea906d2816f6a983c194c9ca077",
+    "info/handbook/chapters/06-evaluation.html": "f92a61dd94a58e5e5882378ce9d65e5dfb55e50310188368321c3f4dcadf68aa",
+    "info/handbook/chapters/07-metrics.html": "f5d3ec43e85133c58f7f55f28e2a0da6ba0aefbff5377c2c631980fb3d6998dc",
+    "info/handbook/chapters/08-uncertainty.html": "c077d4969e8fd5e97fcb9fa951198ea12da47caafb2af3e2fa8b29464ca1bb49",
+    "info/handbook/chapters/09-project-map.html": "bebdf8801b31416542729769e55ff17510d5700cd9d3affec765367b9608c537",
+    "info/handbook/chapters/10-initial-jepa.html": "27aea55cc76dcc49fa7abf4f8275057a55587d6d229f81301a90b21f888ae655",
+    "info/handbook/chapters/11-readouts-transfer.html": "9383d31d35fefec5cfec921aa6bbc7b2acb4a412e4db9a128c6ba443ac10803d",
+    "info/handbook/chapters/12-forecasting.html": "5be2e8f04b59c0eb97ca9782bd5da972708c3a5377a22bf3a780182e15d993fe",
+    "info/handbook/chapters/13-rescues-validity.html": "a7c267c0b74f9965460bfaec352e9e3ecc792551c3bbf19ba146421b53808f9b",
+    "info/handbook/chapters/14-r35.html": "cfb1abfdf44a048bd782aa80601410cd4c133150fce56deb7013af5ca6f232a5",
+    "info/handbook/chapters/15-r36.html": "515e0511189e83d3648a038820220b2443a39ad7efb2f4cc94f2b119da48bac5",
+    "info/handbook/chapters/16-index.html": "796d10621a12246c2642252c99293293ff814050003dc38a00c46a79a449e70b",
+    "info/handbook/chapters/17-publication.html": "96ceacc6dc1455d96a76b52a21f89e1e1946407be904322307f2f69e74e51101",
+    "info/handbook/chapters/18-open-evidence.html": "c105dd7d802a776f734e769c1fb1e9bf4a51ae6557073be4fb3448dfb713800a",
+    "info/handbook/chapters/19-references.html": "b87c940590fb115ef9853e9c1ea79c630c72dd79de0c35af899aa165ce76f61c",
+    "info/handbook/layout.html": "b5b4a19879525058d98ad95704bb0718d34bb1a6b1ea07ee8dee2696a355f92a",
+    "info/handbook/README.md": "04f581c48c25d63e4556b7cc583b8165bbdb8b0eba84e6d33464d1bbb8c29379",
+    "info/technical_handbook.html": "71d9cdf7c0c47454c5ef46c3c49b25bf9bcae15405e4b417aedc6c0e87024a96",
+    "scripts/build_technical_handbook.py": "715d09b1f79bc87cabd272ebfb36e8f03771b5712ea47dc2118c752f07809c37",
+    "tests/test_technical_handbook.py": "0af7e68ebe50f1341a10c7db7db519d81f82d25732e1d33f5db36dd062eaf253"
+  },
+  "report_sha256": {
+    "dispositions.md": "8a3311cff148a6add535389121a00d6076e31ccc18b7611a69e20c4b6f27c818",
+    "final-scientific.md": "eaabb9085cd4d3f8f360900e8c2221e8f9b24f3e89261a0ccfcd260b5da00ae4",
+    "initial-verification.md": "cf5feb631f3cbfa8aab9fa917baf9d19590b75b4e103fc1960b5891b652a7567",
+    "initial-scientific.md": "e2cd53a0c054324c8d977151df6b44abad29bb56fdcdcb5e8ef065ec5adf5c26",
+    "initial-pedagogy.md": "6773ccea9746a7002cf7156db3de14bed6677a50f3c332b7f9ef020555ccb8c0",
+    "final-pedagogy.md": "7fbe9d2cd263c529f836dbecd6be75560a84d5fd1758bfd3dc0959c226d2db04"
+  },
+  "administrative_limit": "This receipt and any later closure-only navigation/log additions are parent-authored administration, not independently reviewed handbook rewrites. Reviewed chapter/layout/builder bytes must remain identical to reviewed_input_sha256."
+}

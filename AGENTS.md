@@ -69,6 +69,13 @@ The four canonical pages own different kinds of content:
 - `info/METHODS.md` defines terms, fixed protocols, evaluation rules, reproduction commands, and historical IDs.
 - `info/NOTES_AND_INSIGHTS.md` explains the reasoning and separates measured evidence from interpretation and unknowns.
 
+`info/technical_handbook.html` is a generated educational guide, not a fifth
+canonical research page. Edit `info/handbook/chapters/` or `layout.html` and run
+`python3 -B scripts/build_technical_handbook.py`, then its `--check` mode.
+Keep publication judgments separate from measured findings. Render and inspect
+changed HTML at desktop and mobile widths and in print. The maintenance guide
+at `info/handbook/README.md` defines the source and review contract.
+
 When new research documentation arrives:
 
 1. Read the prior session's final handoff and committed evidence. Compare the new record with the canonical pages and existing source coverage. Do not repeat completed experiments to reconstruct context.
