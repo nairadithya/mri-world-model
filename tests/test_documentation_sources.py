@@ -66,12 +66,14 @@ class DocumentationSourcesTests(unittest.TestCase):
         script_dir.mkdir()
         script = script_dir / "documentation_sources.py"
         shutil.copy(ROOT / "scripts/documentation_sources.py", script)
+        for name in (*NAMES, "SOURCE_COVERAGE.md"):
+            shutil.copy(self.drafts / name, self.root / "info" / name)
         package = self.root / "info/documentation_sources"
         result = subprocess.run([sys.executable, "-B", str(script), "verify"],
                                 capture_output=True, text=True)
         report = json.loads(result.stdout)
         receipt = package / "verification.json"
-        self.assertEqual(result.returncode, 0)
+        self.assertEqual(result.returncode, 0, report)
         self.assertEqual(report["status"], "PASS")
         self.assertFalse(receipt.exists())
 
@@ -81,10 +83,12 @@ class DocumentationSourcesTests(unittest.TestCase):
         script_dir.mkdir()
         script = script_dir / "documentation_sources.py"
         shutil.copy(ROOT / "scripts/documentation_sources.py", script)
+        for name in (*NAMES, "SOURCE_COVERAGE.md"):
+            shutil.copy(self.drafts / name, self.root / "info" / name)
         receipt = self.package / "verification.json"
         sentinel = b"historical receipt\\x00bytes\\n"
         receipt.write_bytes(sentinel)
-        (self.drafts / "TODO.md").unlink()
+        (self.root / "info/TODO.md").unlink()
         result = subprocess.run([sys.executable, "-B", str(script), "verify"],
                                 capture_output=True, text=True)
         report = json.loads(result.stdout)

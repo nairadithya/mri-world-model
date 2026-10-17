@@ -254,7 +254,6 @@ def main():
         capture(args.repo, args.worktrees)
     else:
         report = verify()
-        (PACKAGE / "verification.json").write_text(json.dumps(report, indent=2) + "\n")
         print(json.dumps(report, indent=2))
         raise SystemExit(bool(report["errors"]))
 
