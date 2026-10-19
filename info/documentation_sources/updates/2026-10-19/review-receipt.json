@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "date": "2026-10-19",
+  "status": "APPROVED_FOR_PILOT_DESIGN",
+  "scope": "Initial full R37 scientific protocol review plus fresh bounded review of the two comparison-confound corrections and their implications. No implementation or scientific result approval.",
+  "reviewer_model": "openai-codex/gpt-6.1-sol:high",
+  "hash_provenance": "Parent-executed sha256sum. Reviewer could read files but did not independently execute hash or verification commands.",
+  "reviews": [
+    {
+      "run_id": "a1cabc55-359d-46ff-8dfa-d263ea6e2329",
+      "path": "info/documentation_sources/updates/2026-10-19/reviews/initial-design.md",
+      "sha256": "b3e3ae55f37a173bb21ed3645dca63a8520daea33a595c3a2eae7f643e8448b3",
+      "verdict": "CHANGES_REQUIRED",
+      "merge_verdict": "BLOCK",
+      "protocol_sha256": "2abc0d033c5d94dba43680f08743f678ff48fca3cc3596079b895d2f1f3913c4"
+    },
+    {
+      "run_id": "ba007797-7cc2-481a-b916-f100e0e6217f",
+      "path": "info/documentation_sources/updates/2026-10-19/reviews/final-design.md",
+      "sha256": "d975616e4e741570cb7e858e0bdf84f640d4e46c20310035501b9bb242e33653",
+      "verdict": "APPROVED_FOR_PILOT_DESIGN",
+      "merge_verdict": "OK — protocol design only.",
+      "reviewed_inputs": {
+        "info/METHODS.md": "e265b5789bf707b09ee2e137409a3cdd44e9993f0b064c1626035679df639dc5",
+        "info/NOTES_AND_INSIGHTS.md": "3138d48f546ecf9c164cf215b77f24b7f0425fb0fedac9a55071469447b882ce",
+        "info/TODO.md": "82f6bc8a68907a76ce5bb5ac337f21661b6ba978a1639f530287ff3dc06b4d57",
+        "info/README.md": "e5951cd561404a4d0d116024ce1fe892baa96612bcd700ad31f16fead287479d"
+      }
+    }
+  ],
+  "post_review_changes": [
+    "TODO closes only the design-review checkbox and links final-design.md. This administrative change was parent-authored, not independently reviewed.",
+    "Source dispositions, review receipt, final verification record and closure text were added after design review. They are parent-authored administration."
+  ],
+  "remaining_gates": [
+    "Implementation and independent implementation review",
+    "Future-input rejection fixtures and content-bound run contract",
+    "Bounded cutoff, target-availability and alignment checks",
+    "Resource availability and execution within the fixed ceilings",
+    "Independent aggregate-result review"
+  ]
+}

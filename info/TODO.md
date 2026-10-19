@@ -4,6 +4,18 @@ This checklist records remaining work after the October 13, 2026, R35 scoped res
 
 Use [Notes and insights](NOTES_AND_INSIGHTS.md) for interpretation, [Experiments](EXPERIMENTS.md) for results, and [Methods](METHODS.md) for protocols. The [research guardrails](research_guardrails.md) govern new implementation. This checklist does not authorize experiments, data acquisition, or a change of method family.
 
+## R37 protocol-first dynamics pilot, October 19, 2026
+
+The operator selects one bounded frozen-spatial-state next-observation pilot. The [R37 protocol](METHODS.md#r37) owns the comparisons, budget, thresholds, and stop rule. This supersedes the earlier no-family-selected planning status only for R37. It does not authorize the historical R36 Phase 2 recipe, a backbone sweep, data acquisition, or new annotation.
+
+- [x] Write the protocol-first decision brief and fix one probabilistic primary endpoint.
+- [x] Obtain independent design review of stable protocol bytes and resolve blocking findings. The [fresh review](documentation_sources/updates/2026-10-19/reviews/final-design.md) returns `APPROVED_FOR_PILOT_DESIGN` for the revised comparisons. Implementation and execution remain unchecked.
+- [ ] Implement only the reviewed pilot, verify cutoff rejection and alignment, and bind the run contract before fitting.
+- [ ] Execute once within eight GPU-hours, sixteen CPU-hours, and two elapsed days. No fitting has run in this documentation task.
+- [ ] Review saved aggregate results independently and record a positive, negative, or inconclusive decision without launching a sweep.
+
+Preliminary data checks are limited to cutoff correctness, target availability, and alignment within the protocol's four-CPU-hour allowance. Target-reliability and independent-validation work below limits interpretation but is not an open-ended prerequisite for this scoped proxy experiment. Known leakage, invalid targets, broken geometry, and privacy limits remain hard stops.
+
 ## R35 computation and scoped result review are closed
 
 The [R35 findings](EXPERIMENTS.md#r35), [independent result review](reviews/r35_result_review.md), and [closure receipt](reviews/r35_closure_receipt.json) close the earlier review task.
@@ -27,7 +39,7 @@ The [completed findings](EXPERIMENTS.md#r36-completed) and [closure receipt](rev
 - [x] Complete the [independent artifact audit](reviews/r36_phase1_artifact_audit.md), including saved ridge replay and patient-level contrast recomputation.
 - [x] Present all arms and required companions in the [research page](research_run.html) and [aggregate measurements](r36_phase1_metrics.json).
 
-The primary C-versus-B encoder gain, D's nuisance tradeoff, and superiority over independent state differences remain INCONCLUSIVE. C passes the specified direct-volume retention margin against A. That is not a general state-improvement claim. No follow-up family is selected, and Phase 2 remains unauthorized.
+The primary C-versus-B encoder gain, D's nuisance tradeoff, and superiority over independent state differences remain INCONCLUSIVE. C passes the specified direct-volume retention margin against A. That is not a general state-improvement claim. No follow-up family was selected at closure, and the historical Phase 2 recipe remains unauthorized. The October 19 R37 decision above selects a separate bounded forecasting pilot.
 
 The earlier implementation review was not retrospective pre-training approval. Computational completion and reporting approval do not resolve target reliability, biological attribution, or untouched external validation.
 
@@ -61,7 +73,7 @@ SAILOR remains controlled-access development transfer. Its tentative codes 3 and
 
 ## Priority 2. Decide the next scientific question before implementation
 
-The [R36 interpretation](NOTES_AND_INSIGHTS.md#d58) separates the descriptive nonlinear-decoder benefit from the unresolved encoder hypothesis. The completed comparison does not select an architecture or authorize another experiment.
+The [R36 interpretation](NOTES_AND_INSIGHTS.md#d58) separates the descriptive nonlinear-decoder benefit from the unresolved encoder hypothesis. The completed comparison itself does not select an architecture or authorize another experiment. The October 19 operator request separately selects [R37](METHODS.md#r37).
 
 Before substantial research implementation:
 
@@ -72,7 +84,7 @@ Before substantial research implementation:
 
 ### R36 Phase 2 remains unauthorized
 
-The [conditional dynamics proposal](METHODS.md#r36-phase2) requires a separate operator decision. It is not an automatic continuation of Phase 1.
+The historical [conditional dynamics proposal](METHODS.md#r36-phase2) remains unselected. The operator's October 19 decision authorizes only the separate [R37 pilot](METHODS.md#r37), with frozen state-only features and its own controls, budget, and review gates. It does not authorize the historical Phase 2 encoder-objective comparison.
 
 Any future predictor must exclude future scans, masks, volumes, embeddings, gaps ending at future visits, and future treatment from inference inputs. Teacher observations can be training targets only. Selection cannot use SAILOR or the reused development assessment outcomes.
 

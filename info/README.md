@@ -11,6 +11,8 @@ The four canonical documents own the research record:
 
 The latest R36 closure is October 13, 2026. Phase 1 computation and scoped reporting review are complete. The primary encoder gain remains inconclusive, C passes the specified direct-volume retention margin, and Phase 2 remains unauthorized. [Completed findings](EXPERIMENTS.md#r36-completed) and [D58 interpretation](NOTES_AND_INSIGHTS.md#d58) explain those distinctions. Earlier October 11 runtime snapshots remain historical, not live job status.
 
+The October 19, 2026, operator request selects the [R37 frozen-state dynamics pilot](METHODS.md#r37). [TODO](TODO.md#r37-protocol-first-dynamics-pilot-october-19-2026) records its review and execution gates. No R37 training or forecasting result is reported by this protocol-first update. The historical R36 Phase 2 recipe remains unauthorized.
+
 ## Evidence and presentation
 
 The [current research page](research_run.html) presents the aggregate findings. Its generator is `scripts/refresh_research_run.py`. [Aggregate R36 measurements](r36_phase1_metrics.json) retain all arms, companions, and input hashes.

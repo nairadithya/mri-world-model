@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "date": "2026-10-19",
+  "status": "PASS",
+  "scope": "Parent-executed documentation integrity checks only. No model, participant-data, geometry or computational-feasibility checks.",
+  "commands": [
+    {
+      "command": "python3 -B -m unittest discover -s tests -p 'test_documentation*.py' -v",
+      "exit_code": 0,
+      "tests": 24
+    },
+    {
+      "command": "python3 -B scripts/documentation_sources.py verify",
+      "exit_code": 0,
+      "source_versions": 72,
+      "local_links_checked": 413,
+      "archive_records_checked": 47,
+      "errors": []
+    },
+    {
+      "command": "python3 -B scripts/render_documentation_coverage.py",
+      "exit_code": 0
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    }
+  ],
+  "final_canonical_hashes": {
+    "info/METHODS.md": "e265b5789bf707b09ee2e137409a3cdd44e9993f0b064c1626035679df639dc5",
+    "info/NOTES_AND_INSIGHTS.md": "3138d48f546ecf9c164cf215b77f24b7f0425fb0fedac9a55071469447b882ce",
+    "info/TODO.md": "3b45217c01592965aa376e5900cead67b0fbcd9b11fbedb25efa04c5fbf60e72",
+    "info/README.md": "e5951cd561404a4d0d116024ce1fe892baa96612bcd700ad31f16fead287479d",
+    "info/EXPERIMENTS.md": "df61c56402b8a47a8c4556d20ebd5ba508f674ad2bb01e2587760a689ed78c55"
+  },
+  "review_receipt": "review-receipt.json",
+  "not_performed": [
+    "Implementation or implementation review",
+    "Training, inference, data QA, geometry verification or feature extraction",
+    "Scientific-result evaluation",
+    "New independent validation",
+    "HTML regeneration or rendering, since no HTML source changed"
+  ]
+}

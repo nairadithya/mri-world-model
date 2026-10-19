@@ -16,6 +16,12 @@ A representation is the set of numerical features that an encoder extracts from 
 
 JEPA, lesion-focused features, forecast heads, clinical inputs, and whole-brain methods are possible ways to reach the goal. None is the goal itself. The [research rules](documentation_sources/versions/6e710be8c33b05d77bf8f13b415b64028fcc13dc03d71defb304e6a7631c78f4.md) and [decisions D55 and D57](documentation_sources/versions/2b7293c884e0e0aa9f1db178d13f55497d584cd7060c68c022436d47330bb63c.md) make that distinction explicit.
 
+### R37 asks whether spatial history predicts an unseen observation
+
+The October 19, 2026, operator request selects the bounded [R37 pilot](METHODS.md#r37). This is a hypothesis and protocol, not a measured result. It freezes an existing state-only encoder and tests whether history improves the next observation's anatomical probability distribution beyond a matched latest-scan predictor and simple controls. The latest-image-only control retains identical past timing, history masks, and availability flags. The pooled-past control retains the full spatial current-scan pathway. These controls separate earlier MRI information from observation scheduling and earlier spatial detail from current-scan processing. Regularized linear spatial dynamics tests whether nonlinear recurrence earns its complexity. No contrast alone establishes anatomical correspondence or a physical change mechanism. Prior latent forecasts and physical-history failures motivate these controls, not a presumption of success.
+
+A history gain would support this tested temporal-state capability. A latest-scan-only gain would support prediction from current state without establishing history benefit. A negative or inconclusive outcome ends this formulation within its budget. Automated volume agreement, reused development patients, and unknown future visit timing limit all three interpretations. The pilot does not reopen R36's encoder-objective findings or demonstrate biological, fixed-day, or treatment-effect prediction.
+
 ### State, observed change, and future prediction are different questions
 
 State means what is present at one visit, such as lesion burden or anatomical structure. A model that extracts lesion volume from a scan estimates state.

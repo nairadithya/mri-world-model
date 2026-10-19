@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "date": "2026-10-19",
+  "scope": "R37 protocol-first operator decision. No new measurements, archive relocation, data access or model fitting. Original 72-version catalog remains unchanged.",
+  "records": [
+    {
+      "source": "Operator request in the current session on October 19, 2026",
+      "read_mode": "Full current-session request",
+      "source_excerpt": "First finalize its one-page protocol, including the materially different comparator, fitting budget, success threshold, and stop rule.",
+      "destinations": [
+        "info/METHODS.md#r37",
+        "info/TODO.md#r37-protocol-first-dynamics-pilot-october-19-2026",
+        "info/NOTES_AND_INSIGHTS.md#r37-asks-whether-spatial-history-predicts-an-unseen-observation",
+        "info/README.md"
+      ],
+      "disposition": "Select one bounded frozen-state next-observation dynamics pilot, with a protocol-first deliverable and independent design and implementation review before fitting. Preserve historical R36 Phase 2 as a separate unselected recipe.",
+      "comparison_status": "new_operator_direction_not_result"
+    },
+    {
+      "sources": [
+        "info/METHODS.md#r36-phase2",
+        "info/research_guardrails.md",
+        "src/model/representation.py",
+        "src/harness/analysis/delta_protocol.py"
+      ],
+      "read_mode": "Direct protocol and code-interface inspection",
+      "destinations": ["info/METHODS.md#r37"],
+      "disposition": "Reuse the existing state-only spatial encoder and affine volume decoder. Replace the conditional proposal with a separate locked pilot, including matched current-only, simple probabilistic, ridge-spatial and pooled-history comparisons. Do not reopen encoder-objective contrasts or call latent error anatomical success.",
+      "comparison_status": "grounded_protocol_choice_not_executed"
+    }
+  ],
+  "detail": "info/documentation_sources/updates/2026-10-19/README.md"
+}
