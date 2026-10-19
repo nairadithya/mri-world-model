@@ -1,9 +1,9 @@
 # AGENTS.md — working guide for this repo
 
 Research repo: longitudinal glioma MRI using LUMIERE for development and
-SAILOR for developmental transfer. The research objective is useful MRI
-representations that preserve anatomical and pathological state and meaningful
-longitudinal change while separating acquisition nuisance. The consolidated protocols in
+SAILOR for developmental transfer. The research direction is world models for
+MRI. The objective is useful representations of anatomical and pathological
+state and meaningful longitudinal dynamics while separating acquisition nuisance. The consolidated protocols in
 `info/METHODS.md` describe scoped experiments, not a universal definition
 or gate for representation quality. Read `info/TODO.md` for remaining work
 at the latest recorded closure, and `info/EXPERIMENTS.md` for outcomes. Lesion awareness, JEPA, forecast
@@ -13,6 +13,53 @@ research implementation. It sets binding decision and reporting requirements.
 `info/archive/2026-10-12/PROPOSAL.md` preserves the original JEPA hypothesis.
 See `info/README.md` for the documentation map. Read
 `info/NOTES_AND_INSIGHTS.md` for the reasoning and interpretation.
+
+## Research direction and priorities
+
+Operator direction, October 19, 2026: pursue hypothesis-driven research within
+**world models for MRI**, rather than treating data auditing as the destination.
+The direction is fixed; the capability, hypothesis, and method remain research
+choices. This updates planning priorities, not historical results or experiment
+authorizations in `info/TODO.md`.
+
+For planning, an MRI world model maintains a patient-state representation from
+available observations and predicts aspects of later observations, with
+uncertainty. MRI only partially observes the patient's biological state and also
+reflects acquisition conditions. Per-scan state estimation and observed-change
+assessment can support this goal, but neither alone demonstrates learned future
+dynamics. Photorealistic scan generation, treatment simulation, and a universal
+brain model are not prerequisites.
+
+- Start the next research proposal with one world-model capability, a falsifiable
+  hypothesis, and a fixed compute and time budget. Identify what the experiment
+  would establish beyond a simpler method. Do not default to more auditing or a
+  larger architecture without connecting it to that question.
+- A candidate question is whether MRI history improves future anatomical
+  prediction beyond the latest scan alone under irregular sampling and
+  acquisition variation. This is a proposal, not a selected experiment. When
+  claiming longitudinal benefit, include matched latest-scan-only and appropriate
+  persistence controls. Respect the prediction-time information cutoff and test
+  anatomically meaningful outputs, not only the model's own latent error.
+- Bound data and target checks to the chosen experiment. Specify the sample,
+  budget, stopping rule, and decision each check informs. Distinguish defects
+  that invalidate a comparison from uncertainty that limits its interpretation.
+  Do not require complete biological validation before a scoped computational
+  test, or let supporting QA expand into an indefinite prerequisite program.
+  Never bypass known leakage, invalid targets, privacy terms, or broken geometry.
+- Plan and protect independent validation where feasible. Its absence limits
+  generalization claims; it does not prohibit all developmental experiments.
+  Agreement with automated masks is not expert-verified biological prediction.
+  Keep reused LUMIERE and SAILOR assessments labeled as development evidence.
+- Seek a specific methodological contribution or demonstrated capability relevant
+  to world models. ICWM, NeurIPS, and ICLR are publication ambitions, not evidence
+  of novelty or acceptance. Applying an existing temporal architecture to MRI is
+  not by itself a demonstrated contribution.
+
+Use the decision brief in `info/research_guardrails.md` before substantial
+implementation. This direction does not authorize Phase 2, new training, data
+acquisition, or a particular method family. Preserve R35 and R36's scoped
+findings, inconclusive comparisons, and withdrawals rather than reopening
+completed experiments to manufacture a world-model success.
 
 ## Layout
 
