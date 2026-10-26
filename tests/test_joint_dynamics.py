@@ -1,4 +1,3 @@
-"""R38 source candidate tests: execute only remotely inside the charged authority."""
 from __future__ import annotations
 
 from contextlib import contextmanager

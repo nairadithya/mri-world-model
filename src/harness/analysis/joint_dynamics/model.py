@@ -1,4 +1,3 @@
-"""Named cutoff-only prediction boundary and the fixed R38 gradient factorial."""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -171,7 +170,6 @@ def gaussian_crps(mean: torch.Tensor, scale: torch.Tensor, truth: torch.Tensor) 
 def losses(prediction: Prediction, current: AnatomyTargets, future: AnatomyTargets,
            mean: torch.Tensor, scale: torch.Tensor) -> dict[str, torch.Tensor]:
     current.validate(); future.validate()
-    # Autocast is explicitly disabled for every loss reduction, including BCE.
     with torch.autocast(device_type=prediction.mean.device.type, enabled=False):
         current_loss = (F.binary_cross_entropy_with_logits(prediction.current_logits.float(), current.masks.float())
             + soft_dice_loss(prediction.current_logits, current.masks)

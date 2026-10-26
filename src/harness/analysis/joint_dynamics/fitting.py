@@ -1,8 +1,3 @@
-"""Fixed matched fitting, source-only feasibility probes and portable predictions.
-
-All functions here run inside the runner's authority reservation. They only write
-staged files; they cannot publish a completed fit or assessment.
-"""
 from __future__ import annotations
 
 from contextlib import contextmanager
@@ -198,7 +193,6 @@ def verify_resource_plan(plan: dict, preflight_record: dict, authority: object,
             or not plan.get('supervisor_decision_sha256')):
         raise ValueError('resource plan is not bound to this full fixed workload')
     snapshot = plan['authority']
-    # The runner verifies ancestry before acquiring the non-reentrant stage lock.
     phases = plan['phases']
     if set(phases) != {'updates', *MEASURED_PHASES, *RESERVES}:
         raise ValueError('whole remaining-workload projection has missing or extra phases')
@@ -364,7 +358,6 @@ def fit_matrix(data: PreparedData, out: Path, contract: dict, resource_plan: dic
     source_identity = {'contract_digest': contract_digest, 'source_sha256': contract['source_sha256'],
                        'row_manifest_sha256': canonical_hash(data.payload['rows'])}
     cells, calibration, orders, initializations = {}, {}, {}, {}
-    # Initialize and save every seed once. All four arms load the same exact bytes.
     for seed in PLAN.seeds:
         seed_all(seed)
         model = make_model(data)
@@ -418,7 +411,6 @@ def fit_matrix(data: PreparedData, out: Path, contract: dict, resource_plan: dic
                     torch.cuda.empty_cache()
             if successful != 62880:
                 raise ValueError('incomplete successful-update matrix')
-        # Source and internal13 estimates are preserved before any scoring/selection.
         with budget.phase('source_cohort_mask_inference'):
             for seed in PLAN.seeds:
                 for arm in ARMS:

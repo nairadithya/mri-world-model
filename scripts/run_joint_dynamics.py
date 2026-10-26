@@ -114,7 +114,6 @@ def prepare(authority, name: str) -> dict:
             'input_sha256': meta['input_sha256'], 'prepared_sha256': digest(path / 'prepared/prepared.json')}
         save_json(path / 'preparation_contract.json', preparation_contract)
         guard.check()
-    # Complete markers are never emitted inside a reservation that can still fail.
     snapshot = authority.snapshot()
     seal_stage(path, 'prepare', canonical_hash(preparation_contract), snapshot)
     return {'status': 'prepared_not_fit_approved', 'stage': name,
@@ -144,7 +143,6 @@ def preflight(authority, name: str, prepared_stage: str) -> dict:
         from src.harness.analysis.joint_dynamics.fitting import preflight as run_preflight
         identity = implementation_identity()
         data, meta = load_prepared(authority, prepared_stage)
-        # These tests run remotely only, and all child CPU and stage GPU wall are charged.
         command = [sys.executable, '-B', '-m', 'unittest', 'discover', '-s', 'tests',
                    '-p', 'test_joint_dynamics.py', '-v']
         completed = subprocess.run(command, cwd=REPO, text=True, capture_output=True)
@@ -253,7 +251,6 @@ def fit(authority) -> dict:
                     projected_gpu_seconds=900. + resource['phases']['assessment']['gpu_seconds'])
         import torch
         torch.cuda.synchronize()
-    # fit payload has its own exact manifest; stage envelope binds the same contract.
     snapshot = authority.snapshot()
     seal_stage(path / 'fit', 'fit', canonical_hash(contract), snapshot)
     validate_completed_fit(path / 'fit', canonical_hash(contract))
@@ -374,7 +371,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         require_remote()
         from src.harness.analysis.joint_dynamics.authority import production_authority
-        authority = production_authority()  # Never initialize or adopt the existing real ledger here.
+        authority = production_authority()
         authority.snapshot()
         with runner_lock():
             if args.mode == 'prepare':

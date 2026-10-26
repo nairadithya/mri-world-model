@@ -1,4 +1,3 @@
-"""Rebuild, bind and consume the existing R38 images and automated targets."""
 from __future__ import annotations
 
 from dataclasses import asdict
@@ -77,7 +76,6 @@ def derive_rows(anatomy: dict, inventory: dict, prepared: dict, splits: dict) ->
             history = ordered[max(start, i - 3):i + 1]
             intervals = [gap_weeks(a['visit'], b['visit']) * 7
                          for a, b in zip(history[:-1], history[1:])]
-            # Only historical gaps affect inherited eligibility, never the outgoing gap.
             if any(g <= 0 for g in intervals):
                 continue
             pair = pairs.get((cutoff['visit_id'], target['visit_id']))
@@ -335,7 +333,6 @@ def prepare_inputs(meta: dict, out: Path, guard: object) -> dict:
             'alignment': aligned.provenance}
     verify_raw_masks(meta)
     normalizer = source_normalizer(visits, meta['splits']['source52'], norm)
-    # Recompute from the newly read masks, not merely from inherited measurements.
     native_visits = [{**v, 'values_mm3': dict(zip(COMPARTMENTS, receipts[v['visit_id']]['native_mm3']))}
                      for v in visits]
     rebuilt = source_normalizer(native_visits, meta['splits']['source52'], norm)
@@ -377,7 +374,6 @@ class PreparedData:
             return tuple(r for r in self.rows if r.patient_id in self.splits['unseen26']
                          and r.primary_history == (name == 'primary'))
         if name == 'nuisance':
-            # Bound row order is the inherited order, already chronological per patient.
             selected = {}
             for row in self.select('primary'):
                 selected.setdefault(row.patient_id, row)

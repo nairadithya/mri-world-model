@@ -1,4 +1,3 @@
-"""Immutable R38 design, byte identities and fail-closed artifact boundaries."""
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
