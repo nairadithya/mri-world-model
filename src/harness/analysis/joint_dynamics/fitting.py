@@ -18,7 +18,7 @@ import torch
 from .data import PreparedData
 from .model import JointDynamics, binary_dice, configure_torch, finite_step, losses
 from .protocol import (ARMS, CALIBRATION_GRID, CONDITIONS, PLAN, Arm, ForecastRow,
-                       canonical_hash, digest, read_json, save_json)
+                       SourceIdentity, canonical_hash, digest, read_json, save_json)
 
 RESERVES = {'numerical_review': (1800., 600.), 'documentation': (900., 0.),
             'contingency': (900., 300.)}
@@ -311,7 +311,7 @@ def evaluate(model: JointDynamics, data: PreparedData, rows: tuple[ForecastRow, 
     model.eval()
     with torch.inference_mode():
         for row in rows:
-            guard.check(projected_cpu_seconds=3600., projected_gpu_seconds=900.)
+            guard.check()
             with torch.autocast('cuda', dtype=torch.bfloat16):
                 prediction = model(data.inputs(row, arm, condition), arm)
             for key in ('mean', 'intrinsic_scale', 'current_mean'):
@@ -341,8 +341,8 @@ def _shared_rows(arrays: dict, name: str, rows: tuple[ForecastRow, ...]) -> list
              'cutoff_measured': list(r.cutoff_measured)} for r in rows]
 
 
-def fit_matrix(data: PreparedData, out: Path, contract: dict, resource_plan: dict,
-               guard: object, anatomy: dict) -> dict:
+def fit_matrix(data: PreparedData, out: Path, contract: dict, guard: object,
+               anatomy: dict, *, canary: bool = False) -> dict:
     from .baselines import (ControlFits, calibrate_gaussian, fit_controls, fit_persistence,
                             gaussian_calibration_receipt, predict_controls)
     configure_torch()
@@ -350,12 +350,22 @@ def fit_matrix(data: PreparedData, out: Path, contract: dict, resource_plan: dic
         raise RuntimeError('fixed CUDA BF16 unavailable')
     out.mkdir(parents=True, exist_ok=False)
     contract_digest = canonical_hash(contract)
-    budget = WorkBudget(guard, resource_plan)
+    budget = guard
+    source = SourceIdentity.from_dict(contract['implementation_source'])
+    scope = 'engineering_canary' if canary else 'fixed_r38_study'
+    if contract['execution_scope'] != scope:
+        raise ValueError('training scope differs from the bound execution contract')
+    epochs, per_epoch = (1, 7) if canary else (PLAN.epochs, PLAN.updates_per_epoch)
+    per_cell = epochs * per_epoch
+    expected_updates = len(ARMS) * len(PLAN.seeds) * per_cell
     training, validation = data.select('source52'), data.select('validation13')
+    fixture = min((r for r in training if len(r.history_visit_ids) == 4), key=lambda r: r.row_id)
+    measurements, roundtrips = {}, {}
     cohorts = {k: data.select(k) for k in ('primary', 'single', 'nuisance')}
     arrays = {'seeds': np.array(PLAN.seeds, dtype=np.int64)}
     cohort_rows = {name: _shared_rows(arrays, name, rows) for name, rows in cohorts.items()}
-    source_identity = {'contract_digest': contract_digest, 'source_sha256': contract['source_sha256'],
+    source_identity = {'contract_digest': contract_digest, 'implementation_source': source.to_dict(),
+                       'execution_scope': scope,
                        'row_manifest_sha256': canonical_hash(data.payload['rows'])}
     cells, calibration, orders, initializations = {}, {}, {}, {}
     for seed in PLAN.seeds:
@@ -364,7 +374,7 @@ def fit_matrix(data: PreparedData, out: Path, contract: dict, resource_plan: dic
         initial = out / f'initialization_{seed}.pt'
         torch.save({'state_dict': model.state_dict(), **source_identity, 'seed': seed}, initial)
         initializations[str(seed)] = {**_record(initial, out), 'tensor_sha256': tensor_hash(model.state_dict())}
-        order = replacement_order(training, seed)
+        order = ((fixture.row_id,) * per_epoch,) if canary else replacement_order(training, seed)
         order_file = out / f'order_{seed}.json'
         save_json(order_file, {'seed': seed, 'orders': order, **source_identity})
         orders[seed] = order
@@ -385,12 +395,23 @@ def fit_matrix(data: PreparedData, out: Path, contract: dict, resource_plan: dic
                         raise ValueError('cell initialization differs from matched seed initialization')
                     optimizer = make_optimizer(model)
                     update_file = directory / 'updates.jsonl'
+                    measurements[label] = []
                     with update_file.open('w') as stream:
                         for epoch, epoch_order in enumerate(orders[seed], 1):
                             for update, row_id in enumerate(epoch_order, 1):
-                                budget.check(62880 - successful)
+                                budget.check(remaining_updates=expected_updates - successful)
                                 row = data.by_row[row_id]
-                                step = train_step(data, row, arm, model, optimizer)
+                                if canary and update > 2:
+                                    with budget.sample(f'{label}/update', synchronize=torch.cuda.synchronize):
+                                        t0, cpu0 = time.monotonic(), time.process_time()
+                                        step = train_step(data, row, arm, model, optimizer)
+                                        budget.completed(f'{label}/update')
+                                        torch.cuda.synchronize()
+                                        measurements[label].append({'wall_seconds': time.monotonic() - t0,
+                                            'cpu_seconds': time.process_time() - cpu0})
+                                else:
+                                    step = train_step(data, row, arm, model, optimizer)
+                                    budget.completed(f'{label}/update')
                                 successful += 1
                                 record = {'epoch': epoch, 'update': update, 'row_id': row_id,
                                     'cutoff_mask_sha256': data.visits[row.cutoff_visit_id]['mask_sha256'],
@@ -398,18 +419,21 @@ def fit_matrix(data: PreparedData, out: Path, contract: dict, resource_plan: dic
                                 import json
                                 stream.write(json.dumps(record, sort_keys=True, allow_nan=False) + '\n')
                             stream.flush(); os.fsync(stream.fileno())
-                    checkpoint = directory / 'epoch20.pt'
+                    checkpoint = directory / f'epoch{epochs}.pt'
                     torch.save({'state_dict': model.state_dict(), 'optimizer': optimizer.state_dict(),
-                        'epoch': 20, 'updates': 5240, 'arm': arm.name, 'seed': seed,
+                        'epoch': epochs, 'updates': per_cell, 'arm': arm.name, 'seed': seed,
                         'initialization': initializations[str(seed)],
                         'order_sha256': digest(out / f'order_{seed}.json'), 'normalizer': data.normalizer,
                         **source_identity}, checkpoint)
-                    cells[label] = {'epoch': 20, 'updates': 5240, **source_identity,
+                    if canary:
+                        roundtrips[label] = prediction_roundtrip(model, data, fixture, arm,
+                            directory / 'roundtrip.pt', optimizer)
+                    cells[label] = {'epoch': epochs, 'updates': per_cell, **source_identity,
                         'initialization': initializations[str(seed)],
                         'weights': _record(checkpoint, out), 'updates_file': _record(update_file, out)}
                     del model, optimizer
                     torch.cuda.empty_cache()
-            if successful != 62880:
+            if successful != expected_updates:
                 raise ValueError('incomplete successful-update matrix')
         with budget.phase('source_cohort_mask_inference'):
             for seed in PLAN.seeds:
@@ -474,7 +498,7 @@ def fit_matrix(data: PreparedData, out: Path, contract: dict, resource_plan: dic
                         if (forecast != CALIBRATION_GRID[int(np.argmin(forecast_scores))]
                                 or persistence != CALIBRATION_GRID[int(np.argmin(persistence_scores))]):
                             raise ValueError('calibration selection differs from bound full-grid scores')
-                    receipt = {**source_identity, 'arm': arm.name, 'seed': seed, 'epoch': 20,
+                    receipt = {**source_identity, 'arm': arm.name, 'seed': seed, 'epoch': epochs,
                         'inputs': _record(out / label / 'calibration_inputs.npz', out),
                         'source_row_ids': [r.row_id for r in training], 'source_patient_ids': [r.patient_id for r in training],
                         'validation_row_ids': [r.row_id for r in validation],
@@ -510,8 +534,10 @@ def fit_matrix(data: PreparedData, out: Path, contract: dict, resource_plan: dic
             with np.load(out / 'private_predictions.npz', allow_pickle=False) as saved:
                 if set(saved.files) != set(arrays) or any(not np.array_equal(saved[k], v) for k, v in arrays.items()):
                     raise ValueError('prediction serialization roundtrip mismatch')
-            fitted = {'contract_digest': contract_digest, 'source_sha256': contract['source_sha256'],
-                'seeds': list(PLAN.seeds), 'total_updates': 62880, 'cells': cells,
+            fitted = {**source_identity, 'epochs': epochs, 'updates_per_epoch': per_epoch,
+                'seeds': list(PLAN.seeds), 'total_updates': successful, 'cells': cells,
+                'timing_samples': measurements, 'checkpoint_roundtrips': roundtrips,
+                'canary_fixture_row_id': fixture.row_id if canary else None,
                 'initializations': initializations, 'calibration': calibration, 'cohort_rows': cohort_rows,
                 'control_fits': control_record, 'control_fits_sha256': digest(out / 'control_fits.json'),
                 'prediction_sha256': digest(out / 'private_predictions.npz'),
@@ -527,8 +553,13 @@ def _restore_cell(data: PreparedData, out: Path, cell: dict, contract_digest: st
     if digest(out / record['path']) != record['sha256']:
         raise ValueError('changed checkpoint before prediction')
     payload = torch.load(out / record['path'], map_location='cpu', weights_only=False)
-    if (payload.get('contract_digest') != contract_digest or payload.get('epoch') != 20
-            or payload.get('updates') != 5240 or payload.get('normalizer') != data.normalizer):
+    schedule = {'engineering_canary': (1, 7), 'fixed_r38_study': (20, 5240)}
+    expected = schedule.get(cell.get('execution_scope'))
+    if (expected is None or (cell['epoch'], cell['updates']) != expected
+            or payload.get('contract_digest') != contract_digest
+            or (payload.get('epoch'), payload.get('updates')) != expected
+            or payload.get('execution_scope') != cell['execution_scope']
+            or payload.get('normalizer') != data.normalizer):
         raise ValueError('mismatched checkpoint identity, selection or normalization')
     model = make_model(data)
     model.load_state_dict(payload['state_dict'], strict=True)

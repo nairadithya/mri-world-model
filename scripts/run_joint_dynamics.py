@@ -1,39 +1,41 @@
 #!/usr/bin/env python3
-"""One fixed-root R38 stage runner; computation is remote and authority-charged."""
+"""Run the fixed R38 study or its explicitly engineering-only actual-data canary."""
 from __future__ import annotations
 
 import argparse
 from contextlib import contextmanager
+from dataclasses import asdict
+from datetime import datetime
 import fcntl
 import json
 import os
 from pathlib import Path
-import shutil
-import subprocess
 import sys
-from typing import Iterator
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from src.harness.analysis.joint_dynamics.protocol import (
-    PLAN, PLANNING, REPO, WORKSPACE, canonical_hash, digest, implementation_identity,
-    read_json, save_json, seal_stage, source_hashes, validate_completed_fit,
-    verify_approval, verify_stage)
+    PLAN, PLANNING, REPO, WORKSPACE, ArtifactRef, Cost, SourceIdentity, StageLimits,
+    StageRequest, canonical_hash, digest, read_json, save_json)
 
 STUDY = WORKSPACE / 'study'
 STAGES = STUDY / 'stages'
+FIT_PHASES = ('updates', 'source_cohort_mask_inference', 'calibration_controls',
+              'nuisance_inference', 'serialization')
 
 
 def require_remote() -> None:
     if ROOT != REPO or Path(sys.executable).absolute() != WORKSPACE / '.venv/bin/python':
         raise RuntimeError('use only the fixed remote R38 repo and Python; no local computation')
     os.environ['CUBLAS_WORKSPACE_CONFIG'] = ':4096:8'
+    os.environ['OMP_NUM_THREADS'] = '1'
+    os.environ['MKL_NUM_THREADS'] = '1'
 
 
 @contextmanager
-def runner_lock() -> Iterator[None]:
+def runner_lock():
     STUDY.mkdir(parents=True, exist_ok=True)
     with (STUDY / 'runner.lock').open('a') as stream:
         try:
@@ -48,325 +50,211 @@ def runner_lock() -> Iterator[None]:
 
 def stage_path(name: str) -> Path:
     if not name or any(c not in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_' for c in name):
-        raise ValueError('stage name must be a single safe identity, not an output directory')
+        raise ValueError('stage name must be a single safe identity')
     return STAGES / name
 
 
-def reserve_directory(name: str) -> Path:
+def completion(name: str) -> dict:
     path = stage_path(name)
-    path.mkdir(parents=True, exist_ok=False)
-    save_json(path / 'started.json', {'stage_name': name, 'status': 'started_not_complete'})
+    value = read_json(path.with_name(path.name + '.control') / 'complete.json')
+    if value['schema'] != 'r38-finalized-stage-v4' or value['stage_name'] != name:
+        raise ValueError('stage completion identity mismatch')
+    return value
+
+
+def _caps(cpu: float, wall: float, gpu: bool) -> Cost:
+    return Cost(cpu, wall, wall if gpu else 0.)
+
+
+def _cleanup(gpu: bool) -> Cost:
+    return _caps(max(300., 3. * (os.cpu_count() or 1)), 8., gpu)
+
+
+def run_stage(authority, name: str, operation: str, payload: dict, phases: dict,
+              *, gpu: bool, scientific: bool, future: Cost | None = None, ancestors=()):
+    from src.harness.analysis.joint_dynamics.execution import execute_stage
+    for ancestor in ancestors:
+        authority.verify_extension(ancestor['authority'])
+    request_path = STUDY / 'requests' / name / 'payload.json'
+    request_path.parent.mkdir(parents=True, exist_ok=False)
+    save_json(request_path, payload)
+    refs = [ArtifactRef(request_path, digest(request_path)),
+            ArtifactRef(Path(payload['bindings']), digest(payload['bindings']))]
+    for ancestor in ancestors:
+        path = stage_path(ancestor['stage_name'])
+        marker = path.with_name(path.name + '.control') / 'complete.json'
+        refs.append(ArtifactRef(marker, digest(marker)))
+    snapshot = authority.snapshot()
+    limits = StageLimits(gpu, scientific, phases,
+        future if future is not None else Cost(3600., 3600., 900.), _cleanup(gpu),
+        datetime.fromisoformat(snapshot['identity']['deadline']))
+    request = StageRequest(name, operation, SourceIdentity.capture(), tuple(refs), limits, stage_path(name))
+    finalized = execute_stage(authority, request)
+    return dict(finalized.operation_result)
+
+
+def execution_bindings() -> Path:
+    path = STUDY / 'execution-input-bindings.json'
+    original = read_json(PLANNING / 'input-bindings.json')
+    original['known_sha256']['mask_transfer'] = 'd42259bbb47f6a9926892d1203dce3300cdee098fee8bbf1109da70482274666'
+    original['execution_note'] = 'Add the diagnosed original manifest pin; the frozen v3 input packet is preserved unchanged.'
+    if path.exists():
+        if read_json(path) != original:
+            raise ValueError('execution bindings changed; no replacement')
+    else:
+        save_json(path, original)
     return path
 
 
-@contextmanager
-def charged_stage(authority, name: str, *, gpu: bool, scientific: bool,
-                  prior_paths: tuple[Path, ...] = (), prior_snapshots: tuple[dict, ...] = ()):
-    for path in prior_paths:
-        authority.verify_extension(read_json(path / 'complete.json')['authority'])
-    for snapshot in prior_snapshots:
-        authority.verify_extension(snapshot)
-    entry = authority.snapshot()
-    with authority.stage(name, gpu=gpu, scientific=scientific) as guard:
-        current = guard.snapshot()
-        stages = current['stages']
-        if (any(current[k] != entry[k] for k in
-                ('authority_id', 'authorization_sha256', 'identity'))
-                or len(stages) != len(entry['stages']) + 1
-                or stages[:-1] != entry['stages']
-                or stages[-1]['name'] != name or stages[-1]['status'] != 'running'
-                or stages[-1]['scientific'] != scientific):
-            raise RuntimeError('authority identity or exact stage prefix changed at entry')
-        yield guard
-
-
-def locked_paths() -> tuple[Path, Path]:
-    path = stage_path(read_json(STUDY / 'locked.json')['stage'])
-    contract = read_json(path / 'contract.json')
-    return path, stage_path(contract['prepared_stage'])
-
-
-def verify_counts(data) -> None:
-    for name, rows, patients in PLAN.cohort_counts:
-        selected = data.select(name)
-        if len(selected) != rows or len({r.patient_id for r in selected}) != patients:
-            raise ValueError(f'wrong ordered cohort: {name}')
-
-
 def prepare(authority, name: str) -> dict:
-    if (STUDY / 'locked.json').exists():
-        raise RuntimeError('preparation cannot restart after scientific lock')
-    path = reserve_directory(name)
-    with charged_stage(authority, name, gpu=True, scientific=False) as guard:
-        from src.harness.analysis.joint_dynamics.data import (
-            PREPARATION_SOURCES, PreparedData, load_metadata, prepare_inputs)
-        from src.harness.analysis.joint_dynamics.model import configure_torch
-        configure_torch()
-        bindings = read_json(PLANNING / 'input-bindings.json')
-        meta = load_metadata(bindings)
-        dependencies = {p: digest(REPO / p) for p in PREPARATION_SOURCES}
-        result = prepare_inputs(meta, path / 'prepared', guard)
-        data = PreparedData(path / 'prepared')
-        verify_counts(data)
-        data.verify_all_bytes(load_metadata(bindings))
-        preparation_contract = {'preparation_source_sha256': dependencies,
-            'bindings_sha256': digest(PLANNING / 'input-bindings.json'),
-            'input_sha256': meta['input_sha256'], 'prepared_sha256': digest(path / 'prepared/prepared.json')}
-        save_json(path / 'preparation_contract.json', preparation_contract)
-        guard.check()
-    snapshot = authority.snapshot()
-    seal_stage(path, 'prepare', canonical_hash(preparation_contract), snapshot)
-    return {'status': 'prepared_not_fit_approved', 'stage': name,
-            'contract_digest': canonical_hash(preparation_contract), 'reconstruction': result['reconstruction']}
+    if any(s['scientific'] for s in authority.snapshot()['stages']):
+        raise RuntimeError('scientific work already started; preparation cannot restart')
+    return run_stage(authority, name, 'prepare',
+        {'purpose': 'prepare', 'bindings': str(execution_bindings())},
+        {'startup': _caps(300., 60., True), 'preparation': _caps(3600., 1200., True),
+         'teardown': _caps(300., 90., True)}, gpu=True, scientific=False,
+        future=Cost(10000., 5500., 2400.))
 
 
-def load_prepared(authority, name: str):
-    from src.harness.analysis.joint_dynamics.data import PREPARATION_SOURCES, PreparedData, load_metadata
-    path = stage_path(name)
-    verify_stage(path, 'prepare')
-    receipt = read_json(path / 'preparation_contract.json')
-    if receipt['preparation_source_sha256'] != {p: digest(REPO / p) for p in PREPARATION_SOURCES}:
-        raise ValueError('preparation dependency bytes changed')
-    meta = load_metadata(read_json(PLANNING / 'input-bindings.json'))
-    data = PreparedData(path / 'prepared')
-    data.verify_all_bytes(meta)
-    verify_counts(data)
-    return data, meta
+def make_contract(prepared: str, *, canary: bool) -> dict:
+    return {'schema': 'r38-concrete-execution-v4',
+        'execution_scope': 'engineering_canary' if canary else 'fixed_r38_study',
+        'implementation_source': SourceIdentity.capture().to_dict(),
+        'scientific_plan': json.loads(json.dumps(asdict(PLAN))),
+        'protocol_v3_sha256': digest(PLANNING / 'protocol-v3.md'),
+        'preparation': prepared, 'preparation_completion_sha256': canonical_hash(completion(prepared)),
+        'bindings_sha256': digest(execution_bindings()),
+        'selection': 'explicit seven-update source-only max-history engineering fixture' if canary
+                     else 'fixed epoch20; all12 cells x5240 updates; no selection or rescue'}
 
 
-def preflight(authority, name: str, prepared_stage: str) -> dict:
-    if (STUDY / 'locked.json').exists():
-        raise RuntimeError('preflight cannot restart after scientific lock')
-    path = reserve_directory(name)
-    with charged_stage(authority, name, gpu=True, scientific=False,
-                       prior_paths=(stage_path(prepared_stage),)) as guard:
-        from src.harness.analysis.joint_dynamics.fitting import preflight as run_preflight
-        identity = implementation_identity()
-        data, meta = load_prepared(authority, prepared_stage)
-        command = [sys.executable, '-B', '-m', 'unittest', 'discover', '-s', 'tests',
-                   '-p', 'test_joint_dynamics.py', '-v']
-        completed = subprocess.run(command, cwd=REPO, text=True, capture_output=True)
-        (path / 'tests.stdout').write_text(completed.stdout)
-        (path / 'tests.stderr').write_text(completed.stderr)
-        save_json(path / 'tests.json', {'command': command, 'returncode': completed.returncode,
-                                      'identity': identity})
-        if completed.returncode:
-            raise RuntimeError('gradient/input/artifact verification tests failed')
-        result = run_preflight(data, path / 'probe', guard)
-        data.verify_all_bytes(meta)
-        save_json(path / 'identity.json', identity)
-        save_json(path / 'inputs.json', {'prepared_stage': prepared_stage,
-                  'preparation_marker_sha256': digest(stage_path(prepared_stage) / 'complete.json')})
-        guard.check()
-    seal_stage(path, 'preflight', canonical_hash(identity), authority.snapshot())
-    return {'status': 'preflight_measured_pending_whole_budget_gate', 'stage': name,
-            'preflight_sha256': canonical_hash(result)}
+def score(authority, fit_name: str, name: str, *, canary: bool, cpu: float, wall: float) -> dict:
+    fitted_stage = completion(fit_name)
+    fitted_payload = read_json(STUDY / 'requests' / fit_name / 'payload.json')
+    if fitted_stage['operation_result']['execution_scope'] != fitted_payload['contract']['execution_scope']:
+        raise ValueError('fit completion scope differs')
+    return run_stage(authority, name, 'verify' if canary else 'assess',
+        {**fitted_payload, 'purpose': 'canary_score' if canary else 'study_score',
+         'fit': str(stage_path(fit_name))},
+        {'startup': _caps(300., 60., False), 'assessment': _caps(cpu, wall, False),
+         'teardown': _caps(300., 60., False)}, gpu=False, scientific=not canary,
+        ancestors=(completion(fitted_payload['prepared_stage']), fitted_stage))
 
 
-def lock(authority, name: str, prepared_stage: str, preflight_stage: str,
-         approval_path: Path, resource_path: Path) -> dict:
-    if (STUDY / 'locked.json').exists():
-        raise FileExistsError('scientific contract already locked')
-    path = reserve_directory(name)
-    before = authority.snapshot()
-    if any(s['scientific'] for s in before['stages']):
-        raise RuntimeError('started scientific work prevents a new lock')
-    resource_snapshot = read_json(resource_path)['authority']
-    with charged_stage(authority, name, gpu=False, scientific=False,
-                       prior_paths=(stage_path(prepared_stage), stage_path(preflight_stage)),
-                       prior_snapshots=(resource_snapshot,)) as guard:
-        from src.harness.analysis.joint_dynamics.fitting import verify_resource_plan
-        identity = implementation_identity()
-        approval, resource = read_json(approval_path), read_json(resource_path)
-        verify_approval(approval, identity)
-        data, meta = load_prepared(authority, prepared_stage)
-        preflight_path = stage_path(preflight_stage)
-        verify_stage(preflight_path, 'preflight', canonical_hash(identity))
-        if resource['authority'] != resource_snapshot:
-            raise ValueError('resource ancestry changed after entry verification')
-        if (read_json(preflight_path / 'identity.json') != identity
-                or read_json(preflight_path / 'inputs.json') != {
-                    'prepared_stage': prepared_stage,
-                    'preparation_marker_sha256': digest(stage_path(prepared_stage) / 'complete.json')}):
-            raise ValueError('preflight source/input identities differ from lock')
-        projection = verify_resource_plan(resource, read_json(preflight_path / 'probe/preflight.json'),
-                                          authority, identity)
-        guard.check(projected_cpu_seconds=projection['cpu_seconds'],
-                    projected_gpu_seconds=projection['gpu_seconds'])
-        contract = {**identity, 'schema': 'r38-joint-dynamics-contract-v3',
-            'prepared_stage': prepared_stage, 'preflight_stage': preflight_stage,
-            'prepared_marker_sha256': digest(stage_path(prepared_stage) / 'complete.json'),
-            'preflight_marker_sha256': digest(preflight_path / 'complete.json'),
-            'input_sha256': meta['input_sha256'], 'normalizer': data.normalizer,
-            'rows': data.payload['rows'], 'splits': data.splits,
-            'approval_sha256': digest(approval_path), 'resource_plan_sha256': digest(resource_path),
-            'resource_projection': projection, 'authority': before}
-        save_json(path / 'contract.json', contract)
-        shutil.copyfile(approval_path, path / 'approval.json')
-        shutil.copyfile(resource_path, path / 'resource_plan.json')
-    seal_stage(path, 'lock', canonical_hash(contract), authority.snapshot())
-    save_json(STUDY / 'locked.json', {'stage': name, 'contract_digest': canonical_hash(contract),
-              'complete_sha256': digest(path / 'complete.json')})
-    return {'status': 'locked_not_started', 'contract_digest': canonical_hash(contract), 'projection': projection}
+def canary(authority, name: str, prepared: str) -> dict:
+    if any(s['scientific'] for s in authority.snapshot()['stages']):
+        raise RuntimeError('engineering canary cannot follow scientific work')
+    phases = {'startup': _caps(300., 60., True), 'essential_checks': _caps(600., 180., True),
+        'updates': _caps(600., 180., True),
+        'source_cohort_mask_inference': _caps(900., 480., True),
+        'calibration_controls': _caps(300., 90., True),
+        'nuisance_inference': _caps(600., 180., True),
+        'serialization': _caps(300., 60., True), 'teardown': _caps(600., 180., True)}
+    contract = make_contract(prepared, canary=True)
+    result = run_stage(authority, name, 'preflight', {'purpose': 'canary_fit',
+        'bindings': str(execution_bindings()), 'prepared_stage': prepared,
+        'preparation': str(stage_path(prepared)), 'contract': contract}, phases,
+        gpu=True, scientific=False, future=Cost(5400., 4500., 900.), ancestors=(completion(prepared),))
+    scored = score(authority, name, name + '-score', canary=True, cpu=900., wall=300.)
+    return {'status': 'actual_data_canary_completed_not_scientific_evidence',
+            'fit': result, 'score': scored,
+            'remaining_authority': {k: authority.snapshot()[k] for k in
+                ('charged_cpu_seconds', 'charged_gpu_seconds', 'remaining_cpu_seconds', 'remaining_gpu_seconds')}}
 
 
-def load_lock(authority):
-    locked = read_json(STUDY / 'locked.json')
-    path = stage_path(locked['stage'])
-    if digest(path / 'complete.json') != locked['complete_sha256']:
-        raise ValueError('lock marker changed')
-    verify_stage(path, 'lock', locked['contract_digest'])
-    contract = read_json(path / 'contract.json')
-    if canonical_hash(contract) != locked['contract_digest']:
-        raise ValueError('lock contract changed')
-    identity = implementation_identity()
-    if any(contract[k] != identity[k] for k in ('source_sha256', 'packet_sha256', 'plan')):
-        raise ValueError('actual implementation/protocol differs from stable approval and locked bytes')
-    verify_approval(read_json(path / 'approval.json'), identity)
-    return contract, read_json(path / 'resource_plan.json')
+def projection(authority, name: str) -> dict:
+    fit_stage, scored = completion(name), completion(name + '-score')
+    if (fit_stage['operation_result']['actual_updates'] != 84
+            or scored['operation_result']['status'] != 'engineering_canary_scored_not_scientific_evidence'):
+        raise ValueError('a complete actual-data canary and real scoring are required')
+    source = SourceIdentity.capture().to_dict()
+    if fit_stage['request']['implementation_source'] != source or scored['request']['implementation_source'] != source:
+        raise ValueError('source changed since the scored canary')
+    authority.verify_extension(fit_stage['authority'])
+    authority.verify_extension(scored['authority'])
+    observations = read_json(fit_stage['observation'])
+    score_observations = read_json(scored['observation'])
+    samples = observations['samples']
+    update_cpu, update_wall = 0., 0.
+    for arm in PLAN.arms:
+        values = [s['observed'] for s in samples if s['unit'].startswith(arm.name + '_')]
+        if len(values) != 15:
+            raise ValueError('five synchronized max-history samples per seed and arm are required')
+        update_cpu += 15720 * max(v['cpu_seconds'] for v in values)
+        update_wall += 15720 * max(v['wall_seconds'] for v in values)
+    # Bounds, not promises: 1.5x the slowest observed per-arm step plus measured
+    # initialization overhead; all other full-shaped phases get 2x plus headroom.
+    phases = {'startup': _caps(600., 120., True)}
+    observed = observations['phase_costs']
+    for phase in FIT_PHASES:
+        if phase == 'updates':
+            cpu = 1.5 * update_cpu + 2 * observed[phase]['cpu_seconds'] + 150.
+            wall = 1.5 * update_wall + 2 * observed[phase]['wall_seconds'] + 30.
+        else:
+            cpu = max(150., 2 * observed[phase]['cpu_seconds'] + 150.)
+            wall = max(30., 2 * observed[phase]['wall_seconds'] + 15.)
+        phases[phase] = _caps(cpu, wall, True)
+    phases['teardown'] = _caps(600., 180., True)
+    score_cost = score_observations['phase_costs']['assessment']
+    assessment = _caps(max(300., 2 * score_cost['cpu_seconds'] + 150.),
+                       max(90., 2 * score_cost['wall_seconds'] + 30.), False)
+    future = Cost(4200. + assessment.cpu_seconds, 3720. + assessment.wall_seconds, 900.)
+    cleanup = _cleanup(True)
+    total_cpu = sum(c.cpu_seconds for c in phases.values()) + future.cpu_seconds + cleanup.cpu_seconds
+    total_gpu = sum(c.gpu_seconds for c in phases.values()) + future.gpu_seconds + cleanup.gpu_seconds
+    total_wall = sum(c.wall_seconds for c in phases.values()) + future.wall_seconds + cleanup.wall_seconds
+    current = authority.snapshot()
+    fits = (total_cpu < current['remaining_cpu_seconds'] and total_gpu < current['remaining_gpu_seconds']
+        and datetime.now().timestamp() + total_wall < datetime.fromisoformat(current['identity']['deadline']).timestamp())
+    return {'status': 'fits_fixed_workload' if fits else 'BLOCKED_FIXED_WORKLOAD_EXCEEDS_REMAINING_ALLOWANCE',
+        'total_updates': PLAN.total_updates, 'phases': {k: v.to_dict() for k, v in phases.items()},
+        'assessment': assessment.to_dict(), 'future': future.to_dict(),
+        'required_cpu_with_reserves_cleanup': total_cpu, 'required_gpu_with_reserves_cleanup': total_gpu,
+        'required_wall_with_reserves_cleanup': total_wall, 'authority': current,
+        'evidence': {'fit_completion': canonical_hash(fit_stage), 'score_completion': canonical_hash(scored),
+                     'observations_sha256': digest(fit_stage['observation']), 'canary_updates': 84,
+                     'unit_samples': len(samples), 'inflation_update': 1.5, 'inflation_other': 2.}}
 
 
-def scientific_history(authority, *, assessing: bool) -> None:
-    scientific = [s for s in authority.snapshot()['stages'] if s['scientific']]
-    expected = ['r38-fit'] if assessing else []
-    if [s['name'] for s in scientific] != expected or any(s['status'] != 'succeeded' for s in scientific):
-        raise RuntimeError('started, failed, partial or repeated scientific stage; no retry')
+def fit(authority, canary_name: str, name: str) -> dict:
+    if any(s['scientific'] for s in authority.snapshot()['stages']):
+        raise RuntimeError('scientific work already started; no retry or rescue')
+    bound = projection(authority, canary_name)
+    save_json(STUDY / ('projection-' + name + '.json'), bound)
+    if bound['status'] != 'fits_fixed_workload':
+        return bound
+    previous = read_json(STUDY / 'requests' / canary_name / 'payload.json')
+    prepared = previous['prepared_stage']
+    contract = make_contract(prepared, canary=False)
+    result = run_stage(authority, name, 'fit', {**previous, 'purpose': 'study_fit', 'contract': contract},
+        {k: Cost.from_dict(v) for k, v in bound['phases'].items()}, gpu=True, scientific=True,
+        future=Cost.from_dict(bound['future']), ancestors=(completion(prepared), completion(canary_name),
+                                                        completion(canary_name + '-score')))
+    # The fixed study includes assessment; its CPU-only stage never changes GPU tagging.
+    assessment = bound['assessment']
+    report = score(authority, name, name + '-score', canary=False,
+                   cpu=assessment['cpu_seconds'], wall=assessment['wall_seconds'])
+    return {'status': 'fixed_study_executed_pending_scientific_interpretation', 'fit': result, 'score': report}
 
 
-def fit(authority) -> dict:
-    scientific_history(authority, assessing=False)
-    path = reserve_directory('r38-fit')
-    with charged_stage(authority, 'r38-fit', gpu=True, scientific=True,
-                       prior_paths=locked_paths()) as guard:
-        from src.harness.analysis.joint_dynamics.fitting import fit_matrix
-        contract, resource = load_lock(authority)
-        data, meta = load_prepared(authority, contract['prepared_stage'])
-        if meta['input_sha256'] != contract['input_sha256'] or data.normalizer != contract['normalizer']:
-            raise ValueError('locked source or normalization changed')
-        guard.check(projected_cpu_seconds=contract['resource_projection']['cpu_seconds'],
-                    projected_gpu_seconds=contract['resource_projection']['gpu_seconds'])
-        result = fit_matrix(data, path / 'fit', contract, resource, guard, meta['objects']['geometry'])
-        data.verify_all_bytes(meta)
-        guard.check(projected_cpu_seconds=3600. + resource['phases']['assessment']['cpu_seconds'],
-                    projected_gpu_seconds=900. + resource['phases']['assessment']['gpu_seconds'])
-        import torch
-        torch.cuda.synchronize()
-    snapshot = authority.snapshot()
-    seal_stage(path / 'fit', 'fit', canonical_hash(contract), snapshot)
-    validate_completed_fit(path / 'fit', canonical_hash(contract))
-    seal_stage(path, 'fit-stage', canonical_hash(contract), snapshot)
-    return {'status': 'fitted_not_assessed', 'updates': result['total_updates'],
-            'contract_digest': canonical_hash(contract)}
-
-
-def assess(authority) -> dict:
-    scientific_history(authority, assessing=True)
-    path = reserve_directory('r38-assess')
-    with charged_stage(authority, 'r38-assess', gpu=False, scientific=True,
-                       prior_paths=(*locked_paths(), stage_path('r38-fit') / 'fit')) as guard:
-        import time
-        import numpy as np
-        from src.harness.analysis.joint_dynamics.assessment import analyze
-        from src.harness.analysis.joint_dynamics.baselines import ControlFits
-        contract, resource = load_lock(authority)
-        data, meta = load_prepared(authority, contract['prepared_stage'])
-        fitted_root = stage_path('r38-fit') / 'fit'
-        marker = validate_completed_fit(fitted_root, canonical_hash(contract))
-        if marker['contract_digest'] != canonical_hash(contract):
-            raise ValueError('fitted contract differs from locked study')
-        fitted = read_json(fitted_root / 'fitted.json')
-        portable = ControlFits.from_dict(fitted['control_fits']).to_dict()
-        if portable != fitted['control_fits']:
-            raise ValueError('portable controls do not roundtrip exactly')
-        control_receipt = read_json(fitted_root / 'control_fits.json')
-        if (control_receipt['fits'] != portable
-                or control_receipt['contract_digest'] != canonical_hash(contract)
-                or fitted['source_sha256'] != contract['source_sha256']
-                or fitted['control_fits_sha256'] != digest(fitted_root / 'control_fits.json')
-                or control_receipt['source_row_ids'] != [r.row_id for r in data.select('source52')]
-                or control_receipt['validation_row_ids'] != [r.row_id for r in data.select('validation13')]):
-            raise ValueError('control fitting identity mismatch')
-        identity = {'contract_digest': canonical_hash(contract), 'source_sha256': source_hashes(),
-            'fitted_manifest_sha256': digest(fitted_root / 'fitted.json'), 'control_fits': portable,
-            'cohort_rows': fitted['cohort_rows'], 'calibration': fitted['calibration']}
-        _verify_fitted_identity(data, fitted_root, fitted, identity)
-        start, cpu = time.monotonic(), time.process_time()
-        with np.load(fitted_root / 'private_predictions.npz', allow_pickle=False) as bundle:
-            arrays = {key: bundle[key] for key in bundle.files}
-        report = analyze(arrays, identity)
-        cap = resource['phases']['assessment']
-        if time.process_time() - cpu > cap['cpu_seconds'] or time.monotonic() - start > cap['wall_seconds']:
-            raise TimeoutError('INCOMPLETE_NOT_GRADED: assessment phase cap exceeded')
-        data.verify_all_bytes(meta)
-        if source_hashes() != contract['source_sha256']:
-            raise ValueError('source changed during assessment')
-        if report.get('status') != 'staged_only':
-            raise ValueError('assessment must return a staged-only aggregate')
-        report['identity'] = identity
-        save_json(path / 'staged_aggregate.json', report)
-        guard.check(projected_cpu_seconds=3600., projected_gpu_seconds=900.)
-    report['status'] = 'completed_not_independently_reviewed'
-    save_json(path / 'aggregate.json', report)
-    (path / 'staged_aggregate.json').unlink()
-    seal_stage(path, 'assessment', canonical_hash(contract), authority.snapshot())
-    return {'status': 'completed_not_independently_reviewed', 'aggregate_sha256': digest(path / 'aggregate.json')}
-
-
-def _verify_fitted_identity(data, root: Path, fitted: dict, identity: dict) -> None:
-    from src.harness.analysis.joint_dynamics.fitting import _shared_rows
-    for name in ('primary', 'single', 'nuisance'):
-        expected = _shared_rows({}, name, data.select(name))
-        if expected != identity['cohort_rows'][name]:
-            raise ValueError('fitted measured targets/ordered cohorts differ from prepared source')
-    import numpy as np
-    from src.harness.analysis.joint_dynamics.baselines import gaussian_calibration_receipt
-    for control in ('P', 'E', 'FP', 'SSM'):
-        if identity['calibration'][control] != fitted['control_fits']['state']['calibration'][control]:
-            raise ValueError('common control calibration differs from validated fit envelope')
-    for label, cell in fitted['cells'].items():
-        calibration = read_json(root / cell['calibration_file']['path'])
-        raw = calibration['inputs']
-        if digest(root / raw['path']) != raw['sha256']:
-            raise ValueError('changed source/validation calibration arrays')
-        with np.load(root / raw['path'], allow_pickle=False) as values:
-            for name, cohort in (('source', 'source52'), ('validation', 'validation13')):
-                expected = {}
-                _shared_rows(expected, name, data.select(cohort))
-                if any(not np.array_equal(values[k], v) for k, v in expected.items()):
-                    raise ValueError('own-persistence source/validation binding mismatch')
-                if (calibration[f'{name}_row_ids'] != expected[f'{name}_row_ids'].tolist()
-                        or calibration[f'{name}_patient_ids'] != expected[f'{name}_patient_ids'].tolist()):
-                    raise ValueError('own-persistence receipt membership mismatch')
-            forecast_receipt = gaussian_calibration_receipt(values['validation_mean'],
-                values['validation_intrinsic_scale'], values['validation_truth'], values['validation_patient_ids'])
-            persistence_receipt = gaussian_calibration_receipt(values['validation_current_mean'],
-                np.broadcast_to(calibration['persistence_rms'], values['validation_current_mean'].shape),
-                values['validation_truth'], values['validation_patient_ids'])
-            if (forecast_receipt != calibration['forecast_receipt']
-                    or persistence_receipt != calibration['persistence_receipt']):
-                raise ValueError('own-cell calibration raw-grid receipt mismatch')
-        if (calibration['contract_digest'] != identity['contract_digest']
-                or {k: calibration[k] for k in ('forecast', 'persistence', 'persistence_rms')}
-                    != identity['calibration'][label]):
-            raise ValueError('fitted neural calibration mismatch')
-    if (identity['calibration'] | {}) != fitted['calibration']:
-        raise ValueError('calibration identity changed')
+def perform_operation(request, work):
+    from src.harness.analysis.joint_dynamics.operations import perform_operation as execute
+    return execute(request, work)
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest='mode', required=True)
-    for mode in ('prepare', 'preflight', 'lock'):
-        command = sub.add_parser(mode)
-        command.add_argument('--stage-name', required=True)
-        if mode != 'prepare':
-            command.add_argument('--prepared-stage', required=True)
-        if mode == 'lock':
-            command.add_argument('--preflight-stage', required=True)
-            command.add_argument('--approval', required=True, type=Path)
-            command.add_argument('--resource-plan', required=True, type=Path)
-    sub.add_parser('fit')
-    sub.add_parser('assess')
+    command = sub.add_parser('prepare')
+    command.add_argument('--stage-name', required=True)
+    command = sub.add_parser('canary')
+    command.add_argument('--stage-name', required=True)
+    command.add_argument('--prepared-stage', required=True)
+    command = sub.add_parser('project')
+    command.add_argument('--canary-stage', required=True)
+    command = sub.add_parser('fit')
+    command.add_argument('--stage-name', required=True)
+    command.add_argument('--canary-stage', required=True)
     args = parser.parse_args(argv)
     try:
         require_remote()
@@ -376,17 +264,14 @@ def main(argv: list[str] | None = None) -> int:
         with runner_lock():
             if args.mode == 'prepare':
                 result = prepare(authority, args.stage_name)
-            elif args.mode == 'preflight':
-                result = preflight(authority, args.stage_name, args.prepared_stage)
-            elif args.mode == 'lock':
-                result = lock(authority, args.stage_name, args.prepared_stage, args.preflight_stage,
-                              args.approval, args.resource_plan)
-            elif args.mode == 'fit':
-                result = fit(authority)
+            elif args.mode == 'canary':
+                result = canary(authority, args.stage_name, args.prepared_stage)
+            elif args.mode == 'project':
+                result = projection(authority, args.canary_stage)
             else:
-                result = assess(authority)
+                result = fit(authority, args.canary_stage, args.stage_name)
         print(json.dumps(result, sort_keys=True, indent=2, allow_nan=False))
-        return 0
+        return 0 if not result['status'].startswith('BLOCKED') else 2
     except Exception as error:
         print(f'INCOMPLETE_NOT_GRADED: {type(error).__name__}: {error}', file=sys.stderr)
         return 1
