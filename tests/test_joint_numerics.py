@@ -531,6 +531,7 @@ class ProductionAssessmentTests(unittest.TestCase):
             arrays[prefix+"_intrinsic_scale"][:] = 0.5
             identity["calibration"][f"OH_{seed}"]["forecast"] = 1.0
             arrays[prefix+"_calibration"] = np.asarray(1.0)
+            arrays[f"single_OH_{seed}_calibration"] = np.asarray(1.0)
             for nuisance_condition in score.CONDITIONS:
                 arrays[f"nuisance_OH_{nuisance_condition}_{seed}_calibration"] = np.asarray(1.0)
                 arrays[f"nuisance_OH_{nuisance_condition}_{seed}_mean"] = arrays[prefix+"_mean"][:18].copy()

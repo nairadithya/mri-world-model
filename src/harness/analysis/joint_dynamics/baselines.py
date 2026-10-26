@@ -291,9 +291,9 @@ def _fit_filter(records: list[dict[str, Any]]) -> dict[str, Any]:
 
 def _posterior(history: FilterHistory, parameters: list[dict[str, Any]]) -> tuple[np.ndarray, np.ndarray]:
     y, dt = _history(history)
-    mean, variance = y[0].copy(), np.asarray([p["final"][2] for p in parameters])
-    b = np.asarray([p["final"][0] for p in parameters])
-    q = np.asarray([p["final"][1] for p in parameters])
+    mean, variance = y[0].copy(), np.asarray([p["final"][2] for p in parameters], dtype=np.float64)
+    b = np.asarray([p["final"][0] for p in parameters], dtype=np.float64)
+    q = np.asarray([p["final"][1] for p in parameters], dtype=np.float64)
     r = variance.copy()
     for i in range(1, len(y)):
         mean += b*dt[i]
