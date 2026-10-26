@@ -182,6 +182,53 @@ class AuthorityTests(unittest.TestCase):
             with self.authority.stage("blocked"):
                 pass
 
+    def test_cost_observes_live_workers_reaped_grandchild_and_final_single_charge(self) -> None:
+        self.initialized()
+        code = ("import json,resource,subprocess,sys,time\n"
+                "subprocess.run([sys.executable,'-B','-c',"
+                "'import time\\ns=time.process_time()\\nwhile time.process_time()-s<.3: pass'],check=True)\n"
+                "u=resource.getrusage(resource.RUSAGE_CHILDREN)\n"
+                "print(json.dumps({'cpu':u.ru_utime+u.ru_stime}),flush=True)\n"
+                "sys.stdin.readline()\n")
+        with self.authority.stage('live-reaped') as guard:
+            worker = subprocess.Popen([sys.executable, '-B', '-c', code], stdin=subprocess.PIPE,
+                                      stdout=subprocess.PIPE, text=True)
+            try:
+                measured = json.loads(worker.stdout.readline())['cpu']
+                live = guard.cost()
+                self.assertTrue(live.descendants_alive)
+                self.assertGreaterEqual(live.cost.cpu_seconds + .03, measured)
+                # cost() and snapshot() must not reacquire the held lock.
+                guard.snapshot()
+                worker.stdin.write('\n'); worker.stdin.flush()
+                worker.wait(timeout=5)
+                joined = guard.cost()
+                self.assertFalse(joined.descendants_alive)
+                self.assertGreaterEqual(joined.cost.cpu_seconds, .3)
+            finally:
+                if worker.poll() is None:
+                    worker.kill(); worker.wait()
+                worker.stdin.close(); worker.stdout.close()
+        final = self.authority.snapshot()
+        charge = final['stages'][-1]['cpu_seconds']
+        self.assertAlmostEqual(final['charged_cpu_seconds'], 900. + charge)
+        self.assertGreaterEqual(charge, .3)
+        self.assertLess(charge, measured + .5)
+        with self.assertRaises(RuntimeError):
+            guard.cost()
+
+    def test_explicit_unresolved_exposure_keeps_lower_bound_and_blocks(self) -> None:
+        self.initialized()
+        with self.assertRaisesRegex(RuntimeError, 'unresolved'):
+            with self.authority.stage('kernel-stuck') as guard:
+                guard.unresolved('owned process cannot be joined; lower bound only')
+        snapshot = self.authority.snapshot()
+        self.assertEqual(snapshot['stages'][-1]['status'], 'running')
+        self.assertGreater(snapshot['stages'][-1]['cpu_seconds'], 0)
+        with self.assertRaisesRegex(RuntimeError, 'unresolved running'):
+            with self.authority.stage('forbidden'):
+                self.fail('unresolved exposure must block')
+
     def test_gpu_is_full_monotonic_wall_not_wall_clock(self) -> None:
         self.initialized()
         with patch.object(mod.time, "monotonic", side_effect=[10., 12., 17.]):

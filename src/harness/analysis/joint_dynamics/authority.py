@@ -14,6 +14,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Iterator
 
+from .protocol import Cost, StageCost
+
 START = "2026-10-26T14:14:16+05:30"
 DEADLINE = "2026-10-28T14:14:16+05:30"
 GPU_LIMIT = 14400.0
@@ -97,7 +99,7 @@ def _number(value: Any) -> float:
 
 def _live_child_cpu() -> tuple[float, bool]:
     """Linux live descendants complement getrusage's already reaped children."""
-    pending, seen, total = [os.getpid()], set(), 0.0
+    pending, seen, ordered, total = [os.getpid()], set(), [], 0.0
     ticks = os.sysconf("SC_CLK_TCK")
     while pending:
         pid = pending.pop()
@@ -114,18 +116,24 @@ def _live_child_cpu() -> tuple[float, bool]:
                 if child in seen:
                     continue
                 seen.add(child)
+                ordered.append(child)
                 pending.append(child)
-                try:
-                    fields = Path(f"/proc/{child}/stat").read_text().rsplit(")", 1)[1].split()
-                    total += (int(fields[11]) + int(fields[12])) / ticks
-                except FileNotFoundError:
-                    pass
+    # Read descendants before ancestors, so a wait during observation can only
+    # duplicate a transition, not drop it. Final joined rusage is authoritative.
+    for child in reversed(ordered):
+        try:
+            fields = Path(f"/proc/{child}/stat").read_text().rsplit(")", 1)[1].split()
+            total += sum(int(fields[i]) for i in (11, 12, 13, 14)) / ticks
+        except FileNotFoundError:
+            pass
     return total, bool(seen)
 
 
 def _cpu() -> tuple[float, bool]:
-    children = resource.getrusage(resource.RUSAGE_CHILDREN)
+    # Bracket the walk: a concurrent wait can move CPU from /proc into rusage.
+    # Taking the later rusage is conservative at that transition, never an omission.
     live, has_children = _live_child_cpu()
+    children = resource.getrusage(resource.RUSAGE_CHILDREN)
     return time.process_time() + children.ru_utime + children.ru_stime + live, has_children
 
 
@@ -136,6 +144,8 @@ class BudgetGuard:
         self.name, self.gpu = name, gpu
         self.started, self.cpu_start = started, cpu_start
         self.active = True
+        self._observed_cpu = 0.0
+        self._unresolved: str | None = None
 
     def _require_active(self) -> None:
         if not self.active or self.authority._active is not self:
@@ -143,7 +153,22 @@ class BudgetGuard:
 
     def _cost(self) -> tuple[float, float, bool]:
         cpu, live = _cpu()
-        return max(0.0, cpu - self.cpu_start), max(0.0, time.monotonic() - self.started), live
+        measured = max(0.0, cpu - self.cpu_start)
+        self._observed_cpu = max(self._observed_cpu, measured)
+        return (self._observed_cpu if live else measured), max(0.0, time.monotonic() - self.started), live
+
+    def cost(self) -> StageCost:
+        """Read the held reservation without acquiring its non-reentrant lock."""
+        self._require_active()
+        cpu, wall, live = self._cost()
+        return StageCost(Cost(cpu, wall, wall if self.gpu else 0.0), live)
+
+    def unresolved(self, reason: str) -> None:
+        """Keep durable lower-bound charges when owned work cannot be joined."""
+        self._require_active()
+        if not isinstance(reason, str) or not reason:
+            raise ValueError('unresolved exposure requires a reason')
+        self._unresolved = reason
 
     def check(self, projected_gpu_seconds: float = 0.0, projected_cpu_seconds: float = 0.0) -> None:
         self._require_active()
@@ -431,8 +456,8 @@ class BudgetAuthority:
                     final_error: BaseException | None = None
                     try:
                         self._check_limits(p, cpu, wall if gpu else 0.0)
-                        if children:
-                            raise RuntimeError("stage ended with unjoined children; continuation blocked")
+                        if children or guard._unresolved:
+                            raise RuntimeError("stage ended with unjoined children or unresolved exposure; continuation blocked")
                     except RuntimeError as exc:
                         final_error = exc
                     core = {k: v for k, v in p["stages"][-1].items() if k != "hash"}
@@ -440,13 +465,14 @@ class BudgetAuthority:
                                 ended=_time(), cpu_seconds=cpu, gpu_seconds=wall if gpu else 0.0,
                                 failure=repr(failure or final_error) if failure or final_error else None)
                     # Unjoined descendants can keep spending: leave a durable unresolved attempt.
-                    if children:
+                    if children or guard._unresolved:
                         core["status"] = "running"
+                        core["failure"] = repr(guard._unresolved or failure or final_error)
                     p["stages"][-1] = {**core, "hash": _digest(core)}
                     p["head"] = p["stages"][-1]["hash"]
                     p["charged_cpu_seconds"] += cpu
                     p["charged_gpu_seconds"] += wall if gpu else 0.0
-                    self._persist(p, "abandon" if children else "finalize", events, anchor)
+                    self._persist(p, "abandon" if children or guard._unresolved else "finalize", events, anchor)
                     if final_error is not None and failure is None:
                         raise final_error
                 finally:
