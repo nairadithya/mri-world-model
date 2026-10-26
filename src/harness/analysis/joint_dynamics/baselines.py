@@ -9,8 +9,10 @@ from typing import Any, Mapping
 import numpy as np
 from scipy.special import ndtr
 
-GRID = (0.5, 1.0, 2.0)
-OBSERVATION_SD = 0.05
+from .protocol import PLAN
+
+GRID = PLAN.calibration_grid
+OBSERVATION_SD = PLAN.observation_sd
 
 
 @dataclass(frozen=True)

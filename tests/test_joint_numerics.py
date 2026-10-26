@@ -13,6 +13,9 @@ from scipy.special import ndtri
 
 from src.harness.analysis.joint_dynamics import assessment as score
 from src.harness.analysis.joint_dynamics import baselines as controls
+from src.harness.analysis.joint_dynamics.protocol import PLAN, SourceIdentity, canonical_hash
+
+TEST_REPO = Path(__file__).resolve().parents[1]
 from src.harness.analysis.joint_dynamics.baselines import (
     ControlFitData, ControlFits, ControlInputs, FilterHistory, SourceChain,
     calibrate_gaussian, fit_controls, fit_persistence, gaussian_calibration_receipt,
@@ -43,10 +46,13 @@ def _fit_data() -> tuple[ControlFitData, ControlFitData]:
     return source, validation
 
 
-def _production_bundle(fits: ControlFits) -> tuple[dict[str, np.ndarray], dict]:
+def _production_bundle(fits: ControlFits) -> tuple[dict[str, np.ndarray], score.AssessmentIdentity]:
     arrays = {"seeds": np.asarray(score.SEEDS, dtype=np.int64)}
-    identity = {"contract_digest": "a"*64, "source_sha256": "b"*64,
-                "fitted_manifest_sha256": "c"*64, "control_fits": fits.to_dict(),
+    identity = {"schema": "r38-assessment-identity-v4",
+                "implementation_source": SourceIdentity.capture(TEST_REPO).to_dict(),
+                "contract_digest": canonical_hash({'fixture': 'synthetic contract'}),
+                "fitted_manifest_sha256": canonical_hash({'fixture': 'synthetic fitted manifest'}),
+                "control_fits": fits.to_dict(),
                 "cohort_rows": {}, "calibration": dict(fits.state["calibration"])}
     for arm_index, arm in enumerate(score.ARMS):
         for seed_index, seed in enumerate(score.SEEDS):
@@ -101,7 +107,11 @@ def _production_bundle(fits: ControlFits) -> tuple[dict[str, np.ndarray], dict]:
                     arrays[prefix+"_"+field] = value.copy() if value.ndim == 0 else value[:18].copy()
                 if condition != "identity":
                     arrays[prefix+"_mean"] += 0.01 if condition == "intensity" else 0.02
-    return arrays, identity
+    return arrays, score.AssessmentIdentity.from_dict(identity, repo=TEST_REPO)
+
+
+def _analyze_bundle(arrays, identity):
+    return score.analyze(arrays, score.AssessmentIdentity.from_dict(identity, repo=TEST_REPO))
 
 
 class LiteralScoreTests(unittest.TestCase):
@@ -454,7 +464,111 @@ class ProductionAssessmentTests(unittest.TestCase):
         cls.arrays, cls.identity = _production_bundle(cls.fits)
 
     def bundle(self):
-        return {k: v.copy() for k, v in self.arrays.items()}, deepcopy(self.identity)
+        return {k: v.copy() for k, v in self.arrays.items()}, self.identity.to_dict()
+
+    def test_assessment_identity_roundtrip_typed_boundary_and_single_source_wire(self):
+        arrays, wire = self.bundle()
+        identity = score.AssessmentIdentity.from_dict(wire, repo=TEST_REPO)
+        self.assertIsInstance(identity.source, SourceIdentity)
+        self.assertEqual(identity.to_dict(), wire)
+        self.assertEqual(identity.control_fits, self.fits.to_dict())
+        self.assertNotIn('source_sha256', wire)
+        with self.assertRaises(ValueError):
+            score.analyze(arrays, wire)
+        with self.assertRaises(ValueError):
+            replace(identity, source=wire['implementation_source'])
+        with self.assertRaises(ValueError):
+            replace(identity, source=identity.source.digest)
+        result = score.analyze(arrays, identity)
+        self.assertEqual(result['identity']['implementation_source'], identity.source.to_dict())
+        self.assertNotIn('source_sha256', result['identity'])
+        self.assertEqual(result['protocol']['version'], 4)
+
+    def test_identity_missing_extra_or_wrong_source_wire_rejected(self):
+        _, original = self.bundle()
+        for key in original:
+            wire = deepcopy(original); del wire[key]
+            with self.subTest(missing=key), self.assertRaises(ValueError):
+                score.AssessmentIdentity.from_dict(wire, repo=TEST_REPO)
+        for key in ('source_sha256', 'unexpected'):
+            wire = deepcopy(original); wire[key] = original['implementation_source']
+            with self.subTest(extra=key), self.assertRaises(ValueError):
+                score.AssessmentIdentity.from_dict(wire, repo=TEST_REPO)
+        for source in (original['implementation_source']['digest'], original['implementation_source']['files']):
+            wire = deepcopy(original); wire['implementation_source'] = source
+            with self.assertRaises(ValueError):
+                score.AssessmentIdentity.from_dict(wire, repo=TEST_REPO)
+
+    def test_identity_missing_extra_changed_current_source_inventory_rejected(self):
+        _, original = self.bundle()
+        first = next(iter(original['implementation_source']['files']))
+        for mutation in ('missing', 'extra', 'changed', 'digest'):
+            wire = deepcopy(original)
+            source = wire['implementation_source']
+            if mutation == 'missing':
+                del source['files'][first]
+            elif mutation == 'extra':
+                source['files']['src/extra_source.py'] = source['files'][first]
+            elif mutation == 'changed':
+                source['files'][first] = canonical_hash({'changed_source': source['files'][first]})
+            if mutation == 'digest':
+                source['digest'] = canonical_hash({'wrong_digest': source['digest']})
+            else:
+                source['digest'] = canonical_hash(source['files'])
+            with self.subTest(mutation=mutation), self.assertRaises(ValueError):
+                score.AssessmentIdentity.from_dict(wire, repo=TEST_REPO)
+        arrays, wire = self.bundle()
+        files = dict(self.identity.source.files)
+        del files[first]
+        stale = SourceIdentity(files, canonical_hash(files))
+        identity = replace(self.identity, source=stale)
+        with self.assertRaises(ValueError):
+            score.analyze(arrays, identity)
+
+    def test_identity_controls_cohorts_and_calibration_are_strict(self):
+        _, original = self.bundle()
+        for section in ('control_fits', 'cohort_rows', 'calibration'):
+            for mutation in ('missing', 'extra'):
+                wire = deepcopy(original)
+                if mutation == 'missing':
+                    del wire[section][next(iter(wire[section]))]
+                else:
+                    wire[section]['unexpected'] = 1
+                with self.subTest(section=section, mutation=mutation), self.assertRaises(ValueError):
+                    score.AssessmentIdentity.from_dict(wire, repo=TEST_REPO)
+        for field in ('contract_digest', 'fitted_manifest_sha256'):
+            wire = deepcopy(original); wire[field] = 'not a digest'
+            with self.subTest(field=field), self.assertRaises(ValueError):
+                score.AssessmentIdentity.from_dict(wire, repo=TEST_REPO)
+        wire = deepcopy(original)
+        wire['calibration']['JH_42']['unexpected'] = 1
+        with self.assertRaises(ValueError):
+            score.AssessmentIdentity.from_dict(wire, repo=TEST_REPO)
+        wire = deepcopy(original)
+        wire['cohort_rows']['primary'][0]['unexpected'] = 1
+        with self.assertRaises(ValueError):
+            score.AssessmentIdentity.from_dict(wire, repo=TEST_REPO)
+
+    def test_fixed_plan_numerical_constants_and_interpretation_limits(self):
+        self.assertEqual(score.ARMS, ('OH', 'OL', 'JH', 'JL'))
+        self.assertEqual(score.SEEDS, (42, 43, 44))
+        self.assertEqual(controls.GRID, (0.5, 1.0, 2.0))
+        self.assertEqual(controls.OBSERVATION_SD, 0.05)
+        self.assertEqual((score.DRAWS, score.BOOTSTRAP_SEED), (10000, 2026))
+        self.assertEqual((PLAN.epochs, PLAN.updates_per_epoch, PLAN.total_updates), (20, 262, 62880))
+        arrays, wire = self.bundle()
+        result = _analyze_bundle(arrays, wire)
+        limits = ' '.join(result['interpretation_limits'])
+        self.assertIn('saturate at 2', limits)
+        self.assertIn('control coverage', limits)
+        self.assertIn('not learned robustness', limits)
+        self.assertIn('not every optimally calibrated persistence', limits)
+        for control in ('P', 'E', 'FP', 'SSM'):
+            self.assertEqual(result['common_control_calibration_grid_scores'][control],
+                             self.fits.state['calibration_receipts'][control]['grid_scores'])
+            self.assertIn('coverage_0.8', result['cohorts']['primary']['scores'][control])
+        self.assertEqual(self.fits.state['source_sha256'], controls._digest(self.fits.state['source']))
+        self.assertEqual(self.fits.to_dict()['schema'], 'r38-control-fits-v3')
 
     def test_complete_staged_only_json_and_sparse_masks(self):
         arrays, identity = self.bundle()
@@ -462,7 +576,7 @@ class ProductionAssessmentTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             with patch("builtins.open", side_effect=AssertionError("analyze must not write files")), \
                  patch.object(Path, "write_text", side_effect=AssertionError("no publishing")):
-                result = score.analyze(arrays, identity)
+                result = _analyze_bundle(arrays, identity)
             self.assertEqual(list(Path(directory).iterdir()), [])
         json.dumps(result, allow_nan=False)
         self.assertEqual(result["status"], "staged_only")
@@ -498,7 +612,7 @@ class ProductionAssessmentTests(unittest.TestCase):
             path = Path(directory)/"private_predictions.npz"
             np.savez(path, **arrays)
             with np.load(path, allow_pickle=False) as loaded:
-                result = score.analyze(loaded, identity)
+                result = _analyze_bundle(loaded, identity)
             self.assertEqual(sorted(p.name for p in Path(directory).iterdir()), ["private_predictions.npz"])
         current = result["cohorts"]["primary"]["scores"]["JH"]["seeds"]["42"]["current_dice"]["mean"]
         self.assertNotEqual(current, 0.123)
@@ -514,7 +628,7 @@ class ProductionAssessmentTests(unittest.TestCase):
             for condition in score.CONDITIONS:
                 for seed in score.SEEDS:
                     arrays[f"nuisance_{arm}_{condition}_{seed}_intrinsic_scale"][:] = 0
-        result = score.analyze(arrays, identity)
+        result = _analyze_bundle(arrays, identity)
         self.assertEqual(result["status"], "staged_only")
         width = result["cohorts"]["primary"]["scores"]["JH"]["seed_score_average"]["width_0.8"]["mean"]
         self.assertAlmostEqual(width, 2*ndtri(0.9)*0.05, places=13)
@@ -536,7 +650,7 @@ class ProductionAssessmentTests(unittest.TestCase):
                 arrays[f"nuisance_OH_{nuisance_condition}_{seed}_calibration"] = np.asarray(1.0)
                 arrays[f"nuisance_OH_{nuisance_condition}_{seed}_mean"] = arrays[prefix+"_mean"][:18].copy()
             seed_scores.append(score.gaussian_crps(arrays[prefix+"_mean"], np.hypot(0.5, 0.05), truth))
-        result = score.analyze(arrays, identity)
+        result = _analyze_bundle(arrays, identity)
         got = result["cohorts"]["primary"]["scores"]["OH"]["seed_score_average"]["crps"]["mean"]
         by_row = np.mean(seed_scores, axis=0)
         expected = score.patient_values(by_row, arrays["primary_patient_ids"]).mean()
@@ -551,26 +665,26 @@ class ProductionAssessmentTests(unittest.TestCase):
         for key in ("primary_truth", "single_cutoff_measured", "nuisance_truth", "nuisance_cutoff_measured"):
             arrays, identity = self.bundle(); arrays[key][0, 0] += 0.01
             with self.subTest(key=key), self.assertRaises(ValueError):
-                score.analyze(arrays, identity)
+                _analyze_bundle(arrays, identity)
         arrays, identity = self.bundle()
         arrays["primary_row_ids"][[0, 1]] = arrays["primary_row_ids"][[1, 0]]
         with self.assertRaises(ValueError):
-            score.analyze(arrays, identity)
+            _analyze_bundle(arrays, identity)
         arrays, identity = self.bundle(); arrays["nuisance_patient_ids"][0] = "wrong"
         with self.assertRaises(ValueError):
-            score.analyze(arrays, identity)
+            _analyze_bundle(arrays, identity)
 
     def test_production_cardinality_not_weakened_by_identity(self):
         for cohort in score.COHORTS:
             arrays, identity = self.bundle()
             identity["cohort_rows"][cohort] = identity["cohort_rows"][cohort][:-1]
             with self.subTest(cohort=cohort), self.assertRaises(ValueError):
-                score.analyze(arrays, identity)
+                _analyze_bundle(arrays, identity)
         arrays, identity = self.bundle()
         identity["cohort_rows"]["single"][-1]["patient_id"] = "p00"
         identity["cohort_rows"]["single"][22]["patient_id"] = "p00"
         with self.assertRaises(ValueError):
-            score.analyze(arrays, identity)
+            _analyze_bundle(arrays, identity)
 
     def test_missing_or_mislabelled_seeds_arms_conditions_and_rows_raise(self):
         for old, new in (("primary_OH_44_mean", "primary_OH_45_mean"),
@@ -578,16 +692,16 @@ class ProductionAssessmentTests(unittest.TestCase):
                          ("nuisance_JH_resolution_43_mean", "nuisance_JH_other_43_mean")):
             arrays, identity = self.bundle(); arrays[new] = arrays.pop(old)
             with self.subTest(old=old), self.assertRaises(ValueError):
-                score.analyze(arrays, identity)
+                _analyze_bundle(arrays, identity)
         for key in ("primary_JL_44_current_dice", "single_JH_42_future_dice",
                     "nuisance_OH_intensity_43_current_mean", "primary_FP_intrinsic_scale"):
             arrays, identity = self.bundle(); del arrays[key]
             with self.subTest(key=key), self.assertRaises(ValueError):
-                score.analyze(arrays, identity)
+                _analyze_bundle(arrays, identity)
         for seeds in ([42, 43, 43], [44, 43, 42], [42, 43, 45]):
             arrays, identity = self.bundle(); arrays["seeds"] = np.asarray(seeds)
             with self.subTest(seeds=seeds), self.assertRaises(ValueError):
-                score.analyze(arrays, identity)
+                _analyze_bundle(arrays, identity)
 
     def test_calibration_and_rms_swaps_rejected_in_all_namespaces(self):
         for key in ("primary_OH_42_calibration", "single_JL_44_persistence_calibration",
@@ -595,13 +709,13 @@ class ProductionAssessmentTests(unittest.TestCase):
             arrays, identity = self.bundle()
             old = float(arrays[key]); arrays[key] = np.asarray(2.0 if old != 2 else 0.5)
             with self.subTest(key=key), self.assertRaises(ValueError):
-                score.analyze(arrays, identity)
+                _analyze_bundle(arrays, identity)
         arrays, identity = self.bundle(); arrays["single_JH_43_persistence_rms"][1] += 0.01
         with self.assertRaises(ValueError):
-            score.analyze(arrays, identity)
+            _analyze_bundle(arrays, identity)
         arrays, identity = self.bundle(); arrays["primary_OH_42_calibration"] = np.asarray([0.5])
         with self.assertRaises(ValueError):
-            score.analyze(arrays, identity)
+            _analyze_bundle(arrays, identity)
 
     def test_e_portable_fit_centers_weights_noise_and_coherent_fp_are_checked(self):
         for key, index in (("primary_E_centers", (0, 0, 0)), ("single_E_weights", (0,)),
@@ -609,28 +723,28 @@ class ProductionAssessmentTests(unittest.TestCase):
                            ("primary_SSM_intrinsic_scale", (0, 1))):
             arrays, identity = self.bundle(); arrays[key][index] += 0.01
             with self.subTest(key=key), self.assertRaises(ValueError):
-                score.analyze(arrays, identity)
+                _analyze_bundle(arrays, identity)
         arrays, identity = self.bundle(); arrays["primary_E_observation_sd"] = np.asarray(0.1)
         with self.assertRaises(ValueError):
-            score.analyze(arrays, identity)
+            _analyze_bundle(arrays, identity)
         arrays, identity = self.bundle()
         arrays["primary_E_centers"] += 0.25
         with self.assertRaises(ValueError):
-            score.analyze(arrays, identity)
+            _analyze_bundle(arrays, identity)
 
     def test_nonfinite_negative_scales_dice_and_pickle_arrays_raise(self):
         for key, value in (("primary_JH_42_mean", np.nan), ("single_FP_intrinsic_scale", -1),
                            ("single_OH_44_current_dice", 1.01), ("nuisance_OL_intensity_42_mean", np.inf)):
             arrays, identity = self.bundle(); arrays[key][0, 0] = value
             with self.subTest(key=key), self.assertRaises(ValueError):
-                score.analyze(arrays, identity)
+                _analyze_bundle(arrays, identity)
         arrays, identity = self.bundle(); arrays["primary_row_ids"] = arrays["primary_row_ids"].astype(object)
         with self.assertRaises(ValueError):
-            score.analyze(arrays, identity)
+            _analyze_bundle(arrays, identity)
         arrays, identity = self.bundle(); arrays["primary_JH_42_future_dice"][0, 0] = 0.5
         self.assertEqual(arrays["primary_truth"][0, 0], 0.0)
         with self.assertRaises(ValueError):
-            score.analyze(arrays, identity)
+            _analyze_bundle(arrays, identity)
 
     def test_nuisance_per_compartment_gate_and_seedwise_drift(self):
         arrays, identity = self.bundle()
@@ -640,7 +754,7 @@ class ProductionAssessmentTests(unittest.TestCase):
             arrays[f"nuisance_JH_intensity_{seed}_mean"][:, 0] += 0.20
             arrays[f"nuisance_JH_resolution_{seed}_mean"] = base.copy()
             arrays[f"nuisance_JH_resolution_{seed}_mean"][:, 1] += (-0.3, 0.0, 0.3)[seed_index]
-        result = score.analyze(arrays, identity)
+        result = _analyze_bundle(arrays, identity)
         intensity = result["nuisance"]["JH"]["changes"]["intensity"]["per_compartment"]
         self.assertFalse(intensity[0]["passes"])
         self.assertTrue(intensity[1]["passes"])
@@ -653,13 +767,13 @@ class ProductionAssessmentTests(unittest.TestCase):
     def test_nuisance_identity_cannot_be_refitted_or_substituted(self):
         arrays, identity = self.bundle(); arrays["nuisance_JH_identity_42_mean"][0, 0] += 0.01
         with self.assertRaises(ValueError):
-            score.analyze(arrays, identity)
+            _analyze_bundle(arrays, identity)
         arrays, identity = self.bundle()
         identity["cohort_rows"]["nuisance"] = identity["cohort_rows"]["nuisance"][::-1]
         for key in ("row_ids", "patient_ids", "truth", "cutoff_measured"):
             arrays["nuisance_"+key] = arrays["nuisance_"+key][::-1].copy()
         with self.assertRaises(ValueError):
-            score.analyze(arrays, identity)
+            _analyze_bundle(arrays, identity)
 
 
 if __name__ == "__main__":

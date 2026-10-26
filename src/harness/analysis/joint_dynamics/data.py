@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import asdict
+from dataclasses import asdict, dataclass
 import hashlib
 import json
 import math
@@ -16,7 +16,7 @@ from src.model.representation import SpatialState, nuisance
 from src.preprocessing.geometry import GEOMETRY_CONTRACT, Grid, align_masks
 from src.preprocessing.transforms import runtime_transform
 from .protocol import (CHECKPOINT_SHA256, COMPARTMENTS, PLAN, ROW_SHA256, ForecastRow,
-                       Normalizer, canonical_hash, digest, gap_weeks, read_json,
+                       ArtifactRef, Normalizer, canonical_hash, digest, gap_weeks, read_json,
                        save_json, week_order)
 
 PREPARATION_SOURCES = ('src/harness/analysis/joint_dynamics/protocol.py',
@@ -24,6 +24,88 @@ PREPARATION_SOURCES = ('src/harness/analysis/joint_dynamics/protocol.py',
                        'src/harness/analysis/joint_dynamics/model.py',
                        'src/model/representation.py', 'src/data/representation.py',
                        'src/preprocessing/geometry.py', 'src/preprocessing/transforms.py')
+
+
+MASK_TRANSFER_SHA256 = 'd42259bbb47f6a9926892d1203dce3300cdee098fee8bbf1109da70482274666'
+
+
+def _reference_values(visit_ids: tuple[str, ...], native: np.ndarray) -> tuple[tuple[str, ...], np.ndarray]:
+    ids = tuple(visit_ids)
+    if (not ids or any(not isinstance(v, str) or not v for v in ids)
+            or len(set(ids)) != len(ids)):
+        raise ValueError('reference visit IDs must be nonempty unique strings')
+    raw = np.asarray(native)
+    if raw.shape != (len(ids), 3) or raw.dtype.kind not in 'fiu' or not np.isfinite(raw).all():
+        raise ValueError('reference native values must be finite numeric [visits,3]')
+    values = np.array(raw, dtype=np.float64, copy=True)
+    values.setflags(write=False)
+    return ids, values
+
+
+@dataclass(frozen=True)
+class CanonicalDecode:
+    visit_ids: tuple[str, ...]
+    native: np.ndarray
+
+    def __post_init__(self) -> None:
+        ids, values = _reference_values(self.visit_ids, self.native)
+        if len(ids) != 599:
+            raise ValueError('canonical decode requires all 599 visits')
+        object.__setattr__(self, 'visit_ids', ids)
+        object.__setattr__(self, 'native', values)
+
+    def require_prepared(self, visit_ids: tuple[str, ...]) -> None:
+        ids = tuple(visit_ids)
+        if len(ids) != 599 or len(set(ids)) != 599 or set(ids) != set(self.visit_ids):
+            raise ValueError('canonical decode must exactly cover all 599 prepared visits')
+
+
+@dataclass(frozen=True)
+class PartialDirectReference:
+    visit_ids: tuple[str, ...]
+    native: np.ndarray
+    artifact: ArtifactRef
+
+    def __post_init__(self) -> None:
+        ids, values = _reference_values(self.visit_ids, self.native)
+        if not isinstance(self.artifact, ArtifactRef):
+            raise ValueError('direct reference requires its bound artifact')
+        object.__setattr__(self, 'visit_ids', ids)
+        object.__setattr__(self, 'native', values)
+
+
+@dataclass(frozen=True)
+class ReferenceCoverage:
+    supplied_visit_ids: tuple[str, ...]
+    unreferenced_visit_ids: tuple[str, ...]
+    max_native_absolute_error: float
+    artifact: ArtifactRef
+
+    def to_dict(self) -> dict:
+        return {'supplied_visit_ids': list(self.supplied_visit_ids),
+                'unreferenced_visit_ids': list(self.unreferenced_visit_ids),
+                'supplied_count': len(self.supplied_visit_ids),
+                'canonical_count': len(self.supplied_visit_ids) + len(self.unreferenced_visit_ids),
+                'max_native_absolute_error': self.max_native_absolute_error,
+                'atol': PLAN.reconstruction_tolerance, 'rtol': PLAN.reconstruction_tolerance,
+                'artifact': self.artifact.to_dict()}
+
+
+def validate_direct(reference: PartialDirectReference, canonical: CanonicalDecode) -> ReferenceCoverage:
+    if not isinstance(reference, PartialDirectReference) or not isinstance(canonical, CanonicalDecode):
+        raise ValueError('expected partial reference and complete canonical decode')
+    reference.artifact.verify()
+    index = {vid: i for i, vid in enumerate(canonical.visit_ids)}
+    if not set(reference.visit_ids) <= index.keys():
+        raise ValueError('direct reference contains unknown visit IDs')
+    expected = canonical.native[[index[vid] for vid in reference.visit_ids]]
+    if not np.allclose(reference.native, expected, atol=PLAN.reconstruction_tolerance,
+                       rtol=PLAN.reconstruction_tolerance):
+        raise ValueError('canonical cached decode differs from immutable direct values')
+    supplied = set(reference.visit_ids)
+    return ReferenceCoverage(reference.visit_ids,
+        tuple(vid for vid in canonical.visit_ids if vid not in supplied),
+        float(np.max(np.abs(reference.native - expected))), reference.artifact)
 
 
 def unique(records: list[dict], key: str) -> dict[str, dict]:
@@ -98,6 +180,10 @@ def derive_rows(anatomy: dict, inventory: dict, prepared: dict, splits: dict) ->
 
 
 def load_metadata(bindings: dict) -> dict:
+    if bindings['known_sha256'].get('mask_transfer') != MASK_TRANSFER_SHA256:
+        raise ValueError('original raw-mask transfer manifest pin is required')
+    if 'mask_transfer' not in bindings['inputs']:
+        raise ValueError('missing pinned raw-mask transfer manifest')
     paths = {k: Path(v) for k, v in bindings['inputs'].items()}
     hashes = {k: digest(p) for k, p in paths.items() if p.is_file()}
     for key, expected in bindings['known_sha256'].items():
@@ -249,21 +335,24 @@ def prepare_inputs(meta: dict, out: Path, guard: object) -> dict:
     encoder = SpatialState().cuda().float().eval().requires_grad_(False)
     encoder.load_state_dict(checkpoint['state_dict'], strict=True)
     norm = meta['objects']['original_run']['normalization']
-    canonical = {}
-    ids = cache['visit_ids']
+    ids = tuple(cache['visit_ids'])
     with torch.inference_mode():
         decoded = torch.nn.functional.linear(cache['maps'].float().mean((-3, -2, -1)),
                    cache['decoder_weight'].float(), cache['decoder_bias'].float()).numpy()
     decoded = decoded * np.asarray(norm['scale']) + np.asarray(norm['mean'])
-    if decoded.shape != (599, 3) or not np.isfinite(decoded).all():
-        raise ValueError('invalid canonical cached native decode')
-    canonical.update(zip(ids, decoded.tolist()))
-    with np.load(meta['paths']['original_predictions'], allow_pickle=False) as direct:
-        if set(direct['visit_ids'].astype(str)) != set(ids):
-            raise ValueError('incomplete direct frozen predictions')
-        for vid, val in zip(direct['visit_ids'].astype(str), direct['state_prediction']):
-            if not np.allclose(canonical[vid], val, atol=1e-4, rtol=1e-4):
-                raise ValueError('canonical cached decode differs from immutable direct values')
+    decode = CanonicalDecode(ids, decoded)
+    decode.require_prepared(tuple(v['visit_id'] for v in meta['objects']['prepared_metadata']['visits']))
+    canonical = dict(zip(decode.visit_ids, decode.native.tolist()))
+    direct_artifact = ArtifactRef(meta['paths']['original_predictions'].resolve(),
+                                  meta['input_sha256']['original_predictions'])
+    direct_artifact.verify()
+    with np.load(direct_artifact.path, allow_pickle=False) as direct:
+        direct_ids = direct['visit_ids']
+        if direct_ids.ndim != 1 or direct_ids.dtype.kind not in 'US':
+            raise ValueError('direct reference IDs must be a string vector')
+        reference = PartialDirectReference(tuple(direct_ids.astype(str)),
+                                           direct['state_prediction'], direct_artifact)
+    coverage = validate_direct(reference, decode)
     receipts, pooled_errors, native_errors = {}, [], []
     anatomy = {v['visit_id']: v for v in meta['objects']['geometry']['visits'] if v['cohort'] == 'LUMIERE'}
     visits = meta['objects']['prepared_metadata']['visits']
@@ -331,6 +420,10 @@ def prepare_inputs(meta: dict, out: Path, guard: object) -> dict:
             'native_mm3': native.tolist(), 'image_file': image_file, 'mask_file': mask_file,
             'image_sha256': digest(out / image_file), 'mask_sha256': digest(out / mask_file),
             'alignment': aligned.provenance}
+    decode.require_prepared(tuple(receipts))
+    if len(pooled_errors) != 599 or len(native_errors) != 599:
+        raise ValueError('every prepared visit must reproduce pooled and native values')
+    direct_artifact.verify()
     verify_raw_masks(meta)
     normalizer = source_normalizer(visits, meta['splits']['source52'], norm)
     native_visits = [{**v, 'values_mm3': dict(zip(COMPARTMENTS, receipts[v['visit_id']]['native_mm3']))}
@@ -343,6 +436,7 @@ def prepare_inputs(meta: dict, out: Path, guard: object) -> dict:
     result = {'schema': 'r38-prepared-v3', 'rows': meta['rows'], 'splits': meta['splits'],
         'visits': receipts, 'input_sha256': meta['input_sha256'], 'normalizer': asdict(rebuilt),
         'frozen_normalization': norm, 'canonical_control_estimates': canonical,
+        'direct_reference_coverage': coverage.to_dict(),
         'roundtrip': 'runtime-transform/float16-storage/float32-load',
         'raw_source_normalizer_visit_ids': list(normalizer.visit_ids),
         'prepared_source_normalizer_visit_ids': list(rebuilt.visit_ids),

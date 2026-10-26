@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+from dataclasses import dataclass
+import json
+from pathlib import Path
 import re
 from typing import Any
 
@@ -9,14 +12,68 @@ from scipy.special import ndtr, ndtri
 
 from .baselines import (ControlFits, GRID, OBSERVATION_SD, _digest, gaussian_crps,
                         mixture_crps, patient_weights)
+from .protocol import PLAN, REPO, CONDITIONS, SourceIdentity
 
-ARMS = ("OH", "OL", "JH", "JL")
-SEEDS = (42, 43, 44)
-CONDITIONS = ("identity", "intensity", "resolution")
+ARMS = tuple(arm.name for arm in PLAN.arms)
+SEEDS = PLAN.seeds
 LEVELS = (0.5, 0.8, 0.95)
-COHORTS = {"primary": (75, 18), "single": (26, 23), "nuisance": (18, 18)}
-DRAWS = 10000
-BOOTSTRAP_SEED = 2026
+COHORTS = {name: (rows, patients) for name, rows, patients in PLAN.cohort_counts
+           if name in ('primary', 'single', 'nuisance')}
+DRAWS = PLAN.bootstrap_draws
+BOOTSTRAP_SEED = PLAN.bootstrap_seed
+
+
+@dataclass(frozen=True)
+class AssessmentIdentity:
+    source: SourceIdentity
+    contract_digest: str
+    fitted_manifest_sha256: str
+    control_fits: dict[str, Any]
+    cohort_rows: dict[str, list[dict[str, Any]]]
+    calibration: dict[str, Any]
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.source, SourceIdentity):
+            raise ValueError('assessment requires SourceIdentity')
+        for key in ('contract_digest', 'fitted_manifest_sha256'):
+            value = getattr(self, key)
+            if not isinstance(value, str) or re.fullmatch(r'[0-9a-f]{64}', value) is None:
+                raise ValueError(f'missing or invalid bound digest {key}')
+        try:
+            fits = ControlFits.from_dict(self.control_fits)
+            if fits.to_dict() != self.control_fits:
+                raise ValueError('control envelope must roundtrip exactly')
+            rows = json.loads(json.dumps(self.cohort_rows, allow_nan=False))
+            calibration = json.loads(json.dumps(self.calibration, allow_nan=False))
+            _validate_rows(rows)
+            _calibration({'calibration': calibration}, fits)
+            source = set(fits.state['source']['patient_ids'])
+            validation = set(fits.state['validation']['patient_ids'])
+            assessed = {r['patient_id'] for cohort in rows.values() for r in cohort}
+            if assessed & (source | validation):
+                raise ValueError('assessment patients overlap fitting/calibration membership')
+        except (KeyError, TypeError, IndexError, OverflowError) as exc:
+            raise ValueError('incomplete or malformed assessment identity') from exc
+        object.__setattr__(self, 'control_fits', fits.to_dict())
+        object.__setattr__(self, 'cohort_rows', rows)
+        object.__setattr__(self, 'calibration', calibration)
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any], *, repo: Path = REPO) -> AssessmentIdentity:
+        wanted = {'schema', 'implementation_source', 'contract_digest', 'fitted_manifest_sha256',
+                  'control_fits', 'cohort_rows', 'calibration'}
+        if (not isinstance(value, Mapping) or set(value) != wanted
+                or value['schema'] != 'r38-assessment-identity-v4'):
+            raise ValueError('invalid assessment identity schema')
+        return cls(SourceIdentity.from_dict(value['implementation_source'], repo=repo),
+                   value['contract_digest'], value['fitted_manifest_sha256'], value['control_fits'],
+                   value['cohort_rows'], value['calibration'])
+
+    def to_dict(self) -> dict[str, Any]:
+        return {'schema': 'r38-assessment-identity-v4', 'implementation_source': self.source.to_dict(),
+                'contract_digest': self.contract_digest, 'fitted_manifest_sha256': self.fitted_manifest_sha256,
+                **json.loads(json.dumps({'control_fits': self.control_fits, 'cohort_rows': self.cohort_rows,
+                                        'calibration': self.calibration}, allow_nan=False))}
 
 
 def _need(arrays: Mapping[str, np.ndarray], key: str, shape: tuple[int, ...],
@@ -80,15 +137,17 @@ def _validate_keys(arrays: Mapping[str, np.ndarray]) -> None:
             raise ValueError(f"missing field {key}")
 
 
-def _bound_rows(arrays: Mapping[str, np.ndarray], identity: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
-    if not isinstance(identity.get("cohort_rows"), dict) or set(identity["cohort_rows"]) != set(COHORTS):
+def _validate_rows(rows: dict[str, list[dict[str, Any]]]) -> None:
+    if not isinstance(rows, dict) or set(rows) != set(COHORTS):
         raise ValueError("missing or extra bound cohorts")
-    rows = identity["cohort_rows"]
     for cohort, (n, patients) in COHORTS.items():
         records = rows[cohort]
         if not isinstance(records, list) or len(records) != n:
             raise ValueError(f"{cohort} must contain exactly {n} rows")
         for r in records:
+            if not isinstance(r, dict) or set(r) != {'row_id', 'patient_id', 'cutoff_visit_id',
+                                                    'target_visit_id', 'truth', 'cutoff_measured'}:
+                raise ValueError('invalid canonical cohort row fields')
             for field in ("row_id", "patient_id", "cutoff_visit_id", "target_visit_id"):
                 if not isinstance(r.get(field), str) or not r[field]:
                     raise ValueError(f"missing {cohort} identity {field}")
@@ -98,17 +157,11 @@ def _bound_rows(arrays: Mapping[str, np.ndarray], identity: dict[str, Any]) -> d
         patient_ids = [r["patient_id"] for r in records]
         if len(set(row_ids)) != n or len(set(patient_ids)) != patients:
             raise ValueError(f"incorrect {cohort} row/patient membership")
-        if not np.array_equal(_need(arrays, cohort+"_row_ids", (n,), "US"), row_ids):
-            raise ValueError(f"{cohort} row identity/order mismatch")
-        if not np.array_equal(_need(arrays, cohort+"_patient_ids", (n,), "US"), patient_ids):
-            raise ValueError(f"{cohort} patient identity/order mismatch")
         for field in ("truth", "cutoff_measured"):
-            actual = _need(arrays, cohort+"_"+field, (n, 3))
-            expected = np.asarray([r[field] for r in records], dtype=float)
-            if expected.shape != (n, 3) or not np.isfinite(expected).all() or (expected < 0).any():
+            expected = np.asarray([r[field] for r in records])
+            if (expected.shape != (n, 3) or expected.dtype.kind not in 'fiu'
+                    or not np.isfinite(expected).all() or (expected < 0).any()):
                 raise ValueError("measured native log-volumes must be finite and nonnegative")
-            if not np.array_equal(actual, expected):
-                raise ValueError(f"{cohort} measured {field} differs from bound identity")
     if {r["row_id"] for r in rows["primary"]} & {r["row_id"] for r in rows["single"]}:
         raise ValueError("primary and single row overlap")
     earliest = {}
@@ -116,6 +169,20 @@ def _bound_rows(arrays: Mapping[str, np.ndarray], identity: dict[str, Any]) -> d
         earliest.setdefault(row["patient_id"], row)
     if rows["nuisance"] != list(earliest.values()):
         raise ValueError("nuisance must be the bound earliest primary row per patient")
+
+
+def _bound_rows(arrays: Mapping[str, np.ndarray], identity: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
+    rows = identity['cohort_rows']
+    _validate_rows(rows)
+    for cohort, (n, _) in COHORTS.items():
+        for field in ('row_ids', 'patient_ids'):
+            expected = [r['row_id' if field == 'row_ids' else 'patient_id'] for r in rows[cohort]]
+            if not np.array_equal(_need(arrays, cohort+'_'+field, (n,), 'US'), expected):
+                raise ValueError(f'{cohort} {field} identity/order mismatch')
+        for field in ('truth', 'cutoff_measured'):
+            if not np.array_equal(_need(arrays, cohort+'_'+field, (n, 3)),
+                                  [r[field] for r in rows[cohort]]):
+                raise ValueError(f'{cohort} measured {field} differs from bound identity')
     return rows
 
 
@@ -130,7 +197,7 @@ def _calibration(identity: dict[str, Any], fits: ControlFits) -> dict[str, Any]:
     for arm in ARMS:
         for seed in SEEDS:
             entry = c[f"{arm}_{seed}"]
-            if not isinstance(entry, dict) or not {"forecast", "persistence", "persistence_rms"} <= set(entry):
+            if not isinstance(entry, dict) or set(entry) != {"forecast", "persistence", "persistence_rms"}:
                 raise ValueError("incomplete own-persistence calibration receipt")
             for field in ("forecast", "persistence"):
                 if not np.isscalar(entry[field]) or entry[field] not in GRID:
@@ -485,24 +552,22 @@ def _capability_flags(contrasts: dict[str, Any], retention: dict[str, Any],
     return flags
 
 
-def analyze(arrays: Mapping[str, np.ndarray], identity: dict[str, Any]) -> dict[str, Any]:
+def analyze(arrays: Mapping[str, np.ndarray], identity: AssessmentIdentity) -> dict[str, Any]:
     """Validate complete private predictions, then reconstruct a JSON-only staged record.
 
     Budget success and publication are exclusively runner responsibilities. Independent
     result review is a later, separately hash-bound record, not a mutation here.
     """
-    if not isinstance(arrays, Mapping) or not isinstance(identity, dict):
-        raise ValueError("arrays and identity must be mappings")
+    if not isinstance(arrays, Mapping) or not isinstance(identity, AssessmentIdentity):
+        raise ValueError("expected arrays mapping and AssessmentIdentity")
     try:
-        return _analyze(arrays, identity)
+        validated = AssessmentIdentity.from_dict(identity.to_dict(), repo=Path(__file__).resolve().parents[4])
+        return _analyze(arrays, validated.to_dict())
     except (KeyError, TypeError, IndexError, OverflowError) as exc:
         raise ValueError("incomplete or malformed prediction/identity bundle") from exc
 
 
 def _analyze(arrays: Mapping[str, np.ndarray], identity: dict[str, Any]) -> dict[str, Any]:
-    for key in ("contract_digest", "source_sha256", "fitted_manifest_sha256"):
-        if not isinstance(identity.get(key), str) or not re.fullmatch(r"[0-9a-f]{64}", identity[key]):
-            raise ValueError(f"missing or invalid bound digest {key}")
     _validate_keys(arrays)
     if not np.array_equal(_need(arrays, "seeds", (3,), "iu"), SEEDS):
         raise ValueError("global seed labels/order differ from fixed matrix")
@@ -535,13 +600,13 @@ def _analyze(arrays: Mapping[str, np.ndarray], identity: dict[str, Any]) -> dict
         gains[arm] = item
     result = {
         "status": "staged_only", "independent_review": "not_performed",
-        "identity": {k: identity[k] for k in ("contract_digest", "source_sha256", "fitted_manifest_sha256")},
+        "identity": {k: identity[k] for k in ("contract_digest", "implementation_source", "fitted_manifest_sha256")},
         "control_fits_sha256": _digest(identity["control_fits"]),
         "selected_calibration": calibration,
         "common_control_calibration_grid_scores": {
             k: v["grid_scores"] for k, v in fits.state["calibration_receipts"].items()},
         "cohort_identity_sha256": {k: _digest(v) for k, v in rows.items()},
-        "protocol": {"version": 3, "arms": list(ARMS), "seeds": list(SEEDS), "conditions": list(CONDITIONS),
+        "protocol": {"version": 4, "arms": list(ARMS), "seeds": list(SEEDS), "conditions": list(CONDITIONS),
                      "compartments": ["necrotic_non_enhancing", "enhancing", "edema_flair"],
                      "units": "native_log1p_mm3", "cohorts": {k: list(v) for k, v in COHORTS.items()},
                      "aggregation": "seed_scores_then_rows_within_patient_then_equal_patients",
@@ -564,7 +629,10 @@ def _analyze(arrays: Mapping[str, np.ndarray], identity: dict[str, Any]) -> dict
                                   "Automated target agreement is not expert-verified biological prediction.",
                                   "A co-adapted system result is not intrinsic frozen-encoder information gain.",
                                   "Unresolved comparisons are inconclusive, never equivalence or no dynamics.",
-                                  "Intensity normalization may cancel the transform; resolution is synthetic.",
+                                  "Intensity is a preprocessing/cancellation consistency check, not learned robustness; normalization may cancel it.",
+                                  "Resolution is the nontrivial synthetic degradation test, not clinical scanner evidence.",
+                                  "Source-in-sample persistence RMS and the fixed (0.5,1,2) calibration grid can miscalibrate controls or saturate at 2; inspect selected multipliers, grid scores and control coverage.",
+                                  "A win is against the declared finite-grid controls, not every optimally calibrated persistence forecast.",
                                   "Common frozen control encoder used internal13 checkpoint selection.",
                                   "Staged scoring is not budget completion, publication or independent approval."]}
     return _json_value(result)
