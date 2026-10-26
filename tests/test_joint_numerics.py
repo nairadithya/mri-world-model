@@ -548,6 +548,26 @@ class ProductionAssessmentTests(unittest.TestCase):
         wire['cohort_rows']['primary'][0]['unexpected'] = 1
         with self.assertRaises(ValueError):
             score.AssessmentIdentity.from_dict(wire, repo=TEST_REPO)
+        for bad in (True, '1.0', [1.0]):
+            wire = deepcopy(original); wire['calibration']['JH_42']['forecast'] = bad
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                score.AssessmentIdentity.from_dict(wire, repo=TEST_REPO)
+        wire = deepcopy(original)
+        wire['calibration']['JH_42']['persistence_rms'] = ['1', '1.5', '2']
+        with self.assertRaises(ValueError):
+            score.AssessmentIdentity.from_dict(wire, repo=TEST_REPO)
+
+    def test_identity_detaches_mutable_producer_and_wire_records(self):
+        _, wire = self.bundle()
+        identity = score.AssessmentIdentity.from_dict(wire, repo=TEST_REPO)
+        original = identity.to_dict()
+        wire['cohort_rows']['primary'][0]['truth'][0] += 1
+        wire['control_fits']['state']['p_rms'][0] += 1
+        wire['calibration']['OH_42']['persistence_rms'][0] += 1
+        self.assertEqual(identity.to_dict(), original)
+        exported = identity.to_dict()
+        exported['cohort_rows']['primary'][0]['truth'][0] += 1
+        self.assertEqual(identity.to_dict(), original)
 
     def test_fixed_plan_numerical_constants_and_interpretation_limits(self):
         self.assertEqual(score.ARMS, ('OH', 'OL', 'JH', 'JL'))
@@ -556,6 +576,8 @@ class ProductionAssessmentTests(unittest.TestCase):
         self.assertEqual(controls.OBSERVATION_SD, 0.05)
         self.assertEqual((score.DRAWS, score.BOOTSTRAP_SEED), (10000, 2026))
         self.assertEqual((PLAN.epochs, PLAN.updates_per_epoch, PLAN.total_updates), (20, 262, 62880))
+        self.assertEqual((PLAN.source_visits, PLAN.reconstruction_tolerance, PLAN.normalizer_tolerance),
+                         (353, 1e-4, 1e-6))
         arrays, wire = self.bundle()
         result = _analyze_bundle(arrays, wire)
         limits = ' '.join(result['interpretation_limits'])

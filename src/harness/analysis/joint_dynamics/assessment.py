@@ -192,7 +192,8 @@ def _calibration(identity: dict[str, Any], fits: ControlFits) -> dict[str, Any]:
     if not isinstance(c, dict) or set(c) != wanted:
         raise ValueError("incomplete or extra fitted calibration identities")
     for name in ("P", "E", "FP", "SSM"):
-        if c[name] not in GRID or c[name] != fits.state["calibration"][name]:
+        if (isinstance(c[name], bool) or not isinstance(c[name], (int, float))
+                or c[name] not in GRID or c[name] != fits.state["calibration"][name]):
             raise ValueError("common-control calibration differs from portable fit")
     for arm in ARMS:
         for seed in SEEDS:
@@ -200,10 +201,12 @@ def _calibration(identity: dict[str, Any], fits: ControlFits) -> dict[str, Any]:
             if not isinstance(entry, dict) or set(entry) != {"forecast", "persistence", "persistence_rms"}:
                 raise ValueError("incomplete own-persistence calibration receipt")
             for field in ("forecast", "persistence"):
-                if not np.isscalar(entry[field]) or entry[field] not in GRID:
+                if (isinstance(entry[field], bool) or not isinstance(entry[field], (int, float))
+                        or entry[field] not in GRID):
                     raise ValueError("calibration must be selected from fixed grid")
-            rms = np.asarray(entry["persistence_rms"], float)
-            if rms.shape != (3,) or not np.isfinite(rms).all() or (rms < 0).any():
+            rms = np.asarray(entry["persistence_rms"])
+            if (rms.shape != (3,) or rms.dtype.kind not in 'fiu'
+                    or not np.isfinite(rms).all() or (rms < 0).any()):
                 raise ValueError("invalid own-persistence residual RMS receipt")
     return c
 

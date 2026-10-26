@@ -99,7 +99,7 @@ def validate_direct(reference: PartialDirectReference, canonical: CanonicalDecod
     if not set(reference.visit_ids) <= index.keys():
         raise ValueError('direct reference contains unknown visit IDs')
     expected = canonical.native[[index[vid] for vid in reference.visit_ids]]
-    if not np.allclose(reference.native, expected, atol=PLAN.reconstruction_tolerance,
+    if not np.allclose(expected, reference.native, atol=PLAN.reconstruction_tolerance,
                        rtol=PLAN.reconstruction_tolerance):
         raise ValueError('canonical cached decode differs from immutable direct values')
     supplied = set(reference.visit_ids)
