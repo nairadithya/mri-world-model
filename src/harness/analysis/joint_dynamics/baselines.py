@@ -1,4 +1,3 @@
-"""Portable, source-fitted R38 measurement controls; inference accepts no labels."""
 from __future__ import annotations
 
 from collections import Counter
@@ -120,7 +119,6 @@ def mixture_crps(centers: Any, weights: Any, truth: Any,
     if not np.isfinite(c).all() or not np.isfinite(y).all():
         raise ValueError("nonfinite mixture")
     first = np.sum(w[None, :, None] * _abs_normal(c-y[:, None, :], observation_sd), axis=1)
-    # Row-wise pairs bound memory independently of the query cohort size.
     pair_weights = w[:, None, None] * w[None, :, None]
     second = np.stack([np.sum(pair_weights * _abs_normal(row[:, None, :]-row[None, :, :],
                                                        np.sqrt(2)*observation_sd), axis=(0, 1))
@@ -223,7 +221,6 @@ def _chain_records(chains: tuple[SourceChain, ...], source_patients: set[str]) -
 
 def _smooth(y: np.ndarray, dt: np.ndarray, b: float, q: float,
             r: float) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Conditional N(y0,R), then scalar Kalman/RTS; lag[i]=Cov(z_i,z_{i+1}|y)."""
     n = len(y)
     mf = np.empty(n); vf = np.empty(n)
     mp = np.empty(n); vp = np.empty(n)
@@ -277,7 +274,6 @@ def _fit_filter(records: list[dict[str, Any]]) -> dict[str, Any]:
                 v = d*d + vs[1:]+vs[:-1]-2*lag
                 moments.append((d, v, dt[1:], w))
                 drift_sum += w*d.sum()
-                # Includes the initial-state N(y0,R) residual, not a second y0 observation.
                 observation_sum += w*np.sum((y-ms)**2+vs)
             b = drift_sum/time_den
             q = max(1e-6, sum(w*np.sum((v-2*b*dt*d+b*b*dt*dt)/dt)

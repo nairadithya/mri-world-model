@@ -1,4 +1,3 @@
-"""R38 numerical regression fixtures. Execute only in a charged remote stage."""
 from __future__ import annotations
 
 from copy import deepcopy
@@ -45,7 +44,6 @@ def _fit_data() -> tuple[ControlFitData, ControlFitData]:
 
 
 def _production_bundle(fits: ControlFits) -> tuple[dict[str, np.ndarray], dict]:
-    """Exact production cardinalities; no test-only bypass of cohort validation."""
     arrays = {"seeds": np.asarray(score.SEEDS, dtype=np.int64)}
     identity = {"contract_digest": "a"*64, "source_sha256": "b"*64,
                 "fitted_manifest_sha256": "c"*64, "control_fits": fits.to_dict(),
@@ -260,7 +258,6 @@ class FilterControlTests(unittest.TestCase):
         np.testing.assert_allclose(state["e_weights"], [0.25, 0.25, 0.5])
         np.testing.assert_array_equal(state["e_changes"], self.source.truth)
         np.testing.assert_allclose(state["p_rms"], np.sqrt([5, 5, 5]))
-        # SourceChain is already split at unusable/nonpositive boundaries by its builder.
         with self.assertRaises(ValueError):
             fit_controls(replace(self.source, chains=(_chain("a", ("x", "y"), [0, 1], [0, 0]),)), self.validation)
         with self.assertRaises(ValueError):
@@ -418,7 +415,6 @@ class ContrastAndGateTests(unittest.TestCase):
         metrics = {a: {"current_mae": np.zeros((18, 3)),
                        "current_dice": np.zeros((18, 3))} for a in score.ARMS}
         metrics["JH"]["current_mae"][:, 0] = 0.05
-        # Isolate exact boundary comparison from floating-point bootstrap reduction.
         boundary = {"difference": 0.05, "ci_95": [0.05, 0.05], "ci_99_5": [0.05, 0.05]}
         with patch.object(score, "paired_interval", side_effect=lambda *args: deepcopy(boundary)):
             result = score._retention(metrics, ids, self.draws)
@@ -617,7 +613,6 @@ class ProductionAssessmentTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             score.analyze(arrays, identity)
         arrays, identity = self.bundle()
-        # Finite, shape-valid centers shifted together with q still cannot hide a changed fitted spread.
         arrays["primary_E_centers"] += 0.25
         with self.assertRaises(ValueError):
             score.analyze(arrays, identity)

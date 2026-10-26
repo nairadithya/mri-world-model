@@ -1,4 +1,3 @@
-"""Ordinary authority-only tests; run remotely inside a charged engineering stage."""
 from __future__ import annotations
 
 import hashlib
@@ -341,7 +340,6 @@ class AuthorityTests(unittest.TestCase):
             self.authority.initialize()
 
     def test_exact_byte_adoption_preserves_receipts_and_charges(self) -> None:
-        # An explicitly temporary fixture exercises adoption; never patch the real authority.
         self.path.parent.mkdir(parents=True)
         p = {"identity": self.authority._identity, "charged_cpu_seconds": 900.0457602360001,
              "charged_gpu_seconds": 0.0, "stages": [], "head": "0" * 64}

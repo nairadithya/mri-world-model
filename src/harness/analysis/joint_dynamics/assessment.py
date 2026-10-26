@@ -1,4 +1,3 @@
-"""Strict saved-array reconstruction for R38. Returns staged aggregates, never files."""
 from __future__ import annotations
 
 from collections.abc import Mapping
@@ -77,7 +76,6 @@ def _validate_keys(arrays: Mapping[str, np.ndarray]) -> None:
             seed_index = 3
         if len(parts) <= seed_index+1 or parts[seed_index] not in tuple(map(str, SEEDS)):
             raise ValueError(f"unknown or missing seed label {key}")
-        # Additional explicitly named mask diagnostics may coexist with required fields.
         if not "_".join(parts[seed_index+1:]):
             raise ValueError(f"missing field {key}")
 
@@ -109,7 +107,6 @@ def _bound_rows(arrays: Mapping[str, np.ndarray], identity: dict[str, Any]) -> d
             expected = np.asarray([r[field] for r in records], dtype=float)
             if expected.shape != (n, 3) or not np.isfinite(expected).all() or (expected < 0).any():
                 raise ValueError("measured native log-volumes must be finite and nonnegative")
-            # These are the same measured values, not a re-encoding tolerance gate.
             if not np.array_equal(actual, expected):
                 raise ValueError(f"{cohort} measured {field} differs from bound identity")
     if {r["row_id"] for r in rows["primary"]} & {r["row_id"] for r in rows["single"]}:
@@ -261,7 +258,6 @@ def _direction(interval: dict[str, Any], positive_favors: bool = False) -> str:
 
 
 def _contrasts(scores: dict[str, np.ndarray], draws: np.ndarray) -> dict[str, Any]:
-    # Each vector is already seed-score, compartment and within-patient averaged.
     pairs = (("JH", "OH"), ("JL", "OL"), ("JH", "JL"), ("OH", "OL"),
              ("JH", "P"), ("JH", "E"), ("JH", "FP"), ("JH", "SSM"))
     result = {}
@@ -295,7 +291,6 @@ def _retention(metrics: dict[str, dict[str, np.ndarray]], patient_ids: np.ndarra
     for joint, observation in (("JH", "OH"), ("JL", "OL")):
         comparisons = {}
         for metric, margin in (("current_mae", 0.05), ("current_dice", 0.02)):
-            # MAE loss is joint-observation; Dice loss is observation-joint.
             difference = metrics[joint][metric]-metrics[observation][metric]
             if metric == "current_dice":
                 difference = -difference
@@ -363,7 +358,6 @@ def _cohort(arrays: Mapping[str, np.ndarray], cohort: str, rows: list[dict[str, 
         summaries[control] = _summary(m, truth, cutoff, ids)
     state = fits.state
     _same(predictions["P"][1], np.broadcast_to(state["p_rms"], (n, 3)), "P RMS")
-    # Both filter controls must derive from one and the same cutoff posterior.
     parameters = state["filter"]["parameters"]
     b = np.asarray([p["final"][0] for p in parameters])
     q = np.asarray([p["final"][1] for p in parameters])
@@ -424,7 +418,6 @@ def _nuisance(arrays: Mapping[str, np.ndarray], rows: dict[str, list[dict[str, A
             perturb_crps = patient_values(condition_metrics[condition]["crps"], ids)
             identity_mae = patient_values(condition_metrics["identity"]["mae"], ids)
             perturb_mae = patient_values(condition_metrics[condition]["mae"], ids)
-            # Absolute differences are computed within seed, never on seed-ensemble means.
             drifts = np.mean([np.abs(p-i) for p, i in zip(condition_means[condition][0],
                                                           condition_means["identity"][0])], axis=0)
             current_drifts = np.mean([np.abs(p-i) for p, i in zip(condition_means[condition][1],
@@ -452,7 +445,6 @@ def _nuisance(arrays: Mapping[str, np.ndarray], rows: dict[str, list[dict[str, A
                 relative = float((perturb_crps[:, c].mean()-identity_crps[:, c].mean())/denominator)
                 mae_change = float((perturb_mae[:, c]-identity_mae[:, c]).mean())
                 crps_interval = paired_interval(perturb_crps[:, c]-identity_crps[:, c], draws)
-                # A paired ratio bootstrap, using exactly the same draws as all primary contrasts.
                 ratios = ((perturb_crps[:, c][draws].mean(axis=1)-identity_crps[:, c][draws].mean(axis=1))
                           / identity_crps[:, c][draws].mean(axis=1))
                 per_compartment.append({"relative_crps_worsening": relative,

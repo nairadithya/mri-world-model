@@ -1,4 +1,3 @@
-"""Fixed R38 grant, durable exclusive reservations and fail-closed spending history."""
 from __future__ import annotations
 
 import fcntl
@@ -427,7 +426,6 @@ class BudgetAuthority:
                 raise
             finally:
                 try:
-                    # Read the durable running record; do not use a stale pre-yield copy.
                     p, events, anchor = self._read_verified()
                     cpu, wall, children = guard._cost()
                     final_error: BaseException | None = None
@@ -461,5 +459,4 @@ def production_authority() -> BudgetAuthority:
 
 
 def _private_test_authority(path: Path) -> BudgetAuthority:
-    """Tests only; no production runner or CLI accepts a different grant/path."""
     return BudgetAuthority(path, _test_token=_TEST_TOKEN)
