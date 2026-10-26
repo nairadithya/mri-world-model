@@ -71,7 +71,7 @@ def _cleanup(gpu: bool) -> Cost:
 
 
 def run_stage(authority, name: str, operation: str, payload: dict, phases: dict,
-              *, gpu: bool, scientific: bool, future: Cost | None = None, ancestors=()):
+              *, gpu: bool, scientific: bool, future: Cost | None = None, ancestors=(), extra_refs=()):
     from src.harness.analysis.joint_dynamics.execution import execute_stage
     for ancestor in ancestors:
         authority.verify_extension(ancestor['authority'])
@@ -80,6 +80,7 @@ def run_stage(authority, name: str, operation: str, payload: dict, phases: dict,
     save_json(request_path, payload)
     refs = [ArtifactRef(request_path, digest(request_path)),
             ArtifactRef(Path(payload['bindings']), digest(payload['bindings']))]
+    refs.extend(extra_refs)
     for ancestor in ancestors:
         path = stage_path(ancestor['stage_name'])
         marker = path.with_name(path.name + '.control') / 'complete.json'
@@ -106,14 +107,33 @@ def execution_bindings() -> Path:
     return path
 
 
-def prepare(authority, name: str) -> dict:
-    if any(s['scientific'] for s in authority.snapshot()['stages']):
+def prepare(authority, name: str, recovery: str | None = None, diagnosis: str | None = None) -> dict:
+    snapshot = authority.snapshot()
+    if any(s['scientific'] for s in snapshot['stages']):
         raise RuntimeError('scientific work already started; preparation cannot restart')
-    return run_stage(authority, name, 'prepare',
-        {'purpose': 'prepare', 'bindings': str(execution_bindings())},
+    payload = {'purpose': 'prepare', 'bindings': str(execution_bindings())}
+    ancestors, refs = (), ()
+    if bool(recovery) != bool(diagnosis):
+        raise ValueError('recovery requires the exact diagnosed failed stage and diagnosis stage')
+    if recovery:
+        failed = [s for s in snapshot['stages'] if s['name'] == recovery]
+        diagnostic = completion(diagnosis)
+        if (len(failed) != 1 or failed[0]['status'] != 'failed' or failed[0]['scientific']
+                or diagnostic['operation_result']['status'] != 'metadata_diagnosis_only_not_input_approval'):
+            raise ValueError('recovery does not refer to the preserved diagnosed engineering failure')
+        diagnostic_payload = read_json(STUDY / 'requests' / diagnosis / 'payload.json')
+        partial = stage_path(recovery) / 'prepared'
+        if diagnostic_payload['partial_prepared'] != str(partial):
+            raise ValueError('diagnosis belongs to a different partial preparation')
+        sha = diagnostic['operation_result']['prepared_metadata_sha256']
+        payload.update(purpose='prepare_recovery', recovery_stage=recovery,
+                       recovery_prepared=str(partial), recovery_metadata_sha256=sha)
+        ancestors = (diagnostic,)
+        refs = (ArtifactRef(partial / 'prepared.json', sha),)
+    return run_stage(authority, name, 'prepare', payload,
         {'startup': _caps(300., 60., True), 'preparation': _caps(3600., 1200., True),
          'teardown': _caps(300., 90., True)}, gpu=True, scientific=False,
-        future=Cost(10000., 5500., 2400.))
+        future=Cost(10000., 5500., 2400.), ancestors=ancestors, extra_refs=refs)
 
 
 def make_contract(prepared: str, *, canary: bool) -> dict:
@@ -247,6 +267,8 @@ def main(argv: list[str] | None = None) -> int:
     sub = parser.add_subparsers(dest='mode', required=True)
     command = sub.add_parser('prepare')
     command.add_argument('--stage-name', required=True)
+    command.add_argument('--recover-prepared-stage')
+    command.add_argument('--diagnosis-stage')
     command = sub.add_parser('canary')
     command.add_argument('--stage-name', required=True)
     command.add_argument('--prepared-stage', required=True)
@@ -263,7 +285,7 @@ def main(argv: list[str] | None = None) -> int:
         authority.snapshot()
         with runner_lock():
             if args.mode == 'prepare':
-                result = prepare(authority, args.stage_name)
+                result = prepare(authority, args.stage_name, args.recover_prepared_stage, args.diagnosis_stage)
             elif args.mode == 'canary':
                 result = canary(authority, args.stage_name, args.prepared_stage)
             elif args.mode == 'project':

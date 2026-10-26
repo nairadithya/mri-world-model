@@ -394,6 +394,7 @@ def fit_matrix(data: PreparedData, out: Path, contract: dict, guard: object,
                     if tensor_hash(model.state_dict()) != initializations[str(seed)]['tensor_sha256']:
                         raise ValueError('cell initialization differs from matched seed initialization')
                     optimizer = make_optimizer(model)
+                    torch.cuda.reset_peak_memory_stats()
                     update_file = directory / 'updates.jsonl'
                     measurements[label] = []
                     with update_file.open('w') as stream:
@@ -426,8 +427,11 @@ def fit_matrix(data: PreparedData, out: Path, contract: dict, guard: object,
                         'order_sha256': digest(out / f'order_{seed}.json'), 'normalizer': data.normalizer,
                         **source_identity}, checkpoint)
                     if canary:
+                        if tensor_hash(model.state_dict()) == initializations[str(seed)]['tensor_sha256']:
+                            raise ValueError('actual-data updates did not change parameters')
                         roundtrips[label] = prediction_roundtrip(model, data, fixture, arm,
                             directory / 'roundtrip.pt', optimizer)
+                        roundtrips[label]['peak_device_memory_bytes'] = torch.cuda.max_memory_allocated()
                     cells[label] = {'epoch': epochs, 'updates': per_cell, **source_identity,
                         'initialization': initializations[str(seed)],
                         'weights': _record(checkpoint, out), 'updates_file': _record(update_file, out)}
@@ -537,6 +541,9 @@ def fit_matrix(data: PreparedData, out: Path, contract: dict, guard: object,
             fitted = {**source_identity, 'epochs': epochs, 'updates_per_epoch': per_epoch,
                 'seeds': list(PLAN.seeds), 'total_updates': successful, 'cells': cells,
                 'timing_samples': measurements, 'checkpoint_roundtrips': roundtrips,
+                'runtime': {'loadavg': list(os.getloadavg()), 'torch_threads': torch.get_num_threads(),
+                    'torch_version': torch.__version__, 'device': torch.cuda.get_device_name(),
+                    'precision': PLAN.precision, 'deterministic_policy': PLAN.deterministic},
                 'canary_fixture_row_id': fixture.row_id if canary else None,
                 'initializations': initializations, 'calibration': calibration, 'cohort_rows': cohort_rows,
                 'control_fits': control_record, 'control_fits_sha256': digest(out / 'control_fits.json'),

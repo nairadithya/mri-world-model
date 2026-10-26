@@ -13,7 +13,13 @@ from .protocol import (PLAN, REPO, ArtifactRef, SourceIdentity, canonical_hash,
 def verify_counts(data) -> None:
     for name, rows, patients in PLAN.cohort_counts:
         selected = data.select(name)
-        if len(selected) != rows or len({r.patient_id for r in selected}) != patients:
+        row_patients = {r.patient_id for r in selected}
+        if name in ('source52', 'validation13'):
+            nominal = set(data.splits[name])
+            membership_valid = len(nominal) == patients and row_patients <= nominal
+        else:
+            membership_valid = len(row_patients) == patients
+        if len(selected) != rows or not membership_valid:
             raise ValueError(f'wrong canonical cohort: {name}')
 
 
@@ -176,6 +182,48 @@ def perform_operation(request, work):
             result = {'status': 'prepared_not_trained', 'reconstruction': prepared['reconstruction'],
                       'direct_reference_count': prepared['direct_reference_coverage']['supplied_count'],
                       'normalizer_visits': len(prepared['normalizer']['visit_ids'])}
+    elif payload['purpose'] == 'prepare_recovery':
+        import shutil
+        from .data import PREPARATION_SOURCES, PreparedData, load_metadata
+        with work.phase('preparation'):
+            source_root = Path(payload['recovery_prepared'])
+            if digest(source_root / 'prepared.json') != payload['recovery_metadata_sha256']:
+                raise ValueError('diagnosed partial preparation metadata changed')
+            meta = load_metadata(read_json(payload['bindings']))
+            original = PreparedData(source_root, device='cpu')
+            if (original.payload['reconstruction']['count'] != 599
+                    or len(original.normalizer['visit_ids']) != 353):
+                raise ValueError('recovery is missing completed numerical preparation')
+            verify_counts(original)
+            original.verify_all_bytes(meta)
+            command = [sys.executable, '-B', '-m', 'unittest', '-v',
+                       'test_joint_execution.NominalSplitCountTests']
+            checked = subprocess.run(command, cwd=REPO, text=True, capture_output=True,
+                env=dict(os.environ, PYTHONPATH=str(REPO / 'tests') + os.pathsep + str(REPO)))
+            (request.output / 'count-check.stdout').write_text(checked.stdout)
+            (request.output / 'count-check.stderr').write_text(checked.stderr)
+            if checked.returncode:
+                raise RuntimeError('nominal-versus-active source membership regression failed')
+            shutil.copytree(source_root, request.output / 'prepared', copy_function=shutil.copyfile)
+            data = PreparedData(request.output / 'prepared', device='cpu')
+            verify_counts(data)
+            data.verify_all_bytes(meta)
+            if digest(source_root / 'prepared.json') != payload['recovery_metadata_sha256']:
+                raise ValueError('recovery metadata changed during finalization')
+            save_json(request.output / 'preparation_contract.json', {
+                'preparation_source_sha256': {p: digest(REPO / p) for p in PREPARATION_SOURCES},
+                'bindings_sha256': digest(payload['bindings']), 'input_sha256': meta['input_sha256'],
+                'prepared_sha256': digest(request.output / 'prepared/prepared.json'),
+                'recovery': {'original_stage': payload['recovery_stage'],
+                    'original_status': 'failed_after_all599_numeric_reconstruction_before_final_count_check',
+                    'metadata_sha256': payload['recovery_metadata_sha256'],
+                    'action': 'preserve failed output; copy completed preparation bytes; recheck counts and every raw/prepared hash',
+                    'reencoded': False}})
+            result = {'status': 'prepared_not_trained', 'reconstruction': data.payload['reconstruction'],
+                'normalizer_visits': len(data.normalizer['visit_ids']), 'source_nominal_patients': 52,
+                'source_patients_with_rows': len({r.patient_id for r in data.select('source52')}),
+                'direct_reference_count': data.payload['direct_reference_coverage']['supplied_count'],
+                'recovered_from_failed_stage': payload['recovery_stage']}
     elif payload['purpose'] in ('canary_fit', 'study_fit'):
         import torch
         from .fitting import fit_matrix
