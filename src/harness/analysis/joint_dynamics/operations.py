@@ -221,6 +221,24 @@ def perform_operation(request, work):
                       'actual_updates': fitted['total_updates'],
                       'scorer_status': report['status'], 'contract_digest': canonical_hash(contract),
                       'aggregate_sha256': digest(request.output / 'staged_aggregate.json')}
+    elif payload['purpose'] == 'diagnose_counts':
+        from .data import PreparedData
+        with work.phase('diagnosis'):
+            path = Path(payload['partial_prepared'])
+            before = digest(path / 'prepared.json')
+            data = PreparedData(path, device='cpu')
+            result = {'status': 'metadata_diagnosis_only_not_input_approval',
+                'prepared_metadata_sha256': before, 'rows': len(data.rows), 'visits': len(data.visits),
+                'normalizer_visits': len(data.normalizer['visit_ids']),
+                'reconstruction': data.payload['reconstruction'],
+                'direct_reference_count': data.payload['direct_reference_coverage']['supplied_count'],
+                'cohorts': {name: {'expected_rows': rows, 'expected_nominal_patients': patients,
+                    'actual_rows': len(data.select(name)),
+                    'actual_row_patients': len({r.patient_id for r in data.select(name)}),
+                    'nominal_split_patients': len(data.splits[name]) if name in data.splits else None}
+                    for name, rows, patients in PLAN.cohort_counts}}
+            if digest(path / 'prepared.json') != before:
+                raise ValueError('partial metadata changed during diagnosis')
     else:
         raise ValueError('unsupported concrete R38 operation')
     save_json(request.output / 'operation_result.json', result)
