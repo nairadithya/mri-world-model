@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+from datetime import datetime
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import re
-from typing import Any, Mapping
+from types import MappingProxyType
+from typing import Any, Literal, Mapping, NewType
 
 WORKSPACE = Path('/home/aditya/experiments/world-model-r38-20261026')
 REPO = WORKSPACE / 'repo'
@@ -101,6 +104,195 @@ class ForecastRow:
     def from_dict(cls, value: Mapping[str, Any]) -> ForecastRow:
         return cls(**{key: tuple(val) if isinstance(val, list) else val
                       for key, val in value.items()})
+
+
+Digest = NewType('Digest', str)
+RepoPath = NewType('RepoPath', str)
+PhaseName = NewType('PhaseName', str)
+
+
+def _bound_digest(value: object) -> Digest:
+    if not isinstance(value, str) or re.fullmatch(r'[0-9a-f]{64}', value) is None:
+        raise ValueError('invalid SHA256 digest')
+    return Digest(value)
+
+
+@dataclass(frozen=True)
+class SourceIdentity:
+    """Complete R38 implementation source, distinct from control-input data hashes."""
+    files: Mapping[RepoPath, Digest]
+    digest: Digest
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.files, Mapping) or not self.files:
+            raise ValueError('implementation source inventory is empty')
+        normalized = {}
+        for name, sha in self.files.items():
+            if (not isinstance(name, str) or Path(name).is_absolute()
+                    or '..' in Path(name).parts or Path(name).as_posix() != name):
+                raise ValueError('unsafe implementation source path')
+            normalized[RepoPath(name)] = _bound_digest(sha)
+        object.__setattr__(self, 'files', MappingProxyType(dict(sorted(normalized.items()))))
+        if _bound_digest(self.digest) != canonical_hash(dict(self.files)):
+            raise ValueError('implementation source manifest/digest mismatch')
+
+    @classmethod
+    def capture(cls, repo: Path = REPO) -> SourceIdentity:
+        files = source_hashes(repo)
+        return cls(files, Digest(canonical_hash(files)))
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, object], *, repo: Path = REPO) -> SourceIdentity:
+        if (not isinstance(value, Mapping) or set(value) != {'schema', 'files', 'digest'}
+                or value['schema'] != 'r38-source-identity-v4'):
+            raise ValueError('invalid implementation source identity schema')
+        result = cls(value['files'], value['digest'])
+        result.require_current(repo)
+        return result
+
+    def require_current(self, repo: Path = REPO) -> None:
+        if self != type(self).capture(repo):
+            raise ValueError('implementation source inventory differs from current code')
+
+    def to_dict(self) -> dict[str, object]:
+        return {'schema': 'r38-source-identity-v4', 'files': dict(self.files), 'digest': self.digest}
+
+
+@dataclass(frozen=True)
+class ArtifactRef:
+    path: Path
+    sha256: Digest
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, 'path', Path(self.path))
+        if not self.path.is_absolute():
+            raise ValueError('artifact references require absolute paths')
+        _bound_digest(self.sha256)
+
+    def verify(self) -> None:
+        if not self.path.is_file() or digest(self.path) != self.sha256:
+            raise ValueError('referenced artifact bytes changed')
+
+    def to_dict(self) -> dict[str, str]:
+        return {'path': str(self.path), 'sha256': self.sha256}
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, object]) -> ArtifactRef:
+        if not isinstance(value, Mapping) or set(value) != {'path', 'sha256'}:
+            raise ValueError('invalid artifact reference')
+        return cls(Path(value['path']), _bound_digest(value['sha256']))
+
+
+@dataclass(frozen=True)
+class Cost:
+    cpu_seconds: float
+    wall_seconds: float
+    gpu_seconds: float
+
+    def __post_init__(self) -> None:
+        for name in ('cpu_seconds', 'wall_seconds', 'gpu_seconds'):
+            value = getattr(self, name)
+            if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value < 0:
+                raise ValueError('resource costs must be finite nonnegative seconds')
+            object.__setattr__(self, name, float(value))
+
+    def to_dict(self) -> dict[str, float]:
+        return {'cpu_seconds': self.cpu_seconds, 'wall_seconds': self.wall_seconds,
+                'gpu_seconds': self.gpu_seconds}
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, object]) -> Cost:
+        if not isinstance(value, Mapping) or set(value) != {'cpu_seconds', 'wall_seconds', 'gpu_seconds'}:
+            raise ValueError('invalid resource cost')
+        return cls(value['cpu_seconds'], value['wall_seconds'], value['gpu_seconds'])
+
+
+@dataclass(frozen=True)
+class StageCost:
+    cost: Cost
+    descendants_alive: bool
+
+
+@dataclass(frozen=True)
+class StageLimits:
+    gpu: bool
+    scientific: bool
+    phase_caps: Mapping[PhaseName, Cost]
+    future: Cost
+    cleanup: Cost
+    deadline: datetime
+
+    def __post_init__(self) -> None:
+        if type(self.gpu) is not bool or type(self.scientific) is not bool:
+            raise ValueError('stage flags must be explicit booleans')
+        if not isinstance(self.phase_caps, Mapping) or not {'startup', 'teardown'} <= self.phase_caps.keys():
+            raise ValueError('stage lifecycle requires startup and teardown caps')
+        for name, cost in self.phase_caps.items():
+            if (not isinstance(name, str) or re.fullmatch(r'[a-z][a-z0-9_]{0,63}', name) is None
+                    or not isinstance(cost, Cost) or cost.wall_seconds <= 0
+                    or (not self.gpu and cost.gpu_seconds != 0)):
+                raise ValueError('invalid phase cap or stage GPU accounting')
+        if (not isinstance(self.future, Cost) or not isinstance(self.cleanup, Cost)
+                or not isinstance(self.deadline, datetime) or self.deadline.tzinfo is None):
+            raise ValueError('invalid future reserve, cleanup or deadline')
+        object.__setattr__(self, 'phase_caps', MappingProxyType(dict(self.phase_caps)))
+
+    def to_dict(self) -> dict[str, object]:
+        return {'gpu': self.gpu, 'scientific': self.scientific,
+                'phase_caps': {k: v.to_dict() for k, v in self.phase_caps.items()},
+                'future': self.future.to_dict(), 'cleanup': self.cleanup.to_dict(),
+                'deadline': self.deadline.isoformat()}
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, object]) -> StageLimits:
+        if not isinstance(value, Mapping) or set(value) != {'gpu', 'scientific', 'phase_caps', 'future', 'cleanup', 'deadline'}:
+            raise ValueError('invalid stage limits')
+        return cls(value['gpu'], value['scientific'],
+                   {PhaseName(k): Cost.from_dict(v) for k, v in value['phase_caps'].items()},
+                   Cost.from_dict(value['future']), Cost.from_dict(value['cleanup']),
+                   datetime.fromisoformat(value['deadline']))
+
+
+@dataclass(frozen=True)
+class StageRequest:
+    """A fixed R38 operation; inputs[0] binds its operation-specific payload JSON."""
+    name: str
+    operation: Literal['prepare', 'preflight', 'measure', 'lock', 'fit', 'assess', 'verify']
+    source: SourceIdentity
+    inputs: tuple[ArtifactRef, ...]
+    limits: StageLimits
+    output: Path
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.name, str) or re.fullmatch(r'[A-Za-z0-9_-]+', self.name) is None:
+            raise ValueError('invalid stage name')
+        if self.operation not in ('prepare', 'preflight', 'measure', 'lock', 'fit', 'assess', 'verify'):
+            raise ValueError('unknown R38 operation')
+        if not isinstance(self.source, SourceIdentity) or not isinstance(self.limits, StageLimits):
+            raise ValueError('stage source and limits require domain values')
+        if not self.inputs or any(not isinstance(ref, ArtifactRef) for ref in self.inputs):
+            raise ValueError('stage requires bound operation payload and input references')
+        object.__setattr__(self, 'inputs', tuple(self.inputs))
+        object.__setattr__(self, 'output', Path(self.output))
+        if not self.output.is_absolute():
+            raise ValueError('stage output must be an absolute private path')
+        if self.limits.scientific != (self.operation in ('fit', 'assess')):
+            raise ValueError('scientific flag differs from fixed stage operation')
+
+    def to_dict(self) -> dict[str, object]:
+        return {'schema': 'r38-stage-request-v4', 'name': self.name, 'operation': self.operation,
+                'implementation_source': self.source.to_dict(), 'inputs': [ref.to_dict() for ref in self.inputs],
+                'limits': self.limits.to_dict(), 'output': str(self.output)}
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, object], *, repo: Path = REPO) -> StageRequest:
+        if (not isinstance(value, Mapping)
+                or set(value) != {'schema', 'name', 'operation', 'implementation_source', 'inputs', 'limits', 'output'}
+                or value['schema'] != 'r38-stage-request-v4'):
+            raise ValueError('invalid R38 stage request')
+        return cls(value['name'], value['operation'], SourceIdentity.from_dict(value['implementation_source'], repo=repo),
+                   tuple(ArtifactRef.from_dict(ref) for ref in value['inputs']),
+                   StageLimits.from_dict(value['limits']), Path(value['output']))
 
 
 def digest(path: str | Path) -> str:
