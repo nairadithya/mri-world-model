@@ -14,7 +14,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Iterator
 
-from .protocol import Cost, StageCost
+from .protocol import ArtifactRef, Cost, SourceIdentity, StageCost, read_json
 
 START = "2026-10-26T14:14:16+05:30"
 DEADLINE = "2026-10-28T14:14:16+05:30"
@@ -29,6 +29,13 @@ IDENTITY = {"start": START, "deadline": DEADLINE, "gpu_limit": GPU_LIMIT,
 LEGACY_SHA256 = "6b1a250adbe5ff38ecf209d213ee1891863b8d76fa4f7d909cbd32f00df9aa36"
 _ZERO = "0" * 64
 _TEST_TOKEN = object()
+AMENDMENT_ID = 'r38-budget-amendment-01'
+AMENDMENT_CPU = 1600.0
+AMENDMENT_GPU = 5350.0
+BUDGET_ONLY_FILES = frozenset((
+    'src/harness/analysis/joint_dynamics/authority.py',
+    'src/harness/analysis/joint_dynamics/execution.py',
+    'scripts/run_joint_dynamics.py', 'tests/test_joint_budget_amendment.py'))
 Record = dict[str, Any]
 
 
@@ -137,6 +144,58 @@ def _cpu() -> tuple[float, bool]:
     return time.process_time() + children.ru_utime + children.ru_stime + live, has_children
 
 
+def _amendment(ref: ArtifactRef) -> Record:
+    ref.verify()
+    value = read_json(ref.path)
+    fields = {'schema', 'id', 'authority_id', 'authorization_sha256', 'deadline',
+              'additional_cpu_seconds', 'additional_gpu_seconds', 'before',
+              'measured_source', 'implementation_source', 'operator_message', 'approved_request'}
+    if (not isinstance(value, dict) or set(value) != fields
+            or value['schema'] != 'r38-additive-authorization-v1' or value['id'] != AMENDMENT_ID
+            or value['additional_cpu_seconds'] != AMENDMENT_CPU
+            or value['additional_gpu_seconds'] != AMENDMENT_GPU
+            or value['deadline'] != DEADLINE or value['operator_message'] != 'Go ahead'
+            or not isinstance(value['approved_request'], str) or not value['approved_request']):
+        raise RuntimeError('not the exact operator-approved additive R38 amendment')
+    identities = []
+    for key in ('measured_source', 'implementation_source'):
+        source = value[key]
+        if (not isinstance(source, dict) or set(source) != {'schema', 'files', 'digest'}
+                or source['schema'] != 'r38-source-identity-v4'):
+            raise RuntimeError('amendment requires complete distinct source identities')
+        identities.append(SourceIdentity(source['files'], source['digest']))
+    old, new = (identity.files for identity in identities)
+    changed = {name for name in old.keys() | new.keys() if old.get(name) != new.get(name)}
+    if not changed <= BUDGET_ONLY_FILES:
+        raise RuntimeError('budget amendment cannot change numerical, model, data or scoring source')
+    return value
+
+
+def effective_limits(payload: Record) -> Record:
+    amendments = payload.get('budget_amendments', [])
+    if not isinstance(amendments, list) or len(amendments) > 1:
+        raise RuntimeError('only one exact additive authorization is permitted')
+    cpu, gpu = CPU_LIMIT, GPU_LIMIT
+    for record in amendments:
+        if not isinstance(record, dict) or set(record) != {'authorization'}:
+            raise RuntimeError('malformed additive authorization binding')
+        value = _amendment(ArtifactRef.from_dict(record['authorization']))
+        cpu += value['additional_cpu_seconds']
+        gpu += value['additional_gpu_seconds']
+    return {'cpu_limit': cpu, 'gpu_limit': gpu, 'deadline': DEADLINE}
+
+
+def verify_budget_only_sources(snapshot: Record, measured: dict, current: dict) -> str:
+    amendments = snapshot.get('budget_amendments', [])
+    if len(amendments) != 1:
+        raise RuntimeError('changed control source requires its exact operator-approved amendment')
+    ref = ArtifactRef.from_dict(amendments[0]['authorization'])
+    value = _amendment(ref)
+    if value['measured_source'] != measured or value['implementation_source'] != current:
+        raise RuntimeError('source differs from the exact budget-only change bound in the amendment')
+    return ref.sha256
+
+
 class BudgetGuard:
     def __init__(self, authority: BudgetAuthority, name: str, gpu: bool,
                  started: float, cpu_start: float):
@@ -184,6 +243,24 @@ class BudgetGuard:
         self._require_active()
         return self.authority._snapshot_locked()
 
+    def apply_budget_amendment(self, ref: ArtifactRef) -> None:
+        self._require_active()
+        if self.name != AMENDMENT_ID or self.gpu:
+            raise RuntimeError('additive authorization has one dedicated CPU control stage')
+        value = _amendment(ref)
+        SourceIdentity.from_dict(value['implementation_source'])
+        authority = self.authority
+        p, events, anchor = authority._read_verified()
+        authority._verify_extension_locked(value['before'])
+        if (p.get('budget_amendments') or any(s['scientific'] for s in p['stages'])
+                or p['stages'][:-1] != value['before']['stages']
+                or value['authority_id'] != anchor['authority_id']
+                or value['authorization_sha256'] != _digest(authority._identity)):
+            raise RuntimeError('amendment is repeated, stale or belongs to another authority')
+        p['budget_amendments'] = [{'authorization': ref.to_dict()}]
+        authority._persist(p, 'amendment', events, anchor)
+        ref.verify()
+
 
 class BudgetAuthority:
     def __init__(self, ledger: Path = LEDGER, *, _test_token: object = None):
@@ -229,9 +306,10 @@ class BudgetAuthority:
         self._check_window()
         if _time() + projected_wall > _deadline_epoch():
             raise RuntimeError("R38 deadline would be exceeded")
-        if p["charged_cpu_seconds"] + cpu > CPU_LIMIT:
+        limits = effective_limits(p)
+        if p["charged_cpu_seconds"] + cpu > limits['cpu_limit']:
             raise RuntimeError("R38 CPU allowance exceeded")
-        if p["charged_gpu_seconds"] + gpu > GPU_LIMIT:
+        if p["charged_gpu_seconds"] + gpu > limits['gpu_limit']:
             raise RuntimeError("R38 GPU allowance exceeded")
 
     def _require_new(self) -> None:
@@ -285,6 +363,7 @@ class BudgetAuthority:
     def _validate_payload(self, p: Record) -> None:
         if p.get("identity") != self._identity:
             raise RuntimeError("authority identity or allowance mismatch")
+        effective_limits(p)
         cpu, gpu, head, names = SETUP_SECONDS, 0.0, _ZERO, set()
         for i, stage in enumerate(p["stages"]):
             core = {k: v for k, v in stage.items() if k != "hash"}
@@ -349,6 +428,24 @@ class BudgetAuthority:
                 raise RuntimeError("initial authority history changed")
             return
         old, new = prior["stages"], p["stages"]
+        if reason == 'amendment':
+            before = prior.get('budget_amendments', [])
+            added = p.get('budget_amendments', [])
+            if (before or len(added) != 1 or old != new or not old
+                    or old[-1]['name'] != AMENDMENT_ID or old[-1]['status'] != 'running'
+                    or any(s['scientific'] for s in old)
+                    or any(p[k] != prior[k] for k in ('identity', 'charged_cpu_seconds', 'charged_gpu_seconds', 'head'))):
+                raise RuntimeError('invalid additive authorization transition')
+            value = _amendment(ArtifactRef.from_dict(added[0]['authorization']))
+            if (value['authority_id'] != anchor['authority_id']
+                    or value['authorization_sha256'] != _digest(self._identity)
+                    or value['before']['stages'] != old[:-1]
+                    or value['before']['head'] != old[-1]['parent']
+                    or any(value['before'][k] != prior[k] for k in ('charged_cpu_seconds', 'charged_gpu_seconds'))):
+                raise RuntimeError('additive authorization does not preserve original history and expenditure')
+            return
+        if p.get('budget_amendments', []) != prior.get('budget_amendments', []):
+            raise RuntimeError('additive authorization cannot be removed, reset or changed')
         if reason == "reserve":
             if (len(new) != len(old) + 1 or new[:-1] != old or new[-1]["status"] != "running"
                     or any(s["status"] == "running" or (s["scientific"] and s["status"] == "failed") for s in old)
@@ -387,12 +484,13 @@ class BudgetAuthority:
 
     def _snapshot_locked(self) -> Record:
         p, events, anchor = self._read_verified()
+        limits = effective_limits(p)
         return {**p, "authority_id": anchor["authority_id"],
-                "authorization_sha256": _digest(self._identity),
+                "authorization_sha256": _digest(self._identity), 'effective_limits': limits,
                 "journal_sequence": len(events) - 1, "journal_tip": events[-1]["hash"],
                 "ledger_raw_sha256": events[-1]["raw_sha256"],
-                "remaining_cpu_seconds": CPU_LIMIT - p["charged_cpu_seconds"],
-                "remaining_gpu_seconds": GPU_LIMIT - p["charged_gpu_seconds"]}
+                "remaining_cpu_seconds": limits['cpu_limit'] - p["charged_cpu_seconds"],
+                "remaining_gpu_seconds": limits['gpu_limit'] - p["charged_gpu_seconds"]}
 
     def snapshot(self) -> Record:
         with self._lock():
@@ -400,20 +498,26 @@ class BudgetAuthority:
 
     def verify_extension(self, snapshot: Record) -> None:
         with self._lock():
-            _, events, anchor = self._read_verified()
-            index = snapshot.get("journal_sequence")
-            if (snapshot.get("identity") != self._identity
-                    or snapshot.get("authority_id") != anchor["authority_id"]
-                    or snapshot.get("authorization_sha256") != _digest(self._identity)
-                    or type(index) is not int or not 0 <= index < len(events)):
-                raise RuntimeError("snapshot authority/allowance or ancestry mismatch")
-            event = events[index]
-            if (snapshot.get("journal_tip") != event["hash"]
-                    or snapshot.get("ledger_raw_sha256") != event["raw_sha256"]
-                    or any(snapshot.get(k) != v for k, v in event["payload"].items())
-                    or snapshot.get("remaining_cpu_seconds") != CPU_LIMIT - event["payload"]["charged_cpu_seconds"]
-                    or snapshot.get("remaining_gpu_seconds") != GPU_LIMIT - event["payload"]["charged_gpu_seconds"]):
-                raise RuntimeError("snapshot is not an ancestor of current authority")
+            self._verify_extension_locked(snapshot)
+
+    def _verify_extension_locked(self, snapshot: Record) -> None:
+        _, events, anchor = self._read_verified()
+        index = snapshot.get('journal_sequence')
+        if (snapshot.get('identity') != self._identity
+                or snapshot.get('authority_id') != anchor['authority_id']
+                or snapshot.get('authorization_sha256') != _digest(self._identity)
+                or type(index) is not int or not 0 <= index < len(events)):
+            raise RuntimeError('snapshot authority/allowance or ancestry mismatch')
+        event = events[index]
+        limits = effective_limits(event['payload'])
+        if (snapshot.get('journal_tip') != event['hash']
+                or snapshot.get('ledger_raw_sha256') != event['raw_sha256']
+                or any(snapshot.get(k) != v for k, v in event['payload'].items())
+                or snapshot.get('remaining_cpu_seconds') != limits['cpu_limit'] - event['payload']['charged_cpu_seconds']
+                or snapshot.get('remaining_gpu_seconds') != limits['gpu_limit'] - event['payload']['charged_gpu_seconds']
+                or ('effective_limits' in snapshot and snapshot['effective_limits'] != limits)
+                or ('effective_limits' not in snapshot and event['payload'].get('budget_amendments'))):
+            raise RuntimeError('snapshot is not an ancestor of current authority')
 
     @contextmanager
     def stage(self, name: str, gpu: bool = False, scientific: bool = False) -> Iterator[BudgetGuard]:

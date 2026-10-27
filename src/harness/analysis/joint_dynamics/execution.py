@@ -330,6 +330,8 @@ class _Observer:
         original = datetime.fromisoformat(snapshot['identity']['deadline'])
         if request.limits.deadline > original:
             raise ValueError('stage cannot extend the original deadline')
+        from .authority import effective_limits
+        self.entry_limits = effective_limits(snapshot)
         self.entry = snapshot
 
     @property
@@ -349,9 +351,9 @@ class _Observer:
         obligations = _sum((limits.future, limits.cleanup, _subtract(cap, elapsed),
                             *(limits.phase_caps[p] for p in self.phases[self.index + 1:])))
         if (self.entry['charged_cpu_seconds'] + self.last.cpu_seconds + obligations.cpu_seconds >=
-                self.entry['identity']['cpu_limit'] or
+                self.entry_limits['cpu_limit'] or
                 self.entry['charged_gpu_seconds'] + self.last.gpu_seconds + obligations.gpu_seconds >=
-                self.entry['identity']['gpu_limit']):
+                self.entry_limits['gpu_limit']):
             raise TimeoutError('unfinished work or protected reserve would be consumed')
         if time.time() + obligations.wall_seconds >= limits.deadline.timestamp():
             raise TimeoutError('deadline cannot cover unfinished work and cleanup')

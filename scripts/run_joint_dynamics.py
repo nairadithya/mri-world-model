@@ -158,7 +158,9 @@ def score(authority, fit_name: str, name: str, *, canary: bool, cpu: float, wall
          'fit': str(stage_path(fit_name))},
         {'startup': _caps(300., 60., False), 'assessment': _caps(cpu, wall, False),
          'teardown': _caps(300., 60., False)}, gpu=False, scientific=not canary,
-        ancestors=(completion(fitted_payload['prepared_stage']), fitted_stage))
+        ancestors=(completion(fitted_payload['prepared_stage']), fitted_stage),
+        extra_refs=(ArtifactRef.from_dict(fitted_payload['contract']['budget_amendment']['authorization']),)
+                   if 'budget_amendment' in fitted_payload['contract'] else ())
 
 
 def canary(authority, name: str, prepared: str) -> dict:
@@ -188,8 +190,13 @@ def projection(authority, name: str) -> dict:
             or scored['operation_result']['status'] != 'engineering_canary_scored_not_scientific_evidence'):
         raise ValueError('a complete actual-data canary and real scoring are required')
     source = SourceIdentity.capture().to_dict()
-    if fit_stage['request']['implementation_source'] != source or scored['request']['implementation_source'] != source:
-        raise ValueError('source changed since the scored canary')
+    measured_source = fit_stage['request']['implementation_source']
+    if measured_source != scored['request']['implementation_source']:
+        raise ValueError('canary training and scoring source differ')
+    amendment_sha256 = None
+    if measured_source != source:
+        from src.harness.analysis.joint_dynamics.authority import verify_budget_only_sources
+        amendment_sha256 = verify_budget_only_sources(authority.snapshot(), measured_source, source)
     authority.verify_extension(fit_stage['authority'])
     authority.verify_extension(scored['authority'])
     observations = read_json(fit_stage['observation'])
@@ -233,7 +240,10 @@ def projection(authority, name: str) -> dict:
         'required_wall_with_reserves_cleanup': total_wall, 'authority': current,
         'evidence': {'fit_completion': canonical_hash(fit_stage), 'score_completion': canonical_hash(scored),
                      'observations_sha256': digest(fit_stage['observation']), 'canary_updates': 84,
-                     'unit_samples': len(samples), 'inflation_update': 1.5, 'inflation_other': 2.}}
+                     'unit_samples': len(samples), 'inflation_update': 1.5, 'inflation_other': 2.,
+                     'measurement_source_digest': measured_source['digest'],
+                     'implementation_source_digest': source['digest'],
+                     'budget_only_source_amendment_sha256': amendment_sha256}}
 
 
 def fit(authority, canary_name: str, name: str) -> dict:
@@ -246,10 +256,16 @@ def fit(authority, canary_name: str, name: str) -> dict:
     previous = read_json(STUDY / 'requests' / canary_name / 'payload.json')
     prepared = previous['prepared_stage']
     contract = make_contract(prepared, canary=False)
+    amendments = authority.snapshot().get('budget_amendments', [])
+    extra_refs = ()
+    if amendments:
+        contract['budget_amendment'] = amendments[0]
+        extra_refs = (ArtifactRef.from_dict(amendments[0]['authorization']),)
     result = run_stage(authority, name, 'fit', {**previous, 'purpose': 'study_fit', 'contract': contract},
         {k: Cost.from_dict(v) for k, v in bound['phases'].items()}, gpu=True, scientific=True,
         future=Cost.from_dict(bound['future']), ancestors=(completion(prepared), completion(canary_name),
-                                                        completion(canary_name + '-score')))
+                                                        completion(canary_name + '-score')),
+        extra_refs=extra_refs)
     # The fixed study includes assessment; its CPU-only stage never changes GPU tagging.
     assessment = bound['assessment']
     report = score(authority, name, name + '-score', canary=False,
