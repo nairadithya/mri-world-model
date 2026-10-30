@@ -1,6 +1,6 @@
 # Experiments and evidence
 
-This reference records what the experiments measured and which claims remain valid. The October 26, 2026, update adds the completed R37 pilot and its scoped independent result review. The October 13 update incorporated completed R36 Phase 1 findings. The earlier October 11 runtime snapshots remain historical. This is a record of saved evidence, not a live progress report.
+This reference records what the experiments measured and which claims remain valid. The October 30, 2026, update adds R39's treatment-status feasibility test. The October 26 update added the completed R37 pilot and its scoped independent result review. The October 13 update incorporated completed R36 Phase 1 findings. The earlier October 11 runtime snapshots remain historical. This is a record of saved evidence, not a live progress report.
 
 Use [Notes and insights](NOTES_AND_INSIGHTS.md) for the reasoning, [Methods](METHODS.md) for protocols and term definitions, and [TODO](TODO.md) for remaining work. The [archive](archive/2026-10-12/README.md) preserves the original records and their correction history.
 
@@ -15,6 +15,33 @@ Patient-uniform results give each patient equal weight. Pooled results combine o
 Macro-F1, AUC, R², and balanced accuracy measure different things. The [Methods glossary](METHODS.md#terms) defines them. Their values are not interchangeable.
 
 An A identifier records a historical experiment or audit. R identifiers record research directions and later investigations. Completed execution, valid measurement, and scientific success are different statuses.
+
+## R39 treatment-status forecasting, October 30, 2026
+
+The fixed [R39 protocol](METHODS.md#r39-cutoff-treatment-phase-forecasting-feasibility) tested whether current treatment status improves next-visit anatomical prediction. Five nested patient-held-out folds covered 242 consecutive SAILOR pairs from 27 reused development patients. All pairs passed the identity and original-session adjacency checks. Of these pairs, 215 had an earlier MRI state and 212 had known cutoff treatment status. Source labels were CRT for 101 pairs, TMZ for 95, no treatment for 16, and unknown for 30.
+
+Inputs were saved R35 seed-42 MRI-derived volume estimates, current treatment phase and past timing. No future label, future MRI, future measured volume or actual next interval entered a predictor. Targets were three native automated compartment log-volumes. L uses the latest state; H adds the immediately preceding state difference; T adds current treatment and state-by-treatment interactions. All four share timing covariates. This is a small linear transition test on a compressed state, not a new spatial encoder experiment.
+
+| Predictor | Patient-uniform Gaussian CRPS | Patient-uniform MAE |
+|---|---:|---:|
+| Latest MRI state, L | 1.281134 | 1.775553 |
+| Latest state plus treatment, LT | 1.236070 | 1.697539 |
+| MRI state history, H | 1.264075 | 1.740442 |
+| History plus treatment, HT | 1.265126 | 1.722333 |
+| Time only | 1.453798 | 2.033726 |
+| Treatment and time only | 1.468382 | 2.064741 |
+| MRI-derived state persistence | 1.885925 | 2.391879 |
+| Measured-current-volume persistence, privileged input | 0.840362 | 0.943004 |
+
+Scores average compartments, then visits within each patient, then patients. Units are `log1p(mm3)` for MAE and the corresponding Gaussian CRPS scale; lower is better. Sigma comes from inner held-out residuals for fitted models and outer-training residuals for fixed persistence. The measured-volume reference receives current automated mask volumes, unlike the MRI-only models.
+
+The primary HT-minus-H CRPS difference was **+0.001051**, with paired 99% patient-bootstrap interval **[-0.080809, +0.081545]**. Adding treatment was 0.083% worse at the point estimate, not the required 5% improvement. HT-minus-LT was +0.029056, interval [-0.024579, +0.093310]. The secondary LT-minus-L difference was -0.045064, interval [-0.117247, +0.015843], a 3.52% point reduction that did not establish superiority. Both treatment feasibility and the history-conditioned follow-up criteria were unmet. This is inconclusive for incremental treatment or history benefit, not evidence of equivalence or treatment irrelevance.
+
+HT beat MRI-state persistence by -0.620799, interval [-1.044117, -0.246458], and treatment/time-only by -0.203256, interval [-0.420882, -0.017003]. Those gains do not isolate learned dynamics. Measured-current-volume persistence was substantially better than every MRI-derived predictor at the point estimate. Differences in state-estimation quality and target calibration remain plausible contributors. Known-status and history-available companions are retained in the [aggregate](r39_treatment_metrics.json); they were not used to select a method.
+
+Execution used CPU on `mosaic-gpu`, without GPU training or SAILOR image transfer. Seven behavioral tests and a real-row canary passed before the fixed run. Saved-weight replay reconstructed all 40 outer-fold model files, eight aggregate score pairs and five bootstrap contrasts. The full-run process used 0.49 user plus 0.03 system CPU seconds; that excludes imports and checks in other processes and is not a total-workflow cost. The one-CPU-hour ceiling was not approached. Fitted models, rows and predictions remain private. No independent scientific review occurred.
+
+Limits include retrospective per-session status with unverified prospective availability, approximate intervals, coarse treatment categories, observational confounding, automated targets, reused development patients, constant Gaussian uncertainty and no acquisition-robustness test. Bootstrap intervals condition on fitted folds rather than refitting them. These results neither identify treatment effects nor test planned intervention schedules. The [aggregate and provenance](r39_treatment_metrics.json) and runnable `scripts/check_treatment_forecast.py` preserve the checked scope. R38 remains interrupted and unscored.
 
 <a id="r37-full-pilot"></a>
 

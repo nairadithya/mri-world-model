@@ -6,8 +6,14 @@ Use [Notes and insights](NOTES_AND_INSIGHTS.md) for interpretation, [Experiments
 
 ## Active threads
 
+### R39 treatment-status feasibility completed, October 30, 2026
+
+- [x] Test current SAILOR treatment phase against matched MRI-state and history controls under the [fixed protocol](METHODS.md#r39-cutoff-treatment-phase-forecasting-feasibility).
+- [x] Complete the patient-held-out comparison and saved-artifact replay. The primary treatment contrast and the history-conditioned follow-up criterion were unmet. See [findings](EXPERIMENTS.md#r39-treatment-status-forecasting-october-30-2026), [interpretation](NOTES_AND_INSIGHTS.md#r39-did-not-establish-added-treatment-information) and [aggregate](r39_treatment_metrics.json).
+- [ ] Decide whether to pursue timestamped planned-treatment inputs or return to the unchanged R38 continuation. Do not present per-session status as planned intervention or start a larger model as a routine repair of this inconclusive result.
+
 ### 1. R38 joint state and dynamics pilot (`exp/r38-joint-state-dynamics`)
-R37 showed that freezing an encoder trained only on single-scan anatomy (`R35`) did not make multi-visit MRI history beat latest-scan-only prediction. R38 tests whether training the spatial state encoder and future-dynamics predictor **jointly** (`JH` vs `JL` vs observation-only `OH` and `OL`) makes MRI history useful for next-visit anatomical prediction.
+R37 did not establish that multi-visit MRI history beats latest-scan-only prediction with an encoder trained on single-scan anatomy (`R35`). R38 tests whether training the spatial state encoder and future-dynamics predictor **jointly** (`JH` vs `JL` vs observation-only `OH` and `OL`) makes MRI history useful for next-visit anatomical prediction.
 
 - [x] Implement the 4-arm joint state-and-dynamics model, source-only controls, and evaluation scorer on `exp/r38-joint-state-dynamics`.
 - [x] Pass the 84-update real-data end-to-end canary on `mosaic-gpu` across all 599 reconstructed visits.

@@ -2,9 +2,19 @@
 
 Why have the experiments not yet established useful prediction of glioma change? This page explains what the results mean, why several earlier claims were withdrawn, and what the remaining experiments can test.
 
-The October 26, 2026, update explains the completed R37 pilot and its scoped result review. The earlier October 13 update covered R36 Phase 1 without new computation. Earlier runtime snapshots remain dated history, not live job status.
+The October 30, 2026, update adds R39's treatment-status feasibility interpretation. The October 26 update explains the completed R37 pilot and its scoped result review. The earlier October 13 update covered R36 Phase 1 without new computation. Earlier runtime snapshots remain dated history, not live job status.
 
 Use [Experiments](EXPERIMENTS.md) for measurements, [Methods](METHODS.md) for exact protocols and historical IDs, and [TODO](TODO.md) for remaining work. The [archive](archive/2026-10-12/README.md) preserves the original records and their correction history.
+
+## R39 did not establish added treatment information
+
+October 30, 2026. The operator selected treatment conditioning after a brainstorming recommendation. That recommendation overstated what was known. Missing treatment inputs were a plausible explanation for forecasting difficulty, not an established root cause. Action conditioning is not required for every predictive world-model formulation. LUMIERE's available metadata does not provide the systematic treatment course table the recommendation assumed, and R38 cannot establish a fundamental limit of action-blind forecasting.
+
+The [R39 comparison](EXPERIMENTS.md#r39-treatment-status-forecasting-october-30-2026) instead tested the current CRT, TMZ, no-treatment and unknown labels documented in SAILOR's dataset descriptor. It used frozen MRI-derived anatomical states and small transition models. The primary comparison found no established improvement from adding treatment to history. A modest latest-state-only point improvement also remained uncertain. This closes the prespecified feasibility test without a positive treatment-conditioning claim.
+
+Prediction error relative to measured-current-volume persistence was larger than the differences among treatment/history models. That makes accurate state estimation and cross-cohort calibration important unresolved issues. It does not prove that they caused R39's outcome. The reduction relative to MRI-state persistence can include calibration learned from the SAILOR training folds, rather than learned future dynamics.
+
+For this direction to progress, the next scientific choice is whether current coarse phase is an adequate action description. Planned interventions with decision timestamps would answer a different question than retrospective per-scan status. The present data cannot support treatment counterfactuals, and the results do not justify launching a larger treatment-conditioned spatial model automatically. A new proposal should explain which information or modeling change makes the question distinguishable from this completed test. R38's saved work remains separate and incomplete.
 
 <a id="research-objective"></a>
 
