@@ -1,411 +1,94 @@
 # AGENTS.md — working guide for this repo
 
-Research repo: longitudinal glioma MRI using LUMIERE for development and
-SAILOR for developmental transfer. The research direction is world models for
-MRI. The objective is useful representations of anatomical and pathological
-state and meaningful longitudinal dynamics while separating acquisition nuisance. The consolidated protocols in
-`info/METHODS.md` describe scoped experiments, not a universal definition
-or gate for representation quality. Read `info/TODO.md` for remaining work
-at the latest recorded closure, and `info/EXPERIMENTS.md` for outcomes. Lesion awareness, JEPA, forecast
-heads, and whole-brain methods are hypotheses, not the objective. See
-[`info/research_guardrails.md`](info/research_guardrails.md) before substantial
-research implementation. It sets binding decision and reporting requirements.
-`info/archive/2026-10-12/PROPOSAL.md` preserves the original JEPA hypothesis.
-See `info/README.md` for the documentation map. Read
-`info/NOTES_AND_INSIGHTS.md` for the reasoning and interpretation.
+Research repo: longitudinal glioma MRI using LUMIERE for development and SAILOR for developmental transfer. The research direction is **world models for MRI**: maintaining a patient-state representation from available observations and predicting aspects of future observations (with uncertainty) while separating acquisition nuisance.
 
-## Research direction and priorities
+Read `info/README.md` for the documentation map, `info/TODO.md` for current priorities, `info/EXPERIMENTS.md` for completed outcomes, `info/METHODS.md` for protocols, and `info/NOTES_AND_INSIGHTS.md` for reasoning. Before implementing a new experiment, follow [`info/research_guardrails.md`](info/research_guardrails.md).
 
-Operator direction, October 19, 2026: pursue hypothesis-driven research within
-**world models for MRI**, rather than treating data auditing as the destination.
-The direction is fixed; the capability, hypothesis, and method remain research
-choices. This updates planning priorities, not historical results or experiment
-authorizations in `info/TODO.md`.
+## Research direction and workflow rules
 
-For planning, an MRI world model maintains a patient-state representation from
-available observations and predicts aspects of later observations, with
-uncertainty. MRI only partially observes the patient's biological state and also
-reflects acquisition conditions. Per-scan state estimation and observed-change
-assessment can support this goal, but neither alone demonstrates learned future
-dynamics. Photorealistic scan generation, treatment simulation, and a universal
-brain model are not prerequisites.
+1. **Hypothesis-driven world-model research.** Start a new experiment with one capability under test, a falsifiable hypothesis, and matched baselines (including latest-scan-only and persistence controls when testing longitudinal benefit). Respect the prediction-time information cutoff and evaluate anatomically meaningful outputs, not only latent error.
+2. **Bound data and target checks to the experiment.** Never bypass known leakage, invalid targets, privacy terms, or broken geometry, but do not let data auditing or infrastructure perfection become an open-ended prerequisite program. Automated masks are development proxies, not expert-verified biological truth.
+3. **Keep execution lean — no compliance theater:**
+   - **Direct implementation on one branch.** Do not split one experiment across multiple git worktrees, spawn competing design subagents for straightforward code, or run multi-round review gates before testing if the code runs.
+   - **Never build custom process/budget-killing supervisors.** Compute budgets are scoping guidelines, not software lockouts. Do not wrap training runs in custom process-tree monitors or hash-locked budget ledgers that abort long GPU runs on transient errors.
+   - **Run a quick real-data smoke test first.** Verify 1–2 real batches end-to-end (load → train step → save/reload → score) on `mosaic-gpu` before launching a multi-seed training matrix.
 
-- Start the next research proposal with one world-model capability, a falsifiable
-  hypothesis, and a fixed compute and time budget. Identify what the experiment
-  would establish beyond a simpler method. Do not default to more auditing or a
-  larger architecture without connecting it to that question.
-- A candidate question is whether MRI history improves future anatomical
-  prediction beyond the latest scan alone under irregular sampling and
-  acquisition variation. This is a proposal, not a selected experiment. When
-  claiming longitudinal benefit, include matched latest-scan-only and appropriate
-  persistence controls. Respect the prediction-time information cutoff and test
-  anatomically meaningful outputs, not only the model's own latent error.
-- Bound data and target checks to the chosen experiment. Specify the sample,
-  budget, stopping rule, and decision each check informs. Distinguish defects
-  that invalidate a comparison from uncertainty that limits its interpretation.
-  Do not require complete biological validation before a scoped computational
-  test, or let supporting QA expand into an indefinite prerequisite program.
-  Never bypass known leakage, invalid targets, privacy terms, or broken geometry.
-- Plan and protect independent validation where feasible. Its absence limits
-  generalization claims; it does not prohibit all developmental experiments.
-  Agreement with automated masks is not expert-verified biological prediction.
-  Keep reused LUMIERE and SAILOR assessments labeled as development evidence.
-- Seek a specific methodological contribution or demonstrated capability relevant
-  to world models. ICWM, NeurIPS, and ICLR are publication ambitions, not evidence
-  of novelty or acceptance. Applying an existing temporal architecture to MRI is
-  not by itself a demonstrated contribution.
+## Compute & execution (`mosaic-gpu` first)
 
-Use the decision brief in `info/research_guardrails.md` before substantial
-implementation. This direction does not authorize Phase 2, new training, data
-acquisition, or a particular method family. Preserve R35 and R36's scoped
-findings, inconclusive comparisons, and withdrawals rather than reopening
-completed experiments to manufacture a world-model success.
+- **Primary GPU host (`mosaic-gpu` over SSH):** Do not run heavy tests, feature extraction, or training on this laptop (CPU-only). Run GPU workloads, tests, and experiments over SSH on `mosaic-gpu` (including workloads that would previously have gone to Kaggle).
+- **Local laptop:** Use only for lightweight editing, git operations, doc checks, and SSH orchestration.
+- **Privacy:** SAILOR is controlled-access. Do not upload SAILOR data to cloud viewers or public hosts. Never commit `data/`, `checkpoints/`, `outputs/`, `.venv/`, or `.env`.
 
 ## Layout
 
-- `src/` — library code. `data/` (LUMIERE dataset/collate/splits,
-  SAILOR adapter `sailor.py`), `model/` (BRAINIAC+LoRA, clinical encoders,
-  fusion, temporal transformer, predictor, gap-conditioned horizon head,
-  velocity-field dynamics `dynamics_field.py`, EMA target, JEPA loss, RANO aux
-  `heads.py`), `train/` (trainer, baselines), `preprocessing/` (BRAINIAC
-  contract pipeline), `harness/` (modular train/eval harness: registries for
-  metrics/tasks/protocols/methods/views, `ReadoutEvaluator`, frozen `paths`,
-  provenance, unified `cli`).
-- `scripts/` — runnable entry points. `harness.py` is the unified CLI:
-  `encode`; `eval` with pluggable metrics (incl. the frozen RANO probes'
-  locked unseen protocol — the legacy `--cv` was leaky, K3-16);
-  `train <jepa|field|head|lora|cnn3d|cnn2d|readout>`; and
-  `run <name>` for the bespoke analyses / feature builders. All training
-  methods live in `src/harness/train/`, analyses in `src/harness/analysis/`,
-  feature builders in `src/harness/encode/`; `harness.py list` prints the
-  registered targets (volume, radiomics, concept, surprise, leadtime,
-  persistence, split-gate, horizon-eval, horizon-probe, pred-latent,
-  cross-site, sailor, sailor-gap, sailor-interval, freeze, interface,
-  radiomics-features, lock). Remaining scripts are the data pipeline
-  (`preprocess.py`, `preprocess_qa.py`, `bet_repair.py`, `raw_mni_deltas.py`),
-  the viewer (`view_scans.py`, `shot_viewer.py`), and fetch/auth tools.
-- `config/` — `default.yaml` (full run; `aux:` section, lambda 0 = JEPA
-  only), `pilot.yaml` (5-patient CPU pilot).
-- `kaggle/` — hero-run notebook. `hero_run.py` is the source of truth;
-  never edit the `.ipynb` directly (JSON churn breaks diffs). Regenerate with
-  `uv run --extra dev jupytext --to ipynb kaggle/hero_run.py` after editing
-  (`jupytext` comes from `uv sync --extra dev`).
-  `kaggle/kernel-*/` are pushable-run variants (own `.py` source +
-  `kernel-metadata.json`; shell commands LIVE — push executes the notebook
-  as-is, so never `py_compile` them, only `jupytext --to ipynb`).
-  `kernel-lora/` (supervised vision finetune, `harness.py train lora`) and
-  `kernel-cnn/` (supervised ResNet-18 comparator, `harness.py train cnn3d`)
-  are the current pushable legs.
-- `info/` contains the consolidated `TODO.md`, `EXPERIMENTS.md`, `METHODS.md`,
-  and `NOTES_AND_INSIGHTS.md`. Keep historical D, A, I, R, G, V, E, and K3 IDs.
-  Add new results and corrections without erasing earlier findings.
-  `info/archive/2026-10-12/` preserves original records byte-for-byte.
-  `info/documentation_sources/` preserves cross-branch snapshots and provenance.
-  Archived originals and frozen source snapshots are immutable.
-  Plot numbers live in `info/plots/metrics.json` (single source of truth);
-  `info/plots/make_plots.py` regenerates every plot from it — never
-  hardcode numbers in a plot script.
-- `data/`, `checkpoints/`, `.venv/`, `.env` — NEVER commit (gitignored).
+- `src/` — library code:
+  - `data/` — LUMIERE dataset/collate/splits, SAILOR adapter (`sailor.py`).
+  - `model/` — spatial state & dynamics (`spatial_dynamics.py`), BRAINIAC+LoRA, clinical encoders, fusion, temporal transformer, predictor, gap-conditioned horizon head, velocity-field dynamics (`dynamics_field.py`), EMA target, JEPA loss, RANO aux (`heads.py`).
+  - `train/` — trainer, baselines.
+  - `preprocessing/` — BRAINIAC contract pipeline.
+  - `harness/` — modular train/eval harness (`cli`, registries, `ReadoutEvaluator`, `analysis/` for R35–R37 spatial state, delta representation, and spatial dynamics runners).
+- `scripts/` — runnable entry points:
+  - `run_spatial_dynamics.py` & `run_spatial_noise_ablation.py` — R37 frozen-state spatial dynamics pilot and empirical-change ablation.
+  - `harness.py` — unified CLI (`encode`, `eval`, `train <jepa|field|head|lora|cnn3d|cnn2d|readout>`, `run <name>`, `list`).
+  - `refresh_research_run.py` — regenerates `info/research_run.html` from aggregate JSON metrics.
+  - `build_technical_handbook.py` — builds and checks `info/technical_handbook.html` from `info/handbook/`.
+  - `documentation_sources.py` & `render_documentation_coverage.py` — verifies archive hashes, local links, and historical ID coverage.
+  - Data & viewer scripts: `preprocess.py`, `preprocess_qa.py`, `bet_repair.py`, `raw_mni_deltas.py`, `view_scans.py`, `shot_viewer.py`.
+- `info/` — canonical research record:
+  - `TODO.md` — current priorities and open decisions.
+  - `EXPERIMENTS.md` — measurements, controls, uncertainty, corrections, and withdrawals (preserving historical D, A, I, R, G, V, E, and K3 IDs).
+  - `METHODS.md` — definitions, fixed protocols, evaluation rules, and reproduction commands.
+  - `NOTES_AND_INSIGHTS.md` — reasoning, interpretation, and open questions.
+  - `technical_handbook.html` — generated prerequisite-first educational guide (edit `info/handbook/` and run `python3 -B scripts/build_technical_handbook.py --check`).
+  - `archive/` & `documentation_sources/` — immutable historical records and snapshots. Never edit archived files in place.
+- `kaggle/` — legacy/pushable Kaggle notebooks (`.py` is source of truth; keep `.ipynb` synchronized via `uv run --extra dev jupytext --to ipynb <file>.py`).
 
 ## Maintain the research documentation
 
-The four canonical pages own different kinds of content:
+When recording new experimental results or updating docs:
 
-- `info/TODO.md` lists current actions, blockers, and authorization. Date the status. Close completed tasks instead of leaving old launch instructions active.
-- `info/EXPERIMENTS.md` records measurements, controls, uncertainty, corrections, withdrawals, and negative or inconclusive outcomes.
-- `info/METHODS.md` defines terms, fixed protocols, evaluation rules, reproduction commands, and historical IDs.
-- `info/NOTES_AND_INSIGHTS.md` explains the reasoning and separates measured evidence from interpretation and unknowns.
+1. **Put each fact in its owning page:** actions/priorities in `info/TODO.md`, measurements/outcomes in `info/EXPERIMENTS.md`, protocols in `info/METHODS.md`, and interpretation in `info/NOTES_AND_INSIGHTS.md`.
+2. **Preserve historical integrity:** Keep existing D, A, I, R, G, V, E, and K3 IDs. Do not erase earlier negative or withdrawn results; supersede old statuses with dated entries. Never modify files inside `info/archive/` or `info/documentation_sources/versions/`.
+3. **Write plain, direct English:** Define shorthand and keep tables readable. Keep private participant inventories, raw images, predictions, and weights out of git.
+4. **Run the fast verification suite before committing doc updates:**
+   ```bash
+   python3 -B -m unittest discover -s tests -p 'test_documentation*.py' -v
+   python3 -B scripts/documentation_sources.py verify
+   python3 -B scripts/build_technical_handbook.py --check
+   ```
 
-`info/technical_handbook.html` is a generated educational guide, not a fifth
-canonical research page. Edit `info/handbook/chapters/` or `layout.html` and run
-`python3 -B scripts/build_technical_handbook.py`, then its `--check` mode.
-Keep publication judgments separate from measured findings. Render and inspect
-changed HTML at desktop and mobile widths and in print. The maintenance guide
-at `info/handbook/README.md` defines the source and review contract.
-
-When new research documentation arrives:
-
-1. Read the prior session's final handoff and committed evidence. Compare the new record with the canonical pages and existing source coverage. Do not repeat completed experiments to reconstruct context.
-2. Put each new fact in its owning page. Preserve D, A, I, R, G, V, E, and K3 IDs. Add a date and source for every result or changed status. Retain the task, cohort, fitting budget, units, aggregation, and uncertainty beside a number.
-3. Preserve corrections, withdrawals, failed and incomplete work, and conflicting historical versions. A later dated finding supersedes an old status without rewriting the old receipt. Separate computational completion, documentation approval, scoped result review, and scientific success.
-4. Keep protocols and proposed work distinct. A documentation update does not authorize a new scientific target, method family, data acquisition, or Phase 2. Follow `info/research_guardrails.md` before implementation.
-5. Fold duplicate standalone narratives into the four pages. Before relocation, preserve exact dirty and untracked bytes. Move originals to a new `info/archive/YYYY-MM-DD/` directory with a README and `manifest.json`. Each record contains `original_path`, `archive_path`, and `sha256`. Never edit an existing archive, frozen source, or hash-bound review report.
-6. Record new source dispositions under `info/documentation_sources/updates/YYYY-MM-DD/`. Link that update from `info/SOURCE_COVERAGE.md`. Do not inflate or overwrite the original 72-version catalog to make it look current. Do not restore `info/drafts/` or create a second active result narrative.
-7. Keep operating guides, review evidence, closure receipts, and aggregate machine-readable measurements separate and discoverable. Preserve exact review verdicts, reviewed hashes, checked scope, and remaining limits. Approval of old hashes does not automatically cover rewritten text.
-8. Update active Markdown links, HTML links, and presentation generators after moving a file. Historical embedded links may remain broken inside immutable archives. Explain that limit in the archive README. Current navigation must work.
-9. Update `info/README.md` and this guide when ownership or maintenance changes. Write plain English, define technical shorthand, and do not replace actual symbols, paths, or metric names with vague prose.
-
-Verify the actual updated files before handing them back:
-
-```bash
-python3 -B -m unittest discover -s tests -p 'test_documentation*.py' -v
-python3 -B scripts/documentation_sources.py verify
-python3 -B scripts/render_documentation_coverage.py
-```
-
-Compile touched ordinary Python files. Keep edited notebook pairs synchronized. Check active links and archive hashes. If a plot or active HTML page changes, regenerate it from its existing inputs, render it, and inspect the pixels. Do not regenerate withdrawn findings as current evidence.
-
-For a substantive consolidation, obtain a fresh read-only comparison after the edited inputs are stable. Record its exact scope and verdict. Integrity tests and identifier-presence checks do not prove semantic completeness or scientific acceptance. Report any unavailable review rather than implying approval.
-
-Keep private participant inventories, raw images, predictions, tensors, and credentials out of committed documentation. Store only approved aggregate evidence and provenance. Do not control research processes or change shared outputs to finish a documentation task.
-
-## Setup
+## Setup & common commands
 
 ```bash
 uv sync                  # create .venv from uv.lock (uv >= 0.9.8)
-uv sync --extra dev      # + jupytext (regenerate Kaggle notebooks from .py)
-uv sync --extra viewer   # + playwright for the shot_viewer screenshot check
+uv sync --extra dev      # + jupytext (for notebook pair checks)
+uv sync --extra viewer   # + playwright for shot_viewer.py
 ```
 
-`pyproject.toml` is the source of truth; `uv.lock` pins the full environment.
-Activate the venv (`source .venv/bin/activate`) or prefix commands with
-`uv run`. Notes: uv resolves CPU-only `torch` from the PyTorch index and
-mechanically excludes `torchvision` (a skewed build breaks the `peft` import
-with a misleading error; see D16 and D37 in `info/METHODS.md`). The `dev` extra
-supplies `jupytext` — run notebook regeneration through the venv
-(`uv run --extra dev jupytext --to ipynb <file>.py`, or `.venv/bin/jupytext`),
-never by hand-editing the `.ipynb` JSON. You additionally
-need the artifacts below — all gitignored, documented not committed.
-
-- `checkpoints/BrainIAC.ckpt` — official weights ONLY (see gotchas).
-- `data/lumiere_sample/Imaging/` — LUMIERE NIfTIs (`lumiere_fetch.py`).
-- `data/lumiere_preprocessed/` — built by `preprocess.py`.
-- `.env` — EBRAINS tokens for SAILOR (auto-managed by `ebrains_auth.py`).
-- `data/templates/MNI152_T1_1mm.nii.gz` — TemplateFlow (see `info/`).
-
-## Common commands
-
 ```bash
-# Preprocess (pilot subset shown; drop --patients for full cohort)
-python scripts/preprocess.py --patients Patient-067 Patient-031 \
-  --workers 4 --template data/templates/MNI152_T1_1mm.nii.gz
-# Train
-python scripts/harness.py train jepa --config config/pilot.yaml \
-  --patients Patient-067 Patient-031 Patient-073 Patient-078 Patient-029 --no-wandb
-# Smoke test (no weights needed)
-python scripts/harness.py train jepa --epochs 1 --batch-size 1 --no-wandb --random-init
-# Modular harness (D33): list registries; encode/eval with pluggable metrics.
-python scripts/harness.py list
-python scripts/harness.py eval --cache checkpoints/probe_cache.pt \
-  --task rano4_forecast --view states_forecast --metrics macro_f1,accuracy \
-  --compare fused --out results/eval.json
-# Representation error (per-horizon, vs persistence): champ 1-step + gap head
-python scripts/harness.py eval --task latent_horizon \
-  --cache checkpoints/horizon_cache.pt --protocol hero_split --cohort unseen \
-  --prediction persistence champ gap_head --boot 1000
-python scripts/harness.py train jepa --config config/pilot.yaml --epochs 1  # native
+# Run spatial dynamics unit tests
+.venv/bin/python -B -m unittest discover -s tests -p 'test_spatial*.py' -v
+
+# Check notebook pairs (.py <-> .ipynb)
+uv run --extra dev python -B scripts/check_notebook_pairs.py
+
 # Local scan explorer (client-side NiiVue; binds 127.0.0.1 only)
-python scripts/view_scans.py                                   # SAILOR derivatives
-python scripts/view_scans.py --root data/lumiere_preprocessed  # LUMIERE 96³
-#   deep-link: /?p=<rel>&ov=<rel>&ov=<rel>  (repeat ov for overlaid masks)
-# Headless render check (viewer running with --no-browser):
-python scripts/shot_viewer.py \
-  "http://127.0.0.1:8765/?p=sub-01/ses-05/T1c.nii.gz&ov=sub-01/ses-05/EdemaMask-ONCO.nii.gz" \
-  /tmp/opencode/shot.png
+.venv/bin/python scripts/view_scans.py                                   # SAILOR derivatives
+.venv/bin/python scripts/view_scans.py --root data/lumiere_preprocessed  # LUMIERE 96³
 ```
 
-## Local scan explorer (`view_scans.py`)
+## Key codebase gotchas
 
-Browser UI over a scan tree. NiiVue renders NIfTI entirely client-side, so the
-bytes only travel disk → localhost → your own browser; nothing is uploaded.
-Auto-detects the SAILOR derivatives layout (`sub-XX/ses-YY/*.nii.gz`) and the
-LUMIERE preprocessed layout (`Patient-XXX/week-*/*.nii.gz`). Base modalities
-(T1c/T1/T2/Flair/CT1/FLAIR) load as the background; masks, segmentations and
-`-icor`/`-zscore` variants load as overlays. Deep-link for scripting/screenshots:
-`/?p=<rel>&ov=<rel>&ov=<rel>` (repeat `ov`, comma-separate also works).
-
-Per-patient/session **metadata** is read from the tree sidecars and shown in a
-bottom panel (and age/OS inline in the patient list):
-- SAILOR: subject `age-years.txt` / `overall-survival-months.txt` /
-  `intervals-days.txt`; session `treatment.txt` / `RANO.txt` (codes decoded
-  PD/SD/PR/CR).
-- LUMIERE: `--meta-dir` (default `data/lumiere_meta`) joins demographics,
-  RANO rating/rationale, and per-timepoint modality completeness onto the
-  `Patient-XXX/week-*` tree.
-
-- SAILOR is controlled-access: keep it on `127.0.0.1`. Do not port-forward
-  beyond an SSH tunnel, and never upload the files to a cloud viewer.
-- The NiiVue bundle is fetched once from jsDelivr into
-  `~/.cache/world-model-viewer/` (pinned `0.69.0`); after that it runs offline.
-- Validate viewer changes with `scripts/shot_viewer.py` (headless
-  Chromium/WebGL via SwiftShader). It is a dev-only tool: `uv sync --extra
-  viewer` then `uv run playwright install chromium`. Start
-  the viewer with `--no-browser`, point the harness at a deep link; it polls
-  until volumes load (software-WebGL shader compile is slow) and exits nonzero
-  if nothing rendered — screenshot the result before trusting a change.
-
-NiiVue 0.69 API gotchas (each cost a blank canvas, found via `shot_viewer.py`):
-
-- `attachTo(id)` wants the id of a `<canvas>`, not a `<div>`.
-- `attachTo` is async and resets volumes when it resolves — load volumes only
-  after awaiting it, or they get wiped (looks like "0 volumes").
-- `loadVolumes` APPENDS and 0.69 has no `removeAllVolumes`; clear via
-  `removeVolume` first. The explorer serializes refreshes through a promise
-  queue so concurrent deep-link loads cannot stack.
-- Passing option objects with a `name` breaks `getFileExt(name||url)`; load by
-  `{url}` only, then set `name`/`colormap`/`opacity` on `nv.volumes[i]`.
-
-## Figure review
-
-Plots are generated from `metrics.json`. The historical `explainer.html` is
-archived at `info/archive/2026-10-12/info/explainer.html` and includes withdrawn
-claims. It is not a current presentation. For any active plot or HTML page,
-verification requires rendering it and looking at the pixels with the
-image-aware read tool. The playwright *module* is not installed — use the
-Chromium binary the view_scans dev tooling cached:
-
-```bash
-python info/plots/make_plots.py          # regenerate png + pdf
-CHROME=$(ls ~/.cache/ms-playwright/chromium-*/chrome-linux64/chrome | head -1)
-"$CHROME" --headless --no-sandbox --disable-gpu --hide-scrollbars \
-  --virtual-time-budget=8000 --window-size=1000,16000 \
-  --screenshot=/tmp/explainer.png "file://$PWD/info/archive/2026-10-12/info/explainer.html"
-python3 -c "from PIL import Image; Image.open('/tmp/explainer.png').crop((0,400,1000,1200)).save('/tmp/crop.png')"  # then read the crop
-```
-
-Rules, all earned:
-
-- **Do not automate text-fit checks through the plotting API.** A
-  `get_window_extent` sweep reported a 232x152px box for a string whose real
-  layout is 85x15pt: it invented overlaps and missed the actual clipping.
-  Render, crop, read the image; fix only what you can see.
-- Titles/tick labels do not wrap or shrink: 15pt titles overflow narrow
-  figures, and log-axis minor ticks collide inside one decade — wrap titles
-  with `\n`, set explicit ticks and `minorticks_off()`.
-- A busy panel needs headroom, not clever placement: raise `ylim` (or widen
-  `figsize`) so legends and value labels clear the bars; give scatter legends a
-  white frame (`LEGEND_BOX`) and reference-line labels a white box.
-- `explainer.html` sizes each `<img>` from its figure width (0.9x96 px/in) so
-  every plot renders at one text scale; update the `width` attribute when a
-  figure's `figsize` changes.
-
-## Conventions (from README, enforced)
-
-1. Never commit data, weights, checkpoints, or secrets.
-2. Small atomic commits, imperative messages ("add X").
-3. Code over notes; docs live in `info/` with D/A/I IDs.
-4. Reproducibility: pin deps, record seeds/configs, tie results to commits.
-5. Branch per experiment (`exp/...`), PRs not direct-to-main.
-6. Artifacts carry provenance: every encoded cache records {champion path,
-   config hash, git sha, date} at creation; loaders assert it. Pre-2026-09-10
-   caches are filename-only (same bug class as the D22 champion overwrite).
-7. Persist trained weights, not just scores, whenever a follow-up might need
-   predictions (`src/harness/train/field.py` saved scores only; recovering field
-   predictions cost a full refit — now `checkpoints/field_models.pt`).
-8. Record every experiment in `info/EXPERIMENTS.md` with its D, A, or R ID.
-   Add reasoning to `info/NOTES_AND_INSIGHTS.md` and protocol changes to
-   `info/METHODS.md`. Preserve earlier outcomes and corrections. Update the
-   current research presentation when conclusions change. Do not restore the
-   archived explainer as current guidance.
-
-## Gotchas (see the historical IDs in info/EXPERIMENTS.md)
-
-- **Weights**: use official `BrainIAC.ckpt` only. Community ports can be
-  silently corrupt (matching key names, degenerate outputs). Verify any
-  checkpoint behaviorally: real-vs-noise drift must be ≫ 0.
-- **Deps**: pin `transformers<5`; never install `torchvision` (a skewed
-  build breaks peft import with a misleading error).
-- **Data**: pandas NaN is truthy — coerce clinical numerics via explicit
-  `isna` guards. Drop imageless visits; require pixels on both sides of
-  every loss pair.
-- **Probes**: single-split probe numbers are noise, and the legacy all-91
-  `--cv` leaks encoder-train patients into probe folds (K3-16) — use the locked
-  protocol (`info/METHODS.md#historical-rano`, `--cv-unseen`); even the readout seed
-  alone spans 0.34–0.45 (A27). Ridge + CV-λ mandatory above ~100-d features
-  (plain LSQ on 1152-d/450-row gives R²≈−100).
-- **SAILOR**: `-icor` files carry background NaNs (~200 sessions, up to 79%
-  of voxels) — prefer base variants; finite-check any new site before first
-  encode. RANO codes {1:PD, 2:SD, 3:PR, 5:CR} are empirical (volume deltas);
-  3-vs-5 tentative. Median inter-visit gap ~76 days (A14; earlier "~14 days"
-  was wrong) → persistence regime (A12).
-- **Gitignore**: anchor data-dir rules (`/data/`, not `data/`) — an
-  unanchored pattern silently unmatched `src/data/` and the whole data
-  layer went uncommitted until the first fresh clone (Kaggle) failed.
-  Audit with `git ls-files` after ignore changes.
-- **Kaggle**: T4 only (P100/sm_60 has no torch kernels in the image);
-  batch 1 on 16 GB; ingestion gunzips `.nii.gz`→`.nii` in place (dataset
-  accepts both); uninstall torchao (0.10 breaks fresh peft imports).
-- **Kaggle notebook**: `%env` swallows trailing `#` comments into the value
-  (keep comments on separate lines); datasets may mount at
-  `/kaggle/input/datasets/<user>/<slug>/` — glob recursively.
-  A resume leg's `best.pt` overwrites the staged champion: label downloads
-  with (leg, epoch, val). Select resume checkpoints BY DEFINITION (lowest
-  val_loss), never by filename. Ferried checkpoints are opt-stripped —
-  resume-opt designs need an optimizer-bearing file or must drop those legs.
-- **Kaggle notebook parsing**: test every log-regex against a REAL log line
-  before push (an untested `" epoch"`-vs-`"(epoch"` mismatch voided the R11
-  verdict cell on complete logs). Verdict/eval cells record UNKNOWN, never
-  assert-fail the session. Run train commands with `python -u`.
-- **Auth**: EBRAINS device codes expire in 5 min. Refresh tokens rotate —
-  exactly one consumer at a time or the chain invalidates (400).
-  SAILOR is controlled-access; the data-proxy v1 object API is
-  `GET /v1/datasets/{id}` (list) and `GET /v1/datasets/{id}/{object}`
-  (bytes). There is no `/files` endpoint. Read 401s literally: missing
-  scopes (token needs `roles`, `email`, `team`, `profile`) means re-auth;
-  "access has expired, please request access again" means file a request
-  (`sailor_request_access.py`), not a token bug.
-- **Scale**: checkpoints are ~1.5GB each; batch 4 fits 24GB VRAM
-  (chunked encoding). No GPU on the dev host — pilot on CPU, hero run
-  needs one (≈6 h all-in, see `info/archive/2026-10-12/info/pilot.md` scale-up checklist).
-
-## Programmatic Kaggle runs (verified 2026-09-06, horizon leg)
-
-The CLI (`kaggle`, creds in `~/.kaggle/`) can push, monitor, and fetch a GPU
-run end-to-end — no browser needed except for live logs (the API exposes
-status only; the kernel page streams the live log).
-
-```bash
-kaggle quota                                            # GPU hours remaining
-kaggle kernels push -p kaggle/kernel-horizon \
-  -t 32400 --accelerator NvidiaTeslaT4                  # push + start (v1, v2, …)
-kaggle kernels status -k nairadithya/horizon-leg        # RUNNING / COMPLETE / ERROR
-kaggle kernels logs -k nairadithya/horizon-leg > logs_run.json   # JSON array AFTER finish
-kaggle kernels output -k nairadithya/horizon-leg -p outputs/horizon-leg/  # best.pt + logs (~1.5GB)
-```
-
-Rules, all earned:
-
-- **T4 selection needs `machine_shape`.** `enable_gpu: true` alone lands on
-  P100, which this image's torch build cannot use (no sm_60 kernels — CUDA
-  available but every op fails). Set `"machine_shape": "NvidiaTeslaT4"` in
-  `kernel-metadata.json` AND pass `--accelerator NvidiaTeslaT4` (belt and
-  suspenders; the flag alone has mixed reports).
-- **Push executes the notebook as-is.** Training shell commands must be LIVE
-  in the pushed `.ipynb` (unlike `hero_run.py`, where they stay commented).
-  Keep the `.py` jupytext source as truth; regenerate after editing
-  (`uv run --extra dev jupytext --to ipynb <file>.py`).
-- **Fail fast on the wrong GPU.** First code cell asserts `torch.cuda` and
-  `'T4' in device name` — a P100 session aborts in seconds instead of burning
-  quota. Verify from the log (`device: Tesla T4`), never assume.
-- **Persist CLI-set flags to `kaggle.yaml`.** `harness.py train jepa` flags mutate the
-  in-memory config only; later eval cells re-read the file. The horizon leg
-  lost its whole eval table to this (training completed, assert tripped on a
-  stale file). Write every flag the run depends on into `kaggle.yaml` at wire-up.
-- **Datasets by slug + recursive glob.** Attach inputs by dataset name; mounts
-  land at varying depths (`/kaggle/input/<slug>/` vs
-  `/kaggle/input/datasets/<user>/<slug>/`). Never hardcode one depth.
-- **Background launches need `setsid`.** A tool-timeout process-group kill
-  takes plain `nohup … &` children with it (killed the first local eval).
-  Use `setsid nohup … & disown` for anything outliving the call.
-- **Outputs are gitignored, always.** `outputs/` holds ~1.5GB `best.pt` files;
-  judge the gate locally (`scripts/harness.py run horizon-eval` runs CPU-only), commit
-  only code + notes.
-
-## Verification bar
-
-- `python -m py_compile` on touched files.
-- Smoke test above must pass; forward + backward + EMA + baselines finite.
-- Clinical vectors swept NaN-free over all 91 patients after data changes.
-- Success criteria for training changes: loss drops, monitors healthy
-  (target std ≫ 0, rank > 1), and the same-space persistence gate is
-  re-passed (A24: in-domain test pooled is a tie, train pooled loses;
-  cross-site loses 7–10.5×) — a falling loss alone proves nothing.
-- Plot/HTML changes: regenerate (`make_plots.py`) and review the rendered png
-  or page with an image-aware read (see Figure review) — code review alone is
-  not evidence that a figure fits.
+- **Deps**: pin `transformers<5`; never install `torchvision` in the local CPU venv (a skewed build breaks `peft` imports; see D16/D37).
+- **Data**: pandas `NaN` is truthy — coerce clinical numerics via explicit `isna` guards. Drop imageless visits; require pixels on both sides of every loss pair.
+- **LUMIERE timing**: LUMIERE visit labels use week bins (`week-XXX`), not exact scan-day intervals; suffixes (`-1`, `-2`) indicate visit order within a week, not 1-day gaps.
+- **SAILOR**: `-icor` files carry background NaNs (~200 sessions) — prefer base variants; finite-check any new site before encoding. Median inter-visit gap is ~76 days (A14).
+- **Gitignore**: anchor data-dir rules (`/data/`, not `data/`) so `src/data/` is never ignored.
+- **Figures & HTML**: generate plots from JSON metrics (`info/plots/make_plots.py`), never hardcoded numbers. Visually inspect rendered plots or HTML pages with the image-aware read tool before committing layout changes.
 
 ## Enforced agent rules
 
 | Rule | Enforcement |
 |---|---|
-| Kaggle `.py` notebook sources and executable `.ipynb` pairs must stay synchronized; `.py` is the source of truth. | `python scripts/check_notebook_pairs.py` (also run in `.github/workflows/notebook-pairs.yml`); regression fixture: `tests/test_notebook_pair_check.py`. |
+| Kaggle `.py` notebook sources and executable `.ipynb` pairs must stay synchronized; `.py` is the source of truth. | `uv run --extra dev python scripts/check_notebook_pairs.py` (also run in `.github/workflows/notebook-pairs.yml`); regression fixture: `tests/test_notebook_pair_check.py`. |
+| Consolidated documentation links, archive hashes, and baseline IDs must remain valid. | `python3 -B scripts/documentation_sources.py verify` and `python3 -B -m unittest discover -s tests -p 'test_documentation*.py' -v`. |
