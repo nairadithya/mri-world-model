@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "date": "2026-10-26",
+  "scope": "Operator-authorized bounded R37 continuation, implementation-review corrections and completed scoped result review on the private SSH GPU host. Preserve initial dated statuses, original expenditure and development-only interpretation. The final outcome is inconclusive, not scientific success.",
+  "records": [
+    {
+      "source": "Current project session operator instructions on October 26, 2026",
+      "source_excerpts": ["Let's do R37 fully.", "I think non-archival workshop acceptance is not preferred.", "Go ahead. Try not to run anything on this laptop, instead run it via ssh to mosaic-gpu", "Use this GPU for Kaggle as well."],
+      "read_mode": "Direct operator authorization following the explicit proposal of a renewed 48-hour window with eight GPU-hours and sixteen CPU-hours for remaining implementation and execution",
+      "evidence": "info/documentation_sources/updates/2026-10-26/r37-continuation.md",
+      "destinations": ["info/TODO.md#current-priority-october-26-2026", "info/METHODS.md#r37", "info/NOTES_AND_INSIGHTS.md#workshop-manuscript-feasibility", "info/README.md"],
+      "disposition": "Prioritize completing the fixed H/L/P/E/R/G pilot on mosaic-gpu; prefer archival acceptance and do not assume non-archival acceptance satisfies the goal. Authorize the explicit continuation allowance, not a silent reset, new method family, new data, R36 Phase 2, automatic retry or a rescue sweep.",
+      "comparison_status": "continuation_authorized_implementation_review_pending"
+    },
+    {
+      "sources": ["info/METHODS.md#r37", "info/documentation_sources/updates/2026-10-19/r37-noise-execution.md", "info/documentation_sources/updates/2026-10-19/reviews/final-design.md", "outputs/r37-noise-ablation/v6/budget_ledger.json"],
+      "read_mode": "Existing protocol, scoped review, execution receipt and original budget ledger; no old experiment repeated to reconstruct context",
+      "evidence": "info/documentation_sources/updates/2026-10-26/r37-continuation.md",
+      "destinations": ["info/METHODS.md#r37", "info/TODO.md#r37-protocol-first-dynamics-pilot-october-19-2026"],
+      "disposition": "Retain original E-only scope and unknown first-preflight expenditure. Declare Gaussian observation E as the full-pilot primary for the common-floor rationale, keep five contrasts and 99% intervals, and disclose already observed ablation evidence. Declare approximate historical week-bin gaps, source-only normalization, matched sampling and fold-local ridge noise. Require independent full-path review before fitting; no old approval is inherited.",
+      "comparison_status": "execution_choices_declared_before_fitting_not_yet_independently_approved"
+    },
+    {
+      "sources": ["info/documentation_sources/updates/2026-10-26/reviews/implementation-v1.md", "info/documentation_sources/updates/2026-10-26/reviews/implementation-dispositions.md"],
+      "read_mode": "Complete independent full-path review and narrow parent-authored blocker dispositions; 62 synthetic spatial tests and hash-bound compilation ran on mosaic-gpu",
+      "evidence": "info/documentation_sources/updates/2026-10-26/reviews/implementation-dispositions.md",
+      "destinations": ["info/documentation_sources/updates/2026-10-26/reviews/implementation-v1.md", "info/documentation_sources/updates/2026-10-26/reviews/implementation-dispositions.md"],
+      "disposition": "Preserve the exact CHANGES_REQUIRED verdict for the first reviewed hashes. Correct direct MRI geometry verification, authoritative cumulative budget/retry binding and complete assessment-to-run/cohort provenance without changing the scientific comparison. Actual reconstruction, authority migration and fitting remain unexecuted and gated; passing synthetic tests is not implementation approval or a scientific result.",
+      "comparison_status": "first_review_changes_required_corrected_bytes_awaiting_independent_rereview"
+    },
+    {
+      "sources": ["info/documentation_sources/updates/2026-10-26/reviews/implementation-v2.md", "info/documentation_sources/updates/2026-10-26/reviews/result-v1.md", "info/documentation_sources/updates/2026-10-26/reviews/result-replay-v1.py", "info/documentation_sources/updates/2026-10-26/reviews/result-replay-v1.json", "info/r37_full_metrics.json"],
+      "read_mode": "Full independent implementation/result reports, exact hash-bound aggregate and reviewer-authored CPU verification executed once on mosaic-gpu; no fitting or old experiment repeated for documentation",
+      "evidence": "info/documentation_sources/updates/2026-10-26/closure.json",
+      "destinations": ["info/EXPERIMENTS.md#r37-full-pilot", "info/METHODS.md#r37", "info/NOTES_AND_INSIGHTS.md#r37-completed-without-an-established-history-benefit", "info/TODO.md#current-priority-october-26-2026", "info/README.md", "info/research_run.html", "info/documentation_sources/updates/2026-10-26/r37-execution.md"],
+      "disposition": "Close the fixed pilot after complete H/L/G seeds and P/E/R controls. Preserve APPROVED_FOR_SCOPED_R37_REPORTING for the exact audited aggregate and INCONCLUSIVE_FOR_FULL_CAPABILITY, not scientific success. Retain all five adjusted intervals, MAE/coverage failures, scoped resolution harms, single-visit/empty companions and uncertainty. Preserve generator-time raw status, original review corrections, prior unknown expenditure and one-analysis stopping. New documentation does not inherit approval of old hashes.",
+      "comparison_status": "execution_complete_result_review_approved_inconclusive_stop"
+    }
+  ],
+  "detail": "info/documentation_sources/updates/2026-10-26/r37-execution.md"
+}

@@ -98,3 +98,5 @@ These update ledgers are separate from the original frozen capture. They record 
 - [2026-10-13 source dispositions](documentation_sources/updates/2026-10-13/coverage.json).
 - [2026-10-17 source dispositions](documentation_sources/updates/2026-10-17/coverage.json).
 - [2026-10-19 source dispositions](documentation_sources/updates/2026-10-19/coverage.json).
+- [2026-10-24 source dispositions](documentation_sources/updates/2026-10-24/coverage.json).
+- [2026-10-26 source dispositions](documentation_sources/updates/2026-10-26/coverage.json).

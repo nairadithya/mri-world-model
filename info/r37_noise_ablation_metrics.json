@@ -1,0 +1,65 @@
+{
+  "assessment_winner_selection": false,
+  "contract_digest": "1d0fc791c9340487670f951a88b5362095c9feb32e559a2e0347244667e0ba86",
+  "input_hashes": {
+    "anatomy_manifest": "c65bdecfe9b6a9f3da548ea1249a95cb3037a3f6876c00f8bd1ba9613c148a57",
+    "checkpoint": "65a4c4db2ca1b44ebf29fa12659fbd09dea6ede606ce1d3279535144933a001a",
+    "chronology_manifest": "5fc550c2edaf2cef8c432219b9ec4f8a08c04eb33dd0c54d140f35d631a300dc",
+    "direct_predictions": "9e7ecd09b8ce257d4c66bb23814850889520890da3fb0726e1b50d997ff8e311",
+    "features": "0646a3be9b0bc7de6295adcea1b4aa3462b1ac6e630ad2f55374192a77026090",
+    "inventory": "b1e668429cbfb5d15f680764b5a192bd256fcf1b10b03a1df081b58cbc9a5e08",
+    "prepared": "90e9b986bfc638866391ea0ab4113e978fcb9165fbd34acc0b681970086777f1",
+    "run": "f59820fb681aafc05b9112329aebbe1fe899bfa0fe831e503afb40a2353dc6e7"
+  },
+  "paired_common_k1": {
+    "ci": [
+      -0.0005599483034065046,
+      -0.00026353003575198714
+    ],
+    "mean": -0.0004193456090056126
+  },
+  "paired_validation_selected": {
+    "ci": [
+      -0.0005597607656571536,
+      -0.0002647988781426919
+    ],
+    "mean": -0.0004193456090056126
+  },
+  "patient_uniform_scores": {
+    "discrete": {
+      "0.5": 1.3545279164421933,
+      "1.0": 1.2230516797168902,
+      "2.0": 1.288274923274843
+    },
+    "gaussian_observation": {
+      "0.5": 1.3534217815214271,
+      "1.0": 1.2226323341078846,
+      "2.0": 1.2880919449014965
+    }
+  },
+  "primary_metric": "patient-uniform CRPS in log1p(mm3)",
+  "query_patients": 18,
+  "query_rows": 75,
+  "row_manifest_sha256": "210c655e445fb33dc3e00bdce672ebcf521205d72ef22ee90577c499d01f32f9",
+  "single_visit_common_k1_scores": {
+    "discrete": 0.8057355955476702,
+    "gaussian_observation": 0.8053629039119367
+  },
+  "status": "completed",
+  "validation_grid_scores": {
+    "discrete": [
+      1.2066326526266942,
+      1.0800147278026795,
+      1.144099959708491
+    ],
+    "gaussian_observation": [
+      1.2057250913028157,
+      1.0796792727340014,
+      1.143920045427041
+    ]
+  },
+  "validation_selected_calibration": {
+    "discrete": 1.0,
+    "gaussian_observation": 1.0
+  }
+}

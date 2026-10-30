@@ -1,0 +1,104 @@
+{
+  "status": "PASS",
+  "method": "reviewer-authored independent reference; no project helper imports",
+  "contract_digest": "1d0fc791c9340487670f951a88b5362095c9feb32e559a2e0347244667e0ba86",
+  "counts": {
+    "assessment_history_patients": 18,
+    "assessment_rows": 101,
+    "eligible_rows": 423,
+    "original_visits": 638,
+    "prepared_visits": 599,
+    "source_rows": 262,
+    "validation_rows": 60
+  },
+  "scored_rows": {
+    "source": 262,
+    "validation": 60,
+    "query": 75,
+    "query_patients": 18,
+    "single_visit": 26
+  },
+  "validation_scores": {
+    "discrete": [
+      1.2066326526266966,
+      1.0800147278026844,
+      1.144099959708501
+    ],
+    "gaussian_observation": [
+      1.2057250913028201,
+      1.0796792727340099,
+      1.1439200454270557
+    ]
+  },
+  "assessment_scores": {
+    "discrete": {
+      "0.5": 1.3545279164421962,
+      "1.0": 1.223051679716895,
+      "2.0": 1.2882749232748534
+    },
+    "gaussian_observation": {
+      "0.5": 1.353421781521432,
+      "1.0": 1.2226323341078933,
+      "2.0": 1.2880919449015114
+    }
+  },
+  "paired": {
+    "common_k1": {
+      "mean": -0.00041934560900220506,
+      "ci": [
+        -0.0005599483034030763,
+        -0.00026353003574866574
+      ]
+    },
+    "validation_selected": {
+      "mean": -0.00041934560900220506,
+      "ci": [
+        -0.0005597607656536928,
+        -0.00026479887813927105
+      ]
+    }
+  },
+  "relative_reduction_percent": 0.034286826628526154,
+  "max_crps_array_abs_error": 3.108624468950438e-14,
+  "max_bootstrap_abs_error": 3.5680009294325465e-15,
+  "direct_decoder_covered_rows": {
+    "source": 0,
+    "validation": 0,
+    "assessment": 75,
+    "single_visit_assessment": 26
+  },
+  "recorded_input_hashes_verified": {
+    "anatomy_manifest": "c65bdecfe9b6a9f3da548ea1249a95cb3037a3f6876c00f8bd1ba9613c148a57",
+    "checkpoint": "65a4c4db2ca1b44ebf29fa12659fbd09dea6ede606ce1d3279535144933a001a",
+    "chronology_manifest": "5fc550c2edaf2cef8c432219b9ec4f8a08c04eb33dd0c54d140f35d631a300dc",
+    "direct_predictions": "9e7ecd09b8ce257d4c66bb23814850889520890da3fb0726e1b50d997ff8e311",
+    "features": "0646a3be9b0bc7de6295adcea1b4aa3462b1ac6e630ad2f55374192a77026090",
+    "inventory": "b1e668429cbfb5d15f680764b5a192bd256fcf1b10b03a1df081b58cbc9a5e08",
+    "prepared": "90e9b986bfc638866391ea0ab4113e978fcb9165fbd34acc0b681970086777f1",
+    "run": "f59820fb681aafc05b9112329aebbe1fe899bfa0fe831e503afb40a2353dc6e7"
+  },
+  "sha256": {
+    "scripts/run_spatial_noise_ablation.py": "251cb615e460a3f7d47d727c38223dd703bb5838c67956f89a0945809183d6a3",
+    "src/harness/analysis/spatial_dynamics_baselines.py": "acbe7ddf99b3c39236cb1a99995c621ca08ad9e4bc5003421deb312ca70b8f37",
+    "src/harness/analysis/spatial_dynamics_protocol.py": "9e29b9efc90699dde135b15d5705ef06bac1d5d473496daa2a3ead0edc358d19",
+    "src/data/representation.py": "65537546257c70ce978fde9b254b7ef75c49b4797a8c279da3542c75f6dcee6a",
+    "info/METHODS.md": "ac38cc4b7b3e501e325dbec71dc211d395e6bef5e4b8ed7d620abaaedc91e36d",
+    "outputs/r37-noise-ablation/v6/run_contract.json": "7695562d8000181e8981c9ab032860e9c81900207f4d277d06a1811601fde877",
+    "outputs/r37-noise-ablation/v6/preflight_receipt.json": "973e8810b0445ec18d48ee347e1ab77623accdf53d049e75bfd3fb2a9af836c6",
+    "outputs/r37-noise-ablation/v6/budget_ledger.json": "e0fc8314ca471ef5892cadff430ed3939fd9bdf138a5bd5434310d20f065ba55",
+    "outputs/r37-noise-ablation/v6/execution.log": "e62677d9250b3600a0bbc189d68a6a31d438fc0a28968e564fdb2a86314c8fd8",
+    "outputs/r37-noise-ablation/v6/run/aggregate.json": "9662947bd1cad598445e609bd2f856e570169219e824240b57871408df8c7585",
+    "outputs/r37-noise-ablation/v6/run/contract.json": "7695562d8000181e8981c9ab032860e9c81900207f4d277d06a1811601fde877",
+    "outputs/r37-noise-ablation/v6/run/private_predictions_scores.npz": "8081eaaceb63dd725ed949666369b646634425461f6c2a7f1e324f63a513db8a",
+    "outputs/r37-noise-ablation/v6/run/private_row_manifest.json": "8ed2b2c8b071c9d4342e1e354cb8306d0e0030f7346ef8537d61d177a84234e9"
+  },
+  "ledger": {
+    "status": "completed",
+    "preflight_cpu_seconds": 0.7817617920000004,
+    "run_cpu_seconds": 22.039009935,
+    "run_wall_seconds": 22.113297836011043,
+    "v1_expenditure": "unavailable; v1 receipt contains no resource ledger"
+  },
+  "review_cpu_seconds": 0.885336949,
+  "review_wall_seconds": 0.8963423469976988
+}

@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "checked_at": "2026-10-24T20:29:35+05:30",
+  "status": "PASS_FOR_DOCUMENTATION_INTEGRITY_AND_FIGURE_BINDINGS_ONLY",
+  "assessment": "CONDITIONAL_GO_FOR_SHORT_WORKSHOP_DRAFT",
+  "independent_review": null,
+  "review_limit": "The assistant assessed the literature and inspected the task-only changes. No independent literature, novelty, manuscript or new scientific result review occurred. Existing R35/R36 approvals do not cover this publication judgment or these new documents.",
+  "commands": [
+    {
+      "command": "python3 -B scripts/render_documentation_coverage.py",
+      "status": "PASS",
+      "scope": "Regenerated the update index without changing the original frozen catalog."
+    },
+    {
+      "command": "python3 -B -m unittest discover -s tests -p 'test_documentation*.py' -v",
+      "status": "PASS",
+      "tests": 24
+    },
+    {
+      "command": "python3 -B scripts/documentation_sources.py verify",
+      "status": "PASS",
+      "source_versions": 72,
+      "branch_refs": 10,
+      "local_links_checked": 433,
+      "supplementary_files_checked": 3,
+      "archive_records_checked": 47,
+      "scope": "Frozen bytes, source coverage, identifier presence and link portability; not semantic completeness or scientific acceptance."
+    },
+    {
+      "command": "git diff --check -- info/NOTES_AND_INSIGHTS.md info/TODO.md info/README.md info/SOURCE_COVERAGE.md",
+      "status": "PASS"
+    }
+  ],
+  "additional_read_only_checks": {
+    "figure_numeric_or_interval_bindings": 29,
+    "figure_input_sha256_matches": true,
+    "figure_interval_shapes_order_and_finiteness": "PASS",
+    "figure_cohort_counts_and_seed_list_match": true,
+    "local_links_in_all_touched_markdown": 379,
+    "preexisting_other_dirty_files_with_unchanged_sha256": 24,
+    "preexisting_paragraphs_in_both_edited_dirty_canonical_pages_preserved_in_order": true,
+    "scope": "The script resolved every figure JSON pointer, checked scalar/interval type and finiteness, checked patient and row counts for all displayed cohort arms, checked touched-page links with the existing documentation checker, and compared existing dirty bytes against the preserved starting snapshot. It computed no new scientific metric or interval."
+  },
+  "checked_files_sha256": {
+    "info/NOTES_AND_INSIGHTS.md": "18c9d4dc64ee843506b683b1fec6f168e53dc6eb3ff012f87d0388a9cfb20335",
+    "info/TODO.md": "0efcd84244fc8aca9a4795f81a77e58b68cd0c305ac9deda495c20d4612a706a",
+    "info/README.md": "7cb6afb17d4bebc9e3c6786be39e7716ddd3ae31bdcbb44d52f4ada949c715c3",
+    "info/SOURCE_COVERAGE.md": "c0410dfc6e92dd5f378b474cb4e1a3f08dd0a9bb42da9070c7149f2fac6d641b",
+    "info/documentation_sources/updates/2026-10-24/literature-check.md": "5039e340a7d19396ac95a5236839339549b6cc2ee685248bae17dfa6377fce7f",
+    "info/documentation_sources/updates/2026-10-24/figure-spec.json": "37cb3a56db9c724faf4fbd0763a0371a52bb9a0946292eb6087e3a80f852044f",
+    "info/documentation_sources/updates/2026-10-24/coverage.json": "0a5636995fc7b41698f820808a5e062bdcdebfb8035d3646378a71c712993933"
+  },
+  "unchanged_scientific_inputs_sha256": {
+    "info/r36_phase1_metrics.json": "5fd08fb735011ab90203b1d79bee869e7c30aeae6f7c48315166fb53854660a6",
+    "info/reviews/r35_result_review.md": "230921929787aa86fddf556a8fbff9590e21c2fd8c782517e25ef818d3a195d6",
+    "info/reviews/r36_phase1_result_review.md": "af9f6099e7daf09ebdb43ccff0b099bf81bfa804bfb1d29a8d72fe3a29479f82",
+    "info/reviews/evidence/r35/correct_independent.py.stdout.txt": "d1d992b488cbdb2067573813e1d27bef521aace14b4202eaa704e8714b53d503"
+  },
+  "not_performed": [
+    "Training, model fitting, prediction replay, MRI access, data acquisition or private participant export",
+    "New bootstrap, significance test, scientific measurement or published-method reproduction",
+    "Plot or HTML generation, rendering, or pixel review; the deliverable is a figure design only",
+    "Independent novelty or manuscript review, workshop selection, submission or acceptance",
+    "Python compilation, because this task changed no Python file",
+    "Commit, branch switch, shared-output modification or R37 execution-window renewal"
+  ]
+}

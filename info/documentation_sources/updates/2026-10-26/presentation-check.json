@@ -1,0 +1,36 @@
+{
+  "status": "PASS",
+  "date": "2026-10-26",
+  "inspector": "Parent assistant, image-aware read of every listed PNG",
+  "html_sha256": "495e9c3cd32b8908ed120002a0f9688823a9f92540ba599dd1a5a5535c41119d",
+  "desktop_viewport": [
+    1100,
+    1000
+  ],
+  "mobile_viewport": [
+    390,
+    1000
+  ],
+  "print_pages_inspected": [
+    3,
+    4,
+    5
+  ],
+  "print_pages_total": 13,
+  "pdf_sha256": "c30b4bd617bb29d9af973104e909aa38deb6f8d35bc7c6a2d80ff2d16077abbd",
+  "image_sha256": {
+    "outputs/r37-full/continuation-20261026/presentation-v2/desktop-1.png": "02dd2862b9b6e9411ceafb19d98fa519eee962cf5bcdac607008ab0274bbe455",
+    "outputs/r37-full/continuation-20261026/presentation-v2/desktop-2.png": "2a79bb2ee0123e2cdb4bdd117658db375a4cb5c8716d523bc8fb2713b91e86fd",
+    "outputs/r37-full/continuation-20261026/presentation-v2/desktop-3.png": "ed6e5ce43564a0d703a4dcadca2eacfd74eea8533b44d3c4639dc4f2fdf4188f",
+    "outputs/r37-full/continuation-20261026/presentation-v2/mobile-1.png": "8183c8266beb84b60da43806be5e0b1cab356ceb87d3f16758338047b8ffbb33",
+    "outputs/r37-full/continuation-20261026/presentation-v2/mobile-2.png": "5c8044c2fe2195d7c7eb0199279ead5596b8564f98edacf23d94939d03ae523a",
+    "outputs/r37-full/continuation-20261026/presentation-v2/mobile-3.png": "35afb4c0d3a18c496c1f25ad309374f44500cf36a5c0f26c8f7ac8699adb4acf",
+    "outputs/r37-full/continuation-20261026/presentation-v2/mobile-4.png": "75d11a0e9c56e5939c8bd71088940ea2472454c61137f921f9248311a3d958d6",
+    "outputs/r37-full/continuation-20261026/presentation-v2/mobile-5.png": "82042e5e0efa5b1f275718a99e80735a1547cdaf6a8a693d4750b0b0d6d470b1",
+    "outputs/r37-full/continuation-20261026/presentation/print-3.png": "8d4505592bce6aa224cd01821d82045234c8d17d02706fb68d95c8beb0cf43e7",
+    "outputs/r37-full/continuation-20261026/presentation/print-4.png": "8ea7b5b7d7d84c126c50ed23a82a2d5f0ac36bd694f0ae9e4b8b35f724efe914",
+    "outputs/r37-full/continuation-20261026/presentation/print-5.png": "90038db8fa534561485949452553b61297b1592cbd5fd8e805e0f4595c169089"
+  },
+  "scope": "Changed R37 section, table labels/numbers, intervals, caveats and boundary to existing history; readable without visible clipping/overlap at these desktop/mobile widths and print pages. Not biological validation or an automated text-fit judgment.",
+  "rejected_capture": "Earlier CLI fragment screenshots were blank/unpainted and were not accepted; preserved privately. Corrected captures use actual scrolled viewports. No HTML/layout change was needed."
+}

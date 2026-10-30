@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "date": "2026-10-24",
+  "scope": "Bounded workshop-manuscript feasibility check and main-figure design using public primary literature and existing approved aggregate findings. No new experiment, training, data acquisition, participant export, submission, archive relocation, or change to the original frozen 72-version catalog.",
+  "records": [
+    {
+      "source": "Operator instructions in the current project session on October 24, 2026",
+      "source_excerpts": ["An accepted paper at ICWM / ICLR / ICML", "Even a workshop", "Proceed with the next action"],
+      "read_mode": "Current-session instructions and preceding bounded feasibility proposal",
+      "destinations": [
+        "info/TODO.md#workshop-manuscript-feasibility-october-24-2026",
+        "info/NOTES_AND_INSIGHTS.md#workshop-manuscript-feasibility"
+      ],
+      "disposition": "Authorize a bounded closest-literature comparison, contribution assessment, and figure sketch. Do not infer authorization for a new method, fitting, full manuscript, or submission.",
+      "comparison_status": "operator_authorized_feasibility_check_complete"
+    },
+    {
+      "sources": [
+        "https://proceedings.mlr.press/v227/kim24a/kim24a.pdf",
+        "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11873959/fullTextXML",
+        "https://arxiv.org/html/2609.00593v2",
+        "https://arxiv.org/html/2610.08848v1",
+        "https://arxiv.org/html/2606.30313v2",
+        "https://arxiv.org/html/2310.00213v1",
+        "https://arxiv.org/html/2504.18268v2",
+        "https://doi.org/10.1148/ryai.210243"
+      ],
+      "read_mode": "Nine targeted search queries, seven retrieved primary full-text sources at explicitly recorded read scopes, and the Rudie primary abstract with full-text access unavailable. Two adjacent abstracts supply task context only; not a systematic review.",
+      "evidence": "info/documentation_sources/updates/2026-10-24/literature-check.md",
+      "destinations": [
+        "info/NOTES_AND_INSIGHTS.md#workshop-manuscript-feasibility",
+        "info/NOTES_AND_INSIGHTS.md#published-scores-need-matching-tasks-before-comparison",
+        "info/TODO.md#workshop-manuscript-feasibility-october-24-2026",
+        "info/README.md"
+      ],
+      "disposition": "Reject broad first-of-kind pair/state, state-subtraction and frozen-change-probe claims. Retain a narrower matched change-supervision empirical candidate with conditional workshop-draft status. Correct the Matoso arXiv identifier without verifying or reassigning historical Maurya scores. Preserve old surveys unchanged.",
+      "comparison_status": "assistant_authored_conditional_draft_recommendation_not_novelty_approval"
+    },
+    {
+      "sources": [
+        "info/r36_phase1_metrics.json",
+        "info/EXPERIMENTS.md#r35",
+        "info/EXPERIMENTS.md#r36-completed",
+        "info/reviews/r35_result_review.md",
+        "info/reviews/r36_phase1_result_review.md",
+        "info/reviews/evidence/r35/correct_independent.py.stdout.txt"
+      ],
+      "read_mode": "Existing public aggregate field inspection, canonical findings, and selected scoped-result-review passages; no prediction replay or model execution",
+      "evidence": "info/documentation_sources/updates/2026-10-24/figure-spec.json",
+      "destinations": [
+        "info/NOTES_AND_INSIGHTS.md#workshop-manuscript-feasibility",
+        "info/TODO.md#workshop-manuscript-feasibility-october-24-2026"
+      ],
+      "disposition": "Sketch a four-panel R36 figure with content-bound JSON pointers to existing measurements, unchanged cohort/aggregation/interval scope, all-arm transfer companions and mandatory state/nuisance/empty-target limits. Keep R35 in a separately scoped context table. Do not call the sketch a generated, reviewed plot or a new scientific result.",
+      "comparison_status": "unrendered_figure_design_no_new_measurements"
+    },
+    {
+      "sources": [
+        "https://iclr.cc/Conferences/2027/WorkshopGuidelines",
+        "https://iclr.cc/Conferences/2027/CallForWorkshops",
+        "https://icwm.cc/call-for-papers"
+      ],
+      "read_mode": "Official call/guidance pages read in the current session, with suggested/provisional dates and inconsistent event-year sentence explicitly distinguished from confirmed individual-workshop calls",
+      "destinations": [
+        "info/documentation_sources/updates/2026-10-24/literature-check.md#venue-and-review-boundary",
+        "info/TODO.md#workshop-manuscript-feasibility-october-24-2026"
+      ],
+      "disposition": "Retain only conditional workshop fit and planning dates. Matching individual call, archival eligibility, human authorship, registration and submission requirements remain pre-submission checks. No acceptance probability or main-conference equivalence is asserted.",
+      "comparison_status": "official_general_guidance_not_specific_workshop_approval"
+    },
+    {
+      "sources": [
+        "info/METHODS.md#r37",
+        "outputs/r37-noise-ablation/v6/budget_ledger.json",
+        "info/documentation_sources/updates/2026-10-19/r37-noise-execution.md"
+      ],
+      "read_mode": "Existing protocol and execution receipt, plus read-only elapsed-clock ledger inspection in the current session",
+      "destinations": ["info/TODO.md#r37-protocol-first-dynamics-pilot-october-19-2026"],
+      "disposition": "Record that the original two-day elapsed execution window has passed. Further execution needs an explicit amendment; prior expenditure and missing v1 accounting cannot be reset or treated as zero. The feasibility check does not renew the pilot.",
+      "comparison_status": "elapsed_window_status_no_reauthorization"
+    }
+  ],
+  "detail": "info/documentation_sources/updates/2026-10-24/literature-check.md",
+  "verification": "info/documentation_sources/updates/2026-10-24/checks.json"
+}

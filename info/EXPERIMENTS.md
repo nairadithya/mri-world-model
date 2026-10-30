@@ -1,6 +1,6 @@
 # Experiments and evidence
 
-This reference records what the experiments measured and which claims remain valid. The October 13, 2026, update incorporates completed R36 Phase 1 findings and their independent review. The earlier October 11 runtime snapshots remain historical. This is a record of saved evidence, not a live progress report.
+This reference records what the experiments measured and which claims remain valid. The October 26, 2026, update adds the completed R37 pilot and its scoped independent result review. The October 13 update incorporated completed R36 Phase 1 findings. The earlier October 11 runtime snapshots remain historical. This is a record of saved evidence, not a live progress report.
 
 Use [Notes and insights](NOTES_AND_INSIGHTS.md) for the reasoning, [Methods](METHODS.md) for protocols and term definitions, and [TODO](TODO.md) for remaining work. The [archive](archive/2026-10-12/README.md) preserves the original records and their correction history.
 
@@ -15,6 +15,84 @@ Patient-uniform results give each patient equal weight. Pooled results combine o
 Macro-F1, AUC, R², and balanced accuracy measure different things. The [Methods glossary](METHODS.md#terms) defines them. Their values are not interchangeable.
 
 An A identifier records a historical experiment or audit. R identifiers record research directions and later investigations. Completed execution, valid measurement, and scientific success are different statuses.
+
+<a id="r37-full-pilot"></a>
+
+## R37 full frozen-state dynamics pilot, October 26, 2026
+
+The fixed [R37 pilot](METHODS.md#r37) completed on `mosaic-gpu` using the frozen original R35 seed-42 encoder, volume head and target normalizer. Source52 supplied 262 fitting pairs; internal13 supplied 60 selection/calibration pairs. H, L and G each ran seeds 42, 43 and 44 for twenty epochs, with identical per-seed initialization, patient-uniform sampled orders and 5,240 updates per fit. P/E/R controls also completed. No encoder fitting, extra configuration, assessment retry or rescue sweep ran. The [aggregate](r37_full_metrics.json), [execution receipt](documentation_sources/updates/2026-10-26/r37-execution.md), [closure metadata](documentation_sources/updates/2026-10-26/closure.json) and [independent result review](documentation_sources/updates/2026-10-26/reviews/result-v1.md) preserve the evidence and exact hashes.
+
+The primary cohort is 75 history-eligible pairs from 18 reused LUMIERE development patients. Another 26 single-visit pairs from 23 patients are separate companions; patients may overlap the primary cohort. Nuisance evaluation uses one earliest eligible primary cutoff per patient, 18 examples. These are automated native-volume proxies, not expert biological outcomes or independent validation. Historical gaps are approximate week-bin differences, not verified dates. No future gap, target image, target mask or treatment enters a predictor.
+
+CRPS, the continuous ranked probability score, scores the predictive distribution; lower is better. Both scores below use native `log1p(mm3)` coordinates. Average fitted-seed scores, then compartments/examples within patient, then patients equally. Do not ensemble predictions. P copies the latest frozen MRI-decoded volume, not a measured cutoff mask. L retains H's past gaps, masks and sequence-availability flags but removes earlier MRI maps. G pools only earlier maps, retaining the spatial current-scan pathway.
+
+| Arm | Patient-uniform CRPS | Mean-prediction MAE |
+|---|---:|---:|
+| H, spatial history | 1.30031836 | 1.69376433 |
+| L, latest MRI with matched observation history | 1.29697350 | 1.67683953 |
+| P, calibrated decoded-state persistence | 1.26913951 | 1.65728793 |
+| E, source joint changes with Gaussian observation noise | 1.22263233 | 1.69711601 |
+| R, voxelwise ridge dynamics | 1.28416460 | 1.68391809 |
+| G, pooled earlier MRI maps | 1.31326489 | 1.69254350 |
+
+E has the lowest point CRPS, not established superiority over every arm. Its Gaussian observation condition and fixed 0.05 observation standard deviation were locked for the common-floor rationale before full fitting, after the earlier noise ablation was already known. This was not untouched or blinded prespecification.
+
+Negative paired CRPS differences favor H. All five two-sided 99% Bonferroni-adjusted patient-bootstrap intervals span zero. The 10,000 paired patient resamples use seed 2026 after averaging fitted-seed scores. The unadjusted 95% companions also span zero and remain in the aggregate.
+
+| Contrast | CRPS difference | Adjusted 99% interval |
+|---|---:|---|
+| H minus L | +0.00334486 | [-0.04732935, +0.05234837] |
+| H minus P | +0.03117885 | [-0.03592705, +0.10415815] |
+| H minus E | +0.07768603 | [-0.03430240, +0.20740137] |
+| H minus R | +0.01615376 | [-0.05803496, +0.08182145] |
+| H minus G | -0.01294653 | [-0.05938712, +0.02905705] |
+
+H's point CRPS is 0.2579% worse than L, not the required 5% improvement. Added-history benefit and earlier-spatial-detail benefit are not established. This does not prove equivalence or that MRI history has no useful information. Secondary L-minus-P and L-minus-E CRPS differences are +0.02783399 and +0.07434116, with paired 95% intervals [-0.01396873, +0.06935944] and [-0.03036085, +0.18425660]. Latest-state prediction benefit is not established either.
+
+All four capability requirements failed:
+
+- Primary adjusted comparisons do not establish the required improvements.
+- H-minus-L MAE is +0.01692480, 95% interval [-0.02721033, +0.06738806]; H-minus-P is +0.03647640, [-0.05329185, +0.14005208]. Both upper bounds exceed +0.05. Failure of this noninferiority requirement is not proof of significant inferiority.
+- H's 80% coverage is 84.36%, 66.16% and 87.82% for necrotic/non-enhancing, enhancing and edema/FLAIR compartments. Enhancing coverage misses the required 70% to 90% range. This is a point calibration-gate failure, not a population-calibration significance claim.
+- The half-resolution perturbation exceeds H's +10% CRPS and +0.05 MAE margins, as detailed below.
+
+On the fixed 18-patient nuisance set, half-resolution downsample/upsample changes versus identity were:
+
+| Arm | Relative CRPS worsening | CRPS increase, paired 95% interval | MAE increase, paired 95% interval |
+|---|---:|---|---|
+| H | +19.3641% | +0.37950101 [0.10504015, 0.72258824] | +0.37930948 [0.06658814, 0.75110040] |
+| L | +18.6841% | +0.37233767 [0.11416493, 0.69375683] | +0.35931552 [0.07253778, 0.70238198] |
+
+Mean absolute log-volume drift across compartments is 0.79093224 for H, 95% interval [0.53066429, 1.09873528], and 0.75966924 for L, [0.50350286, 1.06064980]. The raw key `mean_absolute_volume_drift` uses log-volume coordinates, not mm3. These are scoped synthetic-resolution sensitivity findings. Their 95% companion intervals are separate from the five adjusted primary contrasts; they do not establish clinical scanner effects. No adjusted primary interval establishes H degradation, so the primary `demonstrated_harms` list is empty. That is not proof of harmlessness. Intensity-perturbation changes are approximately numerical noise because standardization largely cancels the affine transform, not evidence of learned intensity invariance.
+
+The aggregate retains every seed, single-visit, compartment, coverage/width and empty/appearance/disappearance companion. Primary empty-target counts are 6/16/4 pairs by compartment, appearance 2/5/2 and disappearance 3/4/3. These subsets are sparse, sometimes concentrated in few patients; do not treat them as biological transition validation or new success endpoints.
+
+The independent reviewer authored, compiled and executed a standalone CPU checker once. It passed 12,861 checks without discrepancies, including independent chronology reconstruction, scoring/bootstrap arithmetic and eighteen bounded fixed-weight neural forwards. It did not refit training trajectories, repeat image encoding or run a full validation/assessment sweep. The [exact checker](documentation_sources/updates/2026-10-26/reviews/result-replay-v1.py) and [bound receipt](documentation_sources/updates/2026-10-26/reviews/result-replay-v1.json) preserve that scope. Before fitting, actual geometry/content checks covered 2,396 MRI files, and every one of 599 original visits reproduced pooled features and decoded volumes at fixed `atol=rtol=1e-4`.
+
+The verdict is `APPROVED_FOR_SCOPED_R37_REPORTING`; the outcome is **INCONCLUSIVE_FOR_FULL_CAPABILITY**, not scientific success. This formulation is closed after its one analysis. Calibration, uncertainty, frozen-decoder bias, approximate timing, unknown interventions and reused development patients limit interpretation. No biological validation, independent generalization, fixed-day/multistep prediction, novelty or publication acceptance follows. No rescue training is authorized.
+
+<a id="r37-noise-ablation"></a>
+
+## R37 E observation-noise ablation, October 19, 2026
+
+The operator-authorized [noise comparison](METHODS.md#r37) completed once using the frozen R35 seed-42 cached embeddings and volume head. No encoder forward pass or neural training ran. This is an E-only distribution comparison, not the full R37 history-versus-current-scan pilot. Source evidence is the saved [aggregate metrics](r37_noise_ablation_metrics.json), private v6 run bundle under `outputs/r37-noise-ablation/v6/`, and [independent-reference replay receipt](documentation_sources/updates/2026-10-19/reviews/noise-result-replay.json). The reviewer wrote the replay; the parent executed it unchanged because the reviewer lacked an execution tool. That distinction is not independent execution by the reviewer.
+
+The source52 fit used 262 adjacent eligible pairs; internal13 calibration used 60 pairs. The history-eligible development assessment used 75 next-visit pairs from 18 patients. Another 26 single-visit assessment pairs were reported separately. Both conditions retained identical patient-weighted joint changes and decoded cutoffs. The discrete condition added no observation noise. The Gaussian condition added fixed observation standard deviation 0.05 per native log-volume coordinate. Both independently selected multiplier 1 from `[0.5,1,2]` using validation CRPS only.
+
+| Common multiplier 1 result | Patient-uniform CRPS in `log1p(mm3)` |
+|---|---:|
+| Without added observation noise | 1.2230516797 |
+| With Gaussian observation noise | 1.2226323341 |
+| Gaussian minus discrete | -0.0004193456 |
+| Paired patient-bootstrap 95% interval | [-0.0005599483, -0.0002635300] |
+
+CRPS averages compartments within example, examples within patient, then patients. The interval uses 10,000 paired patient resamples with seed 2026. The relative reduction is 0.0342868%. The validation-selected comparison has the same point difference because both selected multiplier 1; its independently drawn interval is [-0.0005597608, -0.0002647989]. All-grid and single-visit scores remain in the aggregate file. There was no assessment-based condition selection.
+
+The independently authored reference reproduced every saved CRPS array to a maximum absolute difference of 3.11e-14 and bootstrap draws to 3.57e-15. It reconstructed eligible rows, checked split separation and content bindings, and confirmed the saved calibration choices. This establishes numerical replay, not biological validity. Scoped result-review disposition is recorded in the [execution receipt](documentation_sources/updates/2026-10-19/r37-noise-execution.md).
+
+The measured difference favors smoothing on this development score, but is tiny. It does not establish a meaningful anatomical benefit, history benefit, uncertainty calibration, or a successful world model. Targets are automated mask volumes, development patients were reused, and historical gaps use approximate week bins with suffixes used only for ordering. Same-week target visits can remain eligible; invalid retained historical gaps exclude a row without bridging visits. No full-pilot control or multiplicity choice is selected by this result. At this October 19 receipt the full H/L/P/E/R/G pilot remained incomplete. The separate [October 26 completion](#r37-full-pilot) supersedes that execution status without changing the ablation result.
+
+The v1 preflight had no resource ledger, so its expenditure is unavailable. Superseded preflight receipts were preserved rather than replaced. Later measured preflight expenditure and the completed CPU-only execution were recorded cumulatively; no assessment retry occurred.
 
 <a id="current-evidence"></a>
 

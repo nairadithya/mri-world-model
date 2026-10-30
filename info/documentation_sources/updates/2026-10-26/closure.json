@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "date": "2026-10-26",
+  "experiment": "R37",
+  "computation_status": "complete",
+  "scientific_classification": "INCONCLUSIVE_FOR_FULL_CAPABILITY",
+  "experiment_success": false,
+  "stopping_status": "closed_after_one_analysis_no_automatic_followup",
+  "contract_digest": "6f73bb278bfbb4afd5778e24181f78485d80aa2cb792a82732900bfbc4dc9f1c",
+  "aggregate": {
+    "path": "info/r37_full_metrics.json",
+    "sha256": "bf36341fbe581329a9bd2cc11a49deef8a552a455dcab0fb66b4b13074b12b9f",
+    "status_note": "Exact raw generator bytes retained. Its pre-review status and null reporting_approval are historical generator state; the separate bound result review below supplies scoped reporting approval."
+  },
+  "implementation_review": {
+    "path": "info/documentation_sources/updates/2026-10-26/reviews/implementation-v2.md",
+    "sha256": "72a85f07f597fff07bb55ed2b41ce362b6102265d48ea5066d8ba1ae3928a5bf",
+    "verdict": "APPROVED_FOR_R37_IMPLEMENTATION"
+  },
+  "result_review": {
+    "path": "info/documentation_sources/updates/2026-10-26/reviews/result-v1.md",
+    "sha256": "bb6892714b97752f33cdeace80416f88cc67b8fc857ba194562d90d32065d67f",
+    "verdict": "APPROVED_FOR_SCOPED_R37_REPORTING",
+    "scope": "Exact audited development aggregate, computational completion and inconclusive outcome; not scientific success, biological validation, independent generalization, novelty or publication acceptance"
+  },
+  "independent_verification": {
+    "checker_path": "info/documentation_sources/updates/2026-10-26/reviews/result-replay-v1.py",
+    "checker_sha256": "0936e420322f8301f287e9f1d932af95893c81858f052d3f50a78dff6c93adee",
+    "receipt_path": "info/documentation_sources/updates/2026-10-26/reviews/result-replay-v1.json",
+    "receipt_sha256": "afb8555a2ce230d952d7d163b3cab6152a155c03b7d2a8d3e6e1acf682bd7919",
+    "status": "PASS",
+    "checks": 12861,
+    "execution": "Independent reviewer authored, compiled and executed once on remote CPU; no project scoring or bootstrap API reused",
+    "bounded_neural_forward_checks": 18,
+    "full_training_or_encoder_replay": false
+  },
+  "execution": {
+    "host": "mosaic-gpu",
+    "gpu": "NVIDIA GeForce RTX 5090",
+    "torch": "2.9.1+cu128",
+    "seeds": [42, 43, 44],
+    "neural_arms": ["H", "L", "G"],
+    "controls": ["P", "E", "R"],
+    "neural_fits": 9,
+    "epochs_per_fit": 20,
+    "updates_per_fit": 5240,
+    "total_neural_updates": 47160,
+    "source_pairs": 262,
+    "validation_pairs": 60,
+    "primary_patients": 18,
+    "primary_pairs": 75,
+    "single_visit_patients": 23,
+    "single_visit_pairs": 26,
+    "nuisance_patients": 18,
+    "nuisance_examples": 18,
+    "reconstructed_visits": 599,
+    "geometry_checked_files": 2396,
+    "unique_source_normalizer_visits": 353,
+    "failed_or_retried_scientific_stage": false
+  },
+  "resource_snapshot_after_result_review": {
+    "charged_gpu_seconds": 299.1753105649259,
+    "charged_cpu_seconds_including_setup": 1208.170356689,
+    "setup_cpu_seconds": 900.0,
+    "independent_review_cpu_seconds": 2.98843375,
+    "gpu_limit_seconds": 28800,
+    "cpu_limit_seconds": 57600,
+    "deadline": "2026-10-28T10:00:04+05:30",
+    "prior_expenditure": "Separate original ledger retained. Original v1 expenditure remains unknown, not zero; no claim that the original cumulative ceiling was met.",
+    "scope": "Snapshot after scientific result review; later documentation verification is separate. Unused allowance authorizes no further experiment."
+  }
+}

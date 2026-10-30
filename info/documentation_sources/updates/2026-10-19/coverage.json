@@ -27,6 +27,32 @@
       "destinations": ["info/METHODS.md#r37"],
       "disposition": "Reuse the existing state-only spatial encoder and affine volume decoder. Replace the conditional proposal with a separate locked pilot, including matched current-only, simple probabilistic, ridge-spatial and pooled-history comparisons. Do not reopen encoder-objective contrasts or call latent error anatomical success.",
       "comparison_status": "grounded_protocol_choice_not_executed"
+    },
+    {
+      "source": "Operator instruction in the current session on October 19, 2026",
+      "read_mode": "Full current-session instruction and preceding noise-ablation discussion",
+      "source_excerpt": "I say we go ahead and ablate this with and without.",
+      "destinations": [
+        "info/METHODS.md#r37",
+        "info/TODO.md#r37-protocol-first-dynamics-pilot-october-19-2026",
+        "info/documentation_sources/updates/2026-10-19/r37-noise-amendment.md"
+      ],
+      "disposition": "Authorize matched discrete and Gaussian-observation empirical-change conditions within the existing budget. Preserve common-multiplier and validation-calibrated comparisons. No real ablation has run. Main-contrast designation, multiplicity, remaining implementation and full launch review remain open.",
+      "comparison_status": "operator_authorized_ablation_not_executed"
+    },
+    {
+      "source": "Operator instruction in the current session on October 19, 2026, followed by saved v6 execution evidence",
+      "read_mode": "Full instruction, saved aggregate, private contract and predictions, independent reviewer-authored replay receipts",
+      "source_excerpt": "Go ahead and run.",
+      "destinations": [
+        "info/EXPERIMENTS.md#r37-noise-ablation",
+        "info/TODO.md#r37-protocol-first-dynamics-pilot-october-19-2026",
+        "info/NOTES_AND_INSIGHTS.md#r37-observation-noise-changes-the-score-only-slightly",
+        "info/r37_noise_ablation_metrics.json",
+        "info/documentation_sources/updates/2026-10-19/r37-noise-execution.md"
+      ],
+      "disposition": "Execute the bounded E-only observation-noise comparison once using cached frozen features. Preserve negative and corrected implementation reviews, superseded preflight receipts, input hashes, private replay arrays, and reviewer-authored reference computations executed on the parent host. The tiny development-score difference does not establish history benefit or complete the full R37 pilot.",
+      "comparison_status": "e_only_ablation_executed_full_pilot_incomplete"
     }
   ],
   "detail": "info/documentation_sources/updates/2026-10-19/README.md"

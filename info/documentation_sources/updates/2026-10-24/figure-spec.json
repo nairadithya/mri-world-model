@@ -1,0 +1,110 @@
+{
+  "schema": 1,
+  "date": "2026-10-24",
+  "status": "LAYOUT_AND_DATA_BINDING_ONLY_NOT_RENDERED",
+  "working_title": "Evaluating change-balanced supervision in longitudinal glioma MRI",
+  "purpose": "Design one R36 main result figure without new measurements, fitting, significance tests, or a claim of novelty.",
+  "inputs": {
+    "r36": {
+      "path": "info/r36_phase1_metrics.json",
+      "sha256": "5fd08fb735011ab90203b1d79bee869e7c30aeae6f7c48315166fb53854660a6"
+    }
+  },
+  "shared_caption": {
+    "task": "Observed two-scan anatomical change, not future prediction",
+    "target": "Three automated signed-occupancy compartment targets",
+    "metric": "Balanced signed-occupancy mean absolute error",
+    "units": "Dimensionless occupancy error",
+    "direction": "Lower error is better; negative candidate-minus-comparator differences favor the candidate",
+    "aggregation": "Average pair errors within patient, then average equally across patients; average errors over fitted seeds, not ensemble predictions",
+    "seeds": [42, 43, 44],
+    "fitting_budget": "Locked R36 final-epoch recipe: twelve encoder arms and thirty source-only probes, twenty epochs each; original total ceiling twenty-four GPU-hours; no refitting for this figure",
+    "probe_training": "The 52 source-training patients only; identical local probe recipe for the objective comparison",
+    "cohorts": {
+      "lumiere": {"patients": 23, "pairs": 117, "status": "Reused encoder-unseen development assessment"},
+      "sailor": {"patients": 27, "pairs": 242, "status": "Reused development transfer; no R36 weight fitting or checkpoint selection on these patients"}
+    },
+    "intervals": "Use saved family-three-adjusted paired-patient bootstrap intervals; 10000 draws, seed 2026, conditional on the three fitted seeds",
+    "limits": "Automated targets, reused cohorts, no biological validation or untouched generalization; an interval crossing zero is inconclusive, not equivalence"
+  },
+  "panels": [
+    {
+      "id": "A",
+      "title": "Trained decoder scores",
+      "display": "Grouped points or bars; no inferential error bars",
+      "cohorts": ["lumiere", "sailor"],
+      "description": "Compare the unbalanced B and change-balanced C nonlinear heads within each cohort. This is a descriptive trained-output result, not a frozen-encoder result.",
+      "bindings": {
+        "lumiere_B": "/cohorts/lumiere/B/local/direct_change/patient_uniform_balanced_mae",
+        "lumiere_C": "/cohorts/lumiere/C/local/direct_change/patient_uniform_balanced_mae",
+        "sailor_B": "/cohorts/sailor/B/local/direct_change/patient_uniform_balanced_mae",
+        "sailor_C": "/cohorts/sailor/C/local/direct_change/patient_uniform_balanced_mae"
+      },
+      "uncertainty": "No saved contrast interval is assigned to this descriptive panel. Do not fabricate one or attach the frozen-probe interval."
+    },
+    {
+      "id": "B",
+      "title": "Frozen-probe objective contrasts",
+      "display": "Difference-and-interval plot with a zero reference line",
+      "cohorts": ["lumiere"],
+      "description": "C minus B is the primary objective-only comparison. C minus A and D minus C are labeled companion frozen-probe comparisons, not state-retention comparisons.",
+      "bindings": {
+        "primary_C_minus_B": "/comparisons/C-B/difference",
+        "primary_C_minus_B_ci": "/comparisons/C-B/family_adjusted_ci",
+        "companion_C_minus_A": "/comparisons/C-A/difference",
+        "companion_C_minus_A_ci": "/comparisons/C-A/family_adjusted_ci",
+        "companion_D_minus_C": "/comparisons/D-C/difference",
+        "companion_D_minus_C_ci": "/comparisons/D-C/family_adjusted_ci"
+      },
+      "uncertainty": "Retain the saved family-three intervals and INCONCLUSIVE classifications. Do not interpret a small point difference as evidence of no encoder effect."
+    },
+    {
+      "id": "C",
+      "title": "Incremental-information controls",
+      "display": "Difference-and-interval plot on a separate axis with a zero reference line",
+      "cohorts": ["lumiere"],
+      "description": "Show both C and D against later-scan-only probes and differences of independently decoded states. Beating the former does not establish a gain over the latter.",
+      "bindings": {
+        "C_minus_later_only": "/control_comparisons/C/target_only/difference",
+        "C_minus_later_only_ci": "/control_comparisons/C/target_only/family_adjusted_ci",
+        "C_minus_independent_states": "/control_comparisons/C/independent_state/difference",
+        "C_minus_independent_states_ci": "/control_comparisons/C/independent_state/family_adjusted_ci",
+        "D_minus_later_only": "/control_comparisons/D/target_only/difference",
+        "D_minus_later_only_ci": "/control_comparisons/D/target_only/family_adjusted_ci",
+        "D_minus_independent_states": "/control_comparisons/D/independent_state/difference",
+        "D_minus_independent_states_ci": "/control_comparisons/D/independent_state/family_adjusted_ci"
+      },
+      "uncertainty": "Use the saved family-three patient intervals. These are observed-change controls, not matched latest-scan forecasting controls."
+    },
+    {
+      "id": "D",
+      "title": "Development-transfer companion",
+      "display": "Paired descriptive points for every arm, with zero-change reference",
+      "cohorts": ["sailor"],
+      "description": "Include A, B, C, D and original R35. Compare each frozen difference probe with its independent decoded-state difference. Do not select an arm from transfer outcomes.",
+      "bindings": {
+        "A_frozen": "/cohorts/sailor/A/local/frozen_probe/patient_uniform_balanced_mae",
+        "A_independent": "/cohorts/sailor/A/local/independent_state/patient_uniform_balanced_mae",
+        "B_frozen": "/cohorts/sailor/B/local/frozen_probe/patient_uniform_balanced_mae",
+        "B_independent": "/cohorts/sailor/B/local/independent_state/patient_uniform_balanced_mae",
+        "C_frozen": "/cohorts/sailor/C/local/frozen_probe/patient_uniform_balanced_mae",
+        "C_independent": "/cohorts/sailor/C/local/independent_state/patient_uniform_balanced_mae",
+        "D_frozen": "/cohorts/sailor/D/local/frozen_probe/patient_uniform_balanced_mae",
+        "D_independent": "/cohorts/sailor/D/local/independent_state/patient_uniform_balanced_mae",
+        "R35_frozen": "/cohorts/sailor/R35/local/frozen_probe/patient_uniform_balanced_mae",
+        "R35_independent": "/cohorts/sailor/R35/local/independent_state/patient_uniform_balanced_mae",
+        "zero": "/cohorts/sailor/A/local/zero/patient_uniform_balanced_mae"
+      },
+      "uncertainty": "Descriptive means only. No new paired transfer interval or hypothesis classification is inferred."
+    }
+  ],
+  "required_paper_companions": [
+    "All A/B/C/D/R35 state and local controls, with both development cohorts, including the ungraded A/R35 nonlinear heads",
+    "C minus A direct native log-volume retention result against the locked +0.05 allowance",
+    "D minus C measured direct-state and noise worsening, bias benefit, unresolved tradeoff, and standardization caveat",
+    "Empty-compartment failures and automated-target, geometry, provenance and independent-validation limits",
+    "A separate R35 context table using native log-volume units and its own descriptive/adjusted interval rules, not an unlabeled shared axis"
+  ],
+  "publication_claim_boundary": "Candidate empirical extension of existing pair/state and frozen-probe literature, not first use of those ideas, equivalence, future dynamics, biological prediction, or a new world-model method",
+  "rendering_boundary": "No plot or HTML was generated. If implemented later, use the existing figure-maintenance contract, preserve this public aggregate as the measurement source, and render and inspect pixels before claiming figure review."
+}

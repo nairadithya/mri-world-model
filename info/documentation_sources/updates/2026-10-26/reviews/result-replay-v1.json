@@ -1,0 +1,1422 @@
+{
+  "H_80_coverage_by_compartment": [
+    0.8436213991769548,
+    0.6615961199294533,
+    0.8782333921222811
+  ],
+  "aggregate_sha256": "bf36341fbe581329a9bd2cc11a49deef8a552a455dcab0fb66b4b13074b12b9f",
+  "arm_scores": {
+    "E": {
+      "compartment_crps": [
+        1.1530449847333875,
+        1.6869536077759841,
+        0.8278984063646285
+      ],
+      "compartment_mae": [
+        1.6086237397515657,
+        2.4411263887382737,
+        1.041597902594478
+      ],
+      "crps": 1.222632332958,
+      "mae": 1.697116010361439
+    },
+    "G": {
+      "compartment_crps": [
+        1.1862465302482557,
+        1.888838974019674,
+        0.8647091537967041
+      ],
+      "compartment_mae": [
+        1.579686768735655,
+        2.4329166805827955,
+        1.0650270561199917
+      ],
+      "crps": 1.3132648860215446,
+      "mae": 1.692543501812814
+    },
+    "H": {
+      "compartment_crps": [
+        1.2136631862009652,
+        1.814281683174361,
+        0.8730102104074803
+      ],
+      "compartment_mae": [
+        1.6084348541007227,
+        2.4230884467697025,
+        1.0497696914231243
+      ],
+      "crps": 1.300318359927602,
+      "mae": 1.6937643307645167
+    },
+    "L": {
+      "compartment_crps": [
+        1.1524169265016144,
+        1.8708366016036508,
+        0.8676669612813921
+      ],
+      "compartment_mae": [
+        1.5402197263961261,
+        2.424077413617345,
+        1.0662214442380473
+      ],
+      "crps": 1.296973496462219,
+      "mae": 1.6768395280838397
+    },
+    "P": {
+      "compartment_crps": [
+        1.2100040493971587,
+        1.7717024963167034,
+        0.8257119881784059
+      ],
+      "compartment_mae": [
+        1.5592292522113618,
+        2.414172803730745,
+        0.9984617407439763
+      ],
+      "crps": 1.2691395112974226,
+      "mae": 1.6572879322286944
+    },
+    "R": {
+      "compartment_crps": [
+        1.2105061219182562,
+        1.8173037161996304,
+        0.8246839633320615
+      ],
+      "compartment_mae": [
+        1.5702913080186036,
+        2.4789751556787625,
+        1.0024878211118118
+      ],
+      "crps": 1.284164600483316,
+      "mae": 1.6839180949363926
+    }
+  },
+  "artifact_sha256": {
+    "aggregate-staged.json": "14d4ffc67030e52e156dc7c739a0447d346f3e784437f5d853abd46cd3e25ae0",
+    "aggregate.json": "bf36341fbe581329a9bd2cc11a49deef8a552a455dcab0fb66b4b13074b12b9f",
+    "assessment-complete.json": "408528aa014bef7b60f5eeb33b037c08cd0778e740a1cfd32c21dd3f83ae64cc",
+    "contract.json": "1f8c4df94ddc4a2ec52949c26e131cbae2c826948323baf22b82143c79fcdabc",
+    "controls.pt": "26c235cb43a0028665f6f5a056d3fbcf19878220c71f79a82225a889359cafa6",
+    "features.json": "719f868147ac7c776027c1a237f4f1276a555776b4b58dfafd9a4ef2c4308cd0",
+    "features.pt": "cd0a12597b2fffc2cba2699a69aee6c6852dadef7941c0b57e256fea6d37b91e",
+    "fitting-complete.json": "92acfe746152192fb686dfbfbd3e8578ae350d74e300e2ea0a0d3b07fa5378ce",
+    "implementation-approval.json": "47927f66d3b2ca3b59c67d588387a6acb5049e9fc6d64b19f209c4d26d5bb51e",
+    "implementation-gate.json": "fb637895bae23e3afad7e9098917ba853579688afaf02ec5a82157eb87ae8d55",
+    "private_predictions.npz": "f7d2a6ee8394d5da30252717725281f4199a9053b143be2179cb5027760cc4bb",
+    "private_predictions.pt": "b7d21485cab713df3901e032f4bd54a525c8eba6914ce6427319dc7d4ff883d8",
+    "receipts/authority-initialization.json": "877da48294488bda31a95689b5342c3a1409eafe0b211ad01b278f5ac3ded558",
+    "receipts/encoding-gate.json": "65766b582bf7186ba7921382310bc4f93dc85da51d8c26594e940660162073c6",
+    "receipts/execution-complete-v1.json": "adb5f8c04f88678875f61563bea07ed36e078fd97c6d6fed4f3d200454a00326",
+    "receipts/execution-summary-v1.json": "2c31b0c0186f50ae9d390afc9ee597079ca8c081dd2d597344f6a3ec73b9de00",
+    "receipts/fitting-gate.json": "602832ed26d926820db5f43d15588e797616f254b5f037bf6c93b82f51b124eb",
+    "ridge/complete.json": "5ba98ca0c546f43f744acd60d5e8bf2d7ec01cdd09e5d947032719713a3282d0",
+    "ridge/ridge.pt": "eb0368955f112f96071de8a28f908dda7b04e15fcc7a785582ffc2b0936d5b6a",
+    "ridge/source_oof.npz": "7b8e92c850dd9e070d0aafa9e057de82263eef0fefd5c93fbb7f6f41158b7ecc",
+    "seed42/G-last.pt": "a18d6b7d5f0e3a0438f0b5034567138fad78291ac046d8cf5699246e8864aae0",
+    "seed42/G-partial.pt": "30e53acca2256654cffc08012f02fda1a0cfb3cae8d350c637a4557540c09230",
+    "seed42/G.pt": "7f5dd275582ee09dd86fb376d591f77f87f773f2e3dcb2b28eb6f02a0a87690f",
+    "seed42/H-last.pt": "c057997a755a33bf2e41d9981c61ce2dc20f1c1876e109141a503ba56b058886",
+    "seed42/H-partial.pt": "b5223fb520cf66903f6bb31d114d533745c4dfcb39191f0cfa83e9c1632a75bd",
+    "seed42/H.pt": "d8088c94cc7c5b2b5e7310b51218ee5c785a6fc8c1402b8845fbc764c89b1a80",
+    "seed42/L-last.pt": "c9f2f817d5f9684ba1a755c19038698d54efb210b6ad44ffffd495e2477c5ee0",
+    "seed42/L-partial.pt": "939a3bdf0a871564934a9ea128cfd00f0491c039b91716440e1019aaa0e9498a",
+    "seed42/L.pt": "202f67b5313a2c658c1130f42bb078823cbdf7f31b9933d204439cb466750024",
+    "seed42/sample_order.npy": "57bc6fcdee0e4c443d7f4d0641bbf1f47f9a94b1d12100527b8a53a615b79fc6",
+    "seed43/G-last.pt": "d11c753f9826121967f6cc72178678e743db50a59379ab52940b63859eae4121",
+    "seed43/G-partial.pt": "fd739e8022a517ff33d32a5ea2f18a398f2fb9d648f733bd9aa70222e0330144",
+    "seed43/G.pt": "abd8641dd42285dda3c23c95f004d5a6540612b92be9e8defd6965c1949b699e",
+    "seed43/H-last.pt": "1648bdaefc1a154b77f13faa86a27853a6a66b03f5ff0690afd776c931f8c3c8",
+    "seed43/H-partial.pt": "07f27d36d272d588afa51a3f7a320b47516b6947e0fc494d6be38f8da17db5cc",
+    "seed43/H.pt": "1114f94291de1aa193279a9f2b3212b1b775a836ada8a9143d8a6cda216038bf",
+    "seed43/L-last.pt": "769a0412eba2e946364227a0256d971f089cfa434da303b3391668e39a39f3ec",
+    "seed43/L-partial.pt": "a7cf1802d544efc980963ed4e72a91fca69d3a118b97a9016598a28cabd14e52",
+    "seed43/L.pt": "18db42597da6cdb093fba7026f1d960d23510640b754f0422a0499f4ec75d0d5",
+    "seed43/sample_order.npy": "f18f384ebc9e5ca1be658592f877286ddb7709e0e477b6c748ba62b41f01da73",
+    "seed44/G-last.pt": "ba26a30cc946b5b7b288b70edec5697223beafbd367e46e5156d837f3b7d2b32",
+    "seed44/G-partial.pt": "35f927666933e63714271fa7a3991ac89ebf8832b842b98382bd42b00eeea930",
+    "seed44/G.pt": "2dcf41db402dcb9fab9644bbdffb601ab4053991d8869af0b04eb89fe491fe2f",
+    "seed44/H-last.pt": "8daf486ff10b68f4a5d46820fcb200735fc8c67e330e7c63b094b0aec6dbb7fb",
+    "seed44/H-partial.pt": "b239918d95a16083efe653373450e72c17f4234aa1a002cffed6928ea18d4667",
+    "seed44/H.pt": "295f935c3333bbdead023e93e8f0ee649546d1382643a5d2a8f9c1d7523dc42a",
+    "seed44/L-last.pt": "214a9653fa78b635eba5e1b5261ac7b60c64b4225a314b33309949b5099c822a",
+    "seed44/L-partial.pt": "0607e61301ef27c0806aaa8a7cef5071533be25221718d52593dd12ea57f8e70",
+    "seed44/L.pt": "95ece946d6f247edf8c6c1e077d423532465f7a346ae55f4ec12c881fe18ab8c",
+    "seed44/sample_order.npy": "82f55ec46e04c56fdae4c9818a944e0077f5b3dd4034617fb10f10a098eb157a"
+  },
+  "authority_anchor_sha256": "f4ed1e40adaa3460709132ebc1715d451fba5bd6cda42fe2c006e55062d8ddc8",
+  "checker_sha256": "0936e420322f8301f287e9f1d932af95893c81858f052d3f50a78dff6c93adee",
+  "checks": 12861,
+  "cohorts": {
+    "nuisance": {
+      "examples": 18,
+      "patients": 18
+    },
+    "primary": {
+      "examples": 75,
+      "patients": 18
+    },
+    "single": {
+      "examples": 26,
+      "patients": 23
+    }
+  },
+  "contract_digest": "6f73bb278bfbb4afd5778e24181f78485d80aa2cb792a82732900bfbc4dc9f1c",
+  "criteria": {
+    "coverage": false,
+    "mae_noninferiority": false,
+    "nuisance": false,
+    "primary_contrasts": false
+  },
+  "decision": "INCONCLUSIVE_FOR_FULL_CAPABILITY",
+  "demonstrated_harms": [],
+  "discrepancies": [],
+  "executed_scope": [
+    "independent raw-array Gaussian and E-mixture CRPS/intervals",
+    "all arm/seed patient aggregation and bootstrap",
+    "all saved MAE/coverage/width/subset/nuisance/single summaries",
+    "eighteen first-row CPU fixed-weight neural forward replays",
+    "source normalization and original chronological rows",
+    "P/E validation choices and ridge validation/selected-CV/OOF-noise arithmetic",
+    "neural initialization/order regeneration and saved epoch/optimizer/selection receipts",
+    "contract/artifact/history bindings"
+  ],
+  "final_journal_sha256": "b1dd9bcd7c5996f0a09cecf22acf4a579585e3c3273976f02cdeaadcc21901dd",
+  "final_ledger_sha256": "5edf94822ad83fb383edbea1c4799ae23483fc22f27da14a6d61f50e100b1f10",
+  "fixed_weight_forward_replays": 18,
+  "forward_tolerance": {
+    "atol": 0.0001,
+    "rtol": 0.0001
+  },
+  "interpreter": "/home/aditya/experiments/world-model-r37-20261026/.venv/bin/python",
+  "limits": [
+    "No real-image geometry or encoder extraction replay",
+    "No refit or full assessment rerun",
+    "Neural validation epoch/calibration choice verified from complete saved histories/grid receipts, not a new validation forward sweep",
+    "All-alpha ridge selection checked against recorded CV grid; selected-alpha CV recomputed from saved OOF means and recorded fold-training noise; no fold refit"
+  ],
+  "mae_margins": {
+    "H-L": {
+      "ci": [
+        -0.027210331364128187,
+        0.06738806043207163
+      ],
+      "confidence": 0.95,
+      "difference": 0.0169248026806771,
+      "draws": 10000,
+      "examples": 75,
+      "patients": 18,
+      "seed": 2026
+    },
+    "H-P": {
+      "ci": [
+        -0.053291854342671696,
+        0.14005208207150469
+      ],
+      "confidence": 0.95,
+      "difference": 0.03647639853582223,
+      "draws": 10000,
+      "examples": 75,
+      "patients": 18,
+      "seed": 2026
+    }
+  },
+  "max_absolute_errors": {
+    "E": 3.241851231905457e-14,
+    "P": 4.440892098500626e-16,
+    "aggregate": 1.3322676295501878e-14,
+    "arrays": 0,
+    "bootstrap": 4.496403249731884e-15,
+    "budget": 0,
+    "coverage": 7.771561172376096e-16,
+    "cutoff": 0,
+    "encoding": 0,
+    "forward": 1.0730050625795684e-06,
+    "gaussian": 1.1829472379432104e-07,
+    "neural": 0,
+    "normalization": 0,
+    "nuisance": 2.220446049250313e-16,
+    "reconstruction": 1.1920928955078125e-06,
+    "ridge": 5.598926451355624e-07,
+    "summaries": 1.3988810110276972e-14,
+    "targets": 0
+  },
+  "nuisance": {
+    "H": {
+      "identity": {
+        "coverage_difference_ci": {
+          "0.5": [
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            }
+          ],
+          "0.8": [
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            }
+          ],
+          "0.95": [
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            }
+          ]
+        },
+        "crps_difference": {
+          "ci": [
+            0.0,
+            0.0
+          ],
+          "confidence": 0.95,
+          "difference": 0.0,
+          "draws": 10000,
+          "examples": 18,
+          "patients": 18,
+          "seed": 2026
+        },
+        "mae_difference": {
+          "ci": [
+            0.0,
+            0.0
+          ],
+          "confidence": 0.95,
+          "difference": 0.0,
+          "draws": 10000,
+          "examples": 18,
+          "patients": 18,
+          "seed": 2026
+        },
+        "mean_absolute_volume_drift": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mean_absolute_volume_drift_ci": {
+          "ci": [
+            0.0,
+            0.0
+          ],
+          "confidence": 0.95,
+          "difference": 0.0,
+          "draws": 10000,
+          "examples": 18,
+          "patients": 18,
+          "seed": 2026
+        },
+        "relative_crps_worsening": 0.0
+      },
+      "intensity": {
+        "coverage_difference_ci": {
+          "0.5": [
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            }
+          ],
+          "0.8": [
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            }
+          ],
+          "0.95": [
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            }
+          ]
+        },
+        "crps_difference": {
+          "ci": [
+            -2.7527820704396855e-07,
+            5.959293477465406e-07
+          ],
+          "confidence": 0.95,
+          "difference": 1.1992296424625345e-07,
+          "draws": 10000,
+          "examples": 18,
+          "patients": 18,
+          "seed": 2026
+        },
+        "mae_difference": {
+          "ci": [
+            -3.4732583131420745e-07,
+            7.034819802066537e-07
+          ],
+          "confidence": 0.95,
+          "difference": 1.4128508385369893e-07,
+          "draws": 10000,
+          "examples": 18,
+          "patients": 18,
+          "seed": 2026
+        },
+        "mean_absolute_volume_drift": [
+          1.5011540305130843e-06,
+          1.3245476569383957e-06,
+          9.889955979108183e-07
+        ],
+        "mean_absolute_volume_drift_ci": {
+          "ci": [
+            6.593303965019004e-07,
+            2.0191992007312365e-06
+          ],
+          "confidence": 0.95,
+          "difference": 1.2715656794171082e-06,
+          "draws": 10000,
+          "examples": 18,
+          "patients": 18,
+          "seed": 2026
+        },
+        "relative_crps_worsening": 6.119101647605873e-08
+      },
+      "resolution": {
+        "coverage_difference_ci": {
+          "0.5": [
+            {
+              "ci": [
+                -0.16666666666666666,
+                0.24074074074074073
+              ],
+              "confidence": 0.95,
+              "difference": 0.03703703703703702,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                -0.14814814814814814,
+                0.018518518518518524
+              ],
+              "confidence": 0.95,
+              "difference": -0.05555555555555555,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                -0.2962962962962963,
+                -0.03703703703703704
+              ],
+              "confidence": 0.95,
+              "difference": -0.14814814814814814,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            }
+          ],
+          "0.8": [
+            {
+              "ci": [
+                -0.1111111111111111,
+                0.09259259259259262
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                -0.1111111111111111,
+                0.12962962962962962
+              ],
+              "confidence": 0.95,
+              "difference": 3.0839528461809902e-18,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                -0.12962962962962965,
+                0.07407407407407408
+              ],
+              "confidence": 0.95,
+              "difference": -0.01851851851851852,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            }
+          ],
+          "0.95": [
+            {
+              "ci": [
+                -0.1851851851851852,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": -0.07407407407407408,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                -0.14814814814814817,
+                -0.018518518518518517
+              ],
+              "confidence": 0.95,
+              "difference": -0.07407407407407408,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                -0.05555555555555555,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": -0.01851851851851852,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            }
+          ]
+        },
+        "crps_difference": {
+          "ci": [
+            0.10504015459864798,
+            0.7225882366883615
+          ],
+          "confidence": 0.95,
+          "difference": 0.37950101201964664,
+          "draws": 10000,
+          "examples": 18,
+          "patients": 18,
+          "seed": 2026
+        },
+        "mae_difference": {
+          "ci": [
+            0.06658813879767833,
+            0.7511004004816898
+          ],
+          "confidence": 0.95,
+          "difference": 0.37930947874325216,
+          "draws": 10000,
+          "examples": 18,
+          "patients": 18,
+          "seed": 2026
+        },
+        "mean_absolute_volume_drift": [
+          0.9903671857383516,
+          0.8337447403205765,
+          0.5486847555471791
+        ],
+        "mean_absolute_volume_drift_ci": {
+          "ci": [
+            0.530664287507534,
+            1.098735275864601
+          ],
+          "confidence": 0.95,
+          "difference": 0.7909322381019592,
+          "draws": 10000,
+          "examples": 18,
+          "patients": 18,
+          "seed": 2026
+        },
+        "relative_crps_worsening": 0.19364141723781425
+      }
+    },
+    "L": {
+      "identity": {
+        "coverage_difference_ci": {
+          "0.5": [
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            }
+          ],
+          "0.8": [
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            }
+          ],
+          "0.95": [
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            }
+          ]
+        },
+        "crps_difference": {
+          "ci": [
+            0.0,
+            0.0
+          ],
+          "confidence": 0.95,
+          "difference": 0.0,
+          "draws": 10000,
+          "examples": 18,
+          "patients": 18,
+          "seed": 2026
+        },
+        "mae_difference": {
+          "ci": [
+            0.0,
+            0.0
+          ],
+          "confidence": 0.95,
+          "difference": 0.0,
+          "draws": 10000,
+          "examples": 18,
+          "patients": 18,
+          "seed": 2026
+        },
+        "mean_absolute_volume_drift": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mean_absolute_volume_drift_ci": {
+          "ci": [
+            0.0,
+            0.0
+          ],
+          "confidence": 0.95,
+          "difference": 0.0,
+          "draws": 10000,
+          "examples": 18,
+          "patients": 18,
+          "seed": 2026
+        },
+        "relative_crps_worsening": 0.0
+      },
+      "intensity": {
+        "coverage_difference_ci": {
+          "0.5": [
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            }
+          ],
+          "0.8": [
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            }
+          ],
+          "0.95": [
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": 0.0,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            }
+          ]
+        },
+        "crps_difference": {
+          "ci": [
+            -2.803554679540506e-07,
+            6.623802526029781e-07
+          ],
+          "confidence": 0.95,
+          "difference": 1.4151253305591837e-07,
+          "draws": 10000,
+          "examples": 18,
+          "patients": 18,
+          "seed": 2026
+        },
+        "mae_difference": {
+          "ci": [
+            -3.7381678446243025e-07,
+            7.682376437950364e-07
+          ],
+          "confidence": 0.95,
+          "difference": 1.4422852315746316e-07,
+          "draws": 10000,
+          "examples": 18,
+          "patients": 18,
+          "seed": 2026
+        },
+        "mean_absolute_volume_drift": [
+          1.4305114785568346e-06,
+          1.3686992398712998e-06,
+          8.477105034722222e-07
+        ],
+        "mean_absolute_volume_drift_ci": {
+          "ci": [
+            6.210656792404734e-07,
+            1.933913068796754e-06
+          ],
+          "confidence": 0.95,
+          "difference": 1.2156402817709022e-06,
+          "draws": 10000,
+          "examples": 18,
+          "patients": 18,
+          "seed": 2026
+        },
+        "relative_crps_worsening": 7.101158305822253e-08
+      },
+      "resolution": {
+        "coverage_difference_ci": {
+          "0.5": [
+            {
+              "ci": [
+                -0.1111111111111111,
+                0.2592592592592593
+              ],
+              "confidence": 0.95,
+              "difference": 0.07407407407407408,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                -0.12962962962962962,
+                0.12962962962962965
+              ],
+              "confidence": 0.95,
+              "difference": 3.0839528461809902e-18,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                -0.2222222222222222,
+                0.07407407407407407
+              ],
+              "confidence": 0.95,
+              "difference": -0.07407407407407408,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            }
+          ],
+          "0.8": [
+            {
+              "ci": [
+                -0.05555555555555555,
+                0.14814814814814817
+              ],
+              "confidence": 0.95,
+              "difference": 0.03703703703703705,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                -0.1851851851851852,
+                0.07407407407407408
+              ],
+              "confidence": 0.95,
+              "difference": -0.05555555555555555,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                -0.2222222222222222,
+                0.018518518518518507
+              ],
+              "confidence": 0.95,
+              "difference": -0.0925925925925926,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            }
+          ],
+          "0.95": [
+            {
+              "ci": [
+                -0.14814814814814817,
+                0.01851851851851853
+              ],
+              "confidence": 0.95,
+              "difference": -0.05555555555555555,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                -0.1111111111111111,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": -0.03703703703703704,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            },
+            {
+              "ci": [
+                -0.14814814814814817,
+                0.0
+              ],
+              "confidence": 0.95,
+              "difference": -0.05555555555555555,
+              "draws": 10000,
+              "examples": 18,
+              "patients": 18,
+              "seed": 2026
+            }
+          ]
+        },
+        "crps_difference": {
+          "ci": [
+            0.11416493032405539,
+            0.6937568295535592
+          ],
+          "confidence": 0.95,
+          "difference": 0.3723376653757054,
+          "draws": 10000,
+          "examples": 18,
+          "patients": 18,
+          "seed": 2026
+        },
+        "mae_difference": {
+          "ci": [
+            0.07253777962182092,
+            0.7023819848549155
+          ],
+          "confidence": 0.95,
+          "difference": 0.3593155247126587,
+          "draws": 10000,
+          "examples": 18,
+          "patients": 18,
+          "seed": 2026
+        },
+        "mean_absolute_volume_drift": [
+          0.9986139651801851,
+          0.7476966074771352,
+          0.5326971167491542
+        ],
+        "mean_absolute_volume_drift_ci": {
+          "ci": [
+            0.5035028576850892,
+            1.0606498032808303
+          ],
+          "confidence": 0.95,
+          "difference": 0.7596692442893982,
+          "draws": 10000,
+          "examples": 18,
+          "patients": 18,
+          "seed": 2026
+        },
+        "relative_crps_worsening": 0.1868406027828
+      }
+    }
+  },
+  "numpy_version": "2.2.6",
+  "pre_review_resources": {
+    "gpu_seconds": 299.1753105649259,
+    "scientific_cpu_seconds": 305.181922939,
+    "setup_cpu_seconds": 900.0
+  },
+  "primary_comparisons": {
+    "H-E": {
+      "ci": [
+        -0.0343023976686949,
+        0.20740136702811274
+      ],
+      "confidence": 0.99,
+      "difference": 0.07768602696960235,
+      "draws": 10000,
+      "examples": 75,
+      "patients": 18,
+      "relative_crps_reduction": -0.0635399742632774,
+      "seed": 2026,
+      "unadjusted_ci": [
+        -0.0107569731204575,
+        0.1742119668134451
+      ]
+    },
+    "H-G": {
+      "ci": [
+        -0.05938711615342734,
+        0.02905704972350049
+      ],
+      "confidence": 0.99,
+      "difference": -0.012946526093942513,
+      "draws": 10000,
+      "examples": 75,
+      "patients": 18,
+      "relative_crps_reduction": 0.009858274771332165,
+      "seed": 2026,
+      "unadjusted_ci": [
+        -0.04807005151473235,
+        0.019875821554264934
+      ]
+    },
+    "H-L": {
+      "ci": [
+        -0.047329351221598745,
+        0.05234836844858733
+      ],
+      "confidence": 0.99,
+      "difference": 0.0033448634653832385,
+      "draws": 10000,
+      "examples": 75,
+      "patients": 18,
+      "relative_crps_reduction": -0.0025789759578795923,
+      "seed": 2026,
+      "unadjusted_ci": [
+        -0.03511312239121568,
+        0.04019126182858373
+      ]
+    },
+    "H-P": {
+      "ci": [
+        -0.03592704900698879,
+        0.10415815132380983
+      ],
+      "confidence": 0.99,
+      "difference": 0.03117884863017986,
+      "draws": 10000,
+      "examples": 75,
+      "patients": 18,
+      "relative_crps_reduction": -0.024566919832403444,
+      "seed": 2026,
+      "unadjusted_ci": [
+        -0.021521342662531223,
+        0.08475012243102
+      ]
+    },
+    "H-R": {
+      "ci": [
+        -0.05803495690063994,
+        0.08182144518260041
+      ],
+      "confidence": 0.99,
+      "difference": 0.016153759444286462,
+      "draws": 10000,
+      "examples": 75,
+      "patients": 18,
+      "relative_crps_reduction": -0.01257919696447507,
+      "seed": 2026,
+      "unadjusted_ci": [
+        -0.03942636197700238,
+        0.067692653044649
+      ]
+    }
+  },
+  "score_tolerance": {
+    "atol": 1e-08,
+    "rtol": 1e-08
+  },
+  "secondary_latest_comparisons": {
+    "L-E": {
+      "ci": [
+        -0.030360852541713137,
+        0.1842566008273354
+      ],
+      "confidence": 0.95,
+      "difference": 0.0743411635042191,
+      "draws": 10000,
+      "examples": 75,
+      "patients": 18,
+      "relative_crps_reduction": -0.060804185772153074,
+      "seed": 2026
+    },
+    "L-P": {
+      "ci": [
+        -0.013968732636208762,
+        0.06935943707847683
+      ],
+      "confidence": 0.95,
+      "difference": 0.027833985164796626,
+      "draws": 10000,
+      "examples": 75,
+      "patients": 18,
+      "relative_crps_reduction": -0.02193138336410483,
+      "seed": 2026
+    }
+  },
+  "selections": [
+    {
+      "arm": "H",
+      "calibration": 2.0,
+      "seed": 42,
+      "selected_epoch": 2
+    },
+    {
+      "arm": "L",
+      "calibration": 2.0,
+      "seed": 42,
+      "selected_epoch": 2
+    },
+    {
+      "arm": "G",
+      "calibration": 2.0,
+      "seed": 42,
+      "selected_epoch": 2
+    },
+    {
+      "arm": "H",
+      "calibration": 2.0,
+      "seed": 43,
+      "selected_epoch": 2
+    },
+    {
+      "arm": "L",
+      "calibration": 1.0,
+      "seed": 43,
+      "selected_epoch": 1
+    },
+    {
+      "arm": "G",
+      "calibration": 1.0,
+      "seed": 43,
+      "selected_epoch": 1
+    },
+    {
+      "arm": "H",
+      "calibration": 1.0,
+      "seed": 44,
+      "selected_epoch": 1
+    },
+    {
+      "arm": "L",
+      "calibration": 1.0,
+      "seed": 44,
+      "selected_epoch": 1
+    },
+    {
+      "arm": "G",
+      "calibration": 1.0,
+      "seed": 44,
+      "selected_epoch": 1
+    }
+  ],
+  "source_sha256": {
+    "scripts/run_spatial_dynamics.py": "d56053c5a987bcf51ab7589ae6f20432842f591180e1a8a762ed57a7e5b008bc",
+    "scripts/run_spatial_noise_ablation.py": "251cb615e460a3f7d47d727c38223dd703bb5838c67956f89a0945809183d6a3",
+    "src/data/representation.py": "65537546257c70ce978fde9b254b7ef75c49b4797a8c279da3542c75f6dcee6a",
+    "src/harness/analysis/spatial_dynamics_baselines.py": "acbe7ddf99b3c39236cb1a99995c621ca08ad9e4bc5003421deb312ca70b8f37",
+    "src/harness/analysis/spatial_dynamics_data.py": "8a9a2d5db9bfc680f8a0cf73f4e8f18bb88b7daccf909aafa7a749ae8ece308c",
+    "src/harness/analysis/spatial_dynamics_fit.py": "7f738e076c592d6bf045ccb1a835f10f81c16525ab32b7a37287529c7f5e629a",
+    "src/harness/analysis/spatial_dynamics_protocol.py": "9e29b9efc90699dde135b15d5705ef06bac1d5d473496daa2a3ead0edc358d19",
+    "src/harness/analysis/spatial_dynamics_report.py": "b1e4f14417fc89a4de64f8a0a648d50c0b75b9e880c63459a67cbb2e0865b7ad",
+    "src/harness/analysis/spatial_dynamics_runtime.py": "3bbfa0f3d9ec82139b593b2a71f3e59b7dfe3b31eee746b9ff1932c35dd85638",
+    "src/model/representation.py": "d73125b5f05dca864cb308773bcd1924a7f40552371374753d94c147bff547f6",
+    "src/model/spatial_dynamics.py": "c7c1b87d24de8b083569d29b5021cb994321cf068fd0f7dd1021df9fe103952a",
+    "src/preprocessing/geometry.py": "f09b91bf2ec829297c64efb6606726a3206c98d7dacff4c2cc6db28c5d61fb2d",
+    "src/preprocessing/transforms.py": "c910a8ad41d62534fa3b9fe2f421be5260d91baed806ed679e03177dbb3a6bc1"
+  },
+  "stage": {
+    "cpu_seconds": 2.98843375,
+    "gpu": false,
+    "gpu_seconds": 0.0,
+    "pid": 3604249,
+    "preflight": false,
+    "reserved_cpu_seconds": 56394.818077061,
+    "reserved_gpu_seconds": 0.0,
+    "stage": "independent-result-review-v1",
+    "started_wall_unix": 1792996017.5402281,
+    "status": "completed",
+    "wall_seconds": 2.2233256290201098
+  },
+  "staged_receipt_sha256": "36abcbd6e2e398a3c7962fa1e7e13ffd353dcd180e6094af213fe51127be7f19",
+  "status": "PASS",
+  "torch_version": "2.9.1+cu128",
+  "units": "log1p(mm3)"
+}

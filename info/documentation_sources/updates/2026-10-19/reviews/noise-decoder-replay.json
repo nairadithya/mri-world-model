@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "method": "independent batched affine frozen-cache decode; no encoder forward",
+  "decoded_rows": {
+    "source": {
+      "rows": 262,
+      "max_absolute_error": 1.7763568394002505e-15
+    },
+    "validation": {
+      "rows": 60,
+      "max_absolute_error": 1.7763568394002505e-15
+    },
+    "assessment": {
+      "rows": 75,
+      "max_absolute_error": 1.7763568394002505e-15
+    },
+    "single_visit_assessment": {
+      "rows": 26,
+      "max_absolute_error": 1.7763568394002505e-15
+    }
+  },
+  "cache_checkpoint_provenance_and_normalization": "PASS",
+  "review_cpu_seconds": 0.022558872999999924,
+  "review_wall_seconds": 0.023072202020557597
+}
