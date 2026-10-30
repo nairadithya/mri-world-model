@@ -16,6 +16,14 @@ Macro-F1, AUC, R², and balanced accuracy measure different things. The [Methods
 
 An A identifier records a historical experiment or audit. R identifiers record research directions and later investigations. Completed execution, valid measurement, and scientific success are different statuses.
 
+## R38 continuation status, October 30, 2026
+
+R38 has no complete scientific assessment yet. The October 27 run completed all four seed-42 cells at epoch 20, then a process-supervisor exception interrupted OH43. The original private interruption receipt records 686 persisted OH43 update entries but no OH43 checkpoint; its unflushed tail is unknown. No seed-43 or seed-44 cell completed in that attempt. The original failed stage and expenditure remain preserved.
+
+The October 30 operator instruction authorizes the unchanged [continuation](METHODS.md#october-30-continuation). Four new adoption/rejection tests passed on `mosaic-gpu`, and the real CPU input/checkpoint check passed without GPU updates. It verified all four completed checkpoints against preserved backup hashes, all 20,960 completed update records, optimizer counts, cohort membership, normalizers, original seeded initializations and original sampling schedules. It did not inspect assessment scores. The real check took 15.752 wall seconds and 12.559 process CPU seconds.
+
+The continuation is queued behind an unrelated GPU job. It will reuse seed 42, train the eight remaining cells and run full inference, controls, calibration, nuisance checks and the original scorer. No new training or R38 outcome is claimed by this queued status. Private queue logs, status, pins and eventual outputs are under `outputs/r38-joint-dynamics/continuation-20261030/`. A completion notification is arranged. This entry records a dated launch status, not live process evidence or reporting approval.
+
 ## R39 treatment-status forecasting, October 30, 2026
 
 The fixed [R39 protocol](METHODS.md#r39-cutoff-treatment-phase-forecasting-feasibility) tested whether current treatment status improves next-visit anatomical prediction. Five nested patient-held-out folds covered 242 consecutive SAILOR pairs from 27 reused development patients. All pairs passed the identity and original-session adjacency checks. Of these pairs, 215 had an earlier MRI state and 212 had known cutoff treatment status. Source labels were CRT for 101 pairs, TMZ for 95, no treatment for 16, and unknown for 30.

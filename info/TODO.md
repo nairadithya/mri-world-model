@@ -10,7 +10,7 @@ Use [Notes and insights](NOTES_AND_INSIGHTS.md) for interpretation, [Experiments
 
 - [x] Test current SAILOR treatment phase against matched MRI-state and history controls under the [fixed protocol](METHODS.md#r39-cutoff-treatment-phase-forecasting-feasibility).
 - [x] Complete the patient-held-out comparison and saved-artifact replay. The primary treatment contrast and the history-conditioned follow-up criterion were unmet. See [findings](EXPERIMENTS.md#r39-treatment-status-forecasting-october-30-2026), [interpretation](NOTES_AND_INSIGHTS.md#r39-did-not-establish-added-treatment-information) and [aggregate](r39_treatment_metrics.json).
-- [ ] Decide whether to pursue timestamped planned-treatment inputs or return to the unchanged R38 continuation. Do not present per-session status as planned intervention or start a larger model as a routine repair of this inconclusive result.
+- [x] October 30: the operator chose the unchanged R38 continuation next. Timestamped planned-treatment modeling remains a separate proposal. Do not present per-session status as planned intervention or start a larger treatment model as a routine repair of R39's inconclusive result.
 
 ### 1. R38 joint state and dynamics pilot (`exp/r38-joint-state-dynamics`)
 R37 did not establish that multi-visit MRI history beats latest-scan-only prediction with an encoder trained on single-scan anatomy (`R35`). R38 tests whether training the spatial state encoder and future-dynamics predictor **jointly** (`JH` vs `JL` vs observation-only `OH` and `OL`) makes MRI history useful for next-visit anatomical prediction.
@@ -18,7 +18,8 @@ R37 did not establish that multi-visit MRI history beats latest-scan-only predic
 - [x] Implement the 4-arm joint state-and-dynamics model, source-only controls, and evaluation scorer on `exp/r38-joint-state-dynamics`.
 - [x] Pass the 84-update real-data end-to-end canary on `mosaic-gpu` across all 599 reconstructed visits.
 - [x] Complete seed-42 epoch-20 training on `mosaic-gpu` (`OH`, `OL`, `JH`, `JL` — 5,240 updates each).
-- [ ] **Next action:** Resume and finish seeds 43 and 44 on `mosaic-gpu` directly (without the fragile process-lookup budget wrapper that interrupted seed 43), then run the CPU evaluation scorer to produce the R38 comparison table.
+- [x] October 30: verify the four completed seed-42 checkpoints, all original seeded initializations/orders and prepared inputs. Preserve the interrupted stage and costs. Four continuation tests and the real CPU input check passed.
+- [ ] **Queued October 30:** the detached `mosaic-gpu` continuation waits for the shared GPU to become free. It will train seeds 43 and 44 directly, reuse seed 42, then run full unchanged assessment. Do not launch a duplicate or interrupt the unrelated GPU job. Read the completion receipt and [pending result status](EXPERIMENTS.md#r38-continuation-status-october-30-2026) before interpreting outcomes.
 
 ### 2. Workshop / archival paper track
 The [workshop manuscript feasibility check](NOTES_AND_INSIGHTS.md#workshop-manuscript-feasibility) (`CONDITIONAL_GO_FOR_SHORT_WORKSHOP_DRAFT`) and [literature check](documentation_sources/updates/2026-10-24/literature-check.md) reviewed primary overlap ([PaIRNet/LILAC](https://proceedings.mlr.press/v227/kim24a.html), BrainDiff, Rudie et al.):
