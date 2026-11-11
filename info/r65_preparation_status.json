@@ -1,0 +1,22 @@
+{
+  "status": "blocked_no_image_data",
+  "transfer": {
+    "requested_fitting_patients": 2,
+    "reserved_requested": 0,
+    "returncode": 1,
+    "termination": "manual interruption after native log repeatedly reported zero received data",
+    "root_cause": "not established"
+  },
+  "placeholder_nifti_files": 25,
+  "downloaded_image_bytes": 0,
+  "nonempty_image_files": 0,
+  "reserved_directories_present": 0,
+  "preparation_check": "correctly rejects empty placeholders before image loading",
+  "real_data_smoke": "not_run",
+  "readiness": "not_run",
+  "cohort_training": "not_implemented_or_run",
+  "assessment": "not_implemented_or_run",
+  "source_sha256": "45b9f8e72db1b2f8be8707f3483704dfc9022856ae9b43437a5a0bfc8abfcf94",
+  "membership_sha256": "4df898761ecdb299bc87f99749fbebc8faab294043d454c4055850fcc676e2d6",
+  "native_transfer_journal_sha256": "8b29bd6b1b52f956b66dbd60956f6c5ff17a0fee9f395a950a93f58608f967a9"
+}

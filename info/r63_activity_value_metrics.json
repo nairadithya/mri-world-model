@@ -1,0 +1,134 @@
+{
+  "status": "generator_calculation_complete_no_training",
+  "subjects": 512,
+  "smoke": false,
+  "reference_distribution": "Original test geometries, activity enumerated with probability 0.5; target gain, resolution, clipped Gaussian noise and future intervention marginalized.",
+  "integration": "Exact binary sums, analytic clipped-normal first/second moments, 64-point Gauss-Legendre uniform-gain integration; continuous arithmetic approximates float32 rendering.",
+  "targets": {
+    "contemporary": {
+      "informed_expected_mse": 0.0036887632352390802,
+      "activity_marginalized_expected_mse": 0.003754496662879565,
+      "available_activity_mse_reduction": 6.573342764048469e-05,
+      "relative_reduction_of_marginalized_risk_percent": 1.7507920113603057,
+      "cohort_constant_oracle_expected_mse": 0.013014628756383378,
+      "reduction_as_percent_of_cohort_constant_risk": 0.5050733975661346,
+      "conditional_mean_support_fraction": 0.0422515869140625,
+      "subject_benefit_min_median_max": [
+        9.312193988491711e-06,
+        6.0484861503601854e-05,
+        0.00017283377713679982
+      ],
+      "risk_identity_max_abs_error": 2.0599841277224584e-18,
+      "quadrature_32_vs_64_max_abs_difference": 6.661338147750939e-16
+    },
+    "predictable_future": {
+      "informed_expected_mse": 0.0036861053212494674,
+      "activity_marginalized_expected_mse": 0.003751109110746986,
+      "available_activity_mse_reduction": 6.500378949751885e-05,
+      "relative_reduction_of_marginalized_risk_percent": 1.7329218526670414,
+      "cohort_constant_oracle_expected_mse": 0.013025119865145304,
+      "reduction_as_percent_of_cohort_constant_risk": 0.4990648083897206,
+      "conditional_mean_support_fraction": 0.0578460693359375,
+      "subject_benefit_min_median_max": [
+        8.786339427212438e-06,
+        5.854796988815093e-05,
+        0.00019842747169278223
+      ],
+      "risk_identity_max_abs_error": 2.2971533529536625e-18,
+      "quadrature_32_vs_64_max_abs_difference": 6.661338147750939e-16
+    },
+    "hidden_contemporary_control": {
+      "informed_expected_mse": 0.0037088276512404128,
+      "activity_marginalized_expected_mse": 0.0037088276512404128,
+      "available_activity_mse_reduction": 0.0,
+      "relative_reduction_of_marginalized_risk_percent": 0.0,
+      "cohort_constant_oracle_expected_mse": 0.013288862046782663,
+      "reduction_as_percent_of_cohort_constant_risk": 0.0,
+      "conditional_mean_support_fraction": 0.0,
+      "subject_benefit_min_median_max": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "risk_identity_max_abs_error": 0.0,
+      "quadrature_32_vs_64_max_abs_difference": 5.551115123125783e-16
+    },
+    "randomized_future": {
+      "informed_expected_mse": 0.003751109110746986,
+      "activity_marginalized_expected_mse": 0.003751109110746986,
+      "available_activity_mse_reduction": 0.0,
+      "relative_reduction_of_marginalized_risk_percent": 0.0,
+      "cohort_constant_oracle_expected_mse": 0.013025119865145304,
+      "reduction_as_percent_of_cohort_constant_risk": 0.0,
+      "conditional_mean_support_fraction": 0.0,
+      "subject_benefit_min_median_max": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "risk_identity_max_abs_error": 0.0
+    }
+  },
+  "monte_carlo_checks": {
+    "contemporary": {
+      "draws": 16384,
+      "subjects": 4,
+      "expected_known_unknown_gap": [
+        0.0038859168894491082,
+        0.003956386969429383,
+        7.047007998027511e-05
+      ],
+      "sample_mean_known_unknown_gap": [
+        0.00388284894019636,
+        0.003953182001652054,
+        7.033306145567163e-05
+      ],
+      "mc_standard_errors": [
+        6.056710559458736e-06,
+        6.072897111402196e-06,
+        1.085870140667402e-07
+      ]
+    },
+    "predictable_future": {
+      "draws": 16384,
+      "subjects": 4,
+      "expected_known_unknown_gap": [
+        0.0038830804792054302,
+        0.003953019409012662,
+        6.99389298072316e-05
+      ],
+      "sample_mean_known_unknown_gap": [
+        0.003880031535090186,
+        0.003949763845768304,
+        6.9732310678145e-05
+      ],
+      "mc_standard_errors": [
+        6.0447625483399e-06,
+        6.072201127149957e-06,
+        2.249960173567865e-07
+      ]
+    }
+  },
+  "checks": {
+    "literal_gap_0_25": true,
+    "hidden_zero": true,
+    "randomized_zero": true,
+    "original_renderer_current_activity_independence_for_each_intervention": true
+  },
+  "source_sha256": "f50b6224c8ced890730418f8384f91970277d8592907ffdfc9b8b986f219fbf2",
+  "original_generator_sha256": "73fb1d356d778777a1f9de3ade9825b3ff4d4eafc2db007d32d9afb25c228b96",
+  "original_test_data_sha256": "58fe7ac0de1fd0f63ed3ab0cf4d1b39db9e48d0ff3d13ca00d38665da65ea1fd",
+  "subject_risks_sha256": "23953f9262ca427ee96c3d2a7c3d0a1d40e179d664d8b4c7503255a31c48289a",
+  "conditional_moments_sha256": "292ce18f55dcb6f8db69fd7a245b60e4e5e444f52b700bba83b4915e057d1e3d",
+  "environment": {
+    "torch": "2.9.1+cu128",
+    "numpy": "2.5.4",
+    "device": "NVIDIA GeForce RTX 5090"
+  },
+  "limits": [
+    "Privileged factor access, not noisy-image inference.",
+    "No training, convergence diagnosis, or gradient attribution.",
+    "The cohort-constant reference is a descriptive oracle over these geometries, not a fitted baseline.",
+    "No threshold for substantial incentive was selected."
+  ]
+}

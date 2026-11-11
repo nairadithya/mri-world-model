@@ -1,0 +1,605 @@
+{
+  "study": "R59",
+  "status": "ASSESSMENT_COMPLETE",
+  "outcome": "MEASURED_HISTORY_CRITERION_NOT_MET",
+  "scores": {
+    "P": {
+      "mae": 0.33967159852562917,
+      "nonempty_mae": 0.939263293826258,
+      "empty_mae": 0.17982945233150716,
+      "changed_mae": 1.2875280446427102,
+      "predicted_change_rms": 0.0,
+      "patients": 8,
+      "pairs": 30
+    },
+    "E": {
+      "mae": 0.3500625874482175,
+      "nonempty_mae": 0.9462426028353423,
+      "empty_mae": 0.1929647619470885,
+      "changed_mae": 1.2750363632817363,
+      "predicted_change_rms": 0.057389017915707295,
+      "patients": 8,
+      "pairs": 30
+    },
+    "T": {
+      "mae": 0.33967159852562917,
+      "nonempty_mae": 0.939263293826258,
+      "empty_mae": 0.17982945233150716,
+      "changed_mae": 1.2875280446427102,
+      "predicted_change_rms": 0.0,
+      "patients": 8,
+      "pairs": 30
+    },
+    "L": {
+      "mae": 0.34969168218025914,
+      "nonempty_mae": 0.9436721117679134,
+      "empty_mae": 0.19305324779913086,
+      "changed_mae": 1.2712468124172105,
+      "predicted_change_rms": 0.05963097043919188,
+      "patients": 8,
+      "pairs": 30
+    },
+    "H": {
+      "mae": 0.3490268445108487,
+      "nonempty_mae": 0.941136688739685,
+      "empty_mae": 0.19274844803534097,
+      "changed_mae": 1.269013158159803,
+      "predicted_change_rms": 0.059664654169878685,
+      "patients": 8,
+      "pairs": 30
+    },
+    "S": {
+      "mae": 0.3498430626778617,
+      "nonempty_mae": 0.9443224300231299,
+      "empty_mae": 0.19321889199801312,
+      "changed_mae": 1.2715142265429389,
+      "predicted_change_rms": 0.05997948039851169,
+      "patients": 8,
+      "pairs": 30
+    }
+  },
+  "contrasts": {
+    "L": {
+      "difference": -0.0006648376694103862,
+      "relative_reduction": 0.0019012109903938645,
+      "ci95": [
+        -0.0009826373778625101,
+        -0.0003594481721060429
+      ],
+      "ci_family2": [
+        -0.0010322375457263637,
+        -0.00032285604777769136
+      ],
+      "patients": 8
+    },
+    "P": {
+      "difference": 0.00935524598521956,
+      "relative_reduction": -0.027542031850253945,
+      "ci95": [
+        0.004095137869953213,
+        0.014433911031066785
+      ],
+      "ci_family2": [
+        0.0033699137359244386,
+        0.015063436907454143
+      ],
+      "patients": 8
+    }
+  },
+  "decisions": {
+    "gain_5pct_vs_L": false,
+    "gain_5pct_vs_P": false,
+    "adjusted_interval_below_zero_vs_L": true,
+    "adjusted_interval_below_zero_vs_P": false,
+    "nonempty_retained": true,
+    "beats_shuffled_history": true
+  },
+  "interventions": {
+    "P": {
+      "no_history": {
+        "mae": 0.33967159852562917,
+        "nonempty_mae": 0.939263293826258,
+        "empty_mae": 0.17982945233150716,
+        "changed_mae": 1.2875280446427102,
+        "predicted_change_rms": 0.0,
+        "patients": 8,
+        "pairs": 30
+      },
+      "shift_previous": {
+        "mae": 0.33967159852562917,
+        "nonempty_mae": 0.939263293826258,
+        "empty_mae": 0.17982945233150716,
+        "changed_mae": 1.2875280446427102,
+        "predicted_change_rms": 0.0,
+        "patients": 8,
+        "pairs": 30
+      }
+    },
+    "E": {
+      "no_history": {
+        "mae": 0.3500625874482175,
+        "nonempty_mae": 0.9462426028353423,
+        "empty_mae": 0.1929647619470885,
+        "changed_mae": 1.2750363632817363,
+        "predicted_change_rms": 0.057389017915707295,
+        "patients": 8,
+        "pairs": 30
+      },
+      "shift_previous": {
+        "mae": 0.3500625874482175,
+        "nonempty_mae": 0.9462426028353423,
+        "empty_mae": 0.1929647619470885,
+        "changed_mae": 1.2750363632817363,
+        "predicted_change_rms": 0.057389017915707295,
+        "patients": 8,
+        "pairs": 30
+      }
+    },
+    "T": {
+      "no_history": {
+        "mae": 0.33967159852562917,
+        "nonempty_mae": 0.939263293826258,
+        "empty_mae": 0.17982945233150716,
+        "changed_mae": 1.2875280446427102,
+        "predicted_change_rms": 0.0,
+        "patients": 8,
+        "pairs": 30
+      },
+      "shift_previous": {
+        "mae": 0.33967159852562917,
+        "nonempty_mae": 0.939263293826258,
+        "empty_mae": 0.17982945233150716,
+        "changed_mae": 1.2875280446427102,
+        "predicted_change_rms": 0.0,
+        "patients": 8,
+        "pairs": 30
+      }
+    },
+    "L": {
+      "no_history": {
+        "mae": 0.34969168218025914,
+        "nonempty_mae": 0.9436721117679134,
+        "empty_mae": 0.19305324779913086,
+        "changed_mae": 1.2712468124172105,
+        "predicted_change_rms": 0.05963097043919188,
+        "patients": 8,
+        "pairs": 30
+      },
+      "shift_previous": {
+        "mae": 0.34969168218025914,
+        "nonempty_mae": 0.9436721117679134,
+        "empty_mae": 0.19305324779913086,
+        "changed_mae": 1.2712468124172105,
+        "predicted_change_rms": 0.05963097043919188,
+        "patients": 8,
+        "pairs": 30
+      }
+    },
+    "H": {
+      "no_history": {
+        "mae": 0.34967100670905904,
+        "nonempty_mae": 0.943583915034981,
+        "empty_mae": 0.19304177237596098,
+        "changed_mae": 1.2712687610063882,
+        "predicted_change_rms": 0.05932073582697466,
+        "patients": 8,
+        "pairs": 30
+      },
+      "shift_previous": {
+        "mae": 0.3491338460695801,
+        "nonempty_mae": 0.9412385857866868,
+        "empty_mae": 0.19284870074630767,
+        "changed_mae": 1.2689619246373778,
+        "predicted_change_rms": 0.05993387523103629,
+        "patients": 8,
+        "pairs": 30
+      }
+    },
+    "S": {
+      "no_history": {
+        "mae": 0.3497833376590293,
+        "nonempty_mae": 0.9436454914735902,
+        "empty_mae": 0.19317949892878877,
+        "changed_mae": 1.271270859628662,
+        "predicted_change_rms": 0.05964161104846883,
+        "patients": 8,
+        "pairs": 30
+      },
+      "shift_previous": {
+        "mae": 0.3496838039452882,
+        "nonempty_mae": 0.9441570014994213,
+        "empty_mae": 0.1930564289511426,
+        "changed_mae": 1.2712784353747648,
+        "predicted_change_rms": 0.06008809841404344,
+        "patients": 8,
+        "pairs": 30
+      }
+    }
+  },
+  "selection": {
+    "P": {
+      "candidates": [
+        {
+          "alpha": null,
+          "scores": {
+            "mae": 0.2864011572151588,
+            "nonempty_mae": 1.059462075166998,
+            "empty_mae": 0.09639286080981889,
+            "changed_mae": 1.4255379553623122,
+            "predicted_change_rms": 0.0,
+            "patients": 6,
+            "pairs": 45
+          }
+        }
+      ],
+      "selected_alpha": null,
+      "fitting": {
+        "mae": 0.3121452989311301,
+        "nonempty_mae": 0.8697125133093923,
+        "empty_mae": 0.13803919073724666,
+        "changed_mae": 1.0784173527533853,
+        "predicted_change_rms": 0.0,
+        "patients": 24,
+        "pairs": 119
+      },
+      "selection": {
+        "mae": 0.2864011572151588,
+        "nonempty_mae": 1.059462075166998,
+        "empty_mae": 0.09639286080981889,
+        "changed_mae": 1.4255379553623122,
+        "predicted_change_rms": 0.0,
+        "patients": 6,
+        "pairs": 45
+      }
+    },
+    "E": {
+      "candidates": [
+        {
+          "alpha": null,
+          "scores": {
+            "mae": 0.3015283058437519,
+            "nonempty_mae": 1.0658558472978712,
+            "empty_mae": 0.1143484416179249,
+            "changed_mae": 1.419125345018603,
+            "predicted_change_rms": 0.0559305590089911,
+            "patients": 6,
+            "pairs": 45
+          }
+        }
+      ],
+      "selected_alpha": null,
+      "fitting": {
+        "mae": 0.32134202081078306,
+        "nonempty_mae": 0.8639366872654074,
+        "empty_mae": 0.1515031448031828,
+        "changed_mae": 1.0646725101094747,
+        "predicted_change_rms": 0.05889220091076207,
+        "patients": 24,
+        "pairs": 119
+      },
+      "selection": {
+        "mae": 0.3015283058437519,
+        "nonempty_mae": 1.0658558472978712,
+        "empty_mae": 0.1143484416179249,
+        "changed_mae": 1.419125345018603,
+        "predicted_change_rms": 0.0559305590089911,
+        "patients": 6,
+        "pairs": 45
+      }
+    },
+    "T": {
+      "candidates": [
+        {
+          "alpha": null,
+          "scores": {
+            "mae": 0.2864011572151588,
+            "nonempty_mae": 1.059462075166998,
+            "empty_mae": 0.09639286080981889,
+            "changed_mae": 1.4255379553623122,
+            "predicted_change_rms": 0.0,
+            "patients": 6,
+            "pairs": 45
+          }
+        }
+      ],
+      "selected_alpha": null,
+      "fitting": {
+        "mae": 0.3121452989311301,
+        "nonempty_mae": 0.8697125133093923,
+        "empty_mae": 0.13803919073724666,
+        "changed_mae": 1.0784173527533853,
+        "predicted_change_rms": 0.0,
+        "patients": 24,
+        "pairs": 119
+      },
+      "selection": {
+        "mae": 0.2864011572151588,
+        "nonempty_mae": 1.059462075166998,
+        "empty_mae": 0.09639286080981889,
+        "changed_mae": 1.4255379553623122,
+        "predicted_change_rms": 0.0,
+        "patients": 6,
+        "pairs": 45
+      }
+    },
+    "L": {
+      "candidates": [
+        {
+          "alpha": 0.01,
+          "scores": {
+            "mae": 0.48005094496078854,
+            "nonempty_mae": 1.1705995671097937,
+            "empty_mae": 0.29398767930955017,
+            "changed_mae": 1.4245916810764119,
+            "predicted_change_rms": 0.5167964141555621,
+            "patients": 6,
+            "pairs": 45
+          }
+        },
+        {
+          "alpha": 0.1,
+          "scores": {
+            "mae": 0.428898267258297,
+            "nonempty_mae": 1.1131479917426506,
+            "empty_mae": 0.24412959480103738,
+            "changed_mae": 1.3783553961135617,
+            "predicted_change_rms": 0.38530097413334446,
+            "patients": 6,
+            "pairs": 45
+          }
+        },
+        {
+          "alpha": 1.0,
+          "scores": {
+            "mae": 0.36484422653961324,
+            "nonempty_mae": 1.0776146493006584,
+            "empty_mae": 0.17990635455138346,
+            "changed_mae": 1.3801723688173204,
+            "predicted_change_rms": 0.20110590072413656,
+            "patients": 6,
+            "pairs": 45
+          }
+        },
+        {
+          "alpha": 10.0,
+          "scores": {
+            "mae": 0.31433681282506837,
+            "nonempty_mae": 1.0739850233178005,
+            "empty_mae": 0.12671031155718784,
+            "changed_mae": 1.4119379753134016,
+            "predicted_change_rms": 0.08028837983393357,
+            "patients": 6,
+            "pairs": 45
+          }
+        },
+        {
+          "alpha": 100.0,
+          "scores": {
+            "mae": 0.302710132221731,
+            "nonempty_mae": 1.0664963627800264,
+            "empty_mae": 0.11558825238481789,
+            "changed_mae": 1.4181427093005468,
+            "predicted_change_rms": 0.057693100976707254,
+            "patients": 6,
+            "pairs": 45
+          }
+        }
+      ],
+      "selected_alpha": 100.0,
+      "fitting": {
+        "mae": 0.31950267657765946,
+        "nonempty_mae": 0.8589251811623999,
+        "empty_mae": 0.15073618059118285,
+        "changed_mae": 1.057908816370832,
+        "predicted_change_rms": 0.06335355462723291,
+        "patients": 24,
+        "pairs": 119
+      },
+      "selection": {
+        "mae": 0.302710132221731,
+        "nonempty_mae": 1.0664963627800264,
+        "empty_mae": 0.11558825238481789,
+        "changed_mae": 1.4181427093005468,
+        "predicted_change_rms": 0.057693100976707254,
+        "patients": 6,
+        "pairs": 45
+      }
+    },
+    "H": {
+      "candidates": [
+        {
+          "alpha": 0.01,
+          "scores": {
+            "mae": 0.5442802783816364,
+            "nonempty_mae": 1.231438165235186,
+            "empty_mae": 0.3822206237879808,
+            "changed_mae": 1.359218345257437,
+            "predicted_change_rms": 0.6560716019067888,
+            "patients": 6,
+            "pairs": 45
+          }
+        },
+        {
+          "alpha": 0.1,
+          "scores": {
+            "mae": 0.44344083499025944,
+            "nonempty_mae": 1.0620424982662746,
+            "empty_mae": 0.28700396333043016,
+            "changed_mae": 1.3004412795532916,
+            "predicted_change_rms": 0.4245613634166049,
+            "patients": 6,
+            "pairs": 45
+          }
+        },
+        {
+          "alpha": 1.0,
+          "scores": {
+            "mae": 0.36334555832091403,
+            "nonempty_mae": 1.0233173924283914,
+            "empty_mae": 0.19067096742272935,
+            "changed_mae": 1.3301719941422354,
+            "predicted_change_rms": 0.22861573462931753,
+            "patients": 6,
+            "pairs": 45
+          }
+        },
+        {
+          "alpha": 10.0,
+          "scores": {
+            "mae": 0.3138644240003068,
+            "nonempty_mae": 1.0550990935436646,
+            "empty_mae": 0.12872166889203643,
+            "changed_mae": 1.3957382890494365,
+            "predicted_change_rms": 0.0884434277298831,
+            "patients": 6,
+            "pairs": 45
+          }
+        },
+        {
+          "alpha": 100.0,
+          "scores": {
+            "mae": 0.3025487140242092,
+            "nonempty_mae": 1.065019414400163,
+            "empty_mae": 0.11558484089786054,
+            "changed_mae": 1.4167236886747119,
+            "predicted_change_rms": 0.05761067464168287,
+            "patients": 6,
+            "pairs": 45
+          }
+        }
+      ],
+      "selected_alpha": 100.0,
+      "fitting": {
+        "mae": 0.3166328029404723,
+        "nonempty_mae": 0.8528074790020371,
+        "empty_mae": 0.14900949619100992,
+        "changed_mae": 1.0505903424602328,
+        "predicted_change_rms": 0.0669293361611401,
+        "patients": 24,
+        "pairs": 119
+      },
+      "selection": {
+        "mae": 0.3025487140242092,
+        "nonempty_mae": 1.065019414400163,
+        "empty_mae": 0.11558484089786054,
+        "changed_mae": 1.4167236886747119,
+        "predicted_change_rms": 0.05761067464168287,
+        "patients": 6,
+        "pairs": 45
+      }
+    },
+    "S": {
+      "candidates": [
+        {
+          "alpha": 0.01,
+          "scores": {
+            "mae": 0.5114546941916851,
+            "nonempty_mae": 1.103173257499072,
+            "empty_mae": 0.32949493256533696,
+            "changed_mae": 1.39922384017797,
+            "predicted_change_rms": 0.6447285159940782,
+            "patients": 6,
+            "pairs": 45
+          }
+        },
+        {
+          "alpha": 0.1,
+          "scores": {
+            "mae": 0.4539017454837531,
+            "nonempty_mae": 1.0481227395058579,
+            "empty_mae": 0.2832045601027875,
+            "changed_mae": 1.3462515807168332,
+            "predicted_change_rms": 0.4588782721066728,
+            "patients": 6,
+            "pairs": 45
+          }
+        },
+        {
+          "alpha": 1.0,
+          "scores": {
+            "mae": 0.3798833463828563,
+            "nonempty_mae": 1.0427011146765686,
+            "empty_mae": 0.20455281160645966,
+            "changed_mae": 1.3527505149722059,
+            "predicted_change_rms": 0.24211040093815503,
+            "patients": 6,
+            "pairs": 45
+          }
+        },
+        {
+          "alpha": 10.0,
+          "scores": {
+            "mae": 0.31877190592637966,
+            "nonempty_mae": 1.0712025439391983,
+            "empty_mae": 0.13277681646410025,
+            "changed_mae": 1.406250418598485,
+            "predicted_change_rms": 0.08778486251292004,
+            "patients": 6,
+            "pairs": 45
+          }
+        },
+        {
+          "alpha": 100.0,
+          "scores": {
+            "mae": 0.3029462172185062,
+            "nonempty_mae": 1.0668007554472383,
+            "empty_mae": 0.1159457858610108,
+            "changed_mae": 1.4178168017574182,
+            "predicted_change_rms": 0.05786777233183324,
+            "patients": 6,
+            "pairs": 45
+          }
+        }
+      ],
+      "selected_alpha": 100.0,
+      "fitting": {
+        "mae": 0.31914140978947664,
+        "nonempty_mae": 0.8580323316125315,
+        "empty_mae": 0.1505658992242874,
+        "changed_mae": 1.056763108555254,
+        "predicted_change_rms": 0.06387881620162267,
+        "patients": 24,
+        "pairs": 119
+      },
+      "selection": {
+        "mae": 0.3029462172185062,
+        "nonempty_mae": 1.0668007554472383,
+        "empty_mae": 0.1159457858610108,
+        "changed_mae": 1.4178168017574182,
+        "predicted_change_rms": 0.05786777233183324,
+        "patients": 6,
+        "pairs": 45
+      }
+    }
+  },
+  "trend_coefficient": 0.0,
+  "groups": {
+    "fitting": {
+      "pairs": 119,
+      "patients": 24
+    },
+    "selection": {
+      "pairs": 45,
+      "patients": 6
+    },
+    "scoring": {
+      "pairs": 30,
+      "patients": 8
+    }
+  },
+  "current_and_previous_measurements_supplied": true,
+  "future_interval_supplied": false,
+  "independent_validation": false,
+  "previous_mask_shift_axis": 2,
+  "previous_mask_shift_voxels": 1,
+  "verification": {
+    "status": "VERIFICATION_PASSED",
+    "prediction_arrays_replayed": 30,
+    "regional_measurement_groups_reconstructed": 3,
+    "ridge_solutions_checked_with_lstsq": 3,
+    "future_targets_excluded": true,
+    "patient_splits_disjoint": true,
+    "penalties_reselected": 3,
+    "verifier_sha256": "1ade64f91581a153cfbd5555257799b9a98d7f573d522958955a258f5e6629ce"
+  }
+}

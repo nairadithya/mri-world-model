@@ -1,0 +1,5234 @@
+{
+  "experiment": "R49",
+  "status": "ASSESSMENT_COMPLETE",
+  "scope": "Patient-held-out development assessment within previously studied source/validation patients; original unseen26 and SAILOR excluded",
+  "groups": {
+    "fitting": {
+      "visits": 195,
+      "patients": 40
+    },
+    "selection": {
+      "visits": 67,
+      "patients": 11
+    },
+    "scoring": {
+      "visits": 60,
+      "patients": 13
+    }
+  },
+  "seeds": [
+    42,
+    43
+  ],
+  "epochs_per_cell": 80,
+  "arms": {
+    "pretrained-42": {
+      "seed": 42,
+      "selected_epoch": 44,
+      "selected_checkpoint_sha256": "e8a157ed034738c99ac4cc07482430a25cd680143001683a38bca615f9ba190f",
+      "metrics": {
+        "fitting/identity": {
+          "nonempty_dice": 0.372463530525148,
+          "native_volume_mae": 0.18791175318362158,
+          "all_compartment_dice": 0.3725501855953765,
+          "nonempty_compartment_dice": [
+            0.3571742681116731,
+            0.29902336425544773,
+            0.44075313214641876
+          ],
+          "visits": 195,
+          "patients": 40,
+          "patients_with_primary_dice": 40,
+          "nonempty_target_counts": [
+            176,
+            154,
+            190
+          ],
+          "empty_target_counts": [
+            19,
+            41,
+            5
+          ],
+          "empty_targets_with_false_foreground": [
+            10,
+            31,
+            0
+          ],
+          "empty_target_predicted_voxel_means": [
+            17.526315789473685,
+            38.24390243902439,
+            0.0
+          ],
+          "objective": 0.8317591095385028
+        },
+        "selection/identity": {
+          "nonempty_dice": 0.2583103144242739,
+          "native_volume_mae": 1.2736712089851283,
+          "all_compartment_dice": 0.2652326617636387,
+          "nonempty_compartment_dice": [
+            0.242732802353916,
+            0.16769118521512444,
+            0.3403285149042169
+          ],
+          "visits": 67,
+          "patients": 11,
+          "patients_with_primary_dice": 11,
+          "nonempty_target_counts": [
+            60,
+            37,
+            66
+          ],
+          "empty_target_counts": [
+            7,
+            30,
+            1
+          ],
+          "empty_targets_with_false_foreground": [
+            4,
+            27,
+            1
+          ],
+          "empty_target_predicted_voxel_means": [
+            20.142857142857142,
+            42.43333333333333,
+            84.0
+          ],
+          "objective": 1.8647558171507934
+        },
+        "scoring/identity": {
+          "nonempty_dice": 0.2054822848143101,
+          "native_volume_mae": 1.1122177805608717,
+          "all_compartment_dice": 0.23886189626400148,
+          "nonempty_compartment_dice": [
+            0.19156027188745028,
+            0.13078995310775898,
+            0.3050053871706016
+          ],
+          "visits": 60,
+          "patients": 13,
+          "patients_with_primary_dice": 13,
+          "nonempty_target_counts": [
+            53,
+            52,
+            59
+          ],
+          "empty_target_counts": [
+            7,
+            8,
+            1
+          ],
+          "empty_targets_with_false_foreground": [
+            3,
+            3,
+            1
+          ],
+          "empty_target_predicted_voxel_means": [
+            10.571428571428571,
+            12.375,
+            44.0
+          ],
+          "objective": 1.874514291298113
+        },
+        "scoring/intensity": {
+          "nonempty_dice": 0.2055133655086167,
+          "native_volume_mae": 1.111823042927715,
+          "all_compartment_dice": 0.23888184110187266,
+          "nonempty_compartment_dice": [
+            0.19218869616931988,
+            0.13041619137335078,
+            0.3048046858703867
+          ],
+          "visits": 60,
+          "patients": 13,
+          "patients_with_primary_dice": 13,
+          "nonempty_target_counts": [
+            53,
+            52,
+            59
+          ],
+          "empty_target_counts": [
+            7,
+            8,
+            1
+          ],
+          "empty_targets_with_false_foreground": [
+            3,
+            3,
+            1
+          ],
+          "empty_target_predicted_voxel_means": [
+            10.714285714285714,
+            12.375,
+            44.0
+          ],
+          "objective": 1.8734024914829865
+        },
+        "scoring/resolution": {
+          "nonempty_dice": 0.1892713348014975,
+          "native_volume_mae": 1.1437372208998169,
+          "all_compartment_dice": 0.2528919890621706,
+          "nonempty_compartment_dice": [
+            0.15347106346589193,
+            0.13098170797365033,
+            0.2927250713716006
+          ],
+          "visits": 60,
+          "patients": 13,
+          "patients_with_primary_dice": 13,
+          "nonempty_target_counts": [
+            53,
+            52,
+            59
+          ],
+          "empty_target_counts": [
+            7,
+            8,
+            1
+          ],
+          "empty_targets_with_false_foreground": [
+            2,
+            2,
+            1
+          ],
+          "empty_target_predicted_voxel_means": [
+            2.142857142857143,
+            5.375,
+            94.0
+          ],
+          "objective": 1.8506353924926533
+        }
+      },
+      "curve": [
+        {
+          "epoch": 1,
+          "successful_updates": 49,
+          "training_components": {
+            "volume": 0.6012409551403461,
+            "bce": 0.630759378732779,
+            "dice": 0.9901822673968778
+          },
+          "training_objective": 2.2221826012700028,
+          "selection_dice": 0.04938392345255766,
+          "selection_native_volume_mae": 1.4354699161447266,
+          "selection_objective": 2.208848998779281
+        },
+        {
+          "epoch": 2,
+          "successful_updates": 98,
+          "training_components": {
+            "volume": 0.47597910003402283,
+            "bce": 0.4267223506401747,
+            "dice": 0.984026076549139
+          },
+          "training_objective": 1.8867275272233366,
+          "selection_dice": 0.11497652055704322,
+          "selection_native_volume_mae": 1.4454080182811597,
+          "selection_objective": 2.0158069276235957
+        },
+        {
+          "epoch": 3,
+          "successful_updates": 147,
+          "training_components": {
+            "volume": 0.4056162385604321,
+            "bce": 0.28885681476348485,
+            "dice": 0.9736230290853061
+          },
+          "training_objective": 1.668096082409223,
+          "selection_dice": 0.1091164497671646,
+          "selection_native_volume_mae": 1.4400188929306899,
+          "selection_objective": 1.9139669783453255
+        },
+        {
+          "epoch": 4,
+          "successful_updates": 196,
+          "training_components": {
+            "volume": 0.36082291282140283,
+            "bce": 0.21512579467052068,
+            "dice": 0.9551328964722462
+          },
+          "training_objective": 1.5310816039641697,
+          "selection_dice": 0.11959038581596616,
+          "selection_native_volume_mae": 1.384066048267295,
+          "selection_objective": 1.823248528052991
+        },
+        {
+          "epoch": 5,
+          "successful_updates": 245,
+          "training_components": {
+            "volume": 0.41901611372446396,
+            "bce": 0.17768705779543292,
+            "dice": 0.9527505159378052
+          },
+          "training_objective": 1.549453687457702,
+          "selection_dice": 0.1448340193778604,
+          "selection_native_volume_mae": 1.4175934679488915,
+          "selection_objective": 1.799380805047226
+        },
+        {
+          "epoch": 6,
+          "successful_updates": 294,
+          "training_components": {
+            "volume": 0.37293208153584073,
+            "bce": 0.14788741620305257,
+            "dice": 0.9343899191954199
+          },
+          "training_objective": 1.4552094169343133,
+          "selection_dice": 0.12998024037006883,
+          "selection_native_volume_mae": 1.335756750690624,
+          "selection_objective": 1.7498563077254308
+        },
+        {
+          "epoch": 7,
+          "successful_updates": 343,
+          "training_components": {
+            "volume": 0.3123732685756225,
+            "bce": 0.13160980433607714,
+            "dice": 0.9146429645709503
+          },
+          "training_objective": 1.35862603748265,
+          "selection_dice": 0.136170263439896,
+          "selection_native_volume_mae": 1.3344913249678805,
+          "selection_objective": 1.7153889402508098
+        },
+        {
+          "epoch": 8,
+          "successful_updates": 392,
+          "training_components": {
+            "volume": 0.25623892258184083,
+            "bce": 0.12378948345207252,
+            "dice": 0.9008908482698292
+          },
+          "training_objective": 1.2809192543037426,
+          "selection_dice": 0.13863177475367985,
+          "selection_native_volume_mae": 1.3282775678761787,
+          "selection_objective": 1.7180469778769794
+        },
+        {
+          "epoch": 9,
+          "successful_updates": 441,
+          "training_components": {
+            "volume": 0.25419325797030556,
+            "bce": 0.11668078198264804,
+            "dice": 0.880279567302802
+          },
+          "training_objective": 1.2511536072557556,
+          "selection_dice": 0.17954170209670922,
+          "selection_native_volume_mae": 1.345256742406834,
+          "selection_objective": 1.7351662541296393
+        },
+        {
+          "epoch": 10,
+          "successful_updates": 490,
+          "training_components": {
+            "volume": 0.22540602995417056,
+            "bce": 0.11248531241256456,
+            "dice": 0.8749952273491103
+          },
+          "training_objective": 1.2128865697158453,
+          "selection_dice": 0.17428782682206942,
+          "selection_native_volume_mae": 1.2786681827577295,
+          "selection_objective": 1.6787045620554484
+        },
+        {
+          "epoch": 11,
+          "successful_updates": 539,
+          "training_components": {
+            "volume": 0.2858838042435356,
+            "bce": 0.10086004708487636,
+            "dice": 0.8597778448691735
+          },
+          "training_objective": 1.2465216961975856,
+          "selection_dice": 0.18477847231715722,
+          "selection_native_volume_mae": 1.3359389265077375,
+          "selection_objective": 1.7257103339475106
+        },
+        {
+          "epoch": 12,
+          "successful_updates": 588,
+          "training_components": {
+            "volume": 0.2404096986907415,
+            "bce": 0.10038536033855798,
+            "dice": 0.8357363150669979
+          },
+          "training_objective": 1.1765313740962973,
+          "selection_dice": 0.18100336565317388,
+          "selection_native_volume_mae": 1.3780353533227252,
+          "selection_objective": 1.7611789320295084
+        },
+        {
+          "epoch": 13,
+          "successful_updates": 637,
+          "training_components": {
+            "volume": 0.190023358600835,
+            "bce": 0.09782074647119794,
+            "dice": 0.8181294046915495
+          },
+          "training_objective": 1.1059735097635823,
+          "selection_dice": 0.18665601649702304,
+          "selection_native_volume_mae": 1.35802286547777,
+          "selection_objective": 1.7691568502608466
+        },
+        {
+          "epoch": 14,
+          "successful_updates": 686,
+          "training_components": {
+            "volume": 0.25077647397724473,
+            "bce": 0.09595194087865258,
+            "dice": 0.8153796413005925
+          },
+          "training_objective": 1.1621080561564898,
+          "selection_dice": 0.18576041078070196,
+          "selection_native_volume_mae": 1.2974209195691506,
+          "selection_objective": 1.7318763039913194
+        },
+        {
+          "epoch": 15,
+          "successful_updates": 735,
+          "training_components": {
+            "volume": 0.21020493152049874,
+            "bce": 0.09853647044167305,
+            "dice": 0.8118637005488075
+          },
+          "training_objective": 1.1206051025109793,
+          "selection_dice": 0.1840265655356179,
+          "selection_native_volume_mae": 1.3397744810970373,
+          "selection_objective": 1.7143795176676464
+        },
+        {
+          "epoch": 16,
+          "successful_updates": 784,
+          "training_components": {
+            "volume": 0.2055086836171074,
+            "bce": 0.09826351245924929,
+            "dice": 0.7981823820334213
+          },
+          "training_objective": 1.101954578109778,
+          "selection_dice": 0.18340472981752287,
+          "selection_native_volume_mae": 1.29573914275464,
+          "selection_objective": 1.6616847782742743
+        },
+        {
+          "epoch": 17,
+          "successful_updates": 833,
+          "training_components": {
+            "volume": 0.2013344743886055,
+            "bce": 0.09672942858738585,
+            "dice": 0.7767425592129046
+          },
+          "training_objective": 1.074806462188896,
+          "selection_dice": 0.20299669911930546,
+          "selection_native_volume_mae": 1.299966304252238,
+          "selection_objective": 1.7065562936020833
+        },
+        {
+          "epoch": 18,
+          "successful_updates": 882,
+          "training_components": {
+            "volume": 0.2259127952253971,
+            "bce": 0.09915503761492285,
+            "dice": 0.7756597888775362
+          },
+          "training_objective": 1.100727621717856,
+          "selection_dice": 0.20292476585417207,
+          "selection_native_volume_mae": 1.366286647952329,
+          "selection_objective": 1.7612538439146976
+        },
+        {
+          "epoch": 19,
+          "successful_updates": 931,
+          "training_components": {
+            "volume": 0.21280200697290597,
+            "bce": 0.09577368856810681,
+            "dice": 0.7627638324713094
+          },
+          "training_objective": 1.0713395280123221,
+          "selection_dice": 0.20753412934196264,
+          "selection_native_volume_mae": 1.311290815756992,
+          "selection_objective": 1.7387522665680837
+        },
+        {
+          "epoch": 20,
+          "successful_updates": 980,
+          "training_components": {
+            "volume": 0.16081118041124098,
+            "bce": 0.0918774771862305,
+            "dice": 0.7528388322928012
+          },
+          "training_objective": 1.0055274898902726,
+          "selection_dice": 0.2102002515470861,
+          "selection_native_volume_mae": 1.3698715392617362,
+          "selection_objective": 1.7456995113940375
+        },
+        {
+          "epoch": 21,
+          "successful_updates": 1029,
+          "training_components": {
+            "volume": 0.1614194185735706,
+            "bce": 0.0968496930630257,
+            "dice": 0.7318855441533602
+          },
+          "training_objective": 0.9901546557899564,
+          "selection_dice": 0.2173555614869145,
+          "selection_native_volume_mae": 1.423390030854494,
+          "selection_objective": 1.8083248332063144
+        },
+        {
+          "epoch": 22,
+          "successful_updates": 1078,
+          "training_components": {
+            "volume": 0.16550388998137075,
+            "bce": 0.09186333580470928,
+            "dice": 0.7344205576639908
+          },
+          "training_objective": 0.9917877834500709,
+          "selection_dice": 0.22119343027140684,
+          "selection_native_volume_mae": 1.3634426286031363,
+          "selection_objective": 1.7988818566907536
+        },
+        {
+          "epoch": 23,
+          "successful_updates": 1127,
+          "training_components": {
+            "volume": 0.20716946229625205,
+            "bce": 0.08355238097167618,
+            "dice": 0.7376055815281013
+          },
+          "training_objective": 1.0283274247960295,
+          "selection_dice": 0.2164329220151715,
+          "selection_native_volume_mae": 1.3531903429866885,
+          "selection_objective": 1.9171393013228917
+        },
+        {
+          "epoch": 24,
+          "successful_updates": 1176,
+          "training_components": {
+            "volume": 0.14021375607699155,
+            "bce": 0.09676466633316473,
+            "dice": 0.7073319818729009
+          },
+          "training_objective": 0.9443104042830572,
+          "selection_dice": 0.21317035966662556,
+          "selection_native_volume_mae": 1.45259451054507,
+          "selection_objective": 1.9288466431399716
+        },
+        {
+          "epoch": 25,
+          "successful_updates": 1225,
+          "training_components": {
+            "volume": 0.12322382986641084,
+            "bce": 0.0936233996895727,
+            "dice": 0.7147843521374923
+          },
+          "training_objective": 0.9316315816934758,
+          "selection_dice": 0.215080953426306,
+          "selection_native_volume_mae": 1.4252798762200631,
+          "selection_objective": 1.8256550518321055
+        },
+        {
+          "epoch": 26,
+          "successful_updates": 1274,
+          "training_components": {
+            "volume": 0.20139315421573625,
+            "bce": 0.09121055633086377,
+            "dice": 0.7216521169894781
+          },
+          "training_objective": 1.014255827536078,
+          "selection_dice": 0.2306188930348714,
+          "selection_native_volume_mae": 1.3684396775744292,
+          "selection_objective": 1.8314765271709141
+        },
+        {
+          "epoch": 27,
+          "successful_updates": 1323,
+          "training_components": {
+            "volume": 0.19542335525919233,
+            "bce": 0.08226881683505592,
+            "dice": 0.7173259617426455
+          },
+          "training_objective": 0.9950181338368937,
+          "selection_dice": 0.21888140154330013,
+          "selection_native_volume_mae": 1.3771968319376755,
+          "selection_objective": 1.8390572841181263
+        },
+        {
+          "epoch": 28,
+          "successful_updates": 1372,
+          "training_components": {
+            "volume": 0.14766877862409908,
+            "bce": 0.08850644583446692,
+            "dice": 0.7048808787113581
+          },
+          "training_objective": 0.941056103169924,
+          "selection_dice": 0.21992627329819595,
+          "selection_native_volume_mae": 1.3183997763512663,
+          "selection_objective": 1.8216078782570342
+        },
+        {
+          "epoch": 29,
+          "successful_updates": 1421,
+          "training_components": {
+            "volume": 0.16012849854066588,
+            "bce": 0.0828666391298145,
+            "dice": 0.6941054876034076
+          },
+          "training_objective": 0.937100625273888,
+          "selection_dice": 0.22467855112046833,
+          "selection_native_volume_mae": 1.3041406149660015,
+          "selection_objective": 1.8742956996707782
+        },
+        {
+          "epoch": 30,
+          "successful_updates": 1470,
+          "training_components": {
+            "volume": 0.14286366094094818,
+            "bce": 0.09052202740851313,
+            "dice": 0.6813829799493155
+          },
+          "training_objective": 0.9147686682987768,
+          "selection_dice": 0.23070963540156714,
+          "selection_native_volume_mae": 1.3194785336889072,
+          "selection_objective": 1.8831889525401189
+        },
+        {
+          "epoch": 31,
+          "successful_updates": 1519,
+          "training_components": {
+            "volume": 0.11902147145368731,
+            "bce": 0.08572597851184231,
+            "dice": 0.6721261484500689
+          },
+          "training_objective": 0.8768735984155985,
+          "selection_dice": 0.22834617718114955,
+          "selection_native_volume_mae": 1.3246723137432987,
+          "selection_objective": 1.8946351404389807
+        },
+        {
+          "epoch": 32,
+          "successful_updates": 1568,
+          "training_components": {
+            "volume": 0.12627358650072265,
+            "bce": 0.08803880214109082,
+            "dice": 0.6477746752592235
+          },
+          "training_objective": 0.862087063901037,
+          "selection_dice": 0.23234065847499713,
+          "selection_native_volume_mae": 1.309765377060651,
+          "selection_objective": 1.923184141237787
+        },
+        {
+          "epoch": 33,
+          "successful_updates": 1617,
+          "training_components": {
+            "volume": 0.14309239288409933,
+            "bce": 0.0804216809667802,
+            "dice": 0.6516209718508598
+          },
+          "training_objective": 0.8751350457017393,
+          "selection_dice": 0.2298214003031081,
+          "selection_native_volume_mae": 1.329163025968194,
+          "selection_objective": 1.9150483405499747
+        },
+        {
+          "epoch": 34,
+          "successful_updates": 1666,
+          "training_components": {
+            "volume": 0.12044620146162997,
+            "bce": 0.08947036500642587,
+            "dice": 0.65464884745769
+          },
+          "training_objective": 0.8645654139257459,
+          "selection_dice": 0.23288229926009285,
+          "selection_native_volume_mae": 1.3376572626974703,
+          "selection_objective": 1.9484181070046205
+        },
+        {
+          "epoch": 35,
+          "successful_updates": 1715,
+          "training_components": {
+            "volume": 0.12912369700483017,
+            "bce": 0.08665531869225487,
+            "dice": 0.667372031700917
+          },
+          "training_objective": 0.883151047398002,
+          "selection_dice": 0.22665461529815467,
+          "selection_native_volume_mae": 1.3446823613794325,
+          "selection_objective": 1.840467278136077
+        },
+        {
+          "epoch": 36,
+          "successful_updates": 1764,
+          "training_components": {
+            "volume": 0.11172066187151734,
+            "bce": 0.08570518866808223,
+            "dice": 0.6590040459082677
+          },
+          "training_objective": 0.8564298964478673,
+          "selection_dice": 0.23561978886555304,
+          "selection_native_volume_mae": 1.283829207282927,
+          "selection_objective": 1.8504081066545106
+        },
+        {
+          "epoch": 37,
+          "successful_updates": 1813,
+          "training_components": {
+            "volume": 0.12925232013639731,
+            "bce": 0.08045081762680546,
+            "dice": 0.6745465086056636
+          },
+          "training_objective": 0.8842496463688664,
+          "selection_dice": 0.22853785956923686,
+          "selection_native_volume_mae": 1.306151960447094,
+          "selection_objective": 1.9100696598729134
+        },
+        {
+          "epoch": 38,
+          "successful_updates": 1862,
+          "training_components": {
+            "volume": 0.09929001186974346,
+            "bce": 0.08320730192294248,
+            "dice": 0.6621577362219493
+          },
+          "training_objective": 0.8446550500146353,
+          "selection_dice": 0.23443059998757992,
+          "selection_native_volume_mae": 1.3124549284124063,
+          "selection_objective": 1.880566161153788
+        },
+        {
+          "epoch": 39,
+          "successful_updates": 1911,
+          "training_components": {
+            "volume": 0.11022313180833292,
+            "bce": 0.07608567307447978,
+            "dice": 0.6555260132520626
+          },
+          "training_objective": 0.8418348181348753,
+          "selection_dice": 0.24501816792829342,
+          "selection_native_volume_mae": 1.2652141536259784,
+          "selection_objective": 1.9287423742061842
+        },
+        {
+          "epoch": 40,
+          "successful_updates": 1960,
+          "training_components": {
+            "volume": 0.08680254517552943,
+            "bce": 0.08186169830714324,
+            "dice": 0.6344374150801929
+          },
+          "training_objective": 0.8031016585628656,
+          "selection_dice": 0.23965271394742507,
+          "selection_native_volume_mae": 1.268135502924112,
+          "selection_objective": 2.01061176376653
+        },
+        {
+          "epoch": 41,
+          "successful_updates": 2009,
+          "training_components": {
+            "volume": 0.1048236316547562,
+            "bce": 0.08179676688659807,
+            "dice": 0.6325666598784617
+          },
+          "training_objective": 0.819187058419816,
+          "selection_dice": 0.25426755907425247,
+          "selection_native_volume_mae": 1.29347323930472,
+          "selection_objective": 1.9506185293622618
+        },
+        {
+          "epoch": 42,
+          "successful_updates": 2058,
+          "training_components": {
+            "volume": 0.10121177659155084,
+            "bce": 0.07175608253866159,
+            "dice": 0.6518481757396308
+          },
+          "training_objective": 0.8248160348698432,
+          "selection_dice": 0.250888819418672,
+          "selection_native_volume_mae": 1.2487901261956,
+          "selection_objective": 1.9285645366989992
+        },
+        {
+          "epoch": 43,
+          "successful_updates": 2107,
+          "training_components": {
+            "volume": 0.09540354050934698,
+            "bce": 0.07661776927035623,
+            "dice": 0.650229710798997
+          },
+          "training_objective": 0.8222510205787003,
+          "selection_dice": 0.2430299717230575,
+          "selection_native_volume_mae": 1.2642937692943899,
+          "selection_objective": 2.004494686225519
+        },
+        {
+          "epoch": 44,
+          "successful_updates": 2156,
+          "training_components": {
+            "volume": 0.09321109755322908,
+            "bce": 0.08149100455548018,
+            "dice": 0.6287951220304538
+          },
+          "training_objective": 0.8034972241391631,
+          "selection_dice": 0.2583103144242739,
+          "selection_native_volume_mae": 1.2736712089851283,
+          "selection_objective": 1.8647558171507934
+        },
+        {
+          "epoch": 45,
+          "successful_updates": 2205,
+          "training_components": {
+            "volume": 0.07781363418803386,
+            "bce": 0.08032636948199255,
+            "dice": 0.6118061759533028
+          },
+          "training_objective": 0.7699461796233292,
+          "selection_dice": 0.24758122737967092,
+          "selection_native_volume_mae": 1.2608023265577064,
+          "selection_objective": 2.0030004988645276
+        },
+        {
+          "epoch": 46,
+          "successful_updates": 2254,
+          "training_components": {
+            "volume": 0.10337463922512075,
+            "bce": 0.06837639221753657,
+            "dice": 0.6225175588558881
+          },
+          "training_objective": 0.7942685902985455,
+          "selection_dice": 0.24249455945860027,
+          "selection_native_volume_mae": 1.3278713832163767,
+          "selection_objective": 2.164953770165775
+        },
+        {
+          "epoch": 47,
+          "successful_updates": 2303,
+          "training_components": {
+            "volume": 0.0992947121616453,
+            "bce": 0.0780194814655727,
+            "dice": 0.6265511274337768
+          },
+          "training_objective": 0.8038653210609948,
+          "selection_dice": 0.2383241210439662,
+          "selection_native_volume_mae": 1.259681944545643,
+          "selection_objective": 2.0460559383884687
+        },
+        {
+          "epoch": 48,
+          "successful_updates": 2352,
+          "training_components": {
+            "volume": 0.06800079608025648,
+            "bce": 0.07200034624905899,
+            "dice": 0.620982827895727
+          },
+          "training_objective": 0.7609839702250425,
+          "selection_dice": 0.23604437722811153,
+          "selection_native_volume_mae": 1.280293812148981,
+          "selection_objective": 2.064439349915042
+        },
+        {
+          "epoch": 49,
+          "successful_updates": 2401,
+          "training_components": {
+            "volume": 0.09357379447812073,
+            "bce": 0.06908546996049922,
+            "dice": 0.6007430804081451
+          },
+          "training_objective": 0.7634023448467651,
+          "selection_dice": 0.23907023864463894,
+          "selection_native_volume_mae": 1.2749238450157656,
+          "selection_objective": 2.031932451734037
+        },
+        {
+          "epoch": 50,
+          "successful_updates": 2450,
+          "training_components": {
+            "volume": 0.09773493088686314,
+            "bce": 0.07238820561980949,
+            "dice": 0.5942397453846079
+          },
+          "training_objective": 0.7643628818912805,
+          "selection_dice": 0.2358686673766778,
+          "selection_native_volume_mae": 1.239327940312713,
+          "selection_objective": 2.114139997571335
+        },
+        {
+          "epoch": 51,
+          "successful_updates": 2499,
+          "training_components": {
+            "volume": 0.04970400576981215,
+            "bce": 0.07962639894193181,
+            "dice": 0.5790950246346303
+          },
+          "training_objective": 0.7084254293463742,
+          "selection_dice": 0.2428193961952042,
+          "selection_native_volume_mae": 1.2729998293639622,
+          "selection_objective": 2.0869965987542307
+        },
+        {
+          "epoch": 52,
+          "successful_updates": 2548,
+          "training_components": {
+            "volume": 0.0797132515288794,
+            "bce": 0.07269647585682182,
+            "dice": 0.597636533700503
+          },
+          "training_objective": 0.7500462610862042,
+          "selection_dice": 0.23887076231762763,
+          "selection_native_volume_mae": 1.2834369313280516,
+          "selection_objective": 2.1561824094802935
+        },
+        {
+          "epoch": 53,
+          "successful_updates": 2597,
+          "training_components": {
+            "volume": 0.07946812079932829,
+            "bce": 0.07332532740875672,
+            "dice": 0.5958584403380367
+          },
+          "training_objective": 0.7486518885461217,
+          "selection_dice": 0.23750169614822064,
+          "selection_native_volume_mae": 1.278738171794628,
+          "selection_objective": 2.1180591649922027
+        },
+        {
+          "epoch": 54,
+          "successful_updates": 2646,
+          "training_components": {
+            "volume": 0.08747898503564873,
+            "bce": 0.0682926807912643,
+            "dice": 0.6067826735667693
+          },
+          "training_objective": 0.7625543393936823,
+          "selection_dice": 0.2434397681537298,
+          "selection_native_volume_mae": 1.27350587372431,
+          "selection_objective": 2.091805230208578
+        },
+        {
+          "epoch": 55,
+          "successful_updates": 2695,
+          "training_components": {
+            "volume": 0.06434824818936295,
+            "bce": 0.06603025467607389,
+            "dice": 0.5926091082585162
+          },
+          "training_objective": 0.722987611123953,
+          "selection_dice": 0.23998438206860362,
+          "selection_native_volume_mae": 1.2636799440810769,
+          "selection_objective": 2.1532173495852587
+        },
+        {
+          "epoch": 56,
+          "successful_updates": 2744,
+          "training_components": {
+            "volume": 0.09136923904387421,
+            "bce": 0.06555518263309913,
+            "dice": 0.5889994725202904
+          },
+          "training_objective": 0.7459238941972637,
+          "selection_dice": 0.2412406386735025,
+          "selection_native_volume_mae": 1.2768955604332068,
+          "selection_objective": 2.1205350787456876
+        },
+        {
+          "epoch": 57,
+          "successful_updates": 2793,
+          "training_components": {
+            "volume": 0.06048036267121252,
+            "bce": 0.06721844616866945,
+            "dice": 0.593240595780886
+          },
+          "training_objective": 0.7209394046207679,
+          "selection_dice": 0.24081410299361702,
+          "selection_native_volume_mae": 1.2611668593348562,
+          "selection_objective": 2.0960672727561893
+        },
+        {
+          "epoch": 58,
+          "successful_updates": 2842,
+          "training_components": {
+            "volume": 0.047565291103166644,
+            "bce": 0.0656665292521491,
+            "dice": 0.5755128217049136
+          },
+          "training_objective": 0.6887446420602293,
+          "selection_dice": 0.24077258236373283,
+          "selection_native_volume_mae": 1.2644349368148335,
+          "selection_objective": 2.110818456562233
+        },
+        {
+          "epoch": 59,
+          "successful_updates": 2891,
+          "training_components": {
+            "volume": 0.07681196741162777,
+            "bce": 0.066779119191051,
+            "dice": 0.5702148397763572
+          },
+          "training_objective": 0.713805926379036,
+          "selection_dice": 0.24412911677674584,
+          "selection_native_volume_mae": 1.271429012797528,
+          "selection_objective": 2.1854619724705895
+        },
+        {
+          "epoch": 60,
+          "successful_updates": 2940,
+          "training_components": {
+            "volume": 0.0745790659664915,
+            "bce": 0.0656268765580861,
+            "dice": 0.5749247311017452
+          },
+          "training_objective": 0.7151306736263229,
+          "selection_dice": 0.2447383722921524,
+          "selection_native_volume_mae": 1.2714371931412625,
+          "selection_objective": 2.0719021040647423
+        },
+        {
+          "epoch": 61,
+          "successful_updates": 2989,
+          "training_components": {
+            "volume": 0.05016672221155693,
+            "bce": 0.06769911644869121,
+            "dice": 0.582608156479322
+          },
+          "training_objective": 0.7004739951395701,
+          "selection_dice": 0.23886092694079142,
+          "selection_native_volume_mae": 1.281401963632686,
+          "selection_objective": 2.1212663366806273
+        },
+        {
+          "epoch": 62,
+          "successful_updates": 3038,
+          "training_components": {
+            "volume": 0.06971378650587913,
+            "bce": 0.06438643475410524,
+            "dice": 0.5527898242840399
+          },
+          "training_objective": 0.6868900455440242,
+          "selection_dice": 0.24137680351389398,
+          "selection_native_volume_mae": 1.259784693462292,
+          "selection_objective": 2.1582127334812315
+        },
+        {
+          "epoch": 63,
+          "successful_updates": 3087,
+          "training_components": {
+            "volume": 0.06372989887634341,
+            "bce": 0.06034857287921998,
+            "dice": 0.5542689633675112
+          },
+          "training_objective": 0.6783474351230746,
+          "selection_dice": 0.2383070575737332,
+          "selection_native_volume_mae": 1.2595410808961693,
+          "selection_objective": 2.1777682781006984
+        },
+        {
+          "epoch": 64,
+          "successful_updates": 3136,
+          "training_components": {
+            "volume": 0.05458802149260941,
+            "bce": 0.06374792527951798,
+            "dice": 0.5568087730652248
+          },
+          "training_objective": 0.6751447198373521,
+          "selection_dice": 0.2384528511150281,
+          "selection_native_volume_mae": 1.276092048114033,
+          "selection_objective": 2.167841505125139
+        },
+        {
+          "epoch": 65,
+          "successful_updates": 3185,
+          "training_components": {
+            "volume": 0.045567289780443304,
+            "bce": 0.06336405681989465,
+            "dice": 0.5498011807600657
+          },
+          "training_objective": 0.6587325273604037,
+          "selection_dice": 0.23772149127412748,
+          "selection_native_volume_mae": 1.258015787645006,
+          "selection_objective": 2.219198240087419
+        },
+        {
+          "epoch": 66,
+          "successful_updates": 3234,
+          "training_components": {
+            "volume": 0.05382762440742974,
+            "bce": 0.06163081062710635,
+            "dice": 0.5363481483398341
+          },
+          "training_objective": 0.6518065833743703,
+          "selection_dice": 0.23608128651380966,
+          "selection_native_volume_mae": 1.2626678850256579,
+          "selection_objective": 2.1988333114195417
+        },
+        {
+          "epoch": 67,
+          "successful_updates": 3283,
+          "training_components": {
+            "volume": 0.07870776976028886,
+            "bce": 0.06019239969033291,
+            "dice": 0.5521844614774752
+          },
+          "training_objective": 0.691084630928097,
+          "selection_dice": 0.23889204092156346,
+          "selection_native_volume_mae": 1.2749398991810095,
+          "selection_objective": 2.216850441890817
+        },
+        {
+          "epoch": 68,
+          "successful_updates": 3332,
+          "training_components": {
+            "volume": 0.0400067314505577,
+            "bce": 0.06015162425256002,
+            "dice": 0.5377848116251138
+          },
+          "training_objective": 0.6379431673282315,
+          "selection_dice": 0.23723592808533453,
+          "selection_native_volume_mae": 1.2790566149257085,
+          "selection_objective": 2.2172109802882725
+        },
+        {
+          "epoch": 69,
+          "successful_updates": 3381,
+          "training_components": {
+            "volume": 0.05660247666737399,
+            "bce": 0.06621584541407616,
+            "dice": 0.5477614051256425
+          },
+          "training_objective": 0.6705797272070927,
+          "selection_dice": 0.23532892176424297,
+          "selection_native_volume_mae": 1.2735261052843863,
+          "selection_objective": 2.2372809189844896
+        },
+        {
+          "epoch": 70,
+          "successful_updates": 3430,
+          "training_components": {
+            "volume": 0.03141666961750256,
+            "bce": 0.06449865997315216,
+            "dice": 0.541074928870568
+          },
+          "training_objective": 0.6369902584612227,
+          "selection_dice": 0.23620177731198713,
+          "selection_native_volume_mae": 1.2803250308743577,
+          "selection_objective": 2.243905762114202
+        },
+        {
+          "epoch": 71,
+          "successful_updates": 3479,
+          "training_components": {
+            "volume": 0.034796324968099215,
+            "bce": 0.06196183524958682,
+            "dice": 0.5475807689703428
+          },
+          "training_objective": 0.6443389291880288,
+          "selection_dice": 0.23651848232060899,
+          "selection_native_volume_mae": 1.269126828441761,
+          "selection_objective": 2.2299528341906383
+        },
+        {
+          "epoch": 72,
+          "successful_updates": 3528,
+          "training_components": {
+            "volume": 0.05640464663469734,
+            "bce": 0.061722707176336246,
+            "dice": 0.5632977988475408
+          },
+          "training_objective": 0.6814251526585744,
+          "selection_dice": 0.23428900997954963,
+          "selection_native_volume_mae": 1.2633701757050018,
+          "selection_objective": 2.2487292635063647
+        },
+        {
+          "epoch": 73,
+          "successful_updates": 3577,
+          "training_components": {
+            "volume": 0.02963880697826449,
+            "bce": 0.06008449729348426,
+            "dice": 0.5527096260816623
+          },
+          "training_objective": 0.6424329303534111,
+          "selection_dice": 0.23714490814238404,
+          "selection_native_volume_mae": 1.2623792190564354,
+          "selection_objective": 2.26563863225693
+        },
+        {
+          "epoch": 74,
+          "successful_updates": 3626,
+          "training_components": {
+            "volume": 0.03904042129930206,
+            "bce": 0.060492535070546,
+            "dice": 0.5397157690463921
+          },
+          "training_objective": 0.6392487254162401,
+          "selection_dice": 0.23637988298112395,
+          "selection_native_volume_mae": 1.266787797546571,
+          "selection_objective": 2.227111033099221
+        },
+        {
+          "epoch": 75,
+          "successful_updates": 3675,
+          "training_components": {
+            "volume": 0.061535000433930405,
+            "bce": 0.05877143376462464,
+            "dice": 0.5520191729068756
+          },
+          "training_objective": 0.6723256071054307,
+          "selection_dice": 0.23506494479119888,
+          "selection_native_volume_mae": 1.2682899399496286,
+          "selection_objective": 2.2630563153249486
+        },
+        {
+          "epoch": 76,
+          "successful_updates": 3724,
+          "training_components": {
+            "volume": 0.03922423501946748,
+            "bce": 0.05789142220379197,
+            "dice": 0.530942457455855
+          },
+          "training_objective": 0.6280581146791144,
+          "selection_dice": 0.23604535293676224,
+          "selection_native_volume_mae": 1.2749530171498682,
+          "selection_objective": 2.2717255092400284
+        },
+        {
+          "epoch": 77,
+          "successful_updates": 3773,
+          "training_components": {
+            "volume": 0.07759406899179641,
+            "bce": 0.0562696073377596,
+            "dice": 0.5449499304477984
+          },
+          "training_objective": 0.6788136067773544,
+          "selection_dice": 0.23494031572767227,
+          "selection_native_volume_mae": 1.2662886962932507,
+          "selection_objective": 2.2767287485527268
+        },
+        {
+          "epoch": 78,
+          "successful_updates": 3822,
+          "training_components": {
+            "volume": 0.04970791591420913,
+            "bce": 0.05918098288179281,
+            "dice": 0.5493710501071736
+          },
+          "training_objective": 0.6582599489031755,
+          "selection_dice": 0.23320460662541231,
+          "selection_native_volume_mae": 1.2702651021330942,
+          "selection_objective": 2.2672735790146024
+        },
+        {
+          "epoch": 79,
+          "successful_updates": 3871,
+          "training_components": {
+            "volume": 0.02611470869861734,
+            "bce": 0.06153129259188201,
+            "dice": 0.5456870976166848
+          },
+          "training_objective": 0.6333330989071841,
+          "selection_dice": 0.2357364321475071,
+          "selection_native_volume_mae": 1.2673677102794825,
+          "selection_objective": 2.2629213597791504
+        },
+        {
+          "epoch": 80,
+          "successful_updates": 3920,
+          "training_components": {
+            "volume": 0.05388492894797728,
+            "bce": 0.05854223281570835,
+            "dice": 0.5482917298109105
+          },
+          "training_objective": 0.6607188915745961,
+          "selection_dice": 0.23407391938843716,
+          "selection_native_volume_mae": 1.2717524246457488,
+          "selection_objective": 2.266897875378689
+        }
+      ]
+    },
+    "random-42": {
+      "seed": 42,
+      "selected_epoch": 17,
+      "selected_checkpoint_sha256": "90b8e10ba43a49d225fd3fff7285a28268370b9f321e12ac524cae18d73eb2e3",
+      "metrics": {
+        "fitting/identity": {
+          "nonempty_dice": 0.26939653501395694,
+          "native_volume_mae": 0.5086565515474961,
+          "all_compartment_dice": 0.26988771666256833,
+          "nonempty_compartment_dice": [
+            0.22521195782776499,
+            0.17986689032518158,
+            0.38763646217333947
+          ],
+          "visits": 195,
+          "patients": 40,
+          "patients_with_primary_dice": 40,
+          "nonempty_target_counts": [
+            176,
+            154,
+            190
+          ],
+          "empty_target_counts": [
+            19,
+            41,
+            5
+          ],
+          "empty_targets_with_false_foreground": [
+            13,
+            33,
+            0
+          ],
+          "empty_target_predicted_voxel_means": [
+            47.578947368421055,
+            117.7560975609756,
+            0.0
+          ],
+          "objective": 1.1251815083002832
+        },
+        "selection/identity": {
+          "nonempty_dice": 0.172491405514942,
+          "native_volume_mae": 1.424434803713329,
+          "all_compartment_dice": 0.2055893702884042,
+          "nonempty_compartment_dice": [
+            0.1429285278952392,
+            0.09449388855469175,
+            0.27478323107897495
+          ],
+          "visits": 67,
+          "patients": 11,
+          "patients_with_primary_dice": 11,
+          "nonempty_target_counts": [
+            60,
+            37,
+            66
+          ],
+          "empty_target_counts": [
+            7,
+            30,
+            1
+          ],
+          "empty_targets_with_false_foreground": [
+            2,
+            24,
+            1
+          ],
+          "empty_target_predicted_voxel_means": [
+            16.571428571428573,
+            81.56666666666666,
+            12.0
+          ],
+          "objective": 2.1298736787894192
+        },
+        "scoring/identity": {
+          "nonempty_dice": 0.16142398964170185,
+          "native_volume_mae": 1.2396654434042609,
+          "all_compartment_dice": 0.1715430111057073,
+          "nonempty_compartment_dice": [
+            0.13205904907628035,
+            0.10773197866318285,
+            0.25352948716821866
+          ],
+          "visits": 60,
+          "patients": 13,
+          "patients_with_primary_dice": 13,
+          "nonempty_target_counts": [
+            53,
+            52,
+            59
+          ],
+          "empty_target_counts": [
+            7,
+            8,
+            1
+          ],
+          "empty_targets_with_false_foreground": [
+            5,
+            6,
+            1
+          ],
+          "empty_target_predicted_voxel_means": [
+            56.142857142857146,
+            68.0,
+            32.0
+          ],
+          "objective": 1.977344521083238
+        },
+        "scoring/intensity": {
+          "nonempty_dice": 0.16189146858330616,
+          "native_volume_mae": 1.2393624839260249,
+          "all_compartment_dice": 0.17200672426982802,
+          "nonempty_compartment_dice": [
+            0.13310109040691773,
+            0.10780938829056441,
+            0.2538816910383337
+          ],
+          "visits": 60,
+          "patients": 13,
+          "patients_with_primary_dice": 13,
+          "nonempty_target_counts": [
+            53,
+            52,
+            59
+          ],
+          "empty_target_counts": [
+            7,
+            8,
+            1
+          ],
+          "empty_targets_with_false_foreground": [
+            5,
+            6,
+            1
+          ],
+          "empty_target_predicted_voxel_means": [
+            56.285714285714285,
+            67.75,
+            32.0
+          ],
+          "objective": 1.9772118551536066
+        },
+        "scoring/resolution": {
+          "nonempty_dice": 0.16137757172842487,
+          "native_volume_mae": 1.2726944018067967,
+          "all_compartment_dice": 0.16984504517566587,
+          "nonempty_compartment_dice": [
+            0.13750373275260008,
+            0.10625219802425998,
+            0.24454345725842616
+          ],
+          "visits": 60,
+          "patients": 13,
+          "patients_with_primary_dice": 13,
+          "nonempty_target_counts": [
+            53,
+            52,
+            59
+          ],
+          "empty_target_counts": [
+            7,
+            8,
+            1
+          ],
+          "empty_targets_with_false_foreground": [
+            5,
+            6,
+            1
+          ],
+          "empty_target_predicted_voxel_means": [
+            58.42857142857143,
+            82.0,
+            60.0
+          ],
+          "objective": 1.8924176788955964
+        }
+      },
+      "curve": [
+        {
+          "epoch": 1,
+          "successful_updates": 49,
+          "training_components": {
+            "volume": 0.6676494010748008,
+            "bce": 0.5807630144632779,
+            "dice": 0.9877006500195237
+          },
+          "training_objective": 2.2361130655576025,
+          "selection_dice": 0.08026448420585768,
+          "selection_native_volume_mae": 1.7669401269425007,
+          "selection_objective": 2.3108862395592555
+        },
+        {
+          "epoch": 2,
+          "successful_updates": 98,
+          "training_components": {
+            "volume": 0.6169420430293452,
+            "bce": 0.3734413642149703,
+            "dice": 0.9807364873397044
+          },
+          "training_objective": 1.97111989458402,
+          "selection_dice": 0.10900878126170523,
+          "selection_native_volume_mae": 1.751631423177601,
+          "selection_objective": 2.190319163372173
+        },
+        {
+          "epoch": 3,
+          "successful_updates": 147,
+          "training_components": {
+            "volume": 0.6387318061330379,
+            "bce": 0.27264016859042334,
+            "dice": 0.9710534318899496
+          },
+          "training_objective": 1.882425406613411,
+          "selection_dice": 0.12348075178814465,
+          "selection_native_volume_mae": 1.731088983581798,
+          "selection_objective": 2.115171149203059
+        },
+        {
+          "epoch": 4,
+          "successful_updates": 196,
+          "training_components": {
+            "volume": 0.5660928349082288,
+            "bce": 0.2213480380483163,
+            "dice": 0.9544305605766099
+          },
+          "training_objective": 1.741871433533155,
+          "selection_dice": 0.08745308039599387,
+          "selection_native_volume_mae": 1.5798299225497539,
+          "selection_objective": 1.9991843045820314
+        },
+        {
+          "epoch": 5,
+          "successful_updates": 245,
+          "training_components": {
+            "volume": 0.6256577758452831,
+            "bce": 0.17808201500238513,
+            "dice": 0.9511819656078634
+          },
+          "training_objective": 1.7549217564555317,
+          "selection_dice": 0.12885145762984596,
+          "selection_native_volume_mae": 1.5087994886535683,
+          "selection_objective": 2.0007325169130654
+        },
+        {
+          "epoch": 6,
+          "successful_updates": 294,
+          "training_components": {
+            "volume": 0.5693452209998401,
+            "bce": 0.1549768494107784,
+            "dice": 0.9359222268446898
+          },
+          "training_objective": 1.6602442972553084,
+          "selection_dice": 0.14877833333714305,
+          "selection_native_volume_mae": 1.5379650744852607,
+          "selection_objective": 1.9512635169979085
+        },
+        {
+          "epoch": 7,
+          "successful_updates": 343,
+          "training_components": {
+            "volume": 0.46680562358636124,
+            "bce": 0.1313186073341431,
+            "dice": 0.9123535892902276
+          },
+          "training_objective": 1.5104778202107318,
+          "selection_dice": 0.11694792877629588,
+          "selection_native_volume_mae": 1.4182744590316503,
+          "selection_objective": 1.8521345025024736
+        },
+        {
+          "epoch": 8,
+          "successful_updates": 392,
+          "training_components": {
+            "volume": 0.4302464484595336,
+            "bce": 0.11802224156757196,
+            "dice": 0.8961931103315107
+          },
+          "training_objective": 1.4444618003586163,
+          "selection_dice": 0.1496347281009232,
+          "selection_native_volume_mae": 1.5411518913851128,
+          "selection_objective": 1.9456045954303947
+        },
+        {
+          "epoch": 9,
+          "successful_updates": 441,
+          "training_components": {
+            "volume": 0.4118364570805659,
+            "bce": 0.12133415448837559,
+            "dice": 0.8778460105260212
+          },
+          "training_objective": 1.4110166220949627,
+          "selection_dice": 0.14946143309601745,
+          "selection_native_volume_mae": 1.4242246043206777,
+          "selection_objective": 1.8669932462633614
+        },
+        {
+          "epoch": 10,
+          "successful_updates": 490,
+          "training_components": {
+            "volume": 0.3395788743805427,
+            "bce": 0.10538525993052197,
+            "dice": 0.8693055513577584
+          },
+          "training_objective": 1.3142696856688232,
+          "selection_dice": 0.16255915229466453,
+          "selection_native_volume_mae": 1.4483767674236925,
+          "selection_objective": 1.925604967536561
+        },
+        {
+          "epoch": 11,
+          "successful_updates": 539,
+          "training_components": {
+            "volume": 0.38505098799195797,
+            "bce": 0.10387981404813054,
+            "dice": 0.8550171864338408
+          },
+          "training_objective": 1.3439479884739294,
+          "selection_dice": 0.16482098645104168,
+          "selection_native_volume_mae": 1.5786112976627,
+          "selection_objective": 2.0445323550711767
+        },
+        {
+          "epoch": 12,
+          "successful_updates": 588,
+          "training_components": {
+            "volume": 0.33791211846356217,
+            "bce": 0.10174357519270137,
+            "dice": 0.8275403365110741
+          },
+          "training_objective": 1.2671960301673375,
+          "selection_dice": 0.156729092186343,
+          "selection_native_volume_mae": 1.4886074834497756,
+          "selection_objective": 2.1487542147570537
+        },
+        {
+          "epoch": 13,
+          "successful_updates": 637,
+          "training_components": {
+            "volume": 0.2769083872915079,
+            "bce": 0.09931271500670565,
+            "dice": 0.8122706844256474
+          },
+          "training_objective": 1.188491786723861,
+          "selection_dice": 0.15546137094710508,
+          "selection_native_volume_mae": 1.4953128480603473,
+          "selection_objective": 2.159183753105196
+        },
+        {
+          "epoch": 14,
+          "successful_updates": 686,
+          "training_components": {
+            "volume": 0.33370642889386565,
+            "bce": 0.09513097038635841,
+            "dice": 0.813744267133566
+          },
+          "training_objective": 1.24258166641379,
+          "selection_dice": 0.1682407028644063,
+          "selection_native_volume_mae": 1.517912894296309,
+          "selection_objective": 2.147137220865265
+        },
+        {
+          "epoch": 15,
+          "successful_updates": 735,
+          "training_components": {
+            "volume": 0.2820846703190069,
+            "bce": 0.09675904639148848,
+            "dice": 0.7961235452920962
+          },
+          "training_objective": 1.1749672620025915,
+          "selection_dice": 0.14781149215926312,
+          "selection_native_volume_mae": 1.5258321151753598,
+          "selection_objective": 2.1964603775059683
+        },
+        {
+          "epoch": 16,
+          "successful_updates": 784,
+          "training_components": {
+            "volume": 0.26149858172314294,
+            "bce": 0.09459445682855755,
+            "dice": 0.7789533278880973
+          },
+          "training_objective": 1.1350463664397978,
+          "selection_dice": 0.16071548860836135,
+          "selection_native_volume_mae": 1.530497723408674,
+          "selection_objective": 2.2796572403899282
+        },
+        {
+          "epoch": 17,
+          "successful_updates": 833,
+          "training_components": {
+            "volume": 0.264323629424549,
+            "bce": 0.10100973918317604,
+            "dice": 0.756199741974855
+          },
+          "training_objective": 1.12153311058258,
+          "selection_dice": 0.172491405514942,
+          "selection_native_volume_mae": 1.424434803713329,
+          "selection_objective": 2.1298736787894192
+        },
+        {
+          "epoch": 18,
+          "successful_updates": 882,
+          "training_components": {
+            "volume": 0.27583830150751737,
+            "bce": 0.09212800999237702,
+            "dice": 0.7638962550041005
+          },
+          "training_objective": 1.131862566503995,
+          "selection_dice": 0.15434222186751756,
+          "selection_native_volume_mae": 1.4209369069727984,
+          "selection_objective": 2.279729357446791
+        },
+        {
+          "epoch": 19,
+          "successful_updates": 931,
+          "training_components": {
+            "volume": 0.26748110403617226,
+            "bce": 0.09521153862588111,
+            "dice": 0.7446475993364287
+          },
+          "training_objective": 1.107340241998482,
+          "selection_dice": 0.16310642558659802,
+          "selection_native_volume_mae": 1.430762464453908,
+          "selection_objective": 2.1547393219303106
+        },
+        {
+          "epoch": 20,
+          "successful_updates": 980,
+          "training_components": {
+            "volume": 0.209052487099782,
+            "bce": 0.09158600360537186,
+            "dice": 0.7442809626077995
+          },
+          "training_objective": 1.0449194533129533,
+          "selection_dice": 0.15846380758385173,
+          "selection_native_volume_mae": 1.456398728055617,
+          "selection_objective": 2.210760320784149
+        },
+        {
+          "epoch": 21,
+          "successful_updates": 1029,
+          "training_components": {
+            "volume": 0.2070902040658089,
+            "bce": 0.0952484209862096,
+            "dice": 0.7295492650606692
+          },
+          "training_objective": 1.0318878901126878,
+          "selection_dice": 0.14904033469139472,
+          "selection_native_volume_mae": 1.491671357289654,
+          "selection_objective": 2.4947302605060333
+        },
+        {
+          "epoch": 22,
+          "successful_updates": 1078,
+          "training_components": {
+            "volume": 0.19692901734453755,
+            "bce": 0.09228177851734638,
+            "dice": 0.7160820442896625
+          },
+          "training_objective": 1.0052928401515464,
+          "selection_dice": 0.15602469801322727,
+          "selection_native_volume_mae": 1.4163832728259242,
+          "selection_objective": 2.2751550619296212
+        },
+        {
+          "epoch": 23,
+          "successful_updates": 1127,
+          "training_components": {
+            "volume": 0.2474738574897249,
+            "bce": 0.08549003455002839,
+            "dice": 0.7333447817044383
+          },
+          "training_objective": 1.0663086737441916,
+          "selection_dice": 0.1700521726229063,
+          "selection_native_volume_mae": 1.4664859473198761,
+          "selection_objective": 2.361525192777104
+        },
+        {
+          "epoch": 24,
+          "successful_updates": 1176,
+          "training_components": {
+            "volume": 0.16552204088522837,
+            "bce": 0.09205351287143855,
+            "dice": 0.6951035692141605
+          },
+          "training_objective": 0.9526791229708275,
+          "selection_dice": 0.16112145945318357,
+          "selection_native_volume_mae": 1.4900403926988146,
+          "selection_objective": 2.480243968400513
+        },
+        {
+          "epoch": 25,
+          "successful_updates": 1225,
+          "training_components": {
+            "volume": 0.1686446121535622,
+            "bce": 0.08913764687111743,
+            "dice": 0.6896116348413319
+          },
+          "training_objective": 0.9473938938660116,
+          "selection_dice": 0.1596257451076941,
+          "selection_native_volume_mae": 1.5114112470131955,
+          "selection_objective": 2.36086100703786
+        },
+        {
+          "epoch": 26,
+          "successful_updates": 1274,
+          "training_components": {
+            "volume": 0.20481762773811052,
+            "bce": 0.0847834738516189,
+            "dice": 0.701338417407794
+          },
+          "training_objective": 0.9909395189975234,
+          "selection_dice": 0.15926665243496943,
+          "selection_native_volume_mae": 1.4686482461948742,
+          "selection_objective": 2.461175946447726
+        },
+        {
+          "epoch": 27,
+          "successful_updates": 1323,
+          "training_components": {
+            "volume": 0.25287631047077663,
+            "bce": 0.08240949505270692,
+            "dice": 0.6885819048453601
+          },
+          "training_objective": 1.0238677103688436,
+          "selection_dice": 0.14021225715924626,
+          "selection_native_volume_mae": 1.4475383533385988,
+          "selection_objective": 2.557240904078764
+        },
+        {
+          "epoch": 28,
+          "successful_updates": 1372,
+          "training_components": {
+            "volume": 0.16677208234293336,
+            "bce": 0.0853828694066928,
+            "dice": 0.6813429074409679
+          },
+          "training_objective": 0.9334978591905941,
+          "selection_dice": 0.15356291732770652,
+          "selection_native_volume_mae": 1.4401877443968771,
+          "selection_objective": 2.4464516533356084
+        },
+        {
+          "epoch": 29,
+          "successful_updates": 1421,
+          "training_components": {
+            "volume": 0.17716922245633143,
+            "bce": 0.08385318815958154,
+            "dice": 0.6862942808713669
+          },
+          "training_objective": 0.9473166914872799,
+          "selection_dice": 0.1542549236534741,
+          "selection_native_volume_mae": 1.4701950584168264,
+          "selection_objective": 2.461715770458367
+        },
+        {
+          "epoch": 30,
+          "successful_updates": 1470,
+          "training_components": {
+            "volume": 0.16332518408695865,
+            "bce": 0.09183981280567913,
+            "dice": 0.6688316493462295
+          },
+          "training_objective": 0.9239966462388673,
+          "selection_dice": 0.14533772015039528,
+          "selection_native_volume_mae": 1.4811521830238477,
+          "selection_objective": 2.41897993052707
+        },
+        {
+          "epoch": 31,
+          "successful_updates": 1519,
+          "training_components": {
+            "volume": 0.123016339693314,
+            "bce": 0.08139920977559179,
+            "dice": 0.665019251138736
+          },
+          "training_objective": 0.8694348006076418,
+          "selection_dice": 0.17022329213455534,
+          "selection_native_volume_mae": 1.4521306801696872,
+          "selection_objective": 2.360427102574053
+        },
+        {
+          "epoch": 32,
+          "successful_updates": 1568,
+          "training_components": {
+            "volume": 0.1324668856863028,
+            "bce": 0.08741816073754588,
+            "dice": 0.6460353967471001
+          },
+          "training_objective": 0.8659204431709487,
+          "selection_dice": 0.16230789783077326,
+          "selection_native_volume_mae": 1.4344090967222354,
+          "selection_objective": 2.3279040459961817
+        },
+        {
+          "epoch": 33,
+          "successful_updates": 1617,
+          "training_components": {
+            "volume": 0.15268817772038093,
+            "bce": 0.07960662080552608,
+            "dice": 0.6531190707133367
+          },
+          "training_objective": 0.8854138692392437,
+          "selection_dice": 0.17161021557890385,
+          "selection_native_volume_mae": 1.3885665981736344,
+          "selection_objective": 2.5256919439144956
+        },
+        {
+          "epoch": 34,
+          "successful_updates": 1666,
+          "training_components": {
+            "volume": 0.14281883461353106,
+            "bce": 0.07866004209533388,
+            "dice": 0.6380943283056603
+          },
+          "training_objective": 0.8595732050145252,
+          "selection_dice": 0.17126373438319542,
+          "selection_native_volume_mae": 1.4734138593631807,
+          "selection_objective": 2.4877308578095976
+        },
+        {
+          "epoch": 35,
+          "successful_updates": 1715,
+          "training_components": {
+            "volume": 0.1503693588603383,
+            "bce": 0.08230599090882328,
+            "dice": 0.6480507103296426
+          },
+          "training_objective": 0.8807260600988042,
+          "selection_dice": 0.16342692690478103,
+          "selection_native_volume_mae": 1.4588175884453882,
+          "selection_objective": 2.5846980804268687
+        },
+        {
+          "epoch": 36,
+          "successful_updates": 1764,
+          "training_components": {
+            "volume": 0.13532546220872646,
+            "bce": 0.08322446556364108,
+            "dice": 0.6510567244810935
+          },
+          "training_objective": 0.8696066522534611,
+          "selection_dice": 0.16245980414919434,
+          "selection_native_volume_mae": 1.4637216222708824,
+          "selection_objective": 2.542937119004986
+        },
+        {
+          "epoch": 37,
+          "successful_updates": 1813,
+          "training_components": {
+            "volume": 0.15878543581049415,
+            "bce": 0.07820255345637307,
+            "dice": 0.6657807813240931
+          },
+          "training_objective": 0.9027687705909604,
+          "selection_dice": 0.1679969555660753,
+          "selection_native_volume_mae": 1.473346473627589,
+          "selection_objective": 2.6043169162968263
+        },
+        {
+          "epoch": 38,
+          "successful_updates": 1862,
+          "training_components": {
+            "volume": 0.1102978879203781,
+            "bce": 0.07595890456734478,
+            "dice": 0.6513312608767778
+          },
+          "training_objective": 0.8375880533645007,
+          "selection_dice": 0.16391303898880336,
+          "selection_native_volume_mae": 1.4673177665179018,
+          "selection_objective": 2.757109731318904
+        },
+        {
+          "epoch": 39,
+          "successful_updates": 1911,
+          "training_components": {
+            "volume": 0.11582749791156786,
+            "bce": 0.07223894223832013,
+            "dice": 0.649479937706238
+          },
+          "training_objective": 0.8375463778561261,
+          "selection_dice": 0.16475194883472163,
+          "selection_native_volume_mae": 1.4483279041882837,
+          "selection_objective": 2.6011587363725894
+        },
+        {
+          "epoch": 40,
+          "successful_updates": 1960,
+          "training_components": {
+            "volume": 0.10875707157433798,
+            "bce": 0.07787031950660422,
+            "dice": 0.6330122700104348
+          },
+          "training_objective": 0.819639661091377,
+          "selection_dice": 0.15618200906568802,
+          "selection_native_volume_mae": 1.3968300483825073,
+          "selection_objective": 2.665162692414248
+        },
+        {
+          "epoch": 41,
+          "successful_updates": 2009,
+          "training_components": {
+            "volume": 0.11711242527056198,
+            "bce": 0.07310897396968451,
+            "dice": 0.6133836023318462
+          },
+          "training_objective": 0.8036050015720927,
+          "selection_dice": 0.16391190448234008,
+          "selection_native_volume_mae": 1.440625209035649,
+          "selection_objective": 2.7719676325559193
+        },
+        {
+          "epoch": 42,
+          "successful_updates": 2058,
+          "training_components": {
+            "volume": 0.11750575480505057,
+            "bce": 0.06320800867363757,
+            "dice": 0.6360456558374258
+          },
+          "training_objective": 0.816759419316114,
+          "selection_dice": 0.15493884842270447,
+          "selection_native_volume_mae": 1.4880437847170194,
+          "selection_objective": 2.8928963514041564
+        },
+        {
+          "epoch": 43,
+          "successful_updates": 2107,
+          "training_components": {
+            "volume": 0.11542461352804914,
+            "bce": 0.06767617764443201,
+            "dice": 0.6154404571423164
+          },
+          "training_objective": 0.7985412483147976,
+          "selection_dice": 0.1545035179509122,
+          "selection_native_volume_mae": 1.4521570594415256,
+          "selection_objective": 2.9336227144043288
+        },
+        {
+          "epoch": 44,
+          "successful_updates": 2156,
+          "training_components": {
+            "volume": 0.1020446872517753,
+            "bce": 0.07532483603781424,
+            "dice": 0.6122962913452051
+          },
+          "training_objective": 0.7896658146347947,
+          "selection_dice": 0.1622251540403221,
+          "selection_native_volume_mae": 1.4502844940579669,
+          "selection_objective": 2.685368009737681
+        },
+        {
+          "epoch": 45,
+          "successful_updates": 2205,
+          "training_components": {
+            "volume": 0.07765283895513185,
+            "bce": 0.0676745922675204,
+            "dice": 0.5891942172478407
+          },
+          "training_objective": 0.734521648470493,
+          "selection_dice": 0.15783245156619477,
+          "selection_native_volume_mae": 1.4449287430633138,
+          "selection_objective": 2.8036404456684294
+        },
+        {
+          "epoch": 46,
+          "successful_updates": 2254,
+          "training_components": {
+            "volume": 0.1120360678443924,
+            "bce": 0.06523076915430304,
+            "dice": 0.5953916826309301
+          },
+          "training_objective": 0.7726585196296256,
+          "selection_dice": 0.1649464512051993,
+          "selection_native_volume_mae": 1.4463927373028396,
+          "selection_objective": 2.7127249966277587
+        },
+        {
+          "epoch": 47,
+          "successful_updates": 2303,
+          "training_components": {
+            "volume": 0.1108725728885008,
+            "bce": 0.071278147628301,
+            "dice": 0.6124294979450031
+          },
+          "training_objective": 0.7945802184618049,
+          "selection_dice": 0.1623108849385892,
+          "selection_native_volume_mae": 1.445775188380757,
+          "selection_objective": 2.74495005456734
+        },
+        {
+          "epoch": 48,
+          "successful_updates": 2352,
+          "training_components": {
+            "volume": 0.07996874049735758,
+            "bce": 0.06699680444610585,
+            "dice": 0.6088375024306469
+          },
+          "training_objective": 0.7558030473741104,
+          "selection_dice": 0.1528770814618434,
+          "selection_native_volume_mae": 1.4714511896311373,
+          "selection_objective": 2.7402109055914345
+        },
+        {
+          "epoch": 49,
+          "successful_updates": 2401,
+          "training_components": {
+            "volume": 0.09630548342680319,
+            "bce": 0.06409896325593506,
+            "dice": 0.5892740295483515
+          },
+          "training_objective": 0.7496784762310897,
+          "selection_dice": 0.16254776291016323,
+          "selection_native_volume_mae": 1.4397589363519292,
+          "selection_objective": 2.917741172496435
+        },
+        {
+          "epoch": 50,
+          "successful_updates": 2450,
+          "training_components": {
+            "volume": 0.1064678018614172,
+            "bce": 0.06398568301087018,
+            "dice": 0.5726526871705668
+          },
+          "training_objective": 0.7431061720428542,
+          "selection_dice": 0.15671544761104086,
+          "selection_native_volume_mae": 1.435574770720434,
+          "selection_objective": 2.9210014446852677
+        },
+        {
+          "epoch": 51,
+          "successful_updates": 2499,
+          "training_components": {
+            "volume": 0.05234949425435984,
+            "bce": 0.06988411406293892,
+            "dice": 0.5528356342743606
+          },
+          "training_objective": 0.6750692425916593,
+          "selection_dice": 0.15873236859604517,
+          "selection_native_volume_mae": 1.4350325558288797,
+          "selection_objective": 2.9185646310847075
+        },
+        {
+          "epoch": 52,
+          "successful_updates": 2548,
+          "training_components": {
+            "volume": 0.08582809653180913,
+            "bce": 0.06702085239881761,
+            "dice": 0.5790287026992212
+          },
+          "training_objective": 0.731877651629848,
+          "selection_dice": 0.155126769056546,
+          "selection_native_volume_mae": 1.4671837119150863,
+          "selection_objective": 2.9119728120146795
+        },
+        {
+          "epoch": 53,
+          "successful_updates": 2597,
+          "training_components": {
+            "volume": 0.08685111745905418,
+            "bce": 0.06694614647830557,
+            "dice": 0.5749513311263842
+          },
+          "training_objective": 0.7287485950637439,
+          "selection_dice": 0.15750299517749694,
+          "selection_native_volume_mae": 1.4610881359976347,
+          "selection_objective": 3.0218030162142346
+        },
+        {
+          "epoch": 54,
+          "successful_updates": 2646,
+          "training_components": {
+            "volume": 0.09618242810695218,
+            "bce": 0.06048602651235109,
+            "dice": 0.5739688054109232
+          },
+          "training_objective": 0.7306372600302264,
+          "selection_dice": 0.16296372189610248,
+          "selection_native_volume_mae": 1.4445925056982087,
+          "selection_objective": 2.9805184272840064
+        },
+        {
+          "epoch": 55,
+          "successful_updates": 2695,
+          "training_components": {
+            "volume": 0.07252311852211374,
+            "bce": 0.06155599061000826,
+            "dice": 0.5598308042073861
+          },
+          "training_objective": 0.693909913339508,
+          "selection_dice": 0.1574026988135212,
+          "selection_native_volume_mae": 1.4379015803387496,
+          "selection_objective": 3.072487708942138
+        },
+        {
+          "epoch": 56,
+          "successful_updates": 2744,
+          "training_components": {
+            "volume": 0.09537027412040446,
+            "bce": 0.058977095101354064,
+            "dice": 0.5601144295472367
+          },
+          "training_objective": 0.7144617987689952,
+          "selection_dice": 0.1579677763732388,
+          "selection_native_volume_mae": 1.4389053553838471,
+          "selection_objective": 3.13368551754484
+        },
+        {
+          "epoch": 57,
+          "successful_updates": 2793,
+          "training_components": {
+            "volume": 0.06452830822851796,
+            "bce": 0.06080095960280278,
+            "dice": 0.5589056664552445
+          },
+          "training_objective": 0.6842349342865652,
+          "selection_dice": 0.15328922252060176,
+          "selection_native_volume_mae": 1.4459502567244564,
+          "selection_objective": 3.1679541669002402
+        },
+        {
+          "epoch": 58,
+          "successful_updates": 2842,
+          "training_components": {
+            "volume": 0.05727401848595876,
+            "bce": 0.06316243995876367,
+            "dice": 0.5509166197899059
+          },
+          "training_objective": 0.6713530782346283,
+          "selection_dice": 0.1575969731096657,
+          "selection_native_volume_mae": 1.4381963722994706,
+          "selection_objective": 3.1021461954410063
+        },
+        {
+          "epoch": 59,
+          "successful_updates": 2891,
+          "training_components": {
+            "volume": 0.08463781661330123,
+            "bce": 0.06322327512002979,
+            "dice": 0.5544369174883915
+          },
+          "training_objective": 0.7022980092217226,
+          "selection_dice": 0.15670798541894468,
+          "selection_native_volume_mae": 1.4465082321096352,
+          "selection_objective": 3.1069601101883806
+        },
+        {
+          "epoch": 60,
+          "successful_updates": 2940,
+          "training_components": {
+            "volume": 0.08354793037646092,
+            "bce": 0.05909437024700962,
+            "dice": 0.5499549300242692
+          },
+          "training_objective": 0.6925972306477397,
+          "selection_dice": 0.15261731937296674,
+          "selection_native_volume_mae": 1.447847221526182,
+          "selection_objective": 3.1567125586158666
+        },
+        {
+          "epoch": 61,
+          "successful_updates": 2989,
+          "training_components": {
+            "volume": 0.056095686538192704,
+            "bce": 0.060842909417484534,
+            "dice": 0.554735363752414
+          },
+          "training_objective": 0.6716739597080912,
+          "selection_dice": 0.15633148608567715,
+          "selection_native_volume_mae": 1.444039834379118,
+          "selection_objective": 3.191844693766558
+        },
+        {
+          "epoch": 62,
+          "successful_updates": 3038,
+          "training_components": {
+            "volume": 0.07780643605436079,
+            "bce": 0.06021805788582126,
+            "dice": 0.5244837961135767
+          },
+          "training_objective": 0.6625082900537587,
+          "selection_dice": 0.1498875218725719,
+          "selection_native_volume_mae": 1.4444048015024846,
+          "selection_objective": 3.189624947787606
+        },
+        {
+          "epoch": 63,
+          "successful_updates": 3087,
+          "training_components": {
+            "volume": 0.07054150228102048,
+            "bce": 0.055995581838616096,
+            "dice": 0.5283388603956272
+          },
+          "training_objective": 0.6548759445152638,
+          "selection_dice": 0.15609852108623354,
+          "selection_native_volume_mae": 1.4422060667675571,
+          "selection_objective": 3.1080367223995466
+        },
+        {
+          "epoch": 64,
+          "successful_updates": 3136,
+          "training_components": {
+            "volume": 0.06072080923805539,
+            "bce": 0.05903322006452071,
+            "dice": 0.5331839092266866
+          },
+          "training_objective": 0.6529379385292626,
+          "selection_dice": 0.15129274574146226,
+          "selection_native_volume_mae": 1.4462141868549514,
+          "selection_objective": 3.261385384674803
+        },
+        {
+          "epoch": 65,
+          "successful_updates": 3185,
+          "training_components": {
+            "volume": 0.05020989777448659,
+            "bce": 0.05853273641747737,
+            "dice": 0.5275081879053358
+          },
+          "training_objective": 0.6362508220972998,
+          "selection_dice": 0.15295120141902355,
+          "selection_native_volume_mae": 1.4397574452182083,
+          "selection_objective": 3.2390902368248886
+        },
+        {
+          "epoch": 66,
+          "successful_updates": 3234,
+          "training_components": {
+            "volume": 0.06074023577623451,
+            "bce": 0.057031320774909446,
+            "dice": 0.5166942099730174
+          },
+          "training_objective": 0.6344657665241613,
+          "selection_dice": 0.15454458465236914,
+          "selection_native_volume_mae": 1.4368643655832882,
+          "selection_objective": 3.2041265092219047
+        },
+        {
+          "epoch": 67,
+          "successful_updates": 3283,
+          "training_components": {
+            "volume": 0.08872265627798744,
+            "bce": 0.05494070815997801,
+            "dice": 0.5268902089351263
+          },
+          "training_objective": 0.6705535733730917,
+          "selection_dice": 0.1590580315978667,
+          "selection_native_volume_mae": 1.4426442372138522,
+          "selection_objective": 3.237615001148506
+        },
+        {
+          "epoch": 68,
+          "successful_updates": 3332,
+          "training_components": {
+            "volume": 0.04548259240885576,
+            "bce": 0.054252422118103515,
+            "dice": 0.5121415567703738
+          },
+          "training_objective": 0.6118765712973331,
+          "selection_dice": 0.15158665677468874,
+          "selection_native_volume_mae": 1.4490735410749844,
+          "selection_objective": 3.2590376442235214
+        },
+        {
+          "epoch": 69,
+          "successful_updates": 3381,
+          "training_components": {
+            "volume": 0.06638487344965911,
+            "bce": 0.05962648205183005,
+            "dice": 0.5243177161766932
+          },
+          "training_objective": 0.6503290716781823,
+          "selection_dice": 0.15644377251713293,
+          "selection_native_volume_mae": 1.4420302304214188,
+          "selection_objective": 3.2696251654688684
+        },
+        {
+          "epoch": 70,
+          "successful_updates": 3430,
+          "training_components": {
+            "volume": 0.03426679432905542,
+            "bce": 0.05777777115432309,
+            "dice": 0.515222285496883
+          },
+          "training_objective": 0.6072668509802615,
+          "selection_dice": 0.15513110165147326,
+          "selection_native_volume_mae": 1.4311697375425647,
+          "selection_objective": 3.2989447688036426
+        },
+        {
+          "epoch": 71,
+          "successful_updates": 3479,
+          "training_components": {
+            "volume": 0.03960050852933469,
+            "bce": 0.057430070114311935,
+            "dice": 0.5224689746514344
+          },
+          "training_objective": 0.619499553295081,
+          "selection_dice": 0.15551533381471883,
+          "selection_native_volume_mae": 1.4391310966023216,
+          "selection_objective": 3.284881829577971
+        },
+        {
+          "epoch": 72,
+          "successful_updates": 3528,
+          "training_components": {
+            "volume": 0.06641557546308599,
+            "bce": 0.056461901355681056,
+            "dice": 0.5397950201462477
+          },
+          "training_objective": 0.6626724969650147,
+          "selection_dice": 0.15466538136854488,
+          "selection_native_volume_mae": 1.4445742346342056,
+          "selection_objective": 3.328723181962117
+        },
+        {
+          "epoch": 73,
+          "successful_updates": 3577,
+          "training_components": {
+            "volume": 0.03203511506629487,
+            "bce": 0.05643048167923833,
+            "dice": 0.5289075446434509
+          },
+          "training_objective": 0.6173731413889841,
+          "selection_dice": 0.15283888013025473,
+          "selection_native_volume_mae": 1.4430456988765916,
+          "selection_objective": 3.3271629302790666
+        },
+        {
+          "epoch": 74,
+          "successful_updates": 3626,
+          "training_components": {
+            "volume": 0.04419774883844627,
+            "bce": 0.05705593085073744,
+            "dice": 0.5158102850119273
+          },
+          "training_objective": 0.617063964701111,
+          "selection_dice": 0.15308022099895946,
+          "selection_native_volume_mae": 1.4381282920578011,
+          "selection_objective": 3.333653583076124
+        },
+        {
+          "epoch": 75,
+          "successful_updates": 3675,
+          "training_components": {
+            "volume": 0.06564606230061214,
+            "bce": 0.055071701895949676,
+            "dice": 0.5267888140984069
+          },
+          "training_objective": 0.6475065782949687,
+          "selection_dice": 0.15469971783278383,
+          "selection_native_volume_mae": 1.4373477161665882,
+          "selection_objective": 3.3676727223205063
+        },
+        {
+          "epoch": 76,
+          "successful_updates": 3724,
+          "training_components": {
+            "volume": 0.045843143320869265,
+            "bce": 0.0524013638453676,
+            "dice": 0.5047749601877651
+          },
+          "training_objective": 0.603019467354002,
+          "selection_dice": 0.15592430639858637,
+          "selection_native_volume_mae": 1.4444414116766642,
+          "selection_objective": 3.3917266538117654
+        },
+        {
+          "epoch": 77,
+          "successful_updates": 3773,
+          "training_components": {
+            "volume": 0.09121270966835514,
+            "bce": 0.053225157498169355,
+            "dice": 0.5226052754964584
+          },
+          "training_objective": 0.6670431426629829,
+          "selection_dice": 0.15316680853235828,
+          "selection_native_volume_mae": 1.4480310728834718,
+          "selection_objective": 3.4117668580137694
+        },
+        {
+          "epoch": 78,
+          "successful_updates": 3822,
+          "training_components": {
+            "volume": 0.05871588472509758,
+            "bce": 0.05551768828411764,
+            "dice": 0.5260642426136212
+          },
+          "training_objective": 0.6402978156228364,
+          "selection_dice": 0.15494267923937785,
+          "selection_native_volume_mae": 1.445233456700148,
+          "selection_objective": 3.4314753163094616
+        },
+        {
+          "epoch": 79,
+          "successful_updates": 3871,
+          "training_components": {
+            "volume": 0.029456494294871124,
+            "bce": 0.056532051554742634,
+            "dice": 0.5164378768358474
+          },
+          "training_objective": 0.6024264226854612,
+          "selection_dice": 0.1582973715732296,
+          "selection_native_volume_mae": 1.4423961366210238,
+          "selection_objective": 3.363385768731435
+        },
+        {
+          "epoch": 80,
+          "successful_updates": 3920,
+          "training_components": {
+            "volume": 0.06390410229468192,
+            "bce": 0.054300737246870616,
+            "dice": 0.5225947736165462
+          },
+          "training_objective": 0.6407996131580987,
+          "selection_dice": 0.15193066615398856,
+          "selection_native_volume_mae": 1.4456317453418213,
+          "selection_objective": 3.397103389571695
+        }
+      ]
+    },
+    "pretrained-43": {
+      "seed": 43,
+      "selected_epoch": 22,
+      "selected_checkpoint_sha256": "23a0a76df9be5b41da2149fc054e7f8e2aa085b01b97d1d5a2ba52af71879046",
+      "metrics": {
+        "fitting/identity": {
+          "nonempty_dice": 0.3326318378299871,
+          "native_volume_mae": 0.3267878062020436,
+          "all_compartment_dice": 0.3486302980551847,
+          "nonempty_compartment_dice": [
+            0.3599632617853646,
+            0.2399187984587891,
+            0.38723254461716683
+          ],
+          "visits": 195,
+          "patients": 40,
+          "patients_with_primary_dice": 40,
+          "nonempty_target_counts": [
+            176,
+            154,
+            190
+          ],
+          "empty_target_counts": [
+            19,
+            41,
+            5
+          ],
+          "empty_targets_with_false_foreground": [
+            3,
+            29,
+            1
+          ],
+          "empty_target_predicted_voxel_means": [
+            10.31578947368421,
+            57.78048780487805,
+            2.2
+          ],
+          "objective": 1.0105080991574504
+        },
+        "selection/identity": {
+          "nonempty_dice": 0.23543096290749152,
+          "native_volume_mae": 1.3101305569400876,
+          "all_compartment_dice": 0.2501767772961253,
+          "nonempty_compartment_dice": [
+            0.17787447386279964,
+            0.16910744667167055,
+            0.33879349273690357
+          ],
+          "visits": 67,
+          "patients": 11,
+          "patients_with_primary_dice": 11,
+          "nonempty_target_counts": [
+            60,
+            37,
+            66
+          ],
+          "empty_target_counts": [
+            7,
+            30,
+            1
+          ],
+          "empty_targets_with_false_foreground": [
+            3,
+            27,
+            0
+          ],
+          "empty_target_predicted_voxel_means": [
+            20.0,
+            74.86666666666666,
+            0.0
+          ],
+          "objective": 1.8888228731996874
+        },
+        "scoring/identity": {
+          "nonempty_dice": 0.1908699365073215,
+          "native_volume_mae": 1.11594711229724,
+          "all_compartment_dice": 0.23763108647137768,
+          "nonempty_compartment_dice": [
+            0.15795048233016162,
+            0.13212479416434453,
+            0.28946818352037645
+          ],
+          "visits": 60,
+          "patients": 13,
+          "patients_with_primary_dice": 13,
+          "nonempty_target_counts": [
+            53,
+            52,
+            59
+          ],
+          "empty_target_counts": [
+            7,
+            8,
+            1
+          ],
+          "empty_targets_with_false_foreground": [
+            3,
+            5,
+            0
+          ],
+          "empty_target_predicted_voxel_means": [
+            15.0,
+            35.25,
+            0.0
+          ],
+          "objective": 1.7724233965552043
+        },
+        "scoring/intensity": {
+          "nonempty_dice": 0.1907079254393824,
+          "native_volume_mae": 1.1159245358481216,
+          "all_compartment_dice": 0.23756063394125657,
+          "nonempty_compartment_dice": [
+            0.1564651926827654,
+            0.13310748512696435,
+            0.2896520620621127
+          ],
+          "visits": 60,
+          "patients": 13,
+          "patients_with_primary_dice": 13,
+          "nonempty_target_counts": [
+            53,
+            52,
+            59
+          ],
+          "empty_target_counts": [
+            7,
+            8,
+            1
+          ],
+          "empty_targets_with_false_foreground": [
+            3,
+            5,
+            0
+          ],
+          "empty_target_predicted_voxel_means": [
+            15.285714285714286,
+            35.0,
+            0.0
+          ],
+          "objective": 1.772734100481675
+        },
+        "scoring/resolution": {
+          "nonempty_dice": 0.1635408999729247,
+          "native_volume_mae": 1.1981887941797824,
+          "all_compartment_dice": 0.23297442329213752,
+          "nonempty_compartment_dice": [
+            0.09946459408332531,
+            0.127917890022905,
+            0.2713559375330458
+          ],
+          "visits": 60,
+          "patients": 13,
+          "patients_with_primary_dice": 13,
+          "nonempty_target_counts": [
+            53,
+            52,
+            59
+          ],
+          "empty_target_counts": [
+            7,
+            8,
+            1
+          ],
+          "empty_targets_with_false_foreground": [
+            1,
+            3,
+            1
+          ],
+          "empty_target_predicted_voxel_means": [
+            5.714285714285714,
+            13.0,
+            58.0
+          ],
+          "objective": 1.8565651771750058
+        }
+      },
+      "curve": [
+        {
+          "epoch": 1,
+          "successful_updates": 49,
+          "training_components": {
+            "volume": 0.5750255911778183,
+            "bce": 0.7780266364415487,
+            "dice": 0.9915146363087189
+          },
+          "training_objective": 2.344566863928086,
+          "selection_dice": 0.030346156659283186,
+          "selection_native_volume_mae": 1.5471840399774095,
+          "selection_objective": 2.430885820762784
+        },
+        {
+          "epoch": 2,
+          "successful_updates": 98,
+          "training_components": {
+            "volume": 0.5096433780896358,
+            "bce": 0.5836131989955902,
+            "dice": 0.9858353972435
+          },
+          "training_objective": 2.079091974328726,
+          "selection_dice": 0.06977074562213567,
+          "selection_native_volume_mae": 1.505360014835331,
+          "selection_objective": 2.2292564820637675
+        },
+        {
+          "epoch": 3,
+          "successful_updates": 147,
+          "training_components": {
+            "volume": 0.42912814254179976,
+            "bce": 0.4196380376815795,
+            "dice": 0.9814765957685617
+          },
+          "training_objective": 1.830242775991941,
+          "selection_dice": 0.10069094140061226,
+          "selection_native_volume_mae": 1.3447585760621086,
+          "selection_objective": 2.0110668650019825
+        },
+        {
+          "epoch": 4,
+          "successful_updates": 196,
+          "training_components": {
+            "volume": 0.31337918218893884,
+            "bce": 0.30868942118608045,
+            "dice": 0.9731294060364747
+          },
+          "training_objective": 1.595198009411494,
+          "selection_dice": 0.10325579829162042,
+          "selection_native_volume_mae": 1.3013883192416897,
+          "selection_objective": 1.901210175861012
+        },
+        {
+          "epoch": 5,
+          "successful_updates": 245,
+          "training_components": {
+            "volume": 0.3552287578009641,
+            "bce": 0.2454112309293869,
+            "dice": 0.9621179871070076
+          },
+          "training_objective": 1.5627579758373586,
+          "selection_dice": 0.11278443700398057,
+          "selection_native_volume_mae": 1.295585943445591,
+          "selection_objective": 1.8351353244666744
+        },
+        {
+          "epoch": 6,
+          "successful_updates": 294,
+          "training_components": {
+            "volume": 0.2704387236673098,
+            "bce": 0.19333388801568593,
+            "dice": 0.9469033449124068
+          },
+          "training_objective": 1.4106759565954026,
+          "selection_dice": 0.1413953140473827,
+          "selection_native_volume_mae": 1.2447658782283235,
+          "selection_objective": 1.7507470823545508
+        },
+        {
+          "epoch": 7,
+          "successful_updates": 343,
+          "training_components": {
+            "volume": 0.28565012511248,
+            "bce": 0.15583403899501536,
+            "dice": 0.9357315573936854
+          },
+          "training_objective": 1.3772157215011807,
+          "selection_dice": 0.1489160811379121,
+          "selection_native_volume_mae": 1.3311160390428773,
+          "selection_objective": 1.7786450368304092
+        },
+        {
+          "epoch": 8,
+          "successful_updates": 392,
+          "training_components": {
+            "volume": 0.2561901823354837,
+            "bce": 0.1461453300829117,
+            "dice": 0.9181418602283185
+          },
+          "training_objective": 1.3204773726467138,
+          "selection_dice": 0.17001281528760828,
+          "selection_native_volume_mae": 1.4091211531367185,
+          "selection_objective": 1.8271208488154964
+        },
+        {
+          "epoch": 9,
+          "successful_updates": 441,
+          "training_components": {
+            "volume": 0.22738517813193493,
+            "bce": 0.13093824304449253,
+            "dice": 0.9069294791955214
+          },
+          "training_objective": 1.2652529003719488,
+          "selection_dice": 0.1508334799282707,
+          "selection_native_volume_mae": 1.3257018493151234,
+          "selection_objective": 1.7363479402347892
+        },
+        {
+          "epoch": 10,
+          "successful_updates": 490,
+          "training_components": {
+            "volume": 0.31409383054154044,
+            "bce": 0.11091796627315957,
+            "dice": 0.8958402954615078
+          },
+          "training_objective": 1.3208520922762077,
+          "selection_dice": 0.16076163304248067,
+          "selection_native_volume_mae": 1.2352746152307061,
+          "selection_objective": 1.68197834974623
+        },
+        {
+          "epoch": 11,
+          "successful_updates": 539,
+          "training_components": {
+            "volume": 0.3002404420612714,
+            "bce": 0.10780087312062582,
+            "dice": 0.8759670401230836
+          },
+          "training_objective": 1.2840083553049808,
+          "selection_dice": 0.15855124555434486,
+          "selection_native_volume_mae": 1.2313082366227184,
+          "selection_objective": 1.706772183596344
+        },
+        {
+          "epoch": 12,
+          "successful_updates": 588,
+          "training_components": {
+            "volume": 0.29246059239674843,
+            "bce": 0.09751590464073116,
+            "dice": 0.8667240240635017
+          },
+          "training_objective": 1.2567005211009812,
+          "selection_dice": 0.16961873659577983,
+          "selection_native_volume_mae": 1.303036076695022,
+          "selection_objective": 1.7287203614405768
+        },
+        {
+          "epoch": 13,
+          "successful_updates": 637,
+          "training_components": {
+            "volume": 0.2325368153599974,
+            "bce": 0.09877988880213638,
+            "dice": 0.8410235866522178
+          },
+          "training_objective": 1.1723402908143516,
+          "selection_dice": 0.20198254844571203,
+          "selection_native_volume_mae": 1.2283810385817475,
+          "selection_objective": 1.69941362007629
+        },
+        {
+          "epoch": 14,
+          "successful_updates": 686,
+          "training_components": {
+            "volume": 0.2070077972056774,
+            "bce": 0.10255482853390277,
+            "dice": 0.8254542506658115
+          },
+          "training_objective": 1.1350168764053916,
+          "selection_dice": 0.18503874865507514,
+          "selection_native_volume_mae": 1.254652804756225,
+          "selection_objective": 1.67441466459191
+        },
+        {
+          "epoch": 15,
+          "successful_updates": 735,
+          "training_components": {
+            "volume": 0.21725345809872335,
+            "bce": 0.100308243625869,
+            "dice": 0.8211997891083742
+          },
+          "training_objective": 1.1387614908329666,
+          "selection_dice": 0.2254720108965307,
+          "selection_native_volume_mae": 1.3309641817983016,
+          "selection_objective": 1.8374967441998704
+        },
+        {
+          "epoch": 16,
+          "successful_updates": 784,
+          "training_components": {
+            "volume": 0.23197134681141537,
+            "bce": 0.09430892246130565,
+            "dice": 0.8145707882367648
+          },
+          "training_objective": 1.1408510575094857,
+          "selection_dice": 0.2160948870598781,
+          "selection_native_volume_mae": 1.2563532116329394,
+          "selection_objective": 1.7827222909094391
+        },
+        {
+          "epoch": 17,
+          "successful_updates": 833,
+          "training_components": {
+            "volume": 0.21134959611659632,
+            "bce": 0.09750515186729339,
+            "dice": 0.7881614244901216
+          },
+          "training_objective": 1.0970161724740113,
+          "selection_dice": 0.2278131893325469,
+          "selection_native_volume_mae": 1.2573859243725,
+          "selection_objective": 1.8178555203419104
+        },
+        {
+          "epoch": 18,
+          "successful_updates": 882,
+          "training_components": {
+            "volume": 0.18795085793886424,
+            "bce": 0.10246438450502372,
+            "dice": 0.7831805155827449
+          },
+          "training_objective": 1.0735957580266329,
+          "selection_dice": 0.2198010125912667,
+          "selection_native_volume_mae": 1.3645707288993278,
+          "selection_objective": 1.7449885014066084
+        },
+        {
+          "epoch": 19,
+          "successful_updates": 931,
+          "training_components": {
+            "volume": 0.1890643544017504,
+            "bce": 0.09417298216289148,
+            "dice": 0.780645611958626
+          },
+          "training_objective": 1.063882948523268,
+          "selection_dice": 0.19591479339656057,
+          "selection_native_volume_mae": 1.36084512665939,
+          "selection_objective": 1.7792074699080989
+        },
+        {
+          "epoch": 20,
+          "successful_updates": 980,
+          "training_components": {
+            "volume": 0.16888571128440213,
+            "bce": 0.09527797225910499,
+            "dice": 0.7596947434620976
+          },
+          "training_objective": 1.0238584270056048,
+          "selection_dice": 0.21457607222828987,
+          "selection_native_volume_mae": 1.3096958627693112,
+          "selection_objective": 1.8865932897609825
+        },
+        {
+          "epoch": 21,
+          "successful_updates": 1029,
+          "training_components": {
+            "volume": 0.14791442025214047,
+            "bce": 0.09368007922759997,
+            "dice": 0.7494497791314738
+          },
+          "training_objective": 0.9910442786112142,
+          "selection_dice": 0.21239747511133336,
+          "selection_native_volume_mae": 1.298042570794796,
+          "selection_objective": 1.7952872544314558
+        },
+        {
+          "epoch": 22,
+          "successful_updates": 1078,
+          "training_components": {
+            "volume": 0.19367191133399803,
+            "bce": 0.09738103152246763,
+            "dice": 0.759763492987706
+          },
+          "training_objective": 1.0508164358441716,
+          "selection_dice": 0.23543096290749152,
+          "selection_native_volume_mae": 1.3101305569400876,
+          "selection_objective": 1.8888228731996874
+        },
+        {
+          "epoch": 23,
+          "successful_updates": 1127,
+          "training_components": {
+            "volume": 0.19175636968456006,
+            "bce": 0.1006633287127046,
+            "dice": 0.7341897527376811
+          },
+          "training_objective": 1.0266094511349457,
+          "selection_dice": 0.22566968749163097,
+          "selection_native_volume_mae": 1.329809916181388,
+          "selection_objective": 1.814084475568484
+        },
+        {
+          "epoch": 24,
+          "successful_updates": 1176,
+          "training_components": {
+            "volume": 0.1324882813657705,
+            "bce": 0.0874914686458233,
+            "dice": 0.7323422731497348
+          },
+          "training_objective": 0.9523220231613285,
+          "selection_dice": 0.2150168186645619,
+          "selection_native_volume_mae": 1.3126515829693082,
+          "selection_objective": 1.945980421521447
+        },
+        {
+          "epoch": 25,
+          "successful_updates": 1225,
+          "training_components": {
+            "volume": 0.21371072525970447,
+            "bce": 0.08483237130903246,
+            "dice": 0.7324437165871647
+          },
+          "training_objective": 1.0309868131559017,
+          "selection_dice": 0.22012493386566856,
+          "selection_native_volume_mae": 1.2424661788434646,
+          "selection_objective": 1.798407604886674
+        },
+        {
+          "epoch": 26,
+          "successful_updates": 1274,
+          "training_components": {
+            "volume": 0.20148201892152434,
+            "bce": 0.09225487632965017,
+            "dice": 0.7080321389895219
+          },
+          "training_objective": 1.0017690342406964,
+          "selection_dice": 0.22717916439853614,
+          "selection_native_volume_mae": 1.2542558398008643,
+          "selection_objective": 1.8883788379968383
+        },
+        {
+          "epoch": 27,
+          "successful_updates": 1323,
+          "training_components": {
+            "volume": 0.155353246222083,
+            "bce": 0.09103224327920591,
+            "dice": 0.7089861172896166
+          },
+          "training_objective": 0.9553716067909055,
+          "selection_dice": 0.2315758307547247,
+          "selection_native_volume_mae": 1.2807615151759275,
+          "selection_objective": 1.8910168276910475
+        },
+        {
+          "epoch": 28,
+          "successful_updates": 1372,
+          "training_components": {
+            "volume": 0.12711902766082533,
+            "bce": 0.09603065488276442,
+            "dice": 0.7139717904420998
+          },
+          "training_objective": 0.9371214729856896,
+          "selection_dice": 0.2172232556389245,
+          "selection_native_volume_mae": 1.280496327836288,
+          "selection_objective": 1.8982555630372806
+        },
+        {
+          "epoch": 29,
+          "successful_updates": 1421,
+          "training_components": {
+            "volume": 0.1487018387764692,
+            "bce": 0.08592887123216851,
+            "dice": 0.6979835858711831
+          },
+          "training_objective": 0.9326142958798208,
+          "selection_dice": 0.2301295594979993,
+          "selection_native_volume_mae": 1.3515257961137668,
+          "selection_objective": 2.0075846092639336
+        },
+        {
+          "epoch": 30,
+          "successful_updates": 1470,
+          "training_components": {
+            "volume": 0.1572244545110525,
+            "bce": 0.09339063047981398,
+            "dice": 0.6954430621403915
+          },
+          "training_objective": 0.946058147131258,
+          "selection_dice": 0.2181026444563305,
+          "selection_native_volume_mae": 1.3506808594871003,
+          "selection_objective": 2.0802982878876244
+        },
+        {
+          "epoch": 31,
+          "successful_updates": 1519,
+          "training_components": {
+            "volume": 0.15570964338974314,
+            "bce": 0.09061318973216631,
+            "dice": 0.7010932991137873
+          },
+          "training_objective": 0.9474161322356967,
+          "selection_dice": 0.22923782969023004,
+          "selection_native_volume_mae": 1.227379154021856,
+          "selection_objective": 1.8501916485727363
+        },
+        {
+          "epoch": 32,
+          "successful_updates": 1568,
+          "training_components": {
+            "volume": 0.10574433216586329,
+            "bce": 0.09075895595246367,
+            "dice": 0.6658014881305205
+          },
+          "training_objective": 0.8623047762488475,
+          "selection_dice": 0.21389148214230191,
+          "selection_native_volume_mae": 1.3163905473524975,
+          "selection_objective": 2.037232013097209
+        },
+        {
+          "epoch": 33,
+          "successful_updates": 1617,
+          "training_components": {
+            "volume": 0.1355538371759347,
+            "bce": 0.08430898143060636,
+            "dice": 0.6751224569785289
+          },
+          "training_objective": 0.89498527558507,
+          "selection_dice": 0.2206163257148174,
+          "selection_native_volume_mae": 1.2997881234577244,
+          "selection_objective": 2.1232632350262897
+        },
+        {
+          "epoch": 34,
+          "successful_updates": 1666,
+          "training_components": {
+            "volume": 0.14341759098550452,
+            "bce": 0.09238754846196687,
+            "dice": 0.6842879785941197
+          },
+          "training_objective": 0.9200931180415911,
+          "selection_dice": 0.2145029543646795,
+          "selection_native_volume_mae": 1.3116984655706132,
+          "selection_objective": 2.0878109543878125
+        },
+        {
+          "epoch": 35,
+          "successful_updates": 1715,
+          "training_components": {
+            "volume": 0.12002676071790165,
+            "bce": 0.08590461243352948,
+            "dice": 0.6500250587096582
+          },
+          "training_objective": 0.8559564318610894,
+          "selection_dice": 0.2147542710794143,
+          "selection_native_volume_mae": 1.289396623378044,
+          "selection_objective": 2.16032699284919
+        },
+        {
+          "epoch": 36,
+          "successful_updates": 1764,
+          "training_components": {
+            "volume": 0.11981024827139501,
+            "bce": 0.08123248609309743,
+            "dice": 0.6814798839581316
+          },
+          "training_objective": 0.882522618322624,
+          "selection_dice": 0.23112212863852985,
+          "selection_native_volume_mae": 1.3185480398832385,
+          "selection_objective": 1.9807335259495786
+        },
+        {
+          "epoch": 37,
+          "successful_updates": 1813,
+          "training_components": {
+            "volume": 0.10137008651374625,
+            "bce": 0.08892104973347156,
+            "dice": 0.6521229123457886
+          },
+          "training_objective": 0.8424140485930064,
+          "selection_dice": 0.22272923451809115,
+          "selection_native_volume_mae": 1.3322379877829416,
+          "selection_objective": 2.0362788284101168
+        },
+        {
+          "epoch": 38,
+          "successful_updates": 1862,
+          "training_components": {
+            "volume": 0.0817940687903991,
+            "bce": 0.07695819437503816,
+            "dice": 0.656507536998162
+          },
+          "training_objective": 0.8152598001635992,
+          "selection_dice": 0.21378052592173588,
+          "selection_native_volume_mae": 1.3455100108916922,
+          "selection_objective": 2.298385326381035
+        },
+        {
+          "epoch": 39,
+          "successful_updates": 1911,
+          "training_components": {
+            "volume": 0.11366874216697531,
+            "bce": 0.08307442197013491,
+            "dice": 0.652454591714419
+          },
+          "training_objective": 0.8491977558515292,
+          "selection_dice": 0.22864424882675285,
+          "selection_native_volume_mae": 1.2738469367289036,
+          "selection_objective": 1.9345408317531705
+        },
+        {
+          "epoch": 40,
+          "successful_updates": 1960,
+          "training_components": {
+            "volume": 0.09778842739760875,
+            "bce": 0.07915671789206755,
+            "dice": 0.6394141704608233
+          },
+          "training_objective": 0.8163593157504996,
+          "selection_dice": 0.22740054733952586,
+          "selection_native_volume_mae": 1.2533578072224534,
+          "selection_objective": 2.0740897895605594
+        },
+        {
+          "epoch": 41,
+          "successful_updates": 2009,
+          "training_components": {
+            "volume": 0.08816890550347477,
+            "bce": 0.07963199046595638,
+            "dice": 0.6394031610244357
+          },
+          "training_objective": 0.8072040569938669,
+          "selection_dice": 0.21578513466667457,
+          "selection_native_volume_mae": 1.3023323291025963,
+          "selection_objective": 2.274932121014
+        },
+        {
+          "epoch": 42,
+          "successful_updates": 2058,
+          "training_components": {
+            "volume": 0.08425720928189083,
+            "bce": 0.07745472820810019,
+            "dice": 0.6369501939186681
+          },
+          "training_objective": 0.7986621314086592,
+          "selection_dice": 0.2154056991811573,
+          "selection_native_volume_mae": 1.2652785236522925,
+          "selection_objective": 2.2328852430331305
+        },
+        {
+          "epoch": 43,
+          "successful_updates": 2107,
+          "training_components": {
+            "volume": 0.09323797445648754,
+            "bce": 0.07916189784352752,
+            "dice": 0.6462580340030866
+          },
+          "training_objective": 0.8186579063031016,
+          "selection_dice": 0.2241596319681297,
+          "selection_native_volume_mae": 1.2834899433698579,
+          "selection_objective": 2.219491944742287
+        },
+        {
+          "epoch": 44,
+          "successful_updates": 2156,
+          "training_components": {
+            "volume": 0.09604256178897157,
+            "bce": 0.07871315185932477,
+            "dice": 0.6271515710231585
+          },
+          "training_objective": 0.8019072846714549,
+          "selection_dice": 0.2248931525364572,
+          "selection_native_volume_mae": 1.2860849311119742,
+          "selection_objective": 2.219347470778301
+        },
+        {
+          "epoch": 45,
+          "successful_updates": 2205,
+          "training_components": {
+            "volume": 0.1349773538370545,
+            "bce": 0.07946587772282493,
+            "dice": 0.6316057591866223
+          },
+          "training_objective": 0.8460489907465018,
+          "selection_dice": 0.23115796357297744,
+          "selection_native_volume_mae": 1.3176059710756711,
+          "selection_objective": 2.159745013458844
+        },
+        {
+          "epoch": 46,
+          "successful_updates": 2254,
+          "training_components": {
+            "volume": 0.06751083061576656,
+            "bce": 0.07935490362728254,
+            "dice": 0.6116575221220653
+          },
+          "training_objective": 0.7585232563651143,
+          "selection_dice": 0.21833814504901336,
+          "selection_native_volume_mae": 1.3069403042476742,
+          "selection_objective": 2.3088245049570544
+        },
+        {
+          "epoch": 47,
+          "successful_updates": 2303,
+          "training_components": {
+            "volume": 0.1022237323033504,
+            "bce": 0.07600648315708851,
+            "dice": 0.6211936995004999
+          },
+          "training_objective": 0.7994239149609388,
+          "selection_dice": 0.21726985439329177,
+          "selection_native_volume_mae": 1.2857145802361691,
+          "selection_objective": 2.344406078583204
+        },
+        {
+          "epoch": 48,
+          "successful_updates": 2352,
+          "training_components": {
+            "volume": 0.08578456618273872,
+            "bce": 0.0701553378487752,
+            "dice": 0.6134943392032232
+          },
+          "training_objective": 0.7694342432347371,
+          "selection_dice": 0.20899743704455265,
+          "selection_native_volume_mae": 1.306657076771234,
+          "selection_objective": 2.359972899251762
+        },
+        {
+          "epoch": 49,
+          "successful_updates": 2401,
+          "training_components": {
+            "volume": 0.07971966945542357,
+            "bce": 0.0758379387200246,
+            "dice": 0.6035712512639851
+          },
+          "training_objective": 0.7591288594394333,
+          "selection_dice": 0.2241881472789343,
+          "selection_native_volume_mae": 1.268894285170069,
+          "selection_objective": 2.252856502399087
+        },
+        {
+          "epoch": 50,
+          "successful_updates": 2450,
+          "training_components": {
+            "volume": 0.07471519360462059,
+            "bce": 0.0771060875757077,
+            "dice": 0.6091406829846211
+          },
+          "training_objective": 0.7609619641649494,
+          "selection_dice": 0.22311294790760955,
+          "selection_native_volume_mae": 1.293698413397858,
+          "selection_objective": 2.2168037684737256
+        },
+        {
+          "epoch": 51,
+          "successful_updates": 2499,
+          "training_components": {
+            "volume": 0.07322622081503653,
+            "bce": 0.07209973693319718,
+            "dice": 0.5998012530498016
+          },
+          "training_objective": 0.7451272107980353,
+          "selection_dice": 0.22775390791825956,
+          "selection_native_volume_mae": 1.3101841904401441,
+          "selection_objective": 2.271549024112828
+        },
+        {
+          "epoch": 52,
+          "successful_updates": 2548,
+          "training_components": {
+            "volume": 0.0670695061234232,
+            "bce": 0.07330084473946137,
+            "dice": 0.624350723089316
+          },
+          "training_objective": 0.7647210739522006,
+          "selection_dice": 0.2167498951202399,
+          "selection_native_volume_mae": 1.3033847724243033,
+          "selection_objective": 2.3812309032508607
+        },
+        {
+          "epoch": 53,
+          "successful_updates": 2597,
+          "training_components": {
+            "volume": 0.07843961323587559,
+            "bce": 0.07112636481516603,
+            "dice": 0.5946086096457944
+          },
+          "training_objective": 0.7441745876968361,
+          "selection_dice": 0.2216977543275789,
+          "selection_native_volume_mae": 1.3187142508019325,
+          "selection_objective": 2.32157614067489
+        },
+        {
+          "epoch": 54,
+          "successful_updates": 2646,
+          "training_components": {
+            "volume": 0.07236651319365661,
+            "bce": 0.07203806131700938,
+            "dice": 0.5944371834779398
+          },
+          "training_objective": 0.7388417579886059,
+          "selection_dice": 0.21682006390748987,
+          "selection_native_volume_mae": 1.2917079070323045,
+          "selection_objective": 2.3753863026964046
+        },
+        {
+          "epoch": 55,
+          "successful_updates": 2695,
+          "training_components": {
+            "volume": 0.0708145809180748,
+            "bce": 0.07329711154219323,
+            "dice": 0.5922457290001406
+          },
+          "training_objective": 0.7363574214604086,
+          "selection_dice": 0.226752382460492,
+          "selection_native_volume_mae": 1.2590825333998652,
+          "selection_objective": 2.262575496605692
+        },
+        {
+          "epoch": 56,
+          "successful_updates": 2744,
+          "training_components": {
+            "volume": 0.07654508452575941,
+            "bce": 0.06826654870750735,
+            "dice": 0.5907281728891223
+          },
+          "training_objective": 0.735539806122389,
+          "selection_dice": 0.2228082608400829,
+          "selection_native_volume_mae": 1.2860367148277179,
+          "selection_objective": 2.3157129061625814
+        },
+        {
+          "epoch": 57,
+          "successful_updates": 2793,
+          "training_components": {
+            "volume": 0.07743328210109701,
+            "bce": 0.06987333004145535,
+            "dice": 0.5854930764589555
+          },
+          "training_objective": 0.7327996886015079,
+          "selection_dice": 0.21773375565335806,
+          "selection_native_volume_mae": 1.2811202657831782,
+          "selection_objective": 2.3259954315243343
+        },
+        {
+          "epoch": 58,
+          "successful_updates": 2842,
+          "training_components": {
+            "volume": 0.10057657348015941,
+            "bce": 0.07002747337877133,
+            "dice": 0.5904224680020258
+          },
+          "training_objective": 0.7610265148609565,
+          "selection_dice": 0.22394808636714367,
+          "selection_native_volume_mae": 1.29567588413727,
+          "selection_objective": 2.310449562265593
+        },
+        {
+          "epoch": 59,
+          "successful_updates": 2891,
+          "training_components": {
+            "volume": 0.04970559738904764,
+            "bce": 0.0679413966548544,
+            "dice": 0.5826123639559134
+          },
+          "training_objective": 0.7002593579998154,
+          "selection_dice": 0.21658954189037036,
+          "selection_native_volume_mae": 1.2749241403807243,
+          "selection_objective": 2.357647640033627
+        },
+        {
+          "epoch": 60,
+          "successful_updates": 2940,
+          "training_components": {
+            "volume": 0.05226951656767571,
+            "bce": 0.06492117719766938,
+            "dice": 0.5779679715633391
+          },
+          "training_objective": 0.6951586653286842,
+          "selection_dice": 0.22216192534855714,
+          "selection_native_volume_mae": 1.310181406201452,
+          "selection_objective": 2.351295591415356
+        },
+        {
+          "epoch": 61,
+          "successful_updates": 2989,
+          "training_components": {
+            "volume": 0.05592247776072235,
+            "bce": 0.06630255179170025,
+            "dice": 0.5831166245998481
+          },
+          "training_objective": 0.7053416541522708,
+          "selection_dice": 0.22062709949878495,
+          "selection_native_volume_mae": 1.2735173674805842,
+          "selection_objective": 2.3982582133827783
+        },
+        {
+          "epoch": 62,
+          "successful_updates": 3038,
+          "training_components": {
+            "volume": 0.06609555179348742,
+            "bce": 0.06591128955378037,
+            "dice": 0.5717039450620995
+          },
+          "training_objective": 0.7037107864093674,
+          "selection_dice": 0.2270191458118055,
+          "selection_native_volume_mae": 1.2724658426798847,
+          "selection_objective": 2.3169151914284405
+        },
+        {
+          "epoch": 63,
+          "successful_updates": 3087,
+          "training_components": {
+            "volume": 0.053298736729014376,
+            "bce": 0.06658692573454082,
+            "dice": 0.555558647100742
+          },
+          "training_objective": 0.6754443095642972,
+          "selection_dice": 0.2213504751967636,
+          "selection_native_volume_mae": 1.2674756440926478,
+          "selection_objective": 2.365818812112438
+        },
+        {
+          "epoch": 64,
+          "successful_updates": 3136,
+          "training_components": {
+            "volume": 0.036718268390410605,
+            "bce": 0.06550379072626435,
+            "dice": 0.5621294956940871
+          },
+          "training_objective": 0.664351554810762,
+          "selection_dice": 0.2171914284986828,
+          "selection_native_volume_mae": 1.2791424188183695,
+          "selection_objective": 2.410399555782796
+        },
+        {
+          "epoch": 65,
+          "successful_updates": 3185,
+          "training_components": {
+            "volume": 0.049314836702811025,
+            "bce": 0.06614252218765053,
+            "dice": 0.5533142991555041
+          },
+          "training_objective": 0.6687716580459657,
+          "selection_dice": 0.2205537188355979,
+          "selection_native_volume_mae": 1.2690674561782425,
+          "selection_objective": 2.409834742474365
+        },
+        {
+          "epoch": 66,
+          "successful_updates": 3234,
+          "training_components": {
+            "volume": 0.04262384235178337,
+            "bce": 0.0669974102062369,
+            "dice": 0.5393216793353742
+          },
+          "training_objective": 0.6489429318933945,
+          "selection_dice": 0.21712180516815885,
+          "selection_native_volume_mae": 1.285828615786739,
+          "selection_objective": 2.3876743440375185
+        },
+        {
+          "epoch": 67,
+          "successful_updates": 3283,
+          "training_components": {
+            "volume": 0.036887893243692814,
+            "bce": 0.06548603500787302,
+            "dice": 0.5579957055739866
+          },
+          "training_objective": 0.6603696338255525,
+          "selection_dice": 0.2167571396342007,
+          "selection_native_volume_mae": 1.285726680036749,
+          "selection_objective": 2.415014051472015
+        },
+        {
+          "epoch": 68,
+          "successful_updates": 3332,
+          "training_components": {
+            "volume": 0.054906380795037915,
+            "bce": 0.06359627577515382,
+            "dice": 0.5480342094714826
+          },
+          "training_objective": 0.6665368660416744,
+          "selection_dice": 0.22040834556278088,
+          "selection_native_volume_mae": 1.290789433100098,
+          "selection_objective": 2.405446134305787
+        },
+        {
+          "epoch": 69,
+          "successful_updates": 3381,
+          "training_components": {
+            "volume": 0.037324181642646004,
+            "bce": 0.06042198435318893,
+            "dice": 0.562767369319231
+          },
+          "training_objective": 0.660513535315066,
+          "selection_dice": 0.2188747050849263,
+          "selection_native_volume_mae": 1.2887213892790912,
+          "selection_objective": 2.436181540702222
+        },
+        {
+          "epoch": 70,
+          "successful_updates": 3430,
+          "training_components": {
+            "volume": 0.0562036243888239,
+            "bce": 0.06076252150600432,
+            "dice": 0.5553753420328482
+          },
+          "training_objective": 0.6723414879276765,
+          "selection_dice": 0.22884209114376902,
+          "selection_native_volume_mae": 1.2942905572641026,
+          "selection_objective": 2.417896701159112
+        },
+        {
+          "epoch": 71,
+          "successful_updates": 3479,
+          "training_components": {
+            "volume": 0.05645045670083699,
+            "bce": 0.059493844309867996,
+            "dice": 0.5516973822544783
+          },
+          "training_objective": 0.6676416832651833,
+          "selection_dice": 0.22829836642348153,
+          "selection_native_volume_mae": 1.2856021621855083,
+          "selection_objective": 2.4330535862136653
+        },
+        {
+          "epoch": 72,
+          "successful_updates": 3528,
+          "training_components": {
+            "volume": 0.04211442158378374,
+            "bce": 0.060154391137845015,
+            "dice": 0.5543743564532354
+          },
+          "training_objective": 0.6566431691748642,
+          "selection_dice": 0.22252350614095298,
+          "selection_native_volume_mae": 1.286548446784707,
+          "selection_objective": 2.4632385624283772
+        },
+        {
+          "epoch": 73,
+          "successful_updates": 3577,
+          "training_components": {
+            "volume": 0.08179204676849527,
+            "bce": 0.05805596423918195,
+            "dice": 0.5587685021070333
+          },
+          "training_objective": 0.6986165131147105,
+          "selection_dice": 0.22545153178226335,
+          "selection_native_volume_mae": 1.286202254079386,
+          "selection_objective": 2.4538741748202293
+        },
+        {
+          "epoch": 74,
+          "successful_updates": 3626,
+          "training_components": {
+            "volume": 0.034692289323832545,
+            "bce": 0.06108918594778888,
+            "dice": 0.5343720697439633
+          },
+          "training_objective": 0.6301535450155847,
+          "selection_dice": 0.21983307401504595,
+          "selection_native_volume_mae": 1.2956219861188212,
+          "selection_objective": 2.495318616658396
+        },
+        {
+          "epoch": 75,
+          "successful_updates": 3675,
+          "training_components": {
+            "volume": 0.029417052445933227,
+            "bce": 0.0653557765752246,
+            "dice": 0.5381003013023963
+          },
+          "training_objective": 0.6328731303235541,
+          "selection_dice": 0.22368952402636771,
+          "selection_native_volume_mae": 1.284502536415583,
+          "selection_objective": 2.482899658567871
+        },
+        {
+          "epoch": 76,
+          "successful_updates": 3724,
+          "training_components": {
+            "volume": 0.042531469493555144,
+            "bce": 0.06119257833695604,
+            "dice": 0.5453553817211053
+          },
+          "training_objective": 0.6490794295516165,
+          "selection_dice": 0.2270871995003154,
+          "selection_native_volume_mae": 1.28221740559166,
+          "selection_objective": 2.445799835629217
+        },
+        {
+          "epoch": 77,
+          "successful_updates": 3773,
+          "training_components": {
+            "volume": 0.020228165878245653,
+            "bce": 0.06263925874104292,
+            "dice": 0.5297921935717261
+          },
+          "training_objective": 0.6126596181910147,
+          "selection_dice": 0.2265396843458924,
+          "selection_native_volume_mae": 1.2864420190395778,
+          "selection_objective": 2.479449200237074
+        },
+        {
+          "epoch": 78,
+          "successful_updates": 3822,
+          "training_components": {
+            "volume": 0.06367539997594669,
+            "bce": 0.0635751271209581,
+            "dice": 0.5370798570987506
+          },
+          "training_objective": 0.6643303841956554,
+          "selection_dice": 0.22574505873727768,
+          "selection_native_volume_mae": 1.2824267332808974,
+          "selection_objective": 2.485444476717084
+        },
+        {
+          "epoch": 79,
+          "successful_updates": 3871,
+          "training_components": {
+            "volume": 0.026619291764039255,
+            "bce": 0.06186074809720128,
+            "dice": 0.5415366168205553
+          },
+          "training_objective": 0.6300166566817959,
+          "selection_dice": 0.2271640492752498,
+          "selection_native_volume_mae": 1.2841180136066606,
+          "selection_objective": 2.4804166101145015
+        },
+        {
+          "epoch": 80,
+          "successful_updates": 3920,
+          "training_components": {
+            "volume": 0.03447048097120551,
+            "bce": 0.06129869723409707,
+            "dice": 0.5224472953723027
+          },
+          "training_objective": 0.6182164735776053,
+          "selection_dice": 0.22793758108855613,
+          "selection_native_volume_mae": 1.2836208140542633,
+          "selection_objective": 2.4784773422142825
+        }
+      ]
+    },
+    "random-43": {
+      "seed": 43,
+      "selected_epoch": 12,
+      "selected_checkpoint_sha256": "aabcd470a6d12f7b07b80b02a804e4444f44bcbe333297e636db61f122055fca",
+      "metrics": {
+        "fitting/identity": {
+          "nonempty_dice": 0.27567333171471453,
+          "native_volume_mae": 0.586995208076803,
+          "all_compartment_dice": 0.27830071476836427,
+          "nonempty_compartment_dice": [
+            0.2405301858740848,
+            0.18280294480132137,
+            0.3906158534651013
+          ],
+          "visits": 195,
+          "patients": 40,
+          "patients_with_primary_dice": 40,
+          "nonempty_target_counts": [
+            176,
+            154,
+            190
+          ],
+          "empty_target_counts": [
+            19,
+            41,
+            5
+          ],
+          "empty_targets_with_false_foreground": [
+            11,
+            32,
+            5
+          ],
+          "empty_target_predicted_voxel_means": [
+            34.526315789473685,
+            82.90243902439025,
+            46.6
+          ],
+          "objective": 1.2469190591262838
+        },
+        "selection/identity": {
+          "nonempty_dice": 0.16769609130285232,
+          "native_volume_mae": 1.4981939830090079,
+          "all_compartment_dice": 0.20792246719466226,
+          "nonempty_compartment_dice": [
+            0.13059273355319626,
+            0.10411675177260638,
+            0.27165903225749594
+          ],
+          "visits": 67,
+          "patients": 11,
+          "patients_with_primary_dice": 11,
+          "nonempty_target_counts": [
+            60,
+            37,
+            66
+          ],
+          "empty_target_counts": [
+            7,
+            30,
+            1
+          ],
+          "empty_targets_with_false_foreground": [
+            3,
+            22,
+            0
+          ],
+          "empty_target_predicted_voxel_means": [
+            22.142857142857142,
+            39.46666666666667,
+            0.0
+          ],
+          "objective": 2.097328899511254
+        },
+        "scoring/identity": {
+          "nonempty_dice": 0.15486212194079546,
+          "native_volume_mae": 1.2616801583461903,
+          "all_compartment_dice": 0.1784406451540992,
+          "nonempty_compartment_dice": [
+            0.13440519972791867,
+            0.09826512966831971,
+            0.24134846777683797
+          ],
+          "visits": 60,
+          "patients": 13,
+          "patients_with_primary_dice": 13,
+          "nonempty_target_counts": [
+            53,
+            52,
+            59
+          ],
+          "empty_target_counts": [
+            7,
+            8,
+            1
+          ],
+          "empty_targets_with_false_foreground": [
+            5,
+            5,
+            1
+          ],
+          "empty_target_predicted_voxel_means": [
+            13.714285714285714,
+            42.75,
+            72.0
+          ],
+          "objective": 1.9294601167259926
+        },
+        "scoring/intensity": {
+          "nonempty_dice": 0.15485290823080566,
+          "native_volume_mae": 1.2615087599234853,
+          "all_compartment_dice": 0.17843205627054592,
+          "nonempty_compartment_dice": [
+            0.13429364834353008,
+            0.09824400842473903,
+            0.24144547758597476
+          ],
+          "visits": 60,
+          "patients": 13,
+          "patients_with_primary_dice": 13,
+          "nonempty_target_counts": [
+            53,
+            52,
+            59
+          ],
+          "empty_target_counts": [
+            7,
+            8,
+            1
+          ],
+          "empty_targets_with_false_foreground": [
+            5,
+            5,
+            1
+          ],
+          "empty_target_predicted_voxel_means": [
+            13.714285714285714,
+            42.875,
+            73.0
+          ],
+          "objective": 1.929459569964362
+        },
+        "scoring/resolution": {
+          "nonempty_dice": 0.16911688406377057,
+          "native_volume_mae": 1.2994038225062878,
+          "all_compartment_dice": 0.18350816649375093,
+          "nonempty_compartment_dice": [
+            0.15493612229823822,
+            0.11180643619478924,
+            0.25264137123216257
+          ],
+          "visits": 60,
+          "patients": 13,
+          "patients_with_primary_dice": 13,
+          "nonempty_target_counts": [
+            53,
+            52,
+            59
+          ],
+          "empty_target_counts": [
+            7,
+            8,
+            1
+          ],
+          "empty_targets_with_false_foreground": [
+            5,
+            6,
+            1
+          ],
+          "empty_target_predicted_voxel_means": [
+            19.428571428571427,
+            53.625,
+            68.0
+          ],
+          "objective": 1.8489038076447335
+        }
+      },
+      "curve": [
+        {
+          "epoch": 1,
+          "successful_updates": 49,
+          "training_components": {
+            "volume": 0.631347125615829,
+            "bce": 0.7065797677406901,
+            "dice": 0.9888811184809758
+          },
+          "training_objective": 2.3268080118374947,
+          "selection_dice": 0.07756944974384183,
+          "selection_native_volume_mae": 1.7692737034390469,
+          "selection_objective": 2.4639928947583027
+        },
+        {
+          "epoch": 2,
+          "successful_updates": 98,
+          "training_components": {
+            "volume": 0.669745483956276,
+            "bce": 0.5275929834598151,
+            "dice": 0.9834940574108026
+          },
+          "training_objective": 2.1808325248268936,
+          "selection_dice": 0.08255258977026526,
+          "selection_native_volume_mae": 1.7699250176127777,
+          "selection_objective": 2.3403585464027903
+        },
+        {
+          "epoch": 3,
+          "successful_updates": 147,
+          "training_components": {
+            "volume": 0.673853281675241,
+            "bce": 0.40043572370822617,
+            "dice": 0.9807107754242722
+          },
+          "training_objective": 2.0549997808077394,
+          "selection_dice": 0.13882385771742395,
+          "selection_native_volume_mae": 1.7110652441191663,
+          "selection_objective": 2.270164238986909
+        },
+        {
+          "epoch": 4,
+          "successful_updates": 196,
+          "training_components": {
+            "volume": 0.5557186218408439,
+            "bce": 0.308128237265807,
+            "dice": 0.9732132000800893
+          },
+          "training_objective": 1.83706005918674,
+          "selection_dice": 0.11980915607916413,
+          "selection_native_volume_mae": 1.64346663328394,
+          "selection_objective": 2.071004135367492
+        },
+        {
+          "epoch": 5,
+          "successful_updates": 245,
+          "training_components": {
+            "volume": 0.5573900879575655,
+            "bce": 0.25408393427347525,
+            "dice": 0.963568093837836
+          },
+          "training_objective": 1.7750421160688767,
+          "selection_dice": 0.08482847997747163,
+          "selection_native_volume_mae": 1.6386148258033482,
+          "selection_objective": 2.05895990636897
+        },
+        {
+          "epoch": 6,
+          "successful_updates": 294,
+          "training_components": {
+            "volume": 0.49171198191933146,
+            "bce": 0.19092036944169272,
+            "dice": 0.9456352145243917
+          },
+          "training_objective": 1.628267565885416,
+          "selection_dice": 0.1361489438312648,
+          "selection_native_volume_mae": 1.6327838082682922,
+          "selection_objective": 2.0128511784707803
+        },
+        {
+          "epoch": 7,
+          "successful_updates": 343,
+          "training_components": {
+            "volume": 0.4835965191324552,
+            "bce": 0.15055062875915792,
+            "dice": 0.9321419550822331
+          },
+          "training_objective": 1.5662891029738462,
+          "selection_dice": 0.12974774268269515,
+          "selection_native_volume_mae": 1.578708133002212,
+          "selection_objective": 1.9648439748508195
+        },
+        {
+          "epoch": 8,
+          "successful_updates": 392,
+          "training_components": {
+            "volume": 0.4015921634932359,
+            "bce": 0.13332960668664715,
+            "dice": 0.9068143266897934
+          },
+          "training_objective": 1.4417360968696764,
+          "selection_dice": 0.11970074580854795,
+          "selection_native_volume_mae": 1.6217111898701326,
+          "selection_objective": 2.00299872331547
+        },
+        {
+          "epoch": 9,
+          "successful_updates": 441,
+          "training_components": {
+            "volume": 0.3402626589704783,
+            "bce": 0.12051387121662117,
+            "dice": 0.8971693063393618
+          },
+          "training_objective": 1.3579458365264612,
+          "selection_dice": 0.1359363713312656,
+          "selection_native_volume_mae": 1.6152046016546193,
+          "selection_objective": 2.041774752906087
+        },
+        {
+          "epoch": 10,
+          "successful_updates": 490,
+          "training_components": {
+            "volume": 0.42412528291535684,
+            "bce": 0.1090897625407729,
+            "dice": 0.8844904349400446
+          },
+          "training_objective": 1.4177054803961744,
+          "selection_dice": 0.13674248744854084,
+          "selection_native_volume_mae": 1.5496089713090397,
+          "selection_objective": 1.990811738339975
+        },
+        {
+          "epoch": 11,
+          "successful_updates": 539,
+          "training_components": {
+            "volume": 0.38734415785815474,
+            "bce": 0.1069153353333091,
+            "dice": 0.865731158011999
+          },
+          "training_objective": 1.3599906512034627,
+          "selection_dice": 0.1607072320030624,
+          "selection_native_volume_mae": 1.6325129430322158,
+          "selection_objective": 2.1537718408672997
+        },
+        {
+          "epoch": 12,
+          "successful_updates": 588,
+          "training_components": {
+            "volume": 0.3688772451228056,
+            "bce": 0.0984263110905886,
+            "dice": 0.8603283041562788
+          },
+          "training_objective": 1.327631860369673,
+          "selection_dice": 0.16769609130285232,
+          "selection_native_volume_mae": 1.4981939830090079,
+          "selection_objective": 2.097328899511254
+        },
+        {
+          "epoch": 13,
+          "successful_updates": 637,
+          "training_components": {
+            "volume": 0.25649917808671785,
+            "bce": 0.10319856273917813,
+            "dice": 0.8248302481113334
+          },
+          "training_objective": 1.1845279889372293,
+          "selection_dice": 0.15419792995787687,
+          "selection_native_volume_mae": 1.442625254423161,
+          "selection_objective": 2.048069355396451
+        },
+        {
+          "epoch": 14,
+          "successful_updates": 686,
+          "training_components": {
+            "volume": 0.2439564403910667,
+            "bce": 0.10043786126069536,
+            "dice": 0.8046816511031908
+          },
+          "training_objective": 1.1490759527549528,
+          "selection_dice": 0.1651528148575169,
+          "selection_native_volume_mae": 1.504752530517707,
+          "selection_objective": 2.049584702130095
+        },
+        {
+          "epoch": 15,
+          "successful_updates": 735,
+          "training_components": {
+            "volume": 0.26331778286645807,
+            "bce": 0.10157492771888006,
+            "dice": 0.7937045198220471
+          },
+          "training_objective": 1.1585972304073853,
+          "selection_dice": 0.15354897219913613,
+          "selection_native_volume_mae": 1.5450162567637475,
+          "selection_objective": 2.2040335164669362
+        },
+        {
+          "epoch": 16,
+          "successful_updates": 784,
+          "training_components": {
+            "volume": 0.2647944572501076,
+            "bce": 0.09911409456951494,
+            "dice": 0.7953396659630997
+          },
+          "training_objective": 1.1592482177827221,
+          "selection_dice": 0.14512959000444325,
+          "selection_native_volume_mae": 1.4774815247713884,
+          "selection_objective": 2.1430705499096563
+        },
+        {
+          "epoch": 17,
+          "successful_updates": 833,
+          "training_components": {
+            "volume": 0.25615132593382633,
+            "bce": 0.09389039261433749,
+            "dice": 0.7528244663507508
+          },
+          "training_objective": 1.1028661848989147,
+          "selection_dice": 0.15136338839117164,
+          "selection_native_volume_mae": 1.4488436017662822,
+          "selection_objective": 2.4269179508116583
+        },
+        {
+          "epoch": 18,
+          "successful_updates": 882,
+          "training_components": {
+            "volume": 0.22182294740699807,
+            "bce": 0.10219720566693022,
+            "dice": 0.7543564463273074
+          },
+          "training_objective": 1.0783765994012358,
+          "selection_dice": 0.1554325482558667,
+          "selection_native_volume_mae": 1.512973728572521,
+          "selection_objective": 2.3353184249258723
+        },
+        {
+          "epoch": 19,
+          "successful_updates": 931,
+          "training_components": {
+            "volume": 0.194889036537363,
+            "bce": 0.09543307482844027,
+            "dice": 0.7506481207334078
+          },
+          "training_objective": 1.0409702320992111,
+          "selection_dice": 0.13938484409666166,
+          "selection_native_volume_mae": 1.5179035885713206,
+          "selection_objective": 2.1895226449783682
+        },
+        {
+          "epoch": 20,
+          "successful_updates": 980,
+          "training_components": {
+            "volume": 0.17884970834144415,
+            "bce": 0.09569410821840836,
+            "dice": 0.7322418487988986
+          },
+          "training_objective": 1.0067856653587512,
+          "selection_dice": 0.15560929185246392,
+          "selection_native_volume_mae": 1.4773281308180224,
+          "selection_objective": 2.4571159657256914
+        },
+        {
+          "epoch": 21,
+          "successful_updates": 1029,
+          "training_components": {
+            "volume": 0.17233049401010456,
+            "bce": 0.09053602873538741,
+            "dice": 0.7136810655777269
+          },
+          "training_objective": 0.9765475883232189,
+          "selection_dice": 0.15590919066987266,
+          "selection_native_volume_mae": 1.4792786292490334,
+          "selection_objective": 2.3587760185175406
+        },
+        {
+          "epoch": 22,
+          "successful_updates": 1078,
+          "training_components": {
+            "volume": 0.21720779526692172,
+            "bce": 0.09757306181306308,
+            "dice": 0.7342933884033789
+          },
+          "training_objective": 1.0490742454833637,
+          "selection_dice": 0.1558211904694823,
+          "selection_native_volume_mae": 1.504788000750628,
+          "selection_objective": 2.2659613164350945
+        },
+        {
+          "epoch": 23,
+          "successful_updates": 1127,
+          "training_components": {
+            "volume": 0.20527892635227782,
+            "bce": 0.09647064757136364,
+            "dice": 0.7177236694556015
+          },
+          "training_objective": 1.019473243379243,
+          "selection_dice": 0.1488601466095722,
+          "selection_native_volume_mae": 1.477731571029954,
+          "selection_objective": 2.486271976749953
+        },
+        {
+          "epoch": 24,
+          "successful_updates": 1176,
+          "training_components": {
+            "volume": 0.1486498252225992,
+            "bce": 0.09188580129964229,
+            "dice": 0.700412675814751
+          },
+          "training_objective": 0.9409483023369924,
+          "selection_dice": 0.14458164010453214,
+          "selection_native_volume_mae": 1.4952407170033113,
+          "selection_objective": 2.6167608520245174
+        },
+        {
+          "epoch": 25,
+          "successful_updates": 1225,
+          "training_components": {
+            "volume": 0.22081359985451662,
+            "bce": 0.08276053887600891,
+            "dice": 0.6957134896363968
+          },
+          "training_objective": 0.9992876283669223,
+          "selection_dice": 0.1577523041210217,
+          "selection_native_volume_mae": 1.5403692874150545,
+          "selection_objective": 2.599968345120629
+        },
+        {
+          "epoch": 26,
+          "successful_updates": 1274,
+          "training_components": {
+            "volume": 0.20879842519569097,
+            "bce": 0.08952027562884793,
+            "dice": 0.6677750029625036
+          },
+          "training_objective": 0.9660937037870425,
+          "selection_dice": 0.1452886260418561,
+          "selection_native_volume_mae": 1.5211705058256284,
+          "selection_objective": 2.6219471911536183
+        },
+        {
+          "epoch": 27,
+          "successful_updates": 1323,
+          "training_components": {
+            "volume": 0.15662312654730598,
+            "bce": 0.08481610666987344,
+            "dice": 0.6747346430252761
+          },
+          "training_objective": 0.9161738762424555,
+          "selection_dice": 0.14150211227720477,
+          "selection_native_volume_mae": 1.4531429643872789,
+          "selection_objective": 2.6882684683895364
+        },
+        {
+          "epoch": 28,
+          "successful_updates": 1372,
+          "training_components": {
+            "volume": 0.15061867975223903,
+            "bce": 0.09109610432030583,
+            "dice": 0.6842653517539682
+          },
+          "training_objective": 0.9259801358265131,
+          "selection_dice": 0.13560897298175204,
+          "selection_native_volume_mae": 1.5417512858832305,
+          "selection_objective": 2.814879432230285
+        },
+        {
+          "epoch": 29,
+          "successful_updates": 1421,
+          "training_components": {
+            "volume": 0.16196058535805113,
+            "bce": 0.08103976213128475,
+            "dice": 0.6625383383188492
+          },
+          "training_objective": 0.9055386858081851,
+          "selection_dice": 0.1664353163182197,
+          "selection_native_volume_mae": 1.4978939163873248,
+          "selection_objective": 2.6163522834340096
+        },
+        {
+          "epoch": 30,
+          "successful_updates": 1470,
+          "training_components": {
+            "volume": 0.15681292456216536,
+            "bce": 0.08549570404896094,
+            "dice": 0.6541075196021642
+          },
+          "training_objective": 0.8964161482132905,
+          "selection_dice": 0.15474127540884627,
+          "selection_native_volume_mae": 1.5483990051559315,
+          "selection_objective": 2.810746672351093
+        },
+        {
+          "epoch": 31,
+          "successful_updates": 1519,
+          "training_components": {
+            "volume": 0.16813228841966546,
+            "bce": 0.08256379258714451,
+            "dice": 0.6626452423059026
+          },
+          "training_objective": 0.9133413233127126,
+          "selection_dice": 0.15355085508165717,
+          "selection_native_volume_mae": 1.4995274458966577,
+          "selection_objective": 2.686034344171245
+        },
+        {
+          "epoch": 32,
+          "successful_updates": 1568,
+          "training_components": {
+            "volume": 0.1299707603616974,
+            "bce": 0.08322006699282868,
+            "dice": 0.6216999160937772
+          },
+          "training_objective": 0.8348907434483033,
+          "selection_dice": 0.15649536726451674,
+          "selection_native_volume_mae": 1.4898382058801096,
+          "selection_objective": 2.711111761945667
+        },
+        {
+          "epoch": 33,
+          "successful_updates": 1617,
+          "training_components": {
+            "volume": 0.14503562487184238,
+            "bce": 0.07622782708196421,
+            "dice": 0.632846352381584
+          },
+          "training_objective": 0.8541098043353906,
+          "selection_dice": 0.15418600666494012,
+          "selection_native_volume_mae": 1.5084220638691086,
+          "selection_objective": 2.6280373113146864
+        },
+        {
+          "epoch": 34,
+          "successful_updates": 1666,
+          "training_components": {
+            "volume": 0.14199814617824863,
+            "bce": 0.0821151437668446,
+            "dice": 0.643447924577273
+          },
+          "training_objective": 0.8675612145223662,
+          "selection_dice": 0.14975242436445935,
+          "selection_native_volume_mae": 1.5120412442103053,
+          "selection_objective": 2.6818140187099866
+        },
+        {
+          "epoch": 35,
+          "successful_updates": 1715,
+          "training_components": {
+            "volume": 0.13558011934973105,
+            "bce": 0.07722317438799507,
+            "dice": 0.6162610170168752
+          },
+          "training_objective": 0.8290643107546013,
+          "selection_dice": 0.14604268075053362,
+          "selection_native_volume_mae": 1.5085142410992758,
+          "selection_objective": 2.9380963277742396
+        },
+        {
+          "epoch": 36,
+          "successful_updates": 1764,
+          "training_components": {
+            "volume": 0.1279180120915557,
+            "bce": 0.07375695732353517,
+            "dice": 0.6264332950115206
+          },
+          "training_objective": 0.8281082644266115,
+          "selection_dice": 0.1588224158694108,
+          "selection_native_volume_mae": 1.5500884061358433,
+          "selection_objective": 2.881243042028949
+        },
+        {
+          "epoch": 37,
+          "successful_updates": 1813,
+          "training_components": {
+            "volume": 0.11684825242234347,
+            "bce": 0.07440658532297953,
+            "dice": 0.6076162712696269
+          },
+          "training_objective": 0.79887110901495,
+          "selection_dice": 0.14430740715213017,
+          "selection_native_volume_mae": 1.490320884571632,
+          "selection_objective": 2.8090912886800616
+        },
+        {
+          "epoch": 38,
+          "successful_updates": 1862,
+          "training_components": {
+            "volume": 0.08700818710315684,
+            "bce": 0.07076787846162916,
+            "dice": 0.6264574627081553
+          },
+          "training_objective": 0.7842335282729412,
+          "selection_dice": 0.13526684548135476,
+          "selection_native_volume_mae": 1.5330625383590073,
+          "selection_objective": 3.038799767942564
+        },
+        {
+          "epoch": 39,
+          "successful_updates": 1911,
+          "training_components": {
+            "volume": 0.11872994164721327,
+            "bce": 0.0757650957818931,
+            "dice": 0.6255133028213795
+          },
+          "training_objective": 0.8200083402504859,
+          "selection_dice": 0.1584251928491309,
+          "selection_native_volume_mae": 1.5293096110136326,
+          "selection_objective": 2.7839223530840753
+        },
+        {
+          "epoch": 40,
+          "successful_updates": 1960,
+          "training_components": {
+            "volume": 0.09792641283562169,
+            "bce": 0.07999594463154862,
+            "dice": 0.6104103261079542
+          },
+          "training_objective": 0.7883326835751245,
+          "selection_dice": 0.15539339145136705,
+          "selection_native_volume_mae": 1.5468228315829202,
+          "selection_objective": 2.815974158909232
+        },
+        {
+          "epoch": 41,
+          "successful_updates": 2009,
+          "training_components": {
+            "volume": 0.08654390075841009,
+            "bce": 0.07253595815153602,
+            "dice": 0.6086508709650776
+          },
+          "training_objective": 0.7677307298750238,
+          "selection_dice": 0.15297316987550705,
+          "selection_native_volume_mae": 1.5246504740534796,
+          "selection_objective": 2.9627437694399963
+        },
+        {
+          "epoch": 42,
+          "successful_updates": 2058,
+          "training_components": {
+            "volume": 0.08329466266844136,
+            "bce": 0.06814791668349734,
+            "dice": 0.6030636203594697
+          },
+          "training_objective": 0.7545061997114084,
+          "selection_dice": 0.13958531777536273,
+          "selection_native_volume_mae": 1.5342746737614783,
+          "selection_objective": 3.05942153146029
+        },
+        {
+          "epoch": 43,
+          "successful_updates": 2107,
+          "training_components": {
+            "volume": 0.08739671412950907,
+            "bce": 0.06989178523357481,
+            "dice": 0.6056548095666447
+          },
+          "training_objective": 0.7629433089297286,
+          "selection_dice": 0.15562493334399985,
+          "selection_native_volume_mae": 1.521565658752577,
+          "selection_objective": 3.026278345002636
+        },
+        {
+          "epoch": 44,
+          "successful_updates": 2156,
+          "training_components": {
+            "volume": 0.0960067248545014,
+            "bce": 0.07305670884982252,
+            "dice": 0.5914963249976818
+          },
+          "training_objective": 0.7605597587020057,
+          "selection_dice": 0.15741866634747528,
+          "selection_native_volume_mae": 1.5335482941646383,
+          "selection_objective": 2.92087256823419
+        },
+        {
+          "epoch": 45,
+          "successful_updates": 2205,
+          "training_components": {
+            "volume": 0.14711681644981486,
+            "bce": 0.06646083792886483,
+            "dice": 0.5887635790384734
+          },
+          "training_objective": 0.8023412334171531,
+          "selection_dice": 0.1568754967921217,
+          "selection_native_volume_mae": 1.5719236932416984,
+          "selection_objective": 2.991025411168947
+        },
+        {
+          "epoch": 46,
+          "successful_updates": 2254,
+          "training_components": {
+            "volume": 0.06512335586146666,
+            "bce": 0.07173574282190738,
+            "dice": 0.5782708028952281
+          },
+          "training_objective": 0.7151299015786021,
+          "selection_dice": 0.14683246053431762,
+          "selection_native_volume_mae": 1.5804613007763237,
+          "selection_objective": 3.157223937919433
+        },
+        {
+          "epoch": 47,
+          "successful_updates": 2303,
+          "training_components": {
+            "volume": 0.08973413504158645,
+            "bce": 0.06868421604787073,
+            "dice": 0.5871115472072209
+          },
+          "training_objective": 0.745529898296678,
+          "selection_dice": 0.15959375671220222,
+          "selection_native_volume_mae": 1.5276254071269626,
+          "selection_objective": 2.9900437604669157
+        },
+        {
+          "epoch": 48,
+          "successful_updates": 2352,
+          "training_components": {
+            "volume": 0.08219223430332466,
+            "bce": 0.06371490154051572,
+            "dice": 0.5793415144467966
+          },
+          "training_objective": 0.725248650290637,
+          "selection_dice": 0.1595471472236312,
+          "selection_native_volume_mae": 1.5344459552008842,
+          "selection_objective": 3.0685867849677644
+        },
+        {
+          "epoch": 49,
+          "successful_updates": 2401,
+          "training_components": {
+            "volume": 0.07454003823133039,
+            "bce": 0.06757780262359564,
+            "dice": 0.5605833252271017
+          },
+          "training_objective": 0.7027011660820278,
+          "selection_dice": 0.15100831948648652,
+          "selection_native_volume_mae": 1.557913262153252,
+          "selection_objective": 3.1510009312002847
+        },
+        {
+          "epoch": 50,
+          "successful_updates": 2450,
+          "training_components": {
+            "volume": 0.07231247310455029,
+            "bce": 0.06593603182868368,
+            "dice": 0.5571514033354248
+          },
+          "training_objective": 0.6953999082686587,
+          "selection_dice": 0.14920536024572326,
+          "selection_native_volume_mae": 1.527109533773931,
+          "selection_objective": 3.203136773298556
+        },
+        {
+          "epoch": 51,
+          "successful_updates": 2499,
+          "training_components": {
+            "volume": 0.07492267710085102,
+            "bce": 0.06392146880668104,
+            "dice": 0.5612367426737761
+          },
+          "training_objective": 0.7000808885813081,
+          "selection_dice": 0.15447306858783103,
+          "selection_native_volume_mae": 1.53911019187157,
+          "selection_objective": 3.1210665418024366
+        },
+        {
+          "epoch": 52,
+          "successful_updates": 2548,
+          "training_components": {
+            "volume": 0.07126315108572062,
+            "bce": 0.06380411361150878,
+            "dice": 0.5907915135224661
+          },
+          "training_objective": 0.7258587782196955,
+          "selection_dice": 0.14646436678498026,
+          "selection_native_volume_mae": 1.560858617122972,
+          "selection_objective": 3.212090763975592
+        },
+        {
+          "epoch": 53,
+          "successful_updates": 2597,
+          "training_components": {
+            "volume": 0.08454357756970404,
+            "bce": 0.06169826114174868,
+            "dice": 0.5598052095144223
+          },
+          "training_objective": 0.7060470482258749,
+          "selection_dice": 0.15928451835337382,
+          "selection_native_volume_mae": 1.546376276000104,
+          "selection_objective": 3.2246800908324125
+        },
+        {
+          "epoch": 54,
+          "successful_updates": 2646,
+          "training_components": {
+            "volume": 0.07680421022889326,
+            "bce": 0.06571279790072229,
+            "dice": 0.5552790956619458
+          },
+          "training_objective": 0.6977961037915613,
+          "selection_dice": 0.1538960630001981,
+          "selection_native_volume_mae": 1.550326643185658,
+          "selection_objective": 3.2466368502049097
+        },
+        {
+          "epoch": 55,
+          "successful_updates": 2695,
+          "training_components": {
+            "volume": 0.07170921947138431,
+            "bce": 0.06369271023526007,
+            "dice": 0.5575979448281804
+          },
+          "training_objective": 0.6929998745348247,
+          "selection_dice": 0.15593761892449692,
+          "selection_native_volume_mae": 1.538857349115352,
+          "selection_objective": 3.2411453221358513
+        },
+        {
+          "epoch": 56,
+          "successful_updates": 2744,
+          "training_components": {
+            "volume": 0.07733092362013382,
+            "bce": 0.0613993537788375,
+            "dice": 0.5629192885680077
+          },
+          "training_objective": 0.701649565966979,
+          "selection_dice": 0.1477470700770662,
+          "selection_native_volume_mae": 1.556044626449682,
+          "selection_objective": 3.2636276833088855
+        },
+        {
+          "epoch": 57,
+          "successful_updates": 2793,
+          "training_components": {
+            "volume": 0.07938343234216938,
+            "bce": 0.06048123921541563,
+            "dice": 0.5578655158862088
+          },
+          "training_objective": 0.6977301874437938,
+          "selection_dice": 0.154508646667501,
+          "selection_native_volume_mae": 1.548984167372591,
+          "selection_objective": 3.3132923599126722
+        },
+        {
+          "epoch": 58,
+          "successful_updates": 2842,
+          "training_components": {
+            "volume": 0.10665993220411624,
+            "bce": 0.061008283195396626,
+            "dice": 0.5503790676593779
+          },
+          "training_objective": 0.7180472830588908,
+          "selection_dice": 0.15348255356859106,
+          "selection_native_volume_mae": 1.5378536151591262,
+          "selection_objective": 3.347957262359626
+        },
+        {
+          "epoch": 59,
+          "successful_updates": 2891,
+          "training_components": {
+            "volume": 0.04922446597797367,
+            "bce": 0.060833890228241205,
+            "dice": 0.5448921490938237
+          },
+          "training_objective": 0.6549505053000385,
+          "selection_dice": 0.14758215399490784,
+          "selection_native_volume_mae": 1.5508724899414636,
+          "selection_objective": 3.3357564075001633
+        },
+        {
+          "epoch": 60,
+          "successful_updates": 2940,
+          "training_components": {
+            "volume": 0.05457646460630572,
+            "bce": 0.054542666192756814,
+            "dice": 0.5425755688777338
+          },
+          "training_objective": 0.6516946996767964,
+          "selection_dice": 0.14162447212542786,
+          "selection_native_volume_mae": 1.5519025369028976,
+          "selection_objective": 3.508158626881513
+        },
+        {
+          "epoch": 61,
+          "successful_updates": 2989,
+          "training_components": {
+            "volume": 0.061669953947122665,
+            "bce": 0.059067459847742275,
+            "dice": 0.5507962825970772
+          },
+          "training_objective": 0.6715336963919422,
+          "selection_dice": 0.15169649665486828,
+          "selection_native_volume_mae": 1.5433316339934977,
+          "selection_objective": 3.421169999342764
+        },
+        {
+          "epoch": 62,
+          "successful_updates": 3038,
+          "training_components": {
+            "volume": 0.0673943677666382,
+            "bce": 0.05660272484870241,
+            "dice": 0.539163033778851
+          },
+          "training_objective": 0.6631601263941916,
+          "selection_dice": 0.15058294863801883,
+          "selection_native_volume_mae": 1.5427545434305083,
+          "selection_objective": 3.4683930875677054
+        },
+        {
+          "epoch": 63,
+          "successful_updates": 3087,
+          "training_components": {
+            "volume": 0.05825159133125384,
+            "bce": 0.05802903732353746,
+            "dice": 0.5241271766332479
+          },
+          "training_objective": 0.6404078052880392,
+          "selection_dice": 0.14588216801793194,
+          "selection_native_volume_mae": 1.5603528341877115,
+          "selection_objective": 3.499694546637476
+        },
+        {
+          "epoch": 64,
+          "successful_updates": 3136,
+          "training_components": {
+            "volume": 0.0334962930255689,
+            "bce": 0.05819149901374028,
+            "dice": 0.5271607409685086
+          },
+          "training_objective": 0.6188485330078178,
+          "selection_dice": 0.144109897479644,
+          "selection_native_volume_mae": 1.5618451325764917,
+          "selection_objective": 3.4653588073032635
+        },
+        {
+          "epoch": 65,
+          "successful_updates": 3185,
+          "training_components": {
+            "volume": 0.050543293290031266,
+            "bce": 0.06056908293399969,
+            "dice": 0.5205947506122099
+          },
+          "training_objective": 0.6317071268362409,
+          "selection_dice": 0.1480588096535431,
+          "selection_native_volume_mae": 1.5573484187045248,
+          "selection_objective": 3.5460386842861107
+        },
+        {
+          "epoch": 66,
+          "successful_updates": 3234,
+          "training_components": {
+            "volume": 0.041722847308772494,
+            "bce": 0.05698409538938274,
+            "dice": 0.5001263707112042
+          },
+          "training_objective": 0.5988333134093595,
+          "selection_dice": 0.14564619546470192,
+          "selection_native_volume_mae": 1.5710391160192747,
+          "selection_objective": 3.510989838323279
+        },
+        {
+          "epoch": 67,
+          "successful_updates": 3283,
+          "training_components": {
+            "volume": 0.04236078242269846,
+            "bce": 0.05851856705979652,
+            "dice": 0.5187796346652201
+          },
+          "training_objective": 0.6196589841477151,
+          "selection_dice": 0.14219795634502955,
+          "selection_native_volume_mae": 1.5369164744517958,
+          "selection_objective": 3.5465212319252117
+        },
+        {
+          "epoch": 68,
+          "successful_updates": 3332,
+          "training_components": {
+            "volume": 0.05610773051396394,
+            "bce": 0.05461825798861704,
+            "dice": 0.5120361377031375
+          },
+          "training_objective": 0.6227621262057185,
+          "selection_dice": 0.14679974223315806,
+          "selection_native_volume_mae": 1.5398431596752382,
+          "selection_objective": 3.547214118751188
+        },
+        {
+          "epoch": 69,
+          "successful_updates": 3381,
+          "training_components": {
+            "volume": 0.043425875074731606,
+            "bce": 0.053716063209307885,
+            "dice": 0.5228136796217699
+          },
+          "training_objective": 0.6199556179058094,
+          "selection_dice": 0.147103082876326,
+          "selection_native_volume_mae": 1.5548614161300625,
+          "selection_objective": 3.5380116660805316
+        },
+        {
+          "epoch": 70,
+          "successful_updates": 3430,
+          "training_components": {
+            "volume": 0.06210640528872133,
+            "bce": 0.05394401393344966,
+            "dice": 0.5191270716679403
+          },
+          "training_objective": 0.6351774908901112,
+          "selection_dice": 0.14336478983791048,
+          "selection_native_volume_mae": 1.5533644391473798,
+          "selection_objective": 3.6064680062619545
+        },
+        {
+          "epoch": 71,
+          "successful_updates": 3479,
+          "training_components": {
+            "volume": 0.05727560208298457,
+            "bce": 0.05219633902133166,
+            "dice": 0.5157176062082635
+          },
+          "training_objective": 0.6251895473125797,
+          "selection_dice": 0.14649815869384863,
+          "selection_native_volume_mae": 1.5409319181689654,
+          "selection_objective": 3.6526430297025385
+        },
+        {
+          "epoch": 72,
+          "successful_updates": 3528,
+          "training_components": {
+            "volume": 0.04509546201891052,
+            "bce": 0.052125674035703874,
+            "dice": 0.5114824933883472
+          },
+          "training_objective": 0.6087036294429615,
+          "selection_dice": 0.14388655899625596,
+          "selection_native_volume_mae": 1.5452047429559608,
+          "selection_objective": 3.6525644707488505
+        },
+        {
+          "epoch": 73,
+          "successful_updates": 3577,
+          "training_components": {
+            "volume": 0.08486588603387087,
+            "bce": 0.051745295588718876,
+            "dice": 0.5245034074171998
+          },
+          "training_objective": 0.6611145890397896,
+          "selection_dice": 0.14342896838622393,
+          "selection_native_volume_mae": 1.5379739033513695,
+          "selection_objective": 3.6583836230152222
+        },
+        {
+          "epoch": 74,
+          "successful_updates": 3626,
+          "training_components": {
+            "volume": 0.031560940647688815,
+            "bce": 0.052613163689481254,
+            "dice": 0.4991165411777986
+          },
+          "training_objective": 0.5832906455149687,
+          "selection_dice": 0.14614994412443816,
+          "selection_native_volume_mae": 1.537158095622535,
+          "selection_objective": 3.6374725990010663
+        },
+        {
+          "epoch": 75,
+          "successful_updates": 3675,
+          "training_components": {
+            "volume": 0.031932596736945776,
+            "bce": 0.05529476833108697,
+            "dice": 0.5063220306848869
+          },
+          "training_objective": 0.5935493957529197,
+          "selection_dice": 0.145390543454232,
+          "selection_native_volume_mae": 1.5416462602627734,
+          "selection_objective": 3.6264162862683365
+        },
+        {
+          "epoch": 76,
+          "successful_updates": 3724,
+          "training_components": {
+            "volume": 0.04519695890709185,
+            "bce": 0.053566109566413514,
+            "dice": 0.5076989172360834
+          },
+          "training_objective": 0.6064619857095888,
+          "selection_dice": 0.1426658350298311,
+          "selection_native_volume_mae": 1.5456770967613969,
+          "selection_objective": 3.6969156375755805
+        },
+        {
+          "epoch": 77,
+          "successful_updates": 3773,
+          "training_components": {
+            "volume": 0.023073973983693385,
+            "bce": 0.05380942898635298,
+            "dice": 0.4950210988521577
+          },
+          "training_objective": 0.5719045018222041,
+          "selection_dice": 0.1436475181340973,
+          "selection_native_volume_mae": 1.543204247265308,
+          "selection_objective": 3.713435551104486
+        },
+        {
+          "epoch": 78,
+          "successful_updates": 3822,
+          "training_components": {
+            "volume": 0.06581790852420129,
+            "bce": 0.053900109852838815,
+            "dice": 0.4962941635877658
+          },
+          "training_objective": 0.6160121819648059,
+          "selection_dice": 0.14638688464011526,
+          "selection_native_volume_mae": 1.530822153914353,
+          "selection_objective": 3.7062843607708738
+        },
+        {
+          "epoch": 79,
+          "successful_updates": 3871,
+          "training_components": {
+            "volume": 0.03242579438449003,
+            "bce": 0.053264898225480015,
+            "dice": 0.5009185732939303
+          },
+          "training_objective": 0.5866092659039004,
+          "selection_dice": 0.14119681899550252,
+          "selection_native_volume_mae": 1.5418634158629834,
+          "selection_objective": 3.7322814501968087
+        },
+        {
+          "epoch": 80,
+          "successful_updates": 3920,
+          "training_components": {
+            "volume": 0.036918966363494586,
+            "bce": 0.051964193169484266,
+            "dice": 0.48408257961273193
+          },
+          "training_objective": 0.5729657391457108,
+          "selection_dice": 0.1420343927049167,
+          "selection_native_volume_mae": 1.5412233184695927,
+          "selection_objective": 3.730640583369821
+        }
+      ]
+    }
+  },
+  "controls": {
+    "empty-mask_fitting-median-volume": {
+      "nonempty_dice": 1.377214003804798e-07,
+      "native_volume_mae": 1.318867662375099,
+      "all_compartment_dice": 0.10022397168960959,
+      "nonempty_compartment_dice": [
+        1.7831989719479634e-07,
+        2.155919579963321e-07,
+        3.269886627423446e-08
+      ],
+      "visits": 60,
+      "patients": 13,
+      "patients_with_primary_dice": 13,
+      "nonempty_target_counts": [
+        53,
+        52,
+        59
+      ],
+      "empty_target_counts": [
+        7,
+        8,
+        1
+      ],
+      "empty_targets_with_false_foreground": [
+        0,
+        0,
+        0
+      ],
+      "empty_target_predicted_voxel_means": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "mean-mask_fitting-median-volume": {
+      "nonempty_dice": 1.377214003804798e-07,
+      "native_volume_mae": 1.318867662375099,
+      "all_compartment_dice": 0.10022397168960959,
+      "nonempty_compartment_dice": [
+        1.7831989719479634e-07,
+        2.155919579963321e-07,
+        3.269886627423446e-08
+      ],
+      "visits": 60,
+      "patients": 13,
+      "patients_with_primary_dice": 13,
+      "nonempty_target_counts": [
+        53,
+        52,
+        59
+      ],
+      "empty_target_counts": [
+        7,
+        8,
+        1
+      ],
+      "empty_targets_with_false_foreground": [
+        0,
+        0,
+        0
+      ],
+      "empty_target_predicted_voxel_means": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "empty-mask_fitting-mean-volume": {
+      "nonempty_dice": 1.377214003804798e-07,
+      "native_volume_mae": 1.2951805086848514,
+      "all_compartment_dice": 0.10022397168960959,
+      "nonempty_compartment_dice": [
+        1.7831989719479634e-07,
+        2.155919579963321e-07,
+        3.269886627423446e-08
+      ],
+      "visits": 60,
+      "patients": 13,
+      "patients_with_primary_dice": 13,
+      "nonempty_target_counts": [
+        53,
+        52,
+        59
+      ],
+      "empty_target_counts": [
+        7,
+        8,
+        1
+      ],
+      "empty_targets_with_false_foreground": [
+        0,
+        0,
+        0
+      ],
+      "empty_target_predicted_voxel_means": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "contrasts": {
+    "dice": {
+      "difference": 0.04003305486956717,
+      "ci95": [
+        0.022001186196232612,
+        0.05732538387877051
+      ],
+      "ci97_5": [
+        0.01956272534334193,
+        0.059458892178316035
+      ],
+      "patients": 13,
+      "seed_differences": [
+        0.04405829517260826,
+        0.03600781456652607
+      ],
+      "arm_seed_mean_scores": {
+        "pretrained": 0.1981761106608158,
+        "random": 0.15814305579124863
+      }
+    },
+    "mae": {
+      "difference": -0.13659035444617001,
+      "ci95": [
+        -0.27726419209312586,
+        0.011573734399137652
+      ],
+      "ci97_5": [
+        -0.29553238208919896,
+        0.036304273527092576
+      ],
+      "patients": 13,
+      "seed_differences": [
+        -0.12744766284338935,
+        -0.1457330460489506
+      ],
+      "arm_seed_mean_scores": {
+        "pretrained": 1.1140824464290557,
+        "random": 1.2506728008752257
+      }
+    }
+  },
+  "provenance": {
+    "model_lock": {
+      "status": "ALL_FOUR_FITS_LOCKED",
+      "selected_model_sha256": {
+        "pretrained-42": "e8a157ed034738c99ac4cc07482430a25cd680143001683a38bca615f9ba190f",
+        "pretrained-43": "23a0a76df9be5b41da2149fc054e7f8e2aa085b01b97d1d5a2ba52af71879046",
+        "random-42": "90b8e10ba43a49d225fd3fff7285a28268370b9f321e12ac524cae18d73eb2e3",
+        "random-43": "aabcd470a6d12f7b07b80b02a804e4444f44bcbe333297e636db61f122055fca"
+      },
+      "scoring_images_opened": false,
+      "epochs_per_cell": 80,
+      "manifest_sha256": "98b27c2e4a7be9ca54f790ed9ab41266d653b59af1aefcb033162e8b9bf1f5df"
+    },
+    "fit_execution": {
+      "phase": "fit",
+      "started": "2026-10-31T15:47:37.407799+00:00",
+      "script_sha256": "053024d1b3e2db88a08942dd61c41b8ede9f71f990c207c5e92455405e153315",
+      "brief_sha256": "0d3ebb08b9c01cfba4de67c5ecafede8e5f1de1eb0e690a08b111588aa13a5c9",
+      "prior_instrument_sha256": "66bef4db30d5d6100b63ceec0164741205fee62c69427e13102a510c18351483",
+      "manifest_sha256": "98b27c2e4a7be9ca54f790ed9ab41266d653b59af1aefcb033162e8b9bf1f5df",
+      "epochs": 80,
+      "seeds": [
+        42,
+        43
+      ],
+      "arms": [
+        "pretrained",
+        "random"
+      ]
+    },
+    "assessment_start": {
+      "status": "LOCKS_VERIFIED_BEFORE_SCORING_ARRAY_LOAD",
+      "models": {
+        "pretrained-42": "e8a157ed034738c99ac4cc07482430a25cd680143001683a38bca615f9ba190f",
+        "pretrained-43": "23a0a76df9be5b41da2149fc054e7f8e2aa085b01b97d1d5a2ba52af71879046",
+        "random-42": "90b8e10ba43a49d225fd3fff7285a28268370b9f321e12ac524cae18d73eb2e3",
+        "random-43": "aabcd470a6d12f7b07b80b02a804e4444f44bcbe333297e636db61f122055fca"
+      },
+      "manifest_sha256": "98b27c2e4a7be9ca54f790ed9ab41266d653b59af1aefcb033162e8b9bf1f5df",
+      "script_sha256": "cfbaffe99dd9636f3d73b42cac95d43545ba4b0937973ece4b78dd018cca442e",
+      "brief_sha256": "0d3ebb08b9c01cfba4de67c5ecafede8e5f1de1eb0e690a08b111588aa13a5c9"
+    },
+    "prepared_receipt": {
+      "status": "PREPARED",
+      "groups": {
+        "fitting": {
+          "visits": 195,
+          "patients": 40
+        },
+        "selection": {
+          "visits": 67,
+          "patients": 11
+        },
+        "scoring": {
+          "visits": 60,
+          "patients": 13
+        }
+      },
+      "scoring_image_arrays_opened": false,
+      "all_patient_groups_disjoint": true,
+      "r48_sanity_patients_fitting_only": true,
+      "normalization_fitting_only": true,
+      "positive_weight": [
+        100.0,
+        100.0,
+        100.0
+      ],
+      "manifest_sha256": "98b27c2e4a7be9ca54f790ed9ab41266d653b59af1aefcb033162e8b9bf1f5df",
+      "prepared_source_sha256": "5b444dc63487d6555d04f002c34cf08ba6b6e75b12bb306b628540566200d112",
+      "brief_sha256": "0d3ebb08b9c01cfba4de67c5ecafede8e5f1de1eb0e690a08b111588aa13a5c9"
+    }
+  },
+  "support_conditions": {
+    "positive_dice_gain_in_each_seed": true,
+    "mean_dice_gain_at_least_0_03": true,
+    "adjusted_dice_lower_bound_above_zero": true,
+    "adjusted_volume_upper_bound_at_most_0_05": true
+  },
+  "development_pretraining_criterion_met": true,
+  "outcome": "SUPPORTED_WITHIN_FIXED_DEVELOPMENT_RECIPE",
+  "render": {
+    "columns": [
+      "target",
+      "pretrained seed42",
+      "random seed42"
+    ],
+    "rows": "First two sorted scoring visits with positive masks, not selected by error",
+    "path": "learning-masks.png"
+  },
+  "wall_seconds": 41.540899824001826,
+  "limits": [
+    "Scoring patients were studied historically and are not untouched validation",
+    "Matched schedule does not establish individually optimal or fully converged training",
+    "Two seeds do not establish unrestricted training-seed uncertainty",
+    "Automated masks and native volumes are proxy targets, not biological truth",
+    "Intensity standardization cancels much of the intensity perturbation; resolution stress removes anatomical detail",
+    "This is single-scan state estimation, not forecasting, a clinical comparator, or JEPA attribution",
+    "No new setting, seed, threshold, or checkpoint may be selected from these scoring outcomes",
+    "Within-study patient disjointness does not independently establish the pretraining corpus has no patient overlap"
+  ],
+  "verification": {
+    "status": "SPLITS_STATISTICS_MODELS_PREDICTIONS_AND_INTERVALS_PASSED",
+    "complete_prediction_arrays_replayed": 20,
+    "fitting_only_normalization_weights_and_controls_verified": true,
+    "seed_draws_reproduced_exactly": true,
+    "patient_disjointness_verified": true,
+    "original_unseen26_excluded": true,
+    "cells": {
+      "pretrained-42": {
+        "selected_epoch": 44,
+        "final_epoch": 80,
+        "successful_updates": 3920,
+        "optimizer_parameter_tensors": 153,
+        "selected_at_final_epoch": false,
+        "last_ten_selection_dice": [
+          0.23651848232060899,
+          0.23428900997954963,
+          0.23714490814238404,
+          0.23637988298112395,
+          0.23506494479119888,
+          0.23604535293676224,
+          0.23494031572767227,
+          0.23320460662541231,
+          0.2357364321475071,
+          0.23407391938843716
+        ]
+      },
+      "random-42": {
+        "selected_epoch": 17,
+        "final_epoch": 80,
+        "successful_updates": 3920,
+        "optimizer_parameter_tensors": 153,
+        "selected_at_final_epoch": false,
+        "last_ten_selection_dice": [
+          0.15551533381471883,
+          0.15466538136854488,
+          0.15283888013025473,
+          0.15308022099895946,
+          0.15469971783278383,
+          0.15592430639858637,
+          0.15316680853235828,
+          0.15494267923937785,
+          0.1582973715732296,
+          0.15193066615398856
+        ]
+      },
+      "pretrained-43": {
+        "selected_epoch": 22,
+        "final_epoch": 80,
+        "successful_updates": 3920,
+        "optimizer_parameter_tensors": 153,
+        "selected_at_final_epoch": false,
+        "last_ten_selection_dice": [
+          0.22829836642348153,
+          0.22252350614095298,
+          0.22545153178226335,
+          0.21983307401504595,
+          0.22368952402636771,
+          0.2270871995003154,
+          0.2265396843458924,
+          0.22574505873727768,
+          0.2271640492752498,
+          0.22793758108855613
+        ]
+      },
+      "random-43": {
+        "selected_epoch": 12,
+        "final_epoch": 80,
+        "successful_updates": 3920,
+        "optimizer_parameter_tensors": 153,
+        "selected_at_final_epoch": false,
+        "last_ten_selection_dice": [
+          0.14649815869384863,
+          0.14388655899625596,
+          0.14342896838622393,
+          0.14614994412443816,
+          0.145390543454232,
+          0.1426658350298311,
+          0.1436475181340973,
+          0.14638688464011526,
+          0.14119681899550252,
+          0.1420343927049167
+        ]
+      }
+    },
+    "scope": "Executed artifact and numerical verification, not independent scientific review",
+    "verification_script_sha256": "ed33e5a8f1220dcb602692a765be3f98ec288bbb0c6eece4b78524f152f7f8cf"
+  },
+  "scientific_review": "NOT_PERFORMED"
+}

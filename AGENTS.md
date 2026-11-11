@@ -1,8 +1,12 @@
 # AGENTS.md — working guide for this repo
 
+**Study closed November 11, 2026.** Preserve the code and historical record; no new experiment, training, or reserved-cohort inspection is queued. Reopening requires a new explicit research decision. Historical host paths and execution instructions below describe prior work, not a claim that those resources remain available.
+
 Research repo: longitudinal glioma MRI using LUMIERE for development and SAILOR for developmental transfer. The research direction is **world models for MRI**: maintaining a patient-state representation from available observations and predicting aspects of future observations (with uncertainty) while separating acquisition nuisance.
 
-Read `info/README.md` for the documentation map, `info/TODO.md` for current priorities, `info/EXPERIMENTS.md` for completed outcomes, `info/METHODS.md` for protocols, and `info/NOTES_AND_INSIGHTS.md` for reasoning. Before implementing a new experiment, follow [`info/research_guardrails.md`](info/research_guardrails.md).
+Read `info/README.md` for the documentation map and `info/RESEARCH_SUMMARY.md` for the dated synthesis through R62. Use `info/TODO.md` for deferred dependencies and the work log, `info/EXPERIMENTS.md` for completed outcomes, `info/METHODS.md` for protocols, and `info/NOTES_AND_INSIGHTS.md` for reasoning. Before implementing a new experiment, follow [`info/research_guardrails.md`](info/research_guardrails.md).
+
+R62 added MU-Glioma-Post for development. Its forty hash-reserved patients remain unopened; do not load their images or segmentation measurements as part of routine development or verification. The fixed membership and cohort roles are documented in `info/METHODS.md`.
 
 ## Research direction and workflow rules
 
@@ -35,7 +39,7 @@ Read `info/README.md` for the documentation map, `info/TODO.md` for current prio
   - `documentation_sources.py` & `render_documentation_coverage.py` — verifies archive hashes, local links, and historical ID coverage.
   - Data & viewer scripts: `preprocess.py`, `preprocess_qa.py`, `bet_repair.py`, `raw_mni_deltas.py`, `view_scans.py`, `shot_viewer.py`.
 - `info/` — canonical research record:
-  - `TODO.md` — current priorities and open decisions.
+  - `TODO.md` — closure status, deferred dependencies, and dated work log.
   - `EXPERIMENTS.md` — measurements, controls, uncertainty, corrections, and withdrawals (preserving historical D, A, I, R, G, V, E, and K3 IDs).
   - `METHODS.md` — definitions, fixed protocols, evaluation rules, and reproduction commands.
   - `NOTES_AND_INSIGHTS.md` — reasoning, interpretation, and open questions.

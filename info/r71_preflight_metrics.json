@@ -1,0 +1,447 @@
+{
+  "status": "passed",
+  "threshold": 0.8,
+  "smoke": [
+    {
+      "kind": "learned",
+      "initial_readout_sha256": "b5cda1a778b4d46848e56f73167a8349d63d69ecdb8130517d30cb6865ce61b3",
+      "update_seconds": [
+        0.24192365806084126,
+        0.10316558100748807
+      ],
+      "peak_allocated_bytes": 4061949952,
+      "reload_max_difference": 0.0,
+      "score": {
+        "classes": {
+          "1": {
+            "reference_voxels": 9900,
+            "predicted_voxels": 250505,
+            "intersection_voxels": 6853,
+            "dice": 0.05263339797622933,
+            "nonempty_reference_dice": 0.05263339797622933,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 243652
+          },
+          "2": {
+            "reference_voxels": 1542,
+            "predicted_voxels": 50204,
+            "intersection_voxels": 136,
+            "dice": 0.005256444942604259,
+            "nonempty_reference_dice": 0.005256444942604259,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 50068
+          },
+          "3": {
+            "reference_voxels": 15790,
+            "predicted_voxels": 755151,
+            "intersection_voxels": 4465,
+            "dice": 0.011583246967018228,
+            "nonempty_reference_dice": 0.011583246967018228,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 750686
+          }
+        },
+        "primary_dice": 0.023157696628617275,
+        "empty_case": false
+      }
+    },
+    {
+      "kind": "random",
+      "initial_readout_sha256": "b5cda1a778b4d46848e56f73167a8349d63d69ecdb8130517d30cb6865ce61b3",
+      "update_seconds": [
+        0.10464007500559092,
+        0.10358442994765937
+      ],
+      "peak_allocated_bytes": 4070537216,
+      "reload_max_difference": 0.0,
+      "score": {
+        "classes": {
+          "1": {
+            "reference_voxels": 9900,
+            "predicted_voxels": 203663,
+            "intersection_voxels": 5862,
+            "dice": 0.054897149787182235,
+            "nonempty_reference_dice": 0.054897149787182235,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 197801
+          },
+          "2": {
+            "reference_voxels": 1542,
+            "predicted_voxels": 56908,
+            "intersection_voxels": 263,
+            "dice": 0.008999144568006844,
+            "nonempty_reference_dice": 0.008999144568006844,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 56645
+          },
+          "3": {
+            "reference_voxels": 15790,
+            "predicted_voxels": 716338,
+            "intersection_voxels": 9062,
+            "dice": 0.02475523405743258,
+            "nonempty_reference_dice": 0.02475523405743258,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 707276
+          }
+        },
+        "primary_dice": 0.029550509470873888,
+        "empty_case": false
+      }
+    },
+    {
+      "kind": "direct",
+      "initial_readout_sha256": "b5cda1a778b4d46848e56f73167a8349d63d69ecdb8130517d30cb6865ce61b3",
+      "update_seconds": [
+        0.17374031490180641,
+        0.17142141400836408
+      ],
+      "peak_allocated_bytes": 6061052416,
+      "reload_max_difference": 0.0,
+      "score": {
+        "classes": {
+          "1": {
+            "reference_voxels": 9900,
+            "predicted_voxels": 260766,
+            "intersection_voxels": 6941,
+            "dice": 0.051288303665772576,
+            "nonempty_reference_dice": 0.051288303665772576,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 253825
+          },
+          "2": {
+            "reference_voxels": 1542,
+            "predicted_voxels": 42338,
+            "intersection_voxels": 83,
+            "dice": 0.0037830446672743848,
+            "nonempty_reference_dice": 0.0037830446672743848,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 42255
+          },
+          "3": {
+            "reference_voxels": 15790,
+            "predicted_voxels": 758277,
+            "intersection_voxels": 4987,
+            "dice": 0.012885189524937763,
+            "nonempty_reference_dice": 0.012885189524937763,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 753290
+          }
+        },
+        "primary_dice": 0.022652179285994906,
+        "empty_case": false
+      }
+    }
+  ],
+  "checks": [
+    {
+      "seed": 17,
+      "updates": 512,
+      "visits": [
+        {
+          "classes": {
+            "1": {
+              "reference_voxels": 4094,
+              "predicted_voxels": 4287,
+              "intersection_voxels": 3976,
+              "dice": 0.9488127908364157,
+              "nonempty_reference_dice": 0.9488127908364157,
+              "empty_reference": false,
+              "false_positive_volume_mm3": null,
+              "false_positive_any": null,
+              "all_case_false_positive_volume_mm3": 311
+            },
+            "2": {
+              "reference_voxels": 353,
+              "predicted_voxels": 457,
+              "intersection_voxels": 353,
+              "dice": 0.8716049382716049,
+              "nonempty_reference_dice": 0.8716049382716049,
+              "empty_reference": false,
+              "false_positive_volume_mm3": null,
+              "false_positive_any": null,
+              "all_case_false_positive_volume_mm3": 104
+            },
+            "3": {
+              "reference_voxels": 15095,
+              "predicted_voxels": 22790,
+              "intersection_voxels": 15000,
+              "dice": 0.7918701332981392,
+              "nonempty_reference_dice": 0.7918701332981392,
+              "empty_reference": false,
+              "false_positive_volume_mm3": null,
+              "false_positive_any": null,
+              "all_case_false_positive_volume_mm3": 7790
+            }
+          },
+          "primary_dice": 0.8707626208020532,
+          "empty_case": false,
+          "nonempty_compartment_mean": 0.8707626208020532
+        },
+        {
+          "classes": {
+            "1": {
+              "reference_voxels": 9900,
+              "predicted_voxels": 9692,
+              "intersection_voxels": 9434,
+              "dice": 0.9630461412821559,
+              "nonempty_reference_dice": 0.9630461412821559,
+              "empty_reference": false,
+              "false_positive_volume_mm3": null,
+              "false_positive_any": null,
+              "all_case_false_positive_volume_mm3": 258
+            },
+            "2": {
+              "reference_voxels": 1542,
+              "predicted_voxels": 1774,
+              "intersection_voxels": 1524,
+              "dice": 0.9191797346200241,
+              "nonempty_reference_dice": 0.9191797346200241,
+              "empty_reference": false,
+              "false_positive_volume_mm3": null,
+              "false_positive_any": null,
+              "all_case_false_positive_volume_mm3": 250
+            },
+            "3": {
+              "reference_voxels": 15790,
+              "predicted_voxels": 26318,
+              "intersection_voxels": 15586,
+              "dice": 0.740286881352712,
+              "nonempty_reference_dice": 0.740286881352712,
+              "empty_reference": false,
+              "false_positive_volume_mm3": null,
+              "false_positive_any": null,
+              "all_case_false_positive_volume_mm3": 10732
+            }
+          },
+          "primary_dice": 0.874170919084964,
+          "empty_case": false,
+          "nonempty_compartment_mean": 0.874170919084964
+        }
+      ],
+      "mean_nonempty_compartment_dice": 0.8724667699435087,
+      "status": "passed",
+      "seconds": 93.15647127607372,
+      "peak_allocated_bytes": 6064264704,
+      "draw_sha256": "72f9b6879c0669f39371ecca68e0da562713fdfe7afa1a5984e2d39789bd445d"
+    },
+    {
+      "seed": 23,
+      "updates": 512,
+      "visits": [
+        {
+          "classes": {
+            "1": {
+              "reference_voxels": 4094,
+              "predicted_voxels": 4724,
+              "intersection_voxels": 4005,
+              "dice": 0.9083692447266954,
+              "nonempty_reference_dice": 0.9083692447266954,
+              "empty_reference": false,
+              "false_positive_volume_mm3": null,
+              "false_positive_any": null,
+              "all_case_false_positive_volume_mm3": 719
+            },
+            "2": {
+              "reference_voxels": 353,
+              "predicted_voxels": 450,
+              "intersection_voxels": 353,
+              "dice": 0.8792029887920298,
+              "nonempty_reference_dice": 0.8792029887920298,
+              "empty_reference": false,
+              "false_positive_volume_mm3": null,
+              "false_positive_any": null,
+              "all_case_false_positive_volume_mm3": 97
+            },
+            "3": {
+              "reference_voxels": 15095,
+              "predicted_voxels": 17180,
+              "intersection_voxels": 14652,
+              "dice": 0.9079473276529821,
+              "nonempty_reference_dice": 0.9079473276529821,
+              "empty_reference": false,
+              "false_positive_volume_mm3": null,
+              "false_positive_any": null,
+              "all_case_false_positive_volume_mm3": 2528
+            }
+          },
+          "primary_dice": 0.8985065203905691,
+          "empty_case": false,
+          "nonempty_compartment_mean": 0.8985065203905691
+        },
+        {
+          "classes": {
+            "1": {
+              "reference_voxels": 9900,
+              "predicted_voxels": 10187,
+              "intersection_voxels": 9610,
+              "dice": 0.9568377557624335,
+              "nonempty_reference_dice": 0.9568377557624335,
+              "empty_reference": false,
+              "false_positive_volume_mm3": null,
+              "false_positive_any": null,
+              "all_case_false_positive_volume_mm3": 577
+            },
+            "2": {
+              "reference_voxels": 1542,
+              "predicted_voxels": 1767,
+              "intersection_voxels": 1526,
+              "dice": 0.9223330311272288,
+              "nonempty_reference_dice": 0.9223330311272288,
+              "empty_reference": false,
+              "false_positive_volume_mm3": null,
+              "false_positive_any": null,
+              "all_case_false_positive_volume_mm3": 241
+            },
+            "3": {
+              "reference_voxels": 15790,
+              "predicted_voxels": 19536,
+              "intersection_voxels": 15080,
+              "dice": 0.85376210156825,
+              "nonempty_reference_dice": 0.85376210156825,
+              "empty_reference": false,
+              "false_positive_volume_mm3": null,
+              "false_positive_any": null,
+              "all_case_false_positive_volume_mm3": 4456
+            }
+          },
+          "primary_dice": 0.9109776294859708,
+          "empty_case": false,
+          "nonempty_compartment_mean": 0.9109776294859707
+        }
+      ],
+      "mean_nonempty_compartment_dice": 0.90474207493827,
+      "status": "passed",
+      "seconds": 92.9614233779721,
+      "peak_allocated_bytes": 6064264704,
+      "draw_sha256": "99b09097a303362d377f86ca97903eb492982d8f48e30b9840eac46cc25aec76"
+    },
+    {
+      "seed": 31,
+      "updates": 512,
+      "visits": [
+        {
+          "classes": {
+            "1": {
+              "reference_voxels": 4094,
+              "predicted_voxels": 4921,
+              "intersection_voxels": 3986,
+              "dice": 0.8843039378813089,
+              "nonempty_reference_dice": 0.8843039378813089,
+              "empty_reference": false,
+              "false_positive_volume_mm3": null,
+              "false_positive_any": null,
+              "all_case_false_positive_volume_mm3": 935
+            },
+            "2": {
+              "reference_voxels": 353,
+              "predicted_voxels": 681,
+              "intersection_voxels": 353,
+              "dice": 0.6827852998065764,
+              "nonempty_reference_dice": 0.6827852998065764,
+              "empty_reference": false,
+              "false_positive_volume_mm3": null,
+              "false_positive_any": null,
+              "all_case_false_positive_volume_mm3": 328
+            },
+            "3": {
+              "reference_voxels": 15095,
+              "predicted_voxels": 23394,
+              "intersection_voxels": 14989,
+              "dice": 0.7788718854737717,
+              "nonempty_reference_dice": 0.7788718854737717,
+              "empty_reference": false,
+              "false_positive_volume_mm3": null,
+              "false_positive_any": null,
+              "all_case_false_positive_volume_mm3": 8405
+            }
+          },
+          "primary_dice": 0.7819870410538856,
+          "empty_case": false,
+          "nonempty_compartment_mean": 0.7819870410538856
+        },
+        {
+          "classes": {
+            "1": {
+              "reference_voxels": 9900,
+              "predicted_voxels": 9995,
+              "intersection_voxels": 9587,
+              "dice": 0.963759738627796,
+              "nonempty_reference_dice": 0.963759738627796,
+              "empty_reference": false,
+              "false_positive_volume_mm3": null,
+              "false_positive_any": null,
+              "all_case_false_positive_volume_mm3": 408
+            },
+            "2": {
+              "reference_voxels": 1542,
+              "predicted_voxels": 1809,
+              "intersection_voxels": 1535,
+              "dice": 0.916144434497165,
+              "nonempty_reference_dice": 0.916144434497165,
+              "empty_reference": false,
+              "false_positive_volume_mm3": null,
+              "false_positive_any": null,
+              "all_case_false_positive_volume_mm3": 274
+            },
+            "3": {
+              "reference_voxels": 15790,
+              "predicted_voxels": 25724,
+              "intersection_voxels": 15556,
+              "dice": 0.7494339259045142,
+              "nonempty_reference_dice": 0.7494339259045142,
+              "empty_reference": false,
+              "false_positive_volume_mm3": null,
+              "false_positive_any": null,
+              "all_case_false_positive_volume_mm3": 10168
+            }
+          },
+          "primary_dice": 0.876446033009825,
+          "empty_case": false,
+          "nonempty_compartment_mean": 0.876446033009825
+        }
+      ],
+      "mean_nonempty_compartment_dice": 0.8292165370318554,
+      "status": "passed",
+      "seconds": 93.17130453803111,
+      "peak_allocated_bytes": 6066526208,
+      "draw_sha256": "029cb0c0d6d866bcca32350b9ca1c1ac3157e3b942ca30de7b41b73149b4104d"
+    }
+  ],
+  "cohort_export_started": false,
+  "source_sha256": {
+    "assess69.py": "5405b80f8d162a37939223a4a11534f4a0ef4320795fa19382463a4eec982f43",
+    "assess71.py": "6f8f48a362179a8d6fbd11b15ec7aa09112584d315f606a13f4c0a5af16058d8",
+    "check71.py": "8ccf2d891976024170a4df36bfa341323d96043c35a340dba64b71dc20f575a7",
+    "check_runtime71.py": "59c02991e7e1081968663541908ef295760b2a412bb11f6c5dcf475ade9275f8",
+    "data66.py": "675b7981469af7e02abd2be774599768898fb5e10c332e76b9d03b8874a897ee",
+    "experiment71.py": "6609fb4d278043e746fc39fb2f00ae84c69923d23c211a3a095a2b71b16fa4bb",
+    "launch71.sh": "3ccdc5240e1bf2bed375f9350d8d9db8b8ea06998acf5cf906a72a3528051fc2",
+    "losses66.py": "187b3a5d88feff9d4b977526775186e014519124062ab2f65d2400352916f015",
+    "measure_state.py": "780334f1d734e7f4a51bea1ca2bf9b48c72652b14174f0f67954ac997c6d8711",
+    "model66.py": "b0696f175f50c6b72534d2fb269dd67b4c58515dd9452fda2de8ab18e8011f63",
+    "model69.py": "d6c75a2c5ededcfce75e39745f52713a1cbca61fd4441d1f5657eece30a2cade",
+    "model71.py": "0def11e7f70e4060f60c5f9682711c3e4562008d1a486b8f27e9ac812df86fd2",
+    "protocol.md": "5128c56d4b3bdd6aa5b808868668680552e7dd6f1cd6159e881c00863aac50a8",
+    "render71.py": "4718d904c682f2d19f095f26f53edd0c44b4c63bba4e2c8cb17fa63d2311bc4c",
+    "segmentation66.py": "4ae4f03e212d68e7491ff320e8c15c4cf42017f4a41156261c70687e63ce09a4",
+    "statistics71.py": "69a6447b9a3053da26933e1a05a9b93b63c62ccc15d0d71c7ac4d1367e45e9ba"
+  }
+}

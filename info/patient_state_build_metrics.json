@@ -1,0 +1,160 @@
+{
+  "recorded_utc": "2026-11-04T20:49:03.399825+00:00",
+  "scope": "Integrated build and runtime verification; current-task usefulness and forecast benefit remain unestablished",
+  "milestones": {
+    "working_timeline": "implemented and exercised",
+    "useful_observation_model": "training",
+    "useful_predictive_state": "not established"
+  },
+  "legacy_timeline": {
+    "visits": 3,
+    "two_readouts_from_saved_state": true,
+    "forecast_method": "persistence",
+    "horizons_nominal_weeks": [
+      12,
+      24
+    ],
+    "minimum_pipeline_seconds": 2.0907631469890475,
+    "maximum_pipeline_seconds": 3.9311815039254725,
+    "maximum_state_payload_bytes": 358297392,
+    "forecast_comparison_present": true
+  },
+  "joint_inference_smoke": {
+    "pipeline_seconds": 9.410407817107625,
+    "state_payload_bytes": 1436233512,
+    "missing_sequence": "FLAIR",
+    "scope": "untrained smoke checkpoint; no accuracy claim"
+  },
+  "observation_smoke": {
+    "passed": true,
+    "updates": 2,
+    "checkpoint_max_difference": [
+      0.0,
+      0.0
+    ],
+    "state_max_difference": 0.0,
+    "encoder_changed": true,
+    "mean_seconds_per_update": 0.9532877329620533,
+    "peak_allocated_bytes": 12555029504,
+    "state_payload_bytes": 178626560
+  },
+  "forecast_smoke": {
+    "passed": true,
+    "observation_unchanged": true,
+    "arms": [
+      "current",
+      "history"
+    ],
+    "pairs_per_arm": 2,
+    "horizons_nominal_weeks": [
+      12,
+      24
+    ],
+    "maximum_checkpoint_difference": 0.0,
+    "decoded_crps_exercised": true,
+    "scope": "wiring check only"
+  },
+  "MU_restoration": {
+    "development_patients": 163,
+    "reserved_patients_requested": 0,
+    "reserved_images_opened": 0,
+    "scoring_images_opened_during_preparation": 0,
+    "preparation": {
+      "fitting": {
+        "assigned_patients": 99,
+        "eligible_patients": 99,
+        "visits": 281
+      },
+      "selection": {
+        "assigned_patients": 32,
+        "eligible_patients": 32,
+        "visits": 106
+      }
+    },
+    "excluded_visits": 1,
+    "excluded_reason": "one absent segmentation mask",
+    "cavity_handling": "ignore -1, not background"
+  },
+  "cohort": {
+    "fitting": {
+      "patients": 154,
+      "visits": 586
+    },
+    "selection": {
+      "patients": 50,
+      "visits": 284
+    },
+    "scoring": {
+      "patients": 18,
+      "visits": 116
+    }
+  },
+  "horizon_coverage": {
+    "fitting": {
+      "12": {
+        "cutoffs": 152,
+        "patients": 39,
+        "with_history": 127,
+        "exact_nominal_horizon_cutoffs": 23,
+        "tolerance_nominal_weeks": 4
+      },
+      "24": {
+        "cutoffs": 107,
+        "patients": 35,
+        "with_history": 79,
+        "exact_nominal_horizon_cutoffs": 15,
+        "tolerance_nominal_weeks": 4
+      }
+    },
+    "selection": {
+      "12": {
+        "cutoffs": 124,
+        "patients": 16,
+        "with_history": 112,
+        "exact_nominal_horizon_cutoffs": 18,
+        "tolerance_nominal_weeks": 4
+      },
+      "24": {
+        "cutoffs": 98,
+        "patients": 15,
+        "with_history": 89,
+        "exact_nominal_horizon_cutoffs": 11,
+        "tolerance_nominal_weeks": 4
+      }
+    },
+    "scoring": {
+      "12": {
+        "cutoffs": 49,
+        "patients": 14,
+        "with_history": 44,
+        "exact_nominal_horizon_cutoffs": 8,
+        "tolerance_nominal_weeks": 4
+      },
+      "24": {
+        "cutoffs": 36,
+        "patients": 9,
+        "with_history": 32,
+        "exact_nominal_horizon_cutoffs": 4,
+        "tolerance_nominal_weeks": 4
+      }
+    }
+  },
+  "training": {
+    "run": "observation-v2",
+    "status": "running",
+    "seed": 17,
+    "planned_updates": 37500,
+    "effective_batch_size": 2,
+    "patch_size": 128,
+    "latest_logged_step": 650,
+    "recent_seconds_per_update": 0.6168353582825512,
+    "training_only_projected_hours": 6.425368315443241,
+    "planning_cap_gpu_days": 2,
+    "first_attempt": "stopped before first checkpoint: hidden region outside support; corrected to sample supported brain"
+  },
+  "verification": {
+    "patient_state_contract_tests": 12,
+    "documentation_tests": 27,
+    "viewer_visually_inspected": true
+  }
+}

@@ -1,0 +1,1407 @@
+{
+  "identity": "r68-preparation-v1",
+  "status": "preparation_complete_clinical_context_and_longitudinal_adjudication_blocked",
+  "provenance": {
+    "membership_sha256": "4df898761ecdb299bc87f99749fbebc8faab294043d454c4055850fcc676e2d6",
+    "clinical_sha256": "4341badf954511d67fc52b82b3b488ed7323f7e46d249a354ff9b3a62269c79b",
+    "asset_index_sha256": "eb7bf2ee3cd6c5e6edb5dddcabe74a163ca4b531db03c5eeaa39a6debdebe3e6",
+    "source_url": "https://www.cancerimagingarchive.net/wp-content/uploads/MU-Glioma-Post_ClinicalData-July2025.xlsx",
+    "script_sha256": "40017547e6db550c7da4da4550475ffe4b840d5ed31f604483985ee8d2d20203",
+    "scopes": {
+      "fitting": 99,
+      "selection": 32,
+      "reserved_requested": 0,
+      "pilot_scoring_requested": 0
+    },
+    "MRI_pixels_read": 0,
+    "labels_recomputed_or_changed": 0,
+    "new_model_fits": 0,
+    "date_semantics": "Released diagnosis-relative integer days; no independent acquisition-date verification",
+    "annotation_convention": "MU raw labels: 1 core,2 FLAIR abnormality,3 enhancing,4 cavity; model-native map [0,2,3,1,4]; retain separate cavity"
+  },
+  "coverage": {
+    "fitting": {
+      "all_recorded_cutoffs": {
+        "cutoffs": {
+          "patients": 99,
+          "episodes": 285
+        },
+        "with_past_released_scan": {
+          "patients": 74,
+          "episodes": 184
+        },
+        "retrospective_field_completeness_not_input_validity": {
+          "procedure_day": {
+            "patients": 99,
+            "episodes": 285
+          },
+          "initial_chemo_name": {
+            "patients": 62,
+            "episodes": 203
+          },
+          "initial_chemo_start": {
+            "patients": 59,
+            "episodes": 193
+          },
+          "rt_start": {
+            "patients": 66,
+            "episodes": 216
+          },
+          "rt_end": {
+            "patients": 66,
+            "episodes": 216
+          },
+          "delivered_dose": {
+            "patients": 63,
+            "episodes": 206
+          },
+          "delivered_fractions": {
+            "patients": 63,
+            "episodes": 206
+          },
+          "death_day": {
+            "patients": 49,
+            "episodes": 148
+          },
+          "verified_cutoff_known_plan": {
+            "patients": 0,
+            "episodes": 0
+          }
+        },
+        "horizons": {
+          "84": {
+            "status_counts": {
+              "matched": 100,
+              "out_of_window": 84,
+              "no_later_recorded_mri": 97,
+              "unresolved_cutoff_date": 4
+            },
+            "matched": {
+              "patients": 49,
+              "episodes": 100
+            },
+            "usable_released_change_labels": {
+              "patients": 45,
+              "episodes": 88
+            },
+            "matched_with_history": {
+              "patients": 28,
+              "episodes": 50
+            },
+            "death_before_window_end": {
+              "patients": 30,
+              "episodes": 41
+            },
+            "matched_with_unusable_assets_or_date_conflict": {
+              "patients": 7,
+              "episodes": 12
+            },
+            "strict_clinical_context_and_adjudication_eligible": {
+              "patients": 0,
+              "episodes": 0
+            },
+            "usable_pair_retrospective_field_completeness_not_input_validity": {
+              "procedure_day": {
+                "patients": 45,
+                "episodes": 88
+              },
+              "initial_chemo_name": {
+                "patients": 40,
+                "episodes": 80
+              },
+              "initial_chemo_start": {
+                "patients": 39,
+                "episodes": 79
+              },
+              "rt_start": {
+                "patients": 41,
+                "episodes": 83
+              },
+              "rt_end": {
+                "patients": 41,
+                "episodes": 83
+              },
+              "delivered_dose": {
+                "patients": 40,
+                "episodes": 81
+              },
+              "delivered_fractions": {
+                "patients": 40,
+                "episodes": 81
+              },
+              "death_day": {
+                "patients": 24,
+                "episodes": 45
+              },
+              "verified_cutoff_known_plan": {
+                "patients": 0,
+                "episodes": 0
+              }
+            }
+          },
+          "168": {
+            "status_counts": {
+              "out_of_window": 124,
+              "matched": 60,
+              "no_later_recorded_mri": 97,
+              "unresolved_cutoff_date": 4
+            },
+            "matched": {
+              "patients": 35,
+              "episodes": 60
+            },
+            "usable_released_change_labels": {
+              "patients": 29,
+              "episodes": 50
+            },
+            "matched_with_history": {
+              "patients": 16,
+              "episodes": 26
+            },
+            "death_before_window_end": {
+              "patients": 37,
+              "episodes": 64
+            },
+            "matched_with_unusable_assets_or_date_conflict": {
+              "patients": 6,
+              "episodes": 10
+            },
+            "strict_clinical_context_and_adjudication_eligible": {
+              "patients": 0,
+              "episodes": 0
+            },
+            "usable_pair_retrospective_field_completeness_not_input_validity": {
+              "procedure_day": {
+                "patients": 29,
+                "episodes": 50
+              },
+              "initial_chemo_name": {
+                "patients": 22,
+                "episodes": 39
+              },
+              "initial_chemo_start": {
+                "patients": 22,
+                "episodes": 39
+              },
+              "rt_start": {
+                "patients": 24,
+                "episodes": 44
+              },
+              "rt_end": {
+                "patients": 24,
+                "episodes": 44
+              },
+              "delivered_dose": {
+                "patients": 22,
+                "episodes": 41
+              },
+              "delivered_fractions": {
+                "patients": 22,
+                "episodes": 41
+              },
+              "death_day": {
+                "patients": 11,
+                "episodes": 22
+              },
+              "verified_cutoff_known_plan": {
+                "patients": 0,
+                "episodes": 0
+              }
+            }
+          }
+        }
+      },
+      "post_initial_rt_event": {
+        "cutoffs": {
+          "patients": 62,
+          "episodes": 189
+        },
+        "with_past_released_scan": {
+          "patients": 54,
+          "episodes": 138
+        },
+        "retrospective_field_completeness_not_input_validity": {
+          "procedure_day": {
+            "patients": 62,
+            "episodes": 189
+          },
+          "initial_chemo_name": {
+            "patients": 56,
+            "episodes": 177
+          },
+          "initial_chemo_start": {
+            "patients": 56,
+            "episodes": 177
+          },
+          "rt_start": {
+            "patients": 62,
+            "episodes": 189
+          },
+          "rt_end": {
+            "patients": 62,
+            "episodes": 189
+          },
+          "delivered_dose": {
+            "patients": 60,
+            "episodes": 182
+          },
+          "delivered_fractions": {
+            "patients": 60,
+            "episodes": 182
+          },
+          "death_day": {
+            "patients": 36,
+            "episodes": 110
+          },
+          "verified_cutoff_known_plan": {
+            "patients": 0,
+            "episodes": 0
+          }
+        },
+        "horizons": {
+          "84": {
+            "status_counts": {
+              "matched": 78,
+              "out_of_window": 49,
+              "no_later_recorded_mri": 62
+            },
+            "matched": {
+              "patients": 38,
+              "episodes": 78
+            },
+            "usable_released_change_labels": {
+              "patients": 38,
+              "episodes": 76
+            },
+            "matched_with_history": {
+              "patients": 26,
+              "episodes": 47
+            },
+            "death_before_window_end": {
+              "patients": 19,
+              "episodes": 26
+            },
+            "matched_with_unusable_assets_or_date_conflict": {
+              "patients": 2,
+              "episodes": 2
+            },
+            "strict_clinical_context_and_adjudication_eligible": {
+              "patients": 0,
+              "episodes": 0
+            },
+            "usable_pair_retrospective_field_completeness_not_input_validity": {
+              "procedure_day": {
+                "patients": 38,
+                "episodes": 76
+              },
+              "initial_chemo_name": {
+                "patients": 37,
+                "episodes": 74
+              },
+              "initial_chemo_start": {
+                "patients": 37,
+                "episodes": 74
+              },
+              "rt_start": {
+                "patients": 38,
+                "episodes": 76
+              },
+              "rt_end": {
+                "patients": 38,
+                "episodes": 76
+              },
+              "delivered_dose": {
+                "patients": 37,
+                "episodes": 75
+              },
+              "delivered_fractions": {
+                "patients": 37,
+                "episodes": 75
+              },
+              "death_day": {
+                "patients": 21,
+                "episodes": 41
+              },
+              "verified_cutoff_known_plan": {
+                "patients": 0,
+                "episodes": 0
+              }
+            }
+          },
+          "168": {
+            "status_counts": {
+              "out_of_window": 85,
+              "matched": 42,
+              "no_later_recorded_mri": 62
+            },
+            "matched": {
+              "patients": 27,
+              "episodes": 42
+            },
+            "usable_released_change_labels": {
+              "patients": 23,
+              "episodes": 37
+            },
+            "matched_with_history": {
+              "patients": 14,
+              "episodes": 21
+            },
+            "death_before_window_end": {
+              "patients": 25,
+              "episodes": 44
+            },
+            "matched_with_unusable_assets_or_date_conflict": {
+              "patients": 4,
+              "episodes": 5
+            },
+            "strict_clinical_context_and_adjudication_eligible": {
+              "patients": 0,
+              "episodes": 0
+            },
+            "usable_pair_retrospective_field_completeness_not_input_validity": {
+              "procedure_day": {
+                "patients": 23,
+                "episodes": 37
+              },
+              "initial_chemo_name": {
+                "patients": 22,
+                "episodes": 36
+              },
+              "initial_chemo_start": {
+                "patients": 22,
+                "episodes": 36
+              },
+              "rt_start": {
+                "patients": 23,
+                "episodes": 37
+              },
+              "rt_end": {
+                "patients": 23,
+                "episodes": 37
+              },
+              "delivered_dose": {
+                "patients": 21,
+                "episodes": 35
+              },
+              "delivered_fractions": {
+                "patients": 21,
+                "episodes": 35
+              },
+              "death_day": {
+                "patients": 11,
+                "episodes": 18
+              },
+              "verified_cutoff_known_plan": {
+                "patients": 0,
+                "episodes": 0
+              }
+            }
+          }
+        }
+      },
+      "first_post_initial_rt_candidate": {
+        "cutoffs": {
+          "patients": 62,
+          "episodes": 62
+        },
+        "with_past_released_scan": {
+          "patients": 11,
+          "episodes": 11
+        },
+        "retrospective_field_completeness_not_input_validity": {
+          "procedure_day": {
+            "patients": 62,
+            "episodes": 62
+          },
+          "initial_chemo_name": {
+            "patients": 56,
+            "episodes": 56
+          },
+          "initial_chemo_start": {
+            "patients": 56,
+            "episodes": 56
+          },
+          "rt_start": {
+            "patients": 62,
+            "episodes": 62
+          },
+          "rt_end": {
+            "patients": 62,
+            "episodes": 62
+          },
+          "delivered_dose": {
+            "patients": 60,
+            "episodes": 60
+          },
+          "delivered_fractions": {
+            "patients": 60,
+            "episodes": 60
+          },
+          "death_day": {
+            "patients": 36,
+            "episodes": 36
+          },
+          "verified_cutoff_known_plan": {
+            "patients": 0,
+            "episodes": 0
+          }
+        },
+        "horizons": {
+          "84": {
+            "status_counts": {
+              "matched": 35,
+              "out_of_window": 15,
+              "no_later_recorded_mri": 12
+            },
+            "matched": {
+              "patients": 35,
+              "episodes": 35
+            },
+            "usable_released_change_labels": {
+              "patients": 34,
+              "episodes": 34
+            },
+            "matched_with_history": {
+              "patients": 5,
+              "episodes": 5
+            },
+            "death_before_window_end": {
+              "patients": 7,
+              "episodes": 7
+            },
+            "matched_with_unusable_assets_or_date_conflict": {
+              "patients": 1,
+              "episodes": 1
+            },
+            "strict_clinical_context_and_adjudication_eligible": {
+              "patients": 0,
+              "episodes": 0
+            },
+            "usable_pair_retrospective_field_completeness_not_input_validity": {
+              "procedure_day": {
+                "patients": 34,
+                "episodes": 34
+              },
+              "initial_chemo_name": {
+                "patients": 33,
+                "episodes": 33
+              },
+              "initial_chemo_start": {
+                "patients": 33,
+                "episodes": 33
+              },
+              "rt_start": {
+                "patients": 34,
+                "episodes": 34
+              },
+              "rt_end": {
+                "patients": 34,
+                "episodes": 34
+              },
+              "delivered_dose": {
+                "patients": 33,
+                "episodes": 33
+              },
+              "delivered_fractions": {
+                "patients": 33,
+                "episodes": 33
+              },
+              "death_day": {
+                "patients": 17,
+                "episodes": 17
+              },
+              "verified_cutoff_known_plan": {
+                "patients": 0,
+                "episodes": 0
+              }
+            }
+          },
+          "168": {
+            "status_counts": {
+              "out_of_window": 29,
+              "matched": 21,
+              "no_later_recorded_mri": 12
+            },
+            "matched": {
+              "patients": 21,
+              "episodes": 21
+            },
+            "usable_released_change_labels": {
+              "patients": 19,
+              "episodes": 19
+            },
+            "matched_with_history": {
+              "patients": 3,
+              "episodes": 3
+            },
+            "death_before_window_end": {
+              "patients": 13,
+              "episodes": 13
+            },
+            "matched_with_unusable_assets_or_date_conflict": {
+              "patients": 2,
+              "episodes": 2
+            },
+            "strict_clinical_context_and_adjudication_eligible": {
+              "patients": 0,
+              "episodes": 0
+            },
+            "usable_pair_retrospective_field_completeness_not_input_validity": {
+              "procedure_day": {
+                "patients": 19,
+                "episodes": 19
+              },
+              "initial_chemo_name": {
+                "patients": 18,
+                "episodes": 18
+              },
+              "initial_chemo_start": {
+                "patients": 18,
+                "episodes": 18
+              },
+              "rt_start": {
+                "patients": 19,
+                "episodes": 19
+              },
+              "rt_end": {
+                "patients": 19,
+                "episodes": 19
+              },
+              "delivered_dose": {
+                "patients": 18,
+                "episodes": 18
+              },
+              "delivered_fractions": {
+                "patients": 18,
+                "episodes": 18
+              },
+              "death_day": {
+                "patients": 11,
+                "episodes": 11
+              },
+              "verified_cutoff_known_plan": {
+                "patients": 0,
+                "episodes": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    "selection": {
+      "all_recorded_cutoffs": {
+        "cutoffs": {
+          "patients": 32,
+          "episodes": 106
+        },
+        "with_past_released_scan": {
+          "patients": 27,
+          "episodes": 74
+        },
+        "retrospective_field_completeness_not_input_validity": {
+          "procedure_day": {
+            "patients": 32,
+            "episodes": 106
+          },
+          "initial_chemo_name": {
+            "patients": 25,
+            "episodes": 94
+          },
+          "initial_chemo_start": {
+            "patients": 23,
+            "episodes": 88
+          },
+          "rt_start": {
+            "patients": 24,
+            "episodes": 90
+          },
+          "rt_end": {
+            "patients": 24,
+            "episodes": 90
+          },
+          "delivered_dose": {
+            "patients": 22,
+            "episodes": 83
+          },
+          "delivered_fractions": {
+            "patients": 22,
+            "episodes": 83
+          },
+          "death_day": {
+            "patients": 14,
+            "episodes": 47
+          },
+          "verified_cutoff_known_plan": {
+            "patients": 0,
+            "episodes": 0
+          }
+        },
+        "horizons": {
+          "84": {
+            "status_counts": {
+              "matched": 55,
+              "out_of_window": 19,
+              "no_later_recorded_mri": 32
+            },
+            "matched": {
+              "patients": 23,
+              "episodes": 55
+            },
+            "usable_released_change_labels": {
+              "patients": 21,
+              "episodes": 52
+            },
+            "matched_with_history": {
+              "patients": 17,
+              "episodes": 36
+            },
+            "death_before_window_end": {
+              "patients": 6,
+              "episodes": 10
+            },
+            "matched_with_unusable_assets_or_date_conflict": {
+              "patients": 2,
+              "episodes": 3
+            },
+            "strict_clinical_context_and_adjudication_eligible": {
+              "patients": 0,
+              "episodes": 0
+            },
+            "usable_pair_retrospective_field_completeness_not_input_validity": {
+              "procedure_day": {
+                "patients": 21,
+                "episodes": 52
+              },
+              "initial_chemo_name": {
+                "patients": 20,
+                "episodes": 51
+              },
+              "initial_chemo_start": {
+                "patients": 20,
+                "episodes": 51
+              },
+              "rt_start": {
+                "patients": 20,
+                "episodes": 51
+              },
+              "rt_end": {
+                "patients": 20,
+                "episodes": 51
+              },
+              "delivered_dose": {
+                "patients": 19,
+                "episodes": 46
+              },
+              "delivered_fractions": {
+                "patients": 19,
+                "episodes": 46
+              },
+              "death_day": {
+                "patients": 8,
+                "episodes": 19
+              },
+              "verified_cutoff_known_plan": {
+                "patients": 0,
+                "episodes": 0
+              }
+            }
+          },
+          "168": {
+            "status_counts": {
+              "matched": 34,
+              "no_later_recorded_mri": 32,
+              "out_of_window": 40
+            },
+            "matched": {
+              "patients": 16,
+              "episodes": 34
+            },
+            "usable_released_change_labels": {
+              "patients": 15,
+              "episodes": 32
+            },
+            "matched_with_history": {
+              "patients": 13,
+              "episodes": 22
+            },
+            "death_before_window_end": {
+              "patients": 7,
+              "episodes": 12
+            },
+            "matched_with_unusable_assets_or_date_conflict": {
+              "patients": 1,
+              "episodes": 2
+            },
+            "strict_clinical_context_and_adjudication_eligible": {
+              "patients": 0,
+              "episodes": 0
+            },
+            "usable_pair_retrospective_field_completeness_not_input_validity": {
+              "procedure_day": {
+                "patients": 15,
+                "episodes": 32
+              },
+              "initial_chemo_name": {
+                "patients": 14,
+                "episodes": 31
+              },
+              "initial_chemo_start": {
+                "patients": 14,
+                "episodes": 31
+              },
+              "rt_start": {
+                "patients": 14,
+                "episodes": 31
+              },
+              "rt_end": {
+                "patients": 14,
+                "episodes": 31
+              },
+              "delivered_dose": {
+                "patients": 13,
+                "episodes": 27
+              },
+              "delivered_fractions": {
+                "patients": 13,
+                "episodes": 27
+              },
+              "death_day": {
+                "patients": 6,
+                "episodes": 13
+              },
+              "verified_cutoff_known_plan": {
+                "patients": 0,
+                "episodes": 0
+              }
+            }
+          }
+        }
+      },
+      "post_initial_rt_event": {
+        "cutoffs": {
+          "patients": 23,
+          "episodes": 84
+        },
+        "with_past_released_scan": {
+          "patients": 22,
+          "episodes": 66
+        },
+        "retrospective_field_completeness_not_input_validity": {
+          "procedure_day": {
+            "patients": 23,
+            "episodes": 84
+          },
+          "initial_chemo_name": {
+            "patients": 22,
+            "episodes": 82
+          },
+          "initial_chemo_start": {
+            "patients": 22,
+            "episodes": 82
+          },
+          "rt_start": {
+            "patients": 23,
+            "episodes": 84
+          },
+          "rt_end": {
+            "patients": 23,
+            "episodes": 84
+          },
+          "delivered_dose": {
+            "patients": 22,
+            "episodes": 78
+          },
+          "delivered_fractions": {
+            "patients": 22,
+            "episodes": 78
+          },
+          "death_day": {
+            "patients": 9,
+            "episodes": 35
+          },
+          "verified_cutoff_known_plan": {
+            "patients": 0,
+            "episodes": 0
+          }
+        },
+        "horizons": {
+          "84": {
+            "status_counts": {
+              "matched": 48,
+              "out_of_window": 13,
+              "no_later_recorded_mri": 23
+            },
+            "matched": {
+              "patients": 19,
+              "episodes": 48
+            },
+            "usable_released_change_labels": {
+              "patients": 18,
+              "episodes": 47
+            },
+            "matched_with_history": {
+              "patients": 17,
+              "episodes": 36
+            },
+            "death_before_window_end": {
+              "patients": 3,
+              "episodes": 5
+            },
+            "matched_with_unusable_assets_or_date_conflict": {
+              "patients": 1,
+              "episodes": 1
+            },
+            "strict_clinical_context_and_adjudication_eligible": {
+              "patients": 0,
+              "episodes": 0
+            },
+            "usable_pair_retrospective_field_completeness_not_input_validity": {
+              "procedure_day": {
+                "patients": 18,
+                "episodes": 47
+              },
+              "initial_chemo_name": {
+                "patients": 18,
+                "episodes": 47
+              },
+              "initial_chemo_start": {
+                "patients": 18,
+                "episodes": 47
+              },
+              "rt_start": {
+                "patients": 18,
+                "episodes": 47
+              },
+              "rt_end": {
+                "patients": 18,
+                "episodes": 47
+              },
+              "delivered_dose": {
+                "patients": 17,
+                "episodes": 42
+              },
+              "delivered_fractions": {
+                "patients": 17,
+                "episodes": 42
+              },
+              "death_day": {
+                "patients": 7,
+                "episodes": 18
+              },
+              "verified_cutoff_known_plan": {
+                "patients": 0,
+                "episodes": 0
+              }
+            }
+          },
+          "168": {
+            "status_counts": {
+              "matched": 30,
+              "no_later_recorded_mri": 23,
+              "out_of_window": 31
+            },
+            "matched": {
+              "patients": 14,
+              "episodes": 30
+            },
+            "usable_released_change_labels": {
+              "patients": 14,
+              "episodes": 30
+            },
+            "matched_with_history": {
+              "patients": 12,
+              "episodes": 21
+            },
+            "death_before_window_end": {
+              "patients": 4,
+              "episodes": 7
+            },
+            "matched_with_unusable_assets_or_date_conflict": {
+              "patients": 0,
+              "episodes": 0
+            },
+            "strict_clinical_context_and_adjudication_eligible": {
+              "patients": 0,
+              "episodes": 0
+            },
+            "usable_pair_retrospective_field_completeness_not_input_validity": {
+              "procedure_day": {
+                "patients": 14,
+                "episodes": 30
+              },
+              "initial_chemo_name": {
+                "patients": 14,
+                "episodes": 30
+              },
+              "initial_chemo_start": {
+                "patients": 14,
+                "episodes": 30
+              },
+              "rt_start": {
+                "patients": 14,
+                "episodes": 30
+              },
+              "rt_end": {
+                "patients": 14,
+                "episodes": 30
+              },
+              "delivered_dose": {
+                "patients": 13,
+                "episodes": 26
+              },
+              "delivered_fractions": {
+                "patients": 13,
+                "episodes": 26
+              },
+              "death_day": {
+                "patients": 5,
+                "episodes": 12
+              },
+              "verified_cutoff_known_plan": {
+                "patients": 0,
+                "episodes": 0
+              }
+            }
+          }
+        }
+      },
+      "first_post_initial_rt_candidate": {
+        "cutoffs": {
+          "patients": 23,
+          "episodes": 23
+        },
+        "with_past_released_scan": {
+          "patients": 5,
+          "episodes": 5
+        },
+        "retrospective_field_completeness_not_input_validity": {
+          "procedure_day": {
+            "patients": 23,
+            "episodes": 23
+          },
+          "initial_chemo_name": {
+            "patients": 22,
+            "episodes": 22
+          },
+          "initial_chemo_start": {
+            "patients": 22,
+            "episodes": 22
+          },
+          "rt_start": {
+            "patients": 23,
+            "episodes": 23
+          },
+          "rt_end": {
+            "patients": 23,
+            "episodes": 23
+          },
+          "delivered_dose": {
+            "patients": 22,
+            "episodes": 22
+          },
+          "delivered_fractions": {
+            "patients": 22,
+            "episodes": 22
+          },
+          "death_day": {
+            "patients": 9,
+            "episodes": 9
+          },
+          "verified_cutoff_known_plan": {
+            "patients": 0,
+            "episodes": 0
+          }
+        },
+        "horizons": {
+          "84": {
+            "status_counts": {
+              "matched": 15,
+              "out_of_window": 5,
+              "no_later_recorded_mri": 3
+            },
+            "matched": {
+              "patients": 15,
+              "episodes": 15
+            },
+            "usable_released_change_labels": {
+              "patients": 14,
+              "episodes": 14
+            },
+            "matched_with_history": {
+              "patients": 3,
+              "episodes": 3
+            },
+            "death_before_window_end": {
+              "patients": 2,
+              "episodes": 2
+            },
+            "matched_with_unusable_assets_or_date_conflict": {
+              "patients": 1,
+              "episodes": 1
+            },
+            "strict_clinical_context_and_adjudication_eligible": {
+              "patients": 0,
+              "episodes": 0
+            },
+            "usable_pair_retrospective_field_completeness_not_input_validity": {
+              "procedure_day": {
+                "patients": 14,
+                "episodes": 14
+              },
+              "initial_chemo_name": {
+                "patients": 14,
+                "episodes": 14
+              },
+              "initial_chemo_start": {
+                "patients": 14,
+                "episodes": 14
+              },
+              "rt_start": {
+                "patients": 14,
+                "episodes": 14
+              },
+              "rt_end": {
+                "patients": 14,
+                "episodes": 14
+              },
+              "delivered_dose": {
+                "patients": 13,
+                "episodes": 13
+              },
+              "delivered_fractions": {
+                "patients": 13,
+                "episodes": 13
+              },
+              "death_day": {
+                "patients": 4,
+                "episodes": 4
+              },
+              "verified_cutoff_known_plan": {
+                "patients": 0,
+                "episodes": 0
+              }
+            }
+          },
+          "168": {
+            "status_counts": {
+              "matched": 12,
+              "out_of_window": 8,
+              "no_later_recorded_mri": 3
+            },
+            "matched": {
+              "patients": 12,
+              "episodes": 12
+            },
+            "usable_released_change_labels": {
+              "patients": 12,
+              "episodes": 12
+            },
+            "matched_with_history": {
+              "patients": 3,
+              "episodes": 3
+            },
+            "death_before_window_end": {
+              "patients": 2,
+              "episodes": 2
+            },
+            "matched_with_unusable_assets_or_date_conflict": {
+              "patients": 0,
+              "episodes": 0
+            },
+            "strict_clinical_context_and_adjudication_eligible": {
+              "patients": 0,
+              "episodes": 0
+            },
+            "usable_pair_retrospective_field_completeness_not_input_validity": {
+              "procedure_day": {
+                "patients": 12,
+                "episodes": 12
+              },
+              "initial_chemo_name": {
+                "patients": 12,
+                "episodes": 12
+              },
+              "initial_chemo_start": {
+                "patients": 12,
+                "episodes": 12
+              },
+              "rt_start": {
+                "patients": 12,
+                "episodes": 12
+              },
+              "rt_end": {
+                "patients": 12,
+                "episodes": 12
+              },
+              "delivered_dose": {
+                "patients": 11,
+                "episodes": 11
+              },
+              "delivered_fractions": {
+                "patients": 11,
+                "episodes": 11
+              },
+              "death_day": {
+                "patients": 5,
+                "episodes": 5
+              },
+              "verified_cutoff_known_plan": {
+                "patients": 0,
+                "episodes": 0
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "clinical_field_nonmissing_patients": {
+    "fitting": {
+      "Number of days from Diagnosis to First surgery or procedure ": 99,
+      "Initial Chemo Therapy": 62,
+      "Name of Initial Chemo Therapy": 62,
+      " Number of days from Diagnosis to Initial Chemo Therapy Start date": 59,
+      " Number of days from Diagnosis to Initial Chemo Therapy end date": 59,
+      "Radiation Therapy": 69,
+      "Number of days from Diagnosis to Radiation Therapy Start date": 66,
+      "Number of days from Diagnosis to Radiation Therapy end date": 66,
+      "Dose": 63,
+      "Number of Fractions": 63,
+      "Overall Survival (Death)": 99,
+      "Number of days from Diagnosis to death (Days)": 49,
+      "Number of Days from Diagnosis to 1st MRI (Timepoint_1) ": 91,
+      "Number of Days from Diagnosis to 2nd MRI (Timepoint_2) ": 62,
+      "Number of Days from Diagnosis to 3rd MRI (Timepoint_3) ": 55,
+      "Number of Days from Diagnosis to 4th MRI (Timepoint_4) ": 31,
+      "Number of Days from Diagnosis to 5th MRI (Timepoint_5) ": 18,
+      "Number of Days from Diagnosis to 6th MRI (Timepoint_6) ": 26
+    },
+    "selection": {
+      "Number of days from Diagnosis to First surgery or procedure ": 32,
+      "Initial Chemo Therapy": 25,
+      "Name of Initial Chemo Therapy": 25,
+      " Number of days from Diagnosis to Initial Chemo Therapy Start date": 23,
+      " Number of days from Diagnosis to Initial Chemo Therapy end date": 23,
+      "Radiation Therapy": 26,
+      "Number of days from Diagnosis to Radiation Therapy Start date": 24,
+      "Number of days from Diagnosis to Radiation Therapy end date": 24,
+      "Dose": 22,
+      "Number of Fractions": 22,
+      "Overall Survival (Death)": 32,
+      "Number of days from Diagnosis to death (Days)": 14,
+      "Number of Days from Diagnosis to 1st MRI (Timepoint_1) ": 29,
+      "Number of Days from Diagnosis to 2nd MRI (Timepoint_2) ": 25,
+      "Number of Days from Diagnosis to 3rd MRI (Timepoint_3) ": 17,
+      "Number of Days from Diagnosis to 4th MRI (Timepoint_4) ": 14,
+      "Number of Days from Diagnosis to 5th MRI (Timepoint_5) ": 12,
+      "Number of Days from Diagnosis to 6th MRI (Timepoint_6) ": 9
+    }
+  },
+  "source_knowledge_time_columns": [],
+  "strictly_usable_R68_patients": 0,
+  "issue_counts": {
+    "nonincreasing MRI days; chronology unresolved": 1
+  },
+  "recommendation": {
+    "phase": "follow-up MRI after recorded initial radiotherapy completion, provisional until documentation timing is verified",
+    "horizon_days": 84,
+    "tolerance_days": 28,
+    "target": "native FLAIR-abnormality change (MU source label 2 / model label 3)",
+    "not_a_training_authorization": true,
+    "rationale": "Recorded initial RT completion provides a common event anchor. Use all later cutoffs to retain history support; first-post-RT-only is inventoried but not recommended. The 84-day window has more patient and pair support than 168 days. No prediction performance or outcome-change values inform this choice.",
+    "history_support": {
+      "fitting": {
+        "patients": 26,
+        "episodes": 47
+      },
+      "selection": {
+        "patients": 17,
+        "episodes": 36
+      }
+    },
+    "history_limitation": "The first-post-RT-only restriction would leave just 5 fitting and 3 selection pairs with history; all post-RT cutoffs retain more history, but clinical information-availability and adjudication gates remain closed."
+  },
+  "annotation_review": {
+    "released_masks": "automatic segmentation manually refined/validated by neuroradiologists at release; case-level independent longitudinal-change adjudication not supplied",
+    "existing_agent_inspections": 145,
+    "expert_adjudications_available": 0,
+    "new_bounded_review_packet": 6,
+    "targets_relabelled": 0
+  },
+  "specific_external_needs": [
+    "Dated treatment plans/orders and their documentation/availability timestamps; intended regimen/dose, revisions and historical delivery records linked to allowed cutoffs",
+    "Source clarification for nonincreasing MRI-day trajectory, scan/death contradictions and workbook Timepoint_6 dictionary typo",
+    "Qualified reviewer for bounded FLAIR longitudinal pairs; existing agent review is not expert adjudication"
+  ],
+  "missingness_policy": "NA is unknown, not no treatment. Death=0 is alive/lost-follow-up/unknown and is never treated as confirmed survival. Future outcomes remain evaluation-only.",
+  "field_examples": [
+    {
+      "kind": "ever_chemo_before_actual_start",
+      "interpretation": "An ever-treated flag can be present at a cutoff preceding the recorded treatment start; it is not a cutoff-known plan.",
+      "patient_values": "private manifest only"
+    },
+    {
+      "kind": "dose_without_plan_timestamp",
+      "interpretation": "A recorded course dose has no plan/order or availability timestamp; do not use it as intended dose at the cutoff.",
+      "patient_values": "private manifest only"
+    },
+    {
+      "kind": "completed_rt_without_knowledge_timestamp",
+      "interpretation": "Recorded RT completion before MRI defines a retrospective event phase, but does not verify documentation availability at that MRI.",
+      "patient_values": "private manifest only"
+    },
+    {
+      "kind": "death_zero_not_confirmed_survival",
+      "interpretation": "Death code zero includes alive, lost follow-up and unknown; it cannot establish survival through the forecast window.",
+      "patient_values": "private manifest only"
+    }
+  ],
+  "data_accounting": {
+    "fitting": {
+      "recorded_or_released_visits": {
+        "patients": 99,
+        "episodes": 285
+      },
+      "released_structural_panel": {
+        "patients": 99,
+        "episodes": 282
+      },
+      "clinical_date_without_released_panel": {
+        "patients": 3,
+        "episodes": 3
+      },
+      "released_panel_missing_date": {
+        "patients": 2,
+        "episodes": 2
+      },
+      "released_panel_missing_annotation": {
+        "patients": 1,
+        "episodes": 1
+      },
+      "cutoff_after_recorded_death": {
+        "patients": 7,
+        "episodes": 16
+      },
+      "source_panel_or_annotation_not_on_disk": {
+        "patients": 1,
+        "episodes": 1
+      },
+      "existing_prepared_arrays": {
+        "patients": 99,
+        "episodes": 281
+      },
+      "date_conflict_pairs_by_horizon": {
+        "84": {
+          "patients": 4,
+          "episodes": 9
+        },
+        "168": {
+          "patients": 5,
+          "episodes": 9
+        }
+      }
+    },
+    "selection": {
+      "recorded_or_released_visits": {
+        "patients": 32,
+        "episodes": 106
+      },
+      "released_structural_panel": {
+        "patients": 32,
+        "episodes": 106
+      },
+      "clinical_date_without_released_panel": {
+        "patients": 0,
+        "episodes": 0
+      },
+      "released_panel_missing_date": {
+        "patients": 0,
+        "episodes": 0
+      },
+      "released_panel_missing_annotation": {
+        "patients": 0,
+        "episodes": 0
+      },
+      "cutoff_after_recorded_death": {
+        "patients": 3,
+        "episodes": 5
+      },
+      "source_panel_or_annotation_not_on_disk": {
+        "patients": 0,
+        "episodes": 0
+      },
+      "existing_prepared_arrays": {
+        "patients": 32,
+        "episodes": 106
+      },
+      "date_conflict_pairs_by_horizon": {
+        "84": {
+          "patients": 2,
+          "episodes": 3
+        },
+        "168": {
+          "patients": 1,
+          "episodes": 2
+        }
+      }
+    }
+  },
+  "scope_limit": "Zero fully qualified R68 patients established in checked assets; not evidence that source institutions lack the required records. Released masks are not unreviewed, but per-scan refinement does not establish longitudinal biological-change truth.",
+  "prepared_at": "2026-11-09",
+  "artifacts": {
+    "script": "scripts/prepare_r68_episodes.py",
+    "private_manifest": "outputs/r68-preparation-20261109/episodes-private.json",
+    "private_asset_index": "outputs/r68-preparation-20261109/permitted-asset-index.json",
+    "gpu_root": "/home/aditya/experiments/world-model-r68-preparation-20261109",
+    "annotation_paper": "https://www.nature.com/articles/s41597-025-06011-7"
+  },
+  "verification": {
+    "manifest_consistency": "passed: membership, source/script hashes, 391 unique cutoffs, count reconciliation, strictly past inputs, in-window targets, six distinct review patients",
+    "training_started": false,
+    "new_images_read": 0
+  },
+  "r64_access": {
+    "checked_at": "2026-11-09",
+    "status": "approved_project_access_not_established_in_checked_records",
+    "search_scope": "Repository research/access records and bounded top-level mosaic-gpu experiment/config filenames; no credentials opened, account portal inspected, or entitlement tested",
+    "not_an_access_denial": true,
+    "collections": [
+      {
+        "name": "RIDER Neuro MRI",
+        "url": "https://www.cancerimagingarchive.net/collection/rider-neuro-mri/",
+        "collection_patients": 19,
+        "repeat_interval": "approximately 1-2 days",
+        "scope": "recurrent GBM; repeat DCE in 19 and DTI in 17; contrast status differs by structural sequence",
+        "images": "controlled access",
+        "project_usable_pairs": null
+      },
+      {
+        "name": "QIN GBM Treatment Response",
+        "url": "https://www.cancerimagingarchive.net/collection/qin-gbm-treatment-response/",
+        "collection_patients": 54,
+        "repeat_interval": "typically 2-5 days",
+        "scope": "postoperative pretreatment double-baseline structural, diffusion and perfusion MRI; sequence completeness varies",
+        "images": "controlled access",
+        "project_usable_pairs": null
+      }
+    ],
+    "policy_url": "https://www.cancerimagingarchive.net/nih-controlled-data-access-policy/",
+    "request_instructions": "https://www.grants.nih.gov/policy-and-compliance/policy-topics/sharing-policies/accessing-data/dbgap",
+    "dbgap_accession_route": "phs004225 is the TCIA route for most controlled head-image collections; confirm requested collection/consent-group scope and data-use limitations in the actual request",
+    "information_needed": [
+      "Existing DAR/project ID, approved dataset/consent-group scope, current validity and authorized downloader confirmation, if already held",
+      "Otherwise eligible investigator name, role, institutional affiliation and eRA identity; trainees participate under an eligible investigator",
+      "Institutional signing official and IT/security director names and institutional contact details",
+      "Project title, research-use statement, personnel/institutions, storage and security arrangements, and study-specific IRB determination if applicable"
+    ],
+    "draft_project_title": "Repeat-acquisition reliability of a glioma MRI patient-state observation model",
+    "draft_research_use_statement": "Measure within-patient test-retest variability of current anatomical segmentation, physical compartment volumes and shared features from a preserved MRI observation model. Inventory repeat intervals, sequence availability, contrast and geometry before selecting a small fixed smoke sample and processing eligible pairs. Report patient-level measurement variability. Assess sensitivity to biological change separately using independently reviewed longitudinal references; repeat scans alone do not establish such truth.",
+    "draft_status": "Investigator review required; not an institutional attestation or submitted request",
+    "authorized_access_route": "Eligible investigator submits dbGaP request; institutional signing official co-signs; DAC review; approved account authenticates to NCI Data Commons Framework Services; local API key and collection manifest used by TCIA Data Retriever. Do not transmit keys in reports.",
+    "next_after_approval": "Inventory actual repeat pairs and structural sequences without bulk download, then seek authorization for the bounded measurement phase",
+    "requests_submitted": 0,
+    "third_parties_contacted": 0,
+    "image_files_downloaded": 0,
+    "limit": "Collection participant totals are not verified usable pair counts; repeatability is not biological-change ground truth."
+  }
+}

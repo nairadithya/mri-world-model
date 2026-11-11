@@ -1,0 +1,46 @@
+{
+  "status": "complete_privileged_diagnostic_only",
+  "panel": "C",
+  "kib": 64,
+  "payload_bytes": 65536,
+  "updates_per_case": 512,
+  "cases_satisfying_all_three": 0,
+  "source_sha256": {
+    "fit_state.py": "1e35c1a6ea6b8e391406e0f834af1bf7eb275545b15a7fec7b7f4288a5dd8721",
+    "measure_state.py": "780334f1d734e7f4a51bea1ca2bf9b48c72652b14174f0f67954ac997c6d8711",
+    "protocol.md": "a615a2686cf17347064c1837f1283fcc06c3af29bde1ab9c1db49892e059b5e5",
+    "data66.py": "675b7981469af7e02abd2be774599768898fb5e10c332e76b9d03b8874a897ee",
+    "model66.py": "b0696f175f50c6b72534d2fb269dd67b4c58515dd9452fda2de8ab18e8011f63",
+    "representation66.py": "e849a98338cc48bd943a2ca38445641c37e00b440533cb246335b4df21ec7863",
+    "run65.py": "546accee86c8ac33fd78d8179a76edd4b8ed81b58b42426a608ddc87f0fca1df",
+    "train65.py": "a4bcab8b4f97e9671440d0992bfc93474b1f4663fd922485e477d427f76ec3fc"
+  },
+  "original_artifacts_unchanged": true,
+  "r66_remains_closed": true,
+  "segmentation_remains_deferred": true,
+  "verification_receipt": {
+    "status": "passed",
+    "exact_prediction_count": 18,
+    "canonical_max_difference": 5.551115123125783e-17,
+    "optimized_cases_satisfying_all_three": 0,
+    "ordinary_cases_satisfying_all_three": 0,
+    "independent_displacement_max_difference": 1.4210854715202004e-14,
+    "displacement_absolute_tolerance": 1e-10,
+    "complete_sha256": "bdbd376b3ce02a7a8830fe7dd571e25a4769a7fece24e2a9008e36daa7da8233",
+    "source_sha256": {
+      "fit_state.py": "1e35c1a6ea6b8e391406e0f834af1bf7eb275545b15a7fec7b7f4288a5dd8721",
+      "measure_state.py": "780334f1d734e7f4a51bea1ca2bf9b48c72652b14174f0f67954ac997c6d8711",
+      "protocol.md": "a615a2686cf17347064c1837f1283fcc06c3af29bde1ab9c1db49892e059b5e5",
+      "data66.py": "675b7981469af7e02abd2be774599768898fb5e10c332e76b9d03b8874a897ee",
+      "model66.py": "b0696f175f50c6b72534d2fb269dd67b4c58515dd9452fda2de8ab18e8011f63",
+      "representation66.py": "e849a98338cc48bd943a2ca38445641c37e00b440533cb246335b4df21ec7863",
+      "run65.py": "546accee86c8ac33fd78d8179a76edd4b8ed81b58b42426a608ddc87f0fca1df",
+      "train65.py": "a4bcab8b4f97e9671440d0992bfc93474b1f4663fd922485e477d427f76ec3fc"
+    },
+    "verification_script_sha256": "f411c8601a11c57e139cd33280774962f85471ac376c24a744ad334dd06c218d",
+    "protected_originals_unchanged": true
+  },
+  "protocol_summary": "Six privileged target-state fits use two original fitting visits and three panel C 64 KiB seeds. Each freezes the decoder and takes 512 Adam steps on a float32 state cast to float16 for each forward pass. This is a diagnostic, not a prospective prediction result; R66 remains closed and segmentation remains deferred.",
+  "original_complete_sha256": "bdbd376b3ce02a7a8830fe7dd571e25a4769a7fece24e2a9008e36daa7da8233",
+  "privacy_note": "Individual case records are retained only in the private local original; this file contains aggregate results and protocol information."
+}

@@ -1,0 +1,726 @@
+{
+  "status": "segmentation_reference_readiness_failed",
+  "recorded_utc": "2026-11-03T23:09:33.032805+00:00",
+  "preferred_kib": 64,
+  "smoke_status": "passed",
+  "references_passed": 4,
+  "references_total": 9,
+  "fixed_threshold": 0.8,
+  "updates_per_reference": 512,
+  "references": {
+    "A_17": {
+      "panel": "A",
+      "seed": 17,
+      "updates": 512,
+      "metric": "mean of per-visit means of Dice for reference-nonempty compartments",
+      "mean_nonempty_compartment_dice": 0.6085627004048205,
+      "status": "failed",
+      "example_means": [
+        0.6137864199006587,
+        0.6033389809089823
+      ],
+      "compartments_by_example": [
+        {
+          "1": {
+            "reference_voxels": 4094,
+            "predicted_voxels": 4636,
+            "intersection_voxels": 4047,
+            "dice": 0.9271477663230241,
+            "nonempty_reference_dice": 0.9271477663230241,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "2": {
+            "reference_voxels": 353,
+            "predicted_voxels": 0,
+            "intersection_voxels": 0,
+            "dice": 0.0,
+            "nonempty_reference_dice": 0.0,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "3": {
+            "reference_voxels": 15095,
+            "predicted_voxels": 16471,
+            "intersection_voxels": 14429,
+            "dice": 0.914211493378952,
+            "nonempty_reference_dice": 0.914211493378952,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          }
+        },
+        {
+          "1": {
+            "reference_voxels": 9900,
+            "predicted_voxels": 10604,
+            "intersection_voxels": 9501,
+            "dice": 0.9267460007803355,
+            "nonempty_reference_dice": 0.9267460007803355,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "2": {
+            "reference_voxels": 1542,
+            "predicted_voxels": 10,
+            "intersection_voxels": 9,
+            "dice": 0.011597938144329897,
+            "nonempty_reference_dice": 0.011597938144329897,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "3": {
+            "reference_voxels": 15790,
+            "predicted_voxels": 17874,
+            "intersection_voxels": 14672,
+            "dice": 0.8716730038022814,
+            "nonempty_reference_dice": 0.8716730038022814,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          }
+        }
+      ]
+    },
+    "A_23": {
+      "panel": "A",
+      "seed": 23,
+      "updates": 512,
+      "metric": "mean of per-visit means of Dice for reference-nonempty compartments",
+      "mean_nonempty_compartment_dice": 0.9046735476542109,
+      "status": "passed",
+      "example_means": [
+        0.8942130659944848,
+        0.9151340293139372
+      ],
+      "compartments_by_example": [
+        {
+          "1": {
+            "reference_voxels": 4094,
+            "predicted_voxels": 4726,
+            "intersection_voxels": 4019,
+            "dice": 0.9113378684807256,
+            "nonempty_reference_dice": 0.9113378684807256,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "2": {
+            "reference_voxels": 353,
+            "predicted_voxels": 375,
+            "intersection_voxels": 306,
+            "dice": 0.8406593406593407,
+            "nonempty_reference_dice": 0.8406593406593407,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "3": {
+            "reference_voxels": 15095,
+            "predicted_voxels": 15918,
+            "intersection_voxels": 14431,
+            "dice": 0.9306419888433882,
+            "nonempty_reference_dice": 0.9306419888433882,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          }
+        },
+        {
+          "1": {
+            "reference_voxels": 9900,
+            "predicted_voxels": 10158,
+            "intersection_voxels": 9591,
+            "dice": 0.9563266527071492,
+            "nonempty_reference_dice": 0.9563266527071492,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "2": {
+            "reference_voxels": 1542,
+            "predicted_voxels": 1532,
+            "intersection_voxels": 1374,
+            "dice": 0.8939492517891997,
+            "nonempty_reference_dice": 0.8939492517891997,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "3": {
+            "reference_voxels": 15790,
+            "predicted_voxels": 17059,
+            "intersection_voxels": 14702,
+            "dice": 0.8951261834454626,
+            "nonempty_reference_dice": 0.8951261834454626,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          }
+        }
+      ]
+    },
+    "A_31": {
+      "panel": "A",
+      "seed": 31,
+      "updates": 512,
+      "metric": "mean of per-visit means of Dice for reference-nonempty compartments",
+      "mean_nonempty_compartment_dice": 0.6117842301773382,
+      "status": "failed",
+      "example_means": [
+        0.6081993345214911,
+        0.6153691258331851
+      ],
+      "compartments_by_example": [
+        {
+          "1": {
+            "reference_voxels": 4094,
+            "predicted_voxels": 5186,
+            "intersection_voxels": 4093,
+            "dice": 0.8821120689655172,
+            "nonempty_reference_dice": 0.8821120689655172,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "2": {
+            "reference_voxels": 353,
+            "predicted_voxels": 12,
+            "intersection_voxels": 2,
+            "dice": 0.010958904109589041,
+            "nonempty_reference_dice": 0.010958904109589041,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "3": {
+            "reference_voxels": 15095,
+            "predicted_voxels": 16129,
+            "intersection_voxels": 14543,
+            "dice": 0.9315270304893671,
+            "nonempty_reference_dice": 0.9315270304893671,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          }
+        },
+        {
+          "1": {
+            "reference_voxels": 9900,
+            "predicted_voxels": 11012,
+            "intersection_voxels": 9759,
+            "dice": 0.9333397092578424,
+            "nonempty_reference_dice": 0.9333397092578424,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "2": {
+            "reference_voxels": 1542,
+            "predicted_voxels": 24,
+            "intersection_voxels": 7,
+            "dice": 0.008939974457215836,
+            "nonempty_reference_dice": 0.008939974457215836,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "3": {
+            "reference_voxels": 15790,
+            "predicted_voxels": 17546,
+            "intersection_voxels": 15065,
+            "dice": 0.9038276937844972,
+            "nonempty_reference_dice": 0.9038276937844972,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          }
+        }
+      ]
+    },
+    "B_17": {
+      "panel": "B",
+      "seed": 17,
+      "updates": 512,
+      "metric": "mean of per-visit means of Dice for reference-nonempty compartments",
+      "mean_nonempty_compartment_dice": 0.8613017440776736,
+      "status": "passed",
+      "example_means": [
+        0.8479180317247995,
+        0.8746854564305476
+      ],
+      "compartments_by_example": [
+        {
+          "1": {
+            "reference_voxels": 4094,
+            "predicted_voxels": 4280,
+            "intersection_voxels": 3984,
+            "dice": 0.9515165989968951,
+            "nonempty_reference_dice": 0.9515165989968951,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "2": {
+            "reference_voxels": 353,
+            "predicted_voxels": 241,
+            "intersection_voxels": 211,
+            "dice": 0.7104377104377104,
+            "nonempty_reference_dice": 0.7104377104377104,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "3": {
+            "reference_voxels": 15095,
+            "predicted_voxels": 18509,
+            "intersection_voxels": 14816,
+            "dice": 0.8817997857397929,
+            "nonempty_reference_dice": 0.8817997857397929,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          }
+        },
+        {
+          "1": {
+            "reference_voxels": 9900,
+            "predicted_voxels": 9838,
+            "intersection_voxels": 9273,
+            "dice": 0.9396088762792583,
+            "nonempty_reference_dice": 0.9396088762792583,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "2": {
+            "reference_voxels": 1542,
+            "predicted_voxels": 1502,
+            "intersection_voxels": 1234,
+            "dice": 0.8107752956636005,
+            "nonempty_reference_dice": 0.8107752956636005,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "3": {
+            "reference_voxels": 15790,
+            "predicted_voxels": 18383,
+            "intersection_voxels": 14928,
+            "dice": 0.8736721973487841,
+            "nonempty_reference_dice": 0.8736721973487841,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          }
+        }
+      ]
+    },
+    "B_23": {
+      "panel": "B",
+      "seed": 23,
+      "updates": 512,
+      "metric": "mean of per-visit means of Dice for reference-nonempty compartments",
+      "mean_nonempty_compartment_dice": 0.9057203724096703,
+      "status": "passed",
+      "example_means": [
+        0.8983392112899277,
+        0.9131015335294128
+      ],
+      "compartments_by_example": [
+        {
+          "1": {
+            "reference_voxels": 4094,
+            "predicted_voxels": 4480,
+            "intersection_voxels": 3973,
+            "dice": 0.9267553067413109,
+            "nonempty_reference_dice": 0.9267553067413109,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "2": {
+            "reference_voxels": 353,
+            "predicted_voxels": 433,
+            "intersection_voxels": 329,
+            "dice": 0.8371501272264631,
+            "nonempty_reference_dice": 0.8371501272264631,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "3": {
+            "reference_voxels": 15095,
+            "predicted_voxels": 15520,
+            "intersection_voxels": 14253,
+            "dice": 0.9311121999020088,
+            "nonempty_reference_dice": 0.9311121999020088,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          }
+        },
+        {
+          "1": {
+            "reference_voxels": 9900,
+            "predicted_voxels": 9973,
+            "intersection_voxels": 9495,
+            "dice": 0.9555678558848689,
+            "nonempty_reference_dice": 0.9555678558848689,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "2": {
+            "reference_voxels": 1542,
+            "predicted_voxels": 1649,
+            "intersection_voxels": 1423,
+            "dice": 0.8918834221247258,
+            "nonempty_reference_dice": 0.8918834221247258,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "3": {
+            "reference_voxels": 15790,
+            "predicted_voxels": 16444,
+            "intersection_voxels": 14374,
+            "dice": 0.8918533225786437,
+            "nonempty_reference_dice": 0.8918533225786437,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          }
+        }
+      ]
+    },
+    "B_31": {
+      "panel": "B",
+      "seed": 31,
+      "updates": 512,
+      "metric": "mean of per-visit means of Dice for reference-nonempty compartments",
+      "mean_nonempty_compartment_dice": 0.6631597044661861,
+      "status": "failed",
+      "example_means": [
+        0.6522643717978958,
+        0.6740550371344766
+      ],
+      "compartments_by_example": [
+        {
+          "1": {
+            "reference_voxels": 4094,
+            "predicted_voxels": 5165,
+            "intersection_voxels": 4094,
+            "dice": 0.8843287612053138,
+            "nonempty_reference_dice": 0.8843287612053138,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "2": {
+            "reference_voxels": 353,
+            "predicted_voxels": 29,
+            "intersection_voxels": 29,
+            "dice": 0.1518324607329843,
+            "nonempty_reference_dice": 0.1518324607329843,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "3": {
+            "reference_voxels": 15095,
+            "predicted_voxels": 16366,
+            "intersection_voxels": 14482,
+            "dice": 0.9206318934553892,
+            "nonempty_reference_dice": 0.9206318934553892,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          }
+        },
+        {
+          "1": {
+            "reference_voxels": 9900,
+            "predicted_voxels": 11273,
+            "intersection_voxels": 9832,
+            "dice": 0.9287299863033108,
+            "nonempty_reference_dice": 0.9287299863033108,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "2": {
+            "reference_voxels": 1542,
+            "predicted_voxels": 166,
+            "intersection_voxels": 161,
+            "dice": 0.1885245901639344,
+            "nonempty_reference_dice": 0.1885245901639344,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "3": {
+            "reference_voxels": 15790,
+            "predicted_voxels": 16569,
+            "intersection_voxels": 14641,
+            "dice": 0.9049105349361847,
+            "nonempty_reference_dice": 0.9049105349361847,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          }
+        }
+      ]
+    },
+    "C_17": {
+      "panel": "C",
+      "seed": 17,
+      "updates": 512,
+      "metric": "mean of per-visit means of Dice for reference-nonempty compartments",
+      "mean_nonempty_compartment_dice": 0.8531835244212379,
+      "status": "passed",
+      "example_means": [
+        0.8384105328026975,
+        0.8679565160397783
+      ],
+      "compartments_by_example": [
+        {
+          "1": {
+            "reference_voxels": 4094,
+            "predicted_voxels": 4426,
+            "intersection_voxels": 4030,
+            "dice": 0.9460093896713615,
+            "nonempty_reference_dice": 0.9460093896713615,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "2": {
+            "reference_voxels": 353,
+            "predicted_voxels": 222,
+            "intersection_voxels": 191,
+            "dice": 0.6643478260869565,
+            "nonempty_reference_dice": 0.6643478260869565,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "3": {
+            "reference_voxels": 15095,
+            "predicted_voxels": 17504,
+            "intersection_voxels": 14749,
+            "dice": 0.9048743826497745,
+            "nonempty_reference_dice": 0.9048743826497745,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          }
+        },
+        {
+          "1": {
+            "reference_voxels": 9900,
+            "predicted_voxels": 9792,
+            "intersection_voxels": 9220,
+            "dice": 0.9364208815762747,
+            "nonempty_reference_dice": 0.9364208815762747,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "2": {
+            "reference_voxels": 1542,
+            "predicted_voxels": 1534,
+            "intersection_voxels": 1214,
+            "dice": 0.7893368010403121,
+            "nonempty_reference_dice": 0.7893368010403121,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "3": {
+            "reference_voxels": 15790,
+            "predicted_voxels": 18233,
+            "intersection_voxels": 14938,
+            "dice": 0.8781118655027481,
+            "nonempty_reference_dice": 0.8781118655027481,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          }
+        }
+      ]
+    },
+    "C_23": {
+      "panel": "C",
+      "seed": 23,
+      "updates": 512,
+      "metric": "mean of per-visit means of Dice for reference-nonempty compartments",
+      "mean_nonempty_compartment_dice": 0.5926236858601464,
+      "status": "failed",
+      "example_means": [
+        0.5920459624170697,
+        0.5932014093032231
+      ],
+      "compartments_by_example": [
+        {
+          "1": {
+            "reference_voxels": 4094,
+            "predicted_voxels": 5566,
+            "intersection_voxels": 4076,
+            "dice": 0.8438923395445135,
+            "nonempty_reference_dice": 0.8438923395445135,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "2": {
+            "reference_voxels": 353,
+            "predicted_voxels": 0,
+            "intersection_voxels": 0,
+            "dice": 0.0,
+            "nonempty_reference_dice": 0.0,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "3": {
+            "reference_voxels": 15095,
+            "predicted_voxels": 15058,
+            "intersection_voxels": 14055,
+            "dice": 0.9322455477066959,
+            "nonempty_reference_dice": 0.9322455477066959,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          }
+        },
+        {
+          "1": {
+            "reference_voxels": 9900,
+            "predicted_voxels": 12042,
+            "intersection_voxels": 9705,
+            "dice": 0.8846048673776319,
+            "nonempty_reference_dice": 0.8846048673776319,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "2": {
+            "reference_voxels": 1542,
+            "predicted_voxels": 0,
+            "intersection_voxels": 0,
+            "dice": 0.0,
+            "nonempty_reference_dice": 0.0,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "3": {
+            "reference_voxels": 15790,
+            "predicted_voxels": 15486,
+            "intersection_voxels": 13996,
+            "dice": 0.8949993605320373,
+            "nonempty_reference_dice": 0.8949993605320373,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          }
+        }
+      ]
+    },
+    "C_31": {
+      "panel": "C",
+      "seed": 31,
+      "updates": 512,
+      "metric": "mean of per-visit means of Dice for reference-nonempty compartments",
+      "mean_nonempty_compartment_dice": 0.6322621994360589,
+      "status": "failed",
+      "example_means": [
+        0.6338541580231115,
+        0.6306702408490061
+      ],
+      "compartments_by_example": [
+        {
+          "1": {
+            "reference_voxels": 4094,
+            "predicted_voxels": 4936,
+            "intersection_voxels": 4078,
+            "dice": 0.9032115171650056,
+            "nonempty_reference_dice": 0.9032115171650056,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "2": {
+            "reference_voxels": 353,
+            "predicted_voxels": 14,
+            "intersection_voxels": 12,
+            "dice": 0.0653950953678474,
+            "nonempty_reference_dice": 0.0653950953678474,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "3": {
+            "reference_voxels": 15095,
+            "predicted_voxels": 15989,
+            "intersection_voxels": 14500,
+            "dice": 0.9329558615364818,
+            "nonempty_reference_dice": 0.9329558615364818,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          }
+        },
+        {
+          "1": {
+            "reference_voxels": 9900,
+            "predicted_voxels": 10901,
+            "intersection_voxels": 9703,
+            "dice": 0.9329359165424739,
+            "nonempty_reference_dice": 0.9329359165424739,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "2": {
+            "reference_voxels": 1542,
+            "predicted_voxels": 48,
+            "intersection_voxels": 40,
+            "dice": 0.050314465408805034,
+            "nonempty_reference_dice": 0.050314465408805034,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          },
+          "3": {
+            "reference_voxels": 15790,
+            "predicted_voxels": 17211,
+            "intersection_voxels": 14995,
+            "dice": 0.9087603405957395,
+            "nonempty_reference_dice": 0.9087603405957395,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null
+          }
+        }
+      ]
+    }
+  },
+  "cohort_segmentation_fits_dispatched": 0,
+  "joint_acceptance_assessed": false,
+  "count_based_dice_and_readiness_recomputed": true,
+  "same_two_visits_as_representation_readiness": true,
+  "representation_lock_sha256": "7db678d7d38814130cb5ce348b392226aa063ba12a358824dcd3fb91d63b3cbf",
+  "readiness_sha256": "07d0b1d3cb8fe9af45a584e083f1361ac571d63e128616b4260ea1398188a319",
+  "source_sha256": {
+    "segmentation66.py": "4ae4f03e212d68e7491ff320e8c15c4cf42017f4a41156261c70687e63ce09a4",
+    "data66.py": "675b7981469af7e02abd2be774599768898fb5e10c332e76b9d03b8874a897ee",
+    "model66.py": "b0696f175f50c6b72534d2fb269dd67b4c58515dd9452fda2de8ab18e8011f63"
+  },
+  "scope": "Two fitting visits, direct-image reference readiness. Failure does not establish a compact-state storage limit. No extra updates or threshold changes."
+}

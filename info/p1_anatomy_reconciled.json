@@ -1,0 +1,205 @@
+{
+  "source": "outputs/p1_anatomy_baselines.json",
+  "source_sha256": "5f4decc4fbe4b0868a0e02e2da52531ceb840a9df345145968b63d42b3aa1d15",
+  "correction_date": "2026-11-02",
+  "reason": "SAILOR saved relative MAE uses pair-weighted errors; its displayed absolute MAEs use patient-uniform errors. LUMIERE saved ratios already use patient-uniform errors.",
+  "units": "log1p(mm3)",
+  "cohorts": {
+    "LUMIERE": {
+      "current_image": {
+        "patient_uniform_mae": 2.046600875544296,
+        "patient_uniform_relative_mae": 1.3249937047414992,
+        "pair_weighted_mae": 2.1353118855130218,
+        "pair_weighted_relative_mae": 1.3153095296501403,
+        "historical_saved_relative_mae": 1.3249937047414992,
+        "paired_patient_difference": 0.5019891025067938,
+        "paired_patient_difference_ci95": [
+          0.17274675226672395,
+          0.805102605393451
+        ]
+      },
+      "history_mean": {
+        "patient_uniform_mae": 2.1268054791734037,
+        "patient_uniform_relative_mae": 1.376919117346237,
+        "pair_weighted_mae": 2.232443144712537,
+        "pair_weighted_relative_mae": 1.3751404478962332,
+        "historical_saved_relative_mae": 1.376919117346237,
+        "paired_patient_difference": 0.5821937061359012,
+        "paired_patient_difference_ci95": [
+          0.21085013832732014,
+          0.952650226832372
+        ]
+      },
+      "jepa_state": {
+        "patient_uniform_mae": 2.152017848379128,
+        "patient_uniform_relative_mae": 1.393241904499506,
+        "pair_weighted_mae": 2.2563351314579516,
+        "pair_weighted_relative_mae": 1.389857435171827,
+        "historical_saved_relative_mae": 1.393241904499506,
+        "paired_patient_difference": 0.6074060753416257,
+        "paired_patient_difference_ci95": [
+          0.2259396925834503,
+          1.0016246149099073
+        ]
+      },
+      "linear_trend": {
+        "patient_uniform_mae": 2.3224833803074323,
+        "patient_uniform_relative_mae": 1.503603313692368,
+        "pair_weighted_mae": 2.5589172079548095,
+        "pair_weighted_relative_mae": 1.5762419588649668,
+        "historical_saved_relative_mae": 1.503603313692368,
+        "paired_patient_difference": 0.7778716072699303,
+        "paired_patient_difference_ci95": [
+          0.5494797811315116,
+          1.0460413581512211
+        ]
+      },
+      "mean_delta": {
+        "patient_uniform_mae": 1.5519766203513914,
+        "patient_uniform_relative_mae": 1.0047680895888849,
+        "pair_weighted_mae": 1.630807160061348,
+        "pair_weighted_relative_mae": 1.0045446818346255,
+        "historical_saved_relative_mae": 1.0047680895888849,
+        "paired_patient_difference": 0.007364847313889456,
+        "paired_patient_difference_ci95": [
+          0.00108333141937346,
+          0.013048217202211063
+        ]
+      },
+      "persistence": {
+        "patient_uniform_mae": 1.5446117730375022,
+        "patient_uniform_relative_mae": 1.0,
+        "pair_weighted_mae": 1.6234291909076293,
+        "pair_weighted_relative_mae": 1.0,
+        "historical_saved_relative_mae": 1.0,
+        "paired_patient_difference": 0.0,
+        "paired_patient_difference_ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "trend_ridge": {
+        "patient_uniform_mae": 1.588858822192042,
+        "patient_uniform_relative_mae": 1.0286460649380702,
+        "pair_weighted_mae": 1.6941775839798139,
+        "pair_weighted_relative_mae": 1.0435795989553633,
+        "historical_saved_relative_mae": 1.0286460649380702,
+        "paired_patient_difference": 0.04424704915453967,
+        "paired_patient_difference_ci95": [
+          -0.1670753599895772,
+          0.26408742627792237
+        ]
+      },
+      "volume_ridge": {
+        "patient_uniform_mae": 1.5025452077104735,
+        "patient_uniform_relative_mae": 0.9727656061792769,
+        "pair_weighted_mae": 1.6442303516776482,
+        "pair_weighted_relative_mae": 1.0128131001256602,
+        "historical_saved_relative_mae": 0.9727656061792769,
+        "paired_patient_difference": -0.04206656532702901,
+        "paired_patient_difference_ci95": [
+          -0.2267129131122329,
+          0.147921603838559
+        ]
+      }
+    },
+    "SAILOR": {
+      "current_image": {
+        "patient_uniform_mae": 3.181710112898872,
+        "patient_uniform_relative_mae": 3.374016072695971,
+        "pair_weighted_mae": 3.5382216898322456,
+        "pair_weighted_relative_mae": 3.2953606911906537,
+        "historical_saved_relative_mae": 3.2953606911906537,
+        "paired_patient_difference": 2.238706272861868,
+        "paired_patient_difference_ci95": [
+          1.8852850134064914,
+          2.6457198118506144
+        ]
+      },
+      "history_mean": {
+        "patient_uniform_mae": 4.936184367434481,
+        "patient_uniform_relative_mae": 5.234532626336688,
+        "pair_weighted_mae": 5.271911543766725,
+        "pair_weighted_relative_mae": 4.910051317216018,
+        "historical_saved_relative_mae": 4.910051317216018,
+        "paired_patient_difference": 3.9931805273974765,
+        "paired_patient_difference_ci95": [
+          3.4440768356331244,
+          4.5452015192464374
+        ]
+      },
+      "jepa_state": {
+        "patient_uniform_mae": 2.7186150919700562,
+        "patient_uniform_relative_mae": 2.8829310937518304,
+        "pair_weighted_mae": 3.0850704308634858,
+        "pair_weighted_relative_mae": 2.8733134095687927,
+        "historical_saved_relative_mae": 2.8733134095687927,
+        "paired_patient_difference": 1.775611251933052,
+        "paired_patient_difference_ci95": [
+          1.4437064358896758,
+          2.171141754317538
+        ]
+      },
+      "linear_trend": {
+        "patient_uniform_mae": 1.3648535616694975,
+        "patient_uniform_relative_mae": 1.4473467696758688,
+        "pair_weighted_mae": 1.5868467311908279,
+        "pair_weighted_relative_mae": 1.4779267098887081,
+        "historical_saved_relative_mae": 1.4779267098887081,
+        "paired_patient_difference": 0.42184972163249373,
+        "paired_patient_difference_ci95": [
+          0.2584074060699984,
+          0.6071362013802544
+        ]
+      },
+      "mean_delta": {
+        "patient_uniform_mae": 0.9471069627440692,
+        "patient_uniform_relative_mae": 1.0043511198288484,
+        "pair_weighted_mae": 1.0791473826598397,
+        "pair_weighted_relative_mae": 1.0050754804420183,
+        "historical_saved_relative_mae": 1.0050754804420183,
+        "paired_patient_difference": 0.00410312270706532,
+        "paired_patient_difference_ci95": [
+          0.0012305197312749048,
+          0.006868679012738806
+        ]
+      },
+      "persistence": {
+        "patient_uniform_mae": 0.943003840037004,
+        "patient_uniform_relative_mae": 1.0,
+        "pair_weighted_mae": 1.0736978502204089,
+        "pair_weighted_relative_mae": 1.0,
+        "historical_saved_relative_mae": 1.0,
+        "paired_patient_difference": 0.0,
+        "paired_patient_difference_ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "trend_ridge": {
+        "patient_uniform_mae": 1.617005271891645,
+        "patient_uniform_relative_mae": 1.7147387987605573,
+        "pair_weighted_mae": 1.7274552066354505,
+        "pair_weighted_relative_mae": 1.608883920444507,
+        "historical_saved_relative_mae": 1.608883920444507,
+        "paired_patient_difference": 0.674001431854641,
+        "paired_patient_difference_ci95": [
+          0.5161581376817365,
+          0.829620229341331
+        ]
+      },
+      "volume_ridge": {
+        "patient_uniform_mae": 1.4649340441431915,
+        "patient_uniform_relative_mae": 1.5534762234750885,
+        "pair_weighted_mae": 1.6035219802500638,
+        "pair_weighted_relative_mae": 1.4934573818145325,
+        "historical_saved_relative_mae": 1.4934573818145325,
+        "paired_patient_difference": 0.5219302041061877,
+        "paired_patient_difference_ci95": [
+          0.3841007858346641,
+          0.6584236205159643
+        ]
+      }
+    }
+  }
+}

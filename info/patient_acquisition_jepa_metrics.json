@@ -1,0 +1,1035 @@
+{
+  "identity": "acq-jepa-v1",
+  "status": "completed_no_acquisition_benefit_anatomy_retention_not_established",
+  "populations": {
+    "R": {
+      "patients": 134,
+      "visits": 538,
+      "datasets": {
+        "LUMIERE": 305,
+        "MU": 233
+      }
+    },
+    "P": {
+      "patients": 20,
+      "visits": 48,
+      "datasets": {
+        "MU": 48
+      }
+    },
+    "V": {
+      "patients": 16,
+      "visits": 58,
+      "datasets": {
+        "MU": 58
+      }
+    },
+    "A": {
+      "patients": 16,
+      "visits": 48,
+      "datasets": {
+        "MU": 48
+      }
+    }
+  },
+  "assessment_visits": 48,
+  "assessment_patients": 16,
+  "acquisition": {
+    "fixed": {
+      "primary": 0.6252546614369986,
+      "budgets": [
+        0.5900343409166033,
+        0.660474981957394
+      ],
+      "acquisition_frequency": {
+        "2": {
+          "0": 1.0,
+          "3": 0.0,
+          "2": 0.0
+        },
+        "3": {
+          "0": 0.0,
+          "3": 1.0,
+          "2": 0.0
+        }
+      }
+    },
+    "direct": {
+      "primary": 0.6252546614369986,
+      "budgets": [
+        0.5900343409166033,
+        0.660474981957394
+      ],
+      "acquisition_frequency": {
+        "2": {
+          "0": 1.0,
+          "3": 0.0,
+          "2": 0.0
+        },
+        "3": {
+          "0": 0.0,
+          "3": 1.0,
+          "2": 0.0
+        }
+      }
+    },
+    "jepa": {
+      "primary": 0.6252546614369986,
+      "budgets": [
+        0.5900343409166033,
+        0.660474981957394
+      ],
+      "acquisition_frequency": {
+        "2": {
+          "0": 1.0,
+          "3": 0.0,
+          "2": 0.0
+        },
+        "3": {
+          "0": 0.0,
+          "3": 1.0,
+          "2": 0.0
+        }
+      }
+    },
+    "oracle": {
+      "primary": 0.6270920597722937,
+      "budgets": [
+        0.5924711024972377,
+        0.6617130170473497
+      ],
+      "acquisition_frequency": {
+        "2": {
+          "0": 0.9375,
+          "3": 0.03125,
+          "2": 0.03125
+        },
+        "3": {
+          "0": 0.0625,
+          "3": 0.8645833333333333,
+          "2": 0.07291666666666666
+        }
+      }
+    }
+  },
+  "primary_contrasts": {
+    "jepa_minus_fixed": {
+      "patients": 16,
+      "difference": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "budgets": [
+        {
+          "patients": 16,
+          "difference": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "patients": 16,
+          "difference": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    "jepa_minus_direct": {
+      "patients": 16,
+      "difference": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "budgets": [
+        {
+          "patients": 16,
+          "difference": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "patients": 16,
+          "difference": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    "oracle_minus_fixed": {
+      "patients": 16,
+      "difference": 0.0018373983352950284,
+      "ci95": [
+        0.00010147948938892908,
+        0.004126623285757867
+      ]
+    }
+  },
+  "acquisition_joint_claim": false,
+  "retained_image_completion": true,
+  "retained_all_four_anatomy": false,
+  "practical_improvement_supported": false,
+  "compartment_tradeoffs": {
+    "2": {
+      "1": {
+        "nonempty_targets": 47,
+        "empty_targets": 1,
+        "nonempty_dice": {
+          "fixed": 0.652160864240813,
+          "direct": 0.652160864240813,
+          "jepa": 0.652160864240813,
+          "oracle": 0.6429788807516175
+        },
+        "empty_fp_ml": {
+          "fixed": 9.137,
+          "direct": 9.137,
+          "jepa": 9.137,
+          "oracle": 9.137
+        },
+        "empty_fp_rate": {
+          "fixed": 1.0,
+          "direct": 1.0,
+          "jepa": 1.0,
+          "oracle": 1.0
+        },
+        "jepa_minus_fixed_dice": {
+          "patients": 16,
+          "difference": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        "jepa_minus_fixed_fp_ml": {
+          "patients": 1,
+          "difference": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "2": {
+        "nonempty_targets": 27,
+        "empty_targets": 21,
+        "nonempty_dice": {
+          "fixed": 0.3761214753797642,
+          "direct": 0.3761214753797642,
+          "jepa": 0.3761214753797642,
+          "oracle": 0.3734098183857104
+        },
+        "empty_fp_ml": {
+          "fixed": 2.4899621212121215,
+          "direct": 2.4899621212121215,
+          "jepa": 2.4899621212121215,
+          "oracle": 2.4903106060606066
+        },
+        "empty_fp_rate": {
+          "fixed": 1.0,
+          "direct": 1.0,
+          "jepa": 1.0,
+          "oracle": 1.0
+        },
+        "jepa_minus_fixed_dice": {
+          "patients": 12,
+          "difference": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        "jepa_minus_fixed_fp_ml": {
+          "patients": 11,
+          "difference": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "3": {
+        "nonempty_targets": 48,
+        "empty_targets": 0,
+        "nonempty_dice": {
+          "fixed": 0.6454228302993713,
+          "direct": 0.6454228302993713,
+          "jepa": 0.6454228302993713,
+          "oracle": 0.6537893316178797
+        },
+        "empty_fp_ml": {
+          "fixed": null,
+          "direct": null,
+          "jepa": null,
+          "oracle": null
+        },
+        "empty_fp_rate": {
+          "fixed": null,
+          "direct": null,
+          "jepa": null,
+          "oracle": null
+        },
+        "jepa_minus_fixed_dice": {
+          "patients": 16,
+          "difference": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        "jepa_minus_fixed_fp_ml": {
+          "patients": 0,
+          "difference": null,
+          "ci95": null
+        }
+      },
+      "4": {
+        "nonempty_targets": 41,
+        "empty_targets": 7,
+        "nonempty_dice": {
+          "fixed": 0.5349621402562068,
+          "direct": 0.5349621402562068,
+          "jepa": 0.5349621402562068,
+          "oracle": 0.5493261486530062
+        },
+        "empty_fp_ml": {
+          "fixed": 11.726222222222225,
+          "direct": 11.726222222222225,
+          "jepa": 11.726222222222225,
+          "oracle": 11.726222222222225
+        },
+        "empty_fp_rate": {
+          "fixed": 1.0,
+          "direct": 1.0,
+          "jepa": 1.0,
+          "oracle": 1.0
+        },
+        "jepa_minus_fixed_dice": {
+          "patients": 14,
+          "difference": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        "jepa_minus_fixed_fp_ml": {
+          "patients": 3,
+          "difference": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        }
+      }
+    },
+    "3": {
+      "1": {
+        "nonempty_targets": 47,
+        "empty_targets": 1,
+        "nonempty_dice": {
+          "fixed": 0.6843853749525939,
+          "direct": 0.6843853749525939,
+          "jepa": 0.6843853749525939,
+          "oracle": 0.6840934249166555
+        },
+        "empty_fp_ml": {
+          "fixed": 6.186,
+          "direct": 6.186,
+          "jepa": 6.186,
+          "oracle": 6.186
+        },
+        "empty_fp_rate": {
+          "fixed": 1.0,
+          "direct": 1.0,
+          "jepa": 1.0,
+          "oracle": 1.0
+        },
+        "jepa_minus_fixed_dice": {
+          "patients": 16,
+          "difference": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        "jepa_minus_fixed_fp_ml": {
+          "patients": 1,
+          "difference": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "2": {
+        "nonempty_targets": 27,
+        "empty_targets": 21,
+        "nonempty_dice": {
+          "fixed": 0.3946081495842006,
+          "direct": 0.3946081495842006,
+          "jepa": 0.3946081495842006,
+          "oracle": 0.40214804852984415
+        },
+        "empty_fp_ml": {
+          "fixed": 2.081537878787879,
+          "direct": 2.081537878787879,
+          "jepa": 2.081537878787879,
+          "oracle": 2.06844696969697
+        },
+        "empty_fp_rate": {
+          "fixed": 1.0,
+          "direct": 1.0,
+          "jepa": 1.0,
+          "oracle": 1.0
+        },
+        "jepa_minus_fixed_dice": {
+          "patients": 12,
+          "difference": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        "jepa_minus_fixed_fp_ml": {
+          "patients": 11,
+          "difference": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "3": {
+        "nonempty_targets": 48,
+        "empty_targets": 0,
+        "nonempty_dice": {
+          "fixed": 0.8065264872112229,
+          "direct": 0.8065264872112229,
+          "jepa": 0.8065264872112229,
+          "oracle": 0.8020609916703013
+        },
+        "empty_fp_ml": {
+          "fixed": null,
+          "direct": null,
+          "jepa": null,
+          "oracle": null
+        },
+        "empty_fp_rate": {
+          "fixed": null,
+          "direct": null,
+          "jepa": null,
+          "oracle": null
+        },
+        "jepa_minus_fixed_dice": {
+          "patients": 16,
+          "difference": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        "jepa_minus_fixed_fp_ml": {
+          "patients": 0,
+          "difference": null,
+          "ci95": null
+        }
+      },
+      "4": {
+        "nonempty_targets": 41,
+        "empty_targets": 7,
+        "nonempty_dice": {
+          "fixed": 0.5634979765937616,
+          "direct": 0.5634979765937616,
+          "jepa": 0.5634979765937616,
+          "oracle": 0.5704720122374091
+        },
+        "empty_fp_ml": {
+          "fixed": 10.135,
+          "direct": 10.135,
+          "jepa": 10.135,
+          "oracle": 9.608833333333335
+        },
+        "empty_fp_rate": {
+          "fixed": 1.0,
+          "direct": 1.0,
+          "jepa": 1.0,
+          "oracle": 1.0
+        },
+        "jepa_minus_fixed_dice": {
+          "patients": 14,
+          "difference": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        "jepa_minus_fixed_fp_ml": {
+          "patients": 3,
+          "difference": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        }
+      }
+    }
+  },
+  "exploratory_harm_flags": [],
+  "fixed_panel_retention": {
+    "1": {
+      "lesion_deficit": {
+        "patients": 16,
+        "difference": -0.28025022887935247,
+        "ci95": [
+          -0.367417339614282,
+          -0.19350307423310975
+        ]
+      },
+      "passed": true,
+      "new": {
+        "D": 0.4123515536538963,
+        "lesion_flair_mae": 0.7644713167722027,
+        "brain_flair_mae": 0.42374489428475504,
+        "gradient_flair_mae": 0.18947108053705758
+      },
+      "reference": {
+        "D": 0.2732867045878735,
+        "lesion_flair_mae": 1.044721545651555,
+        "brain_flair_mae": 0.49712283732369544,
+        "gradient_flair_mae": 0.19735650647845532
+      },
+      "additional_paired_differences": {
+        "D": {
+          "patients": 16,
+          "difference": 0.1390648490660228,
+          "ci95": [
+            0.1014220873523094,
+            0.17795269625782784
+          ]
+        },
+        "brain_flair_mae": {
+          "patients": 16,
+          "difference": -0.07337794303894044,
+          "ci95": [
+            -0.08684304284397512,
+            -0.058752712933346635
+          ]
+        },
+        "gradient_flair_mae": {
+          "patients": 16,
+          "difference": -0.007885425941397746,
+          "ci95": [
+            -0.011036978259216993,
+            -0.004733003019484587
+          ]
+        }
+      }
+    },
+    "01": {
+      "lesion_deficit": {
+        "patients": 16,
+        "difference": -0.16784429022421438,
+        "ci95": [
+          -0.23025236949324607,
+          -0.106291412236169
+        ]
+      },
+      "passed": true,
+      "new": {
+        "D": 0.5900343409166033,
+        "lesion_flair_mae": 0.745086532086134,
+        "brain_flair_mae": 0.420418564012895,
+        "gradient_flair_mae": 0.1906603838161876
+      },
+      "reference": {
+        "D": 0.5693243574734761,
+        "lesion_flair_mae": 0.9129308223103483,
+        "brain_flair_mae": 0.4602107807373007,
+        "gradient_flair_mae": 0.19601657641016773
+      },
+      "additional_paired_differences": {
+        "D": {
+          "patients": 16,
+          "difference": 0.020709983443127383,
+          "ci95": [
+            -0.0004914548954508621,
+            0.043494227339263385
+          ]
+        },
+        "brain_flair_mae": {
+          "patients": 16,
+          "difference": -0.039792216724405687,
+          "ci95": [
+            -0.047872662844602024,
+            -0.03192067284137012
+          ]
+        },
+        "gradient_flair_mae": {
+          "patients": 16,
+          "difference": -0.005356192593980168,
+          "ci95": [
+            -0.007638964150230296,
+            -0.0031731658193489736
+          ]
+        }
+      }
+    },
+    "12": {
+      "lesion_deficit": {
+        "patients": 16,
+        "difference": -0.1337722295274337,
+        "ci95": [
+          -0.16856391770454743,
+          -0.09966393261371803
+        ]
+      },
+      "passed": true,
+      "new": {
+        "D": 0.46964757071103624,
+        "lesion_flair_mae": 0.5227069359893599,
+        "brain_flair_mae": 0.381754051707685,
+        "gradient_flair_mae": 0.1850302542740893
+      },
+      "reference": {
+        "D": 0.4489339329904922,
+        "lesion_flair_mae": 0.6564791655167939,
+        "brain_flair_mae": 0.41038130735978484,
+        "gradient_flair_mae": 0.1874358254045041
+      },
+      "additional_paired_differences": {
+        "D": {
+          "patients": 16,
+          "difference": 0.02071363772054404,
+          "ci95": [
+            -0.00683446197885707,
+            0.05089472086311867
+          ]
+        },
+        "brain_flair_mae": {
+          "patients": 16,
+          "difference": -0.02862725565209985,
+          "ci95": [
+            -0.0417138590477407,
+            -0.01581684729239593
+          ]
+        },
+        "gradient_flair_mae": {
+          "patients": 16,
+          "difference": -0.0024055711304148044,
+          "ci95": [
+            -0.004429218451130306,
+            0.00011107500370901807
+          ]
+        }
+      }
+    },
+    "012": {
+      "lesion_deficit": {
+        "patients": 16,
+        "difference": -0.06088950714717308,
+        "ci95": [
+          -0.09259075537944833,
+          -0.03445540409224729
+        ]
+      },
+      "passed": true,
+      "new": {
+        "D": 0.6217948463688339,
+        "lesion_flair_mae": 0.5269845246026913,
+        "brain_flair_mae": 0.3791488851110141,
+        "gradient_flair_mae": 0.18497751311450783
+      },
+      "reference": {
+        "D": 0.6782649664697242,
+        "lesion_flair_mae": 0.5878740317498644,
+        "brain_flair_mae": 0.40248887048413357,
+        "gradient_flair_mae": 0.18708696578267134
+      },
+      "additional_paired_differences": {
+        "D": {
+          "patients": 16,
+          "difference": -0.05647012010089039,
+          "ci95": [
+            -0.08259058123115778,
+            -0.03325902602014392
+          ]
+        },
+        "brain_flair_mae": {
+          "patients": 16,
+          "difference": -0.023339985373119515,
+          "ci95": [
+            -0.03639189267220597,
+            -0.011975230493893232
+          ]
+        },
+        "gradient_flair_mae": {
+          "patients": 16,
+          "difference": -0.00210945266816351,
+          "ci95": [
+            -0.0034632755094207777,
+            -0.0007749072004420073
+          ]
+        }
+      }
+    }
+  },
+  "all_four_anatomy_difference": {
+    "patients": 16,
+    "difference": -0.04591810604767872,
+    "ci95": [
+      -0.07022506745182219,
+      -0.02218689226859744
+    ]
+  },
+  "mean_four_sequence_encoding_seconds": 12.838732699186464,
+  "representation_runtime": {
+    "smoke": false,
+    "updates": 12500,
+    "elapsed_seconds": 22911.275294477004,
+    "mean_update_seconds": 1.8038357806854137,
+    "peak_bytes": 11958550528,
+    "best_selection_score": 0.7700404834487118,
+    "best_step": 12500,
+    "best_terminal": true
+  },
+  "policy_selection": {
+    "direct": [
+      {
+        "penalty": 0.1,
+        "V_primary": 0.578335871636374
+      },
+      {
+        "penalty": 1.0,
+        "V_primary": 0.578335871636374
+      },
+      {
+        "penalty": 10.0,
+        "V_primary": 0.578335871636374
+      },
+      {
+        "penalty": 100.0,
+        "V_primary": 0.578335871636374
+      }
+    ],
+    "jepa": [
+      {
+        "penalty": 0.1,
+        "V_primary": 0.578335871636374
+      },
+      {
+        "penalty": 1.0,
+        "V_primary": 0.578335871636374
+      },
+      {
+        "penalty": 10.0,
+        "V_primary": 0.578335871636374
+      },
+      {
+        "penalty": 100.0,
+        "V_primary": 0.578335871636374
+      }
+    ]
+  },
+  "fixed_order_selection": [
+    {
+      "order": [
+        0,
+        3,
+        2
+      ],
+      "V_primary": 0.578335871636374
+    },
+    {
+      "order": [
+        0,
+        2,
+        3
+      ],
+      "V_primary": 0.5646839882362827
+    },
+    {
+      "order": [
+        3,
+        0,
+        2
+      ],
+      "V_primary": 0.528264192820186
+    },
+    {
+      "order": [
+        3,
+        2,
+        0
+      ],
+      "V_primary": 0.4559351062749243
+    },
+    {
+      "order": [
+        2,
+        0,
+        3
+      ],
+      "V_primary": 0.5076202287092707
+    },
+    {
+      "order": [
+        2,
+        3,
+        0
+      ],
+      "V_primary": 0.4489430255641003
+    }
+  ],
+  "lock": {
+    "representation_sha256": "723e149f1dcdff8b7134936c108dcfc5509e3a811741ec00692edfc2bdbbc606",
+    "selectors_sha256": "242be14e611a175c0c60ec850d8d4d768992d4e8f6f746dc8c4c90b22884268c",
+    "fixed_order": [
+      0,
+      3,
+      2
+    ],
+    "assessment_opened": false,
+    "assessment_role_sha256": "22610fa7d4287490beb31cbd331a3255d314d9aaaa8440fd4d5635567cb61aa7"
+  },
+  "limitations": [
+    "Offline sequence reveal on released upstream geometry",
+    "Unit cost is one reveal, not scan time or a contrast-injection schedule",
+    "One development seed; conditional bootstrap intervals",
+    "No calibrated uncertainty or biological forecasting claim",
+    "JEPA causal training effect unisolated; reference observer saw broader fitting population"
+  ],
+  "reserved_patients_opened": 0,
+  "unopened_MU_scoring_patients_opened": 0,
+  "chosen_path_verification": {
+    "targets": 48,
+    "identical_fixed_direct_jepa_paths": 48,
+    "paths": {
+      "fixed": {
+        "0,3": 48
+      },
+      "direct": {
+        "0,3": 48
+      },
+      "jepa": {
+        "0,3": 48
+      }
+    },
+    "sequence_index": {
+      "0": "CT1",
+      "1": "T1",
+      "2": "T2",
+      "3": "FLAIR"
+    }
+  },
+  "all_four_absolute_anatomy": {
+    "nonempty_dice": {
+      "new": 0.6717698995199539,
+      "reference": 0.7176880055676327
+    },
+    "compartments": {
+      "1": {
+        "nonempty_targets": 47,
+        "nonempty_patients": 16,
+        "empty_targets": 1,
+        "empty_patients": 1,
+        "nonempty_dice": {
+          "new": 0.6837189748061403,
+          "reference": 0.7694810305664104
+        },
+        "empty_fp_ml": {
+          "new": 6.834,
+          "reference": 2.521
+        },
+        "empty_fp_rate": {
+          "new": 1.0,
+          "reference": 1.0
+        },
+        "all_target_volume_mae_ml": {
+          "new": 0.6764083333333337,
+          "reference": -1.2134229166666664
+        },
+        "dice_difference": {
+          "patients": 16,
+          "difference": -0.08576205576027013,
+          "ci95": [
+            -0.11787115955153185,
+            -0.05659902050635165
+          ]
+        },
+        "empty_fp_difference": {
+          "patients": 1,
+          "difference": 4.313,
+          "ci95": [
+            4.313,
+            4.313
+          ]
+        }
+      },
+      "2": {
+        "nonempty_targets": 27,
+        "nonempty_patients": 12,
+        "empty_targets": 21,
+        "empty_patients": 11,
+        "nonempty_dice": {
+          "new": 0.3927044924171714,
+          "reference": 0.41791922150089306
+        },
+        "empty_fp_ml": {
+          "new": 1.9763257575757578,
+          "reference": 1.1788560606060605
+        },
+        "empty_fp_rate": {
+          "new": 1.0,
+          "reference": 0.7424242424242423
+        },
+        "all_target_volume_mae_ml": {
+          "new": 2.5135031249999997,
+          "reference": 1.7330114583333334
+        },
+        "dice_difference": {
+          "patients": 12,
+          "difference": -0.02521472908372159,
+          "ci95": [
+            -0.08874719145428413,
+            0.03052105688420811
+          ]
+        },
+        "empty_fp_difference": {
+          "patients": 11,
+          "difference": 0.797469696969697,
+          "ci95": [
+            0.19296704545454527,
+            1.538184090909091
+          ]
+        }
+      },
+      "3": {
+        "nonempty_targets": 48,
+        "nonempty_patients": 16,
+        "empty_targets": 0,
+        "empty_patients": 0,
+        "nonempty_dice": {
+          "new": 0.8309512398286424,
+          "reference": 0.8713669832367443
+        },
+        "empty_fp_ml": {
+          "new": null,
+          "reference": null
+        },
+        "empty_fp_rate": {
+          "new": null,
+          "reference": null
+        },
+        "all_target_volume_mae_ml": {
+          "new": 8.038804166666667,
+          "reference": 2.630017708333334
+        },
+        "dice_difference": {
+          "patients": 16,
+          "difference": -0.04041574340810199,
+          "ci95": [
+            -0.058208829299714195,
+            -0.022303674782766895
+          ]
+        },
+        "empty_fp_difference": {
+          "patients": 0,
+          "difference": null,
+          "ci95": null
+        }
+      },
+      "4": {
+        "nonempty_targets": 41,
+        "nonempty_patients": 14,
+        "empty_targets": 7,
+        "empty_patients": 3,
+        "nonempty_dice": {
+          "new": 0.578056222951065,
+          "reference": 0.5832651381824461
+        },
+        "empty_fp_ml": {
+          "new": 8.908222222222223,
+          "reference": 4.516055555555556
+        },
+        "empty_fp_rate": {
+          "new": 1.0,
+          "reference": 1.0
+        },
+        "all_target_volume_mae_ml": {
+          "new": 2.943095833333334,
+          "reference": 1.76706875
+        },
+        "dice_difference": {
+          "patients": 14,
+          "difference": -0.005208915231381135,
+          "ci95": [
+            -0.04847674168535126,
+            0.04911770733008747
+          ]
+        },
+        "empty_fp_difference": {
+          "patients": 3,
+          "difference": 4.392166666666667,
+          "ci95": [
+            1.829,
+            7.43
+          ]
+        }
+      }
+    }
+  },
+  "execution_measurements": {
+    "role_total_seconds": {
+      "P": 2675.4093708456494,
+      "V": 3094.7133917843457,
+      "A": 3703.0547322371276
+    },
+    "patient_mean_four_sequence_encoding_seconds": 12.838732699186464,
+    "patient_mean_all_four_readout_seconds": 1.57785266234229,
+    "patient_mean_T1_query_descriptor_seconds": 3.0413297986466206,
+    "patient_mean_state_bytes": {
+      "1": 6439484160.0,
+      "01": 9654762240.0,
+      "013": 12870040320.0,
+      "0123": 16085318400.0
+    },
+    "example_files_bytes": 58710060863
+  },
+  "examples": {
+    "count": 2,
+    "rule": "First V visit by SHA256(acq-example-v1|stem), then first remaining differing learned order if present, otherwise next hash; no accuracy selection",
+    "different_case_exists": false,
+    "verification": {
+      "passed": true,
+      "maps_checked": 6,
+      "exclusive_native_labels": true,
+      "displayed_volumes_match_native_maps": true,
+      "anatomy_and_completion_same_saved_state": true,
+      "first_example_saved_state_reload_and_unavailable_input_invariance": true,
+      "second_example_resumed_from_saved_state": true
+    },
+    "viewer_verified": true,
+    "viewer_checks": [
+      "First example native anatomy and missing-FLAIR completion rendered",
+      "Second example final observed FLAIR and native anatomy rendered",
+      "Both timelines distinguish actual evidence, hypothetical utility and image completion"
+    ],
+    "recovered_from_host_oom": true,
+    "timing_limitation": "Initial encoding and pre-interruption update timings were not persisted; one resumed actual update took 3.537155039026402 seconds."
+  },
+  "execution_corrections": [
+    "Corrected raw-versus-window-blended smoke assertion; serialized readouts remain exact",
+    "Transferred fixed reference observer inputs to CUDA; no models, scores or policies changed",
+    "Example batch exhausted host memory after one full example and two steps of the second; resumed only the missing final step with mapped saved-state storage"
+  ],
+  "interpretation": "No incremental adaptive sequence-choice benefit under this trained observer. Low oracle headroom is conditional on this observer and released offline reveal task, not a finding that MRI acquisition has no value. Image completion improved against the preserved reference; native all-four anatomy did not pass retention acceptance. Anatomy was statistically worse than reference, but the interval straddles the -0.05 margin: retention is not established, and inferiority beyond that margin is not established either. One seed, terminal selected checkpoint, reused development population; no causal JEPA training-effect or independent generalization claim.",
+  "entirely_empty_visit_count": 0
+}

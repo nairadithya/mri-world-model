@@ -1,0 +1,81 @@
+{
+  "status": "passed_geometry_and_visual_inspection",
+  "fixed_targets": 2,
+  "registrations": 4,
+  "seconds": 24.08033967099618,
+  "settings": {
+    "library": "SimpleITK",
+    "version": "2.5.2",
+    "transform": "Euler3D",
+    "metric": "MattesMutualInformation",
+    "bins": 32,
+    "sampling": "REGULAR",
+    "sampling_fraction": 0.1,
+    "sampling_seed": 67017,
+    "shrink": [
+      4,
+      2,
+      1
+    ],
+    "smoothing_mm": [
+      2,
+      1,
+      0
+    ],
+    "optimizer": "GradientDescent",
+    "learning_rate": 1.0,
+    "learning_rate_estimation": "EachIteration",
+    "maximum_step_mm": 1.0,
+    "scales": "PhysicalShift",
+    "iterations_per_level": 100,
+    "convergence_minimum": 1e-06,
+    "convergence_window": 10,
+    "threads_per_registration": 1,
+    "metric_masks": "current and previous CT1 support",
+    "failure_policy": "Exceptions, invalid geometry, nonfinite inputs/transforms/outputs, or no supported overlap exclude the target in every arm and reference. Finite fixed-iteration termination alone does not fail. No identity fallback or donor rematching.",
+    "shape_czxy": [
+      4,
+      182,
+      182,
+      218
+    ],
+    "spacing_xyz": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "origin_lps": [
+      -90.0,
+      126.0,
+      -72.0
+    ],
+    "direction_lps": [
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      -1.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  },
+  "freeze": {
+    "time": "2026-11-04T17:18:39.901980+00:00",
+    "alignment_inspected": true,
+    "settings_sha256": "2defc207b6255749026d34ecb9ffb08526db3a40621f0acab4a34d9d7185164f",
+    "code_sha256": "8e5fe6e7bcfd139af65be3f0a1aff46bfbf775d9538ae6665019be406c6a247f",
+    "smoke_code_sha256": "6c8b8d5b6321d6b132f8cdd7c005dde773c5261b77e6660f26f3363a622a2513",
+    "smoke_sha256": "37c1dc77fe6639cc09170aa036038593d71a52e44c310677c732153924fa294b",
+    "private_pairs_sha256": "3829fb605a73e923b66b46c742c581c332a6bc5295accdec0615441c003d2ccc",
+    "post_smoke_code_change": "Only final manifest original fitting donor-pool identity metadata added; registration numerical code unchanged.",
+    "visual_findings": "All four CT1 overlay images inspected. Both genuine histories show improved ventricular and outer-brain alignment. Donor alignments improve gross pose but retain cross-patient anatomy and support mismatch; no equivalence claim.",
+    "instrument_correction": "Original Once learning-rate estimate overshot a better CT1 alignment. Before cohort processing fixed EachIteration estimation and maximum physical step1mm. No identity fallback. Original receipts retained.",
+    "identity_tolerance": 1e-06,
+    "independent_trilinear_tolerance": 0.0001,
+    "workers": 4
+  },
+  "limits": "Four fixed fitting registrations only; donor anatomy and source coverage remain different. Not expert registration validation or clinical-phase equivalence.",
+  "privacy_note": "Individual case records are retained only in the private local original; this file contains aggregate results and protocol information."
+}

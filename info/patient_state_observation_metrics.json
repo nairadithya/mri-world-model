@@ -1,0 +1,116 @@
+{
+  "scope": "full-volume development evaluation",
+  "group": "selection",
+  "model_sha256": "87e2349c54fafd133a08246fd0d920956687faf640c8a080edc2f2cd1dc3ae59",
+  "datasets": {
+    "LUMIERE": {
+      "patients": 18,
+      "visits": 178,
+      "segmentation_dice": 0.7104821416878901,
+      "compartments": {
+        "1": {
+          "dice": 0.6748348536625889,
+          "nonempty_dice": 0.720640381117516,
+          "volume_error_ml": 1.581851576328537,
+          "empty_reference_fp_ml": 0.24165555555555554
+        },
+        "2": {
+          "dice": 0.6249140878402849,
+          "nonempty_dice": 0.647651905385096,
+          "volume_error_ml": 6.320513676111471,
+          "empty_reference_fp_ml": 2.5944000000000003
+        },
+        "3": {
+          "dice": 0.8316974835607964,
+          "nonempty_dice": 0.8502526220103541,
+          "volume_error_ml": 7.564137423487915,
+          "empty_reference_fp_ml": 0.8684000000000001
+        }
+      },
+      "missing_sequences": {
+        "CT1": {
+          "brain_mae": 0.38922003275005496,
+          "lesion_mae": 0.41186692471836683,
+          "gradient_mae": 0.2232739576327441
+        },
+        "T1": {
+          "brain_mae": 0.33010936595385176,
+          "lesion_mae": 0.34224898297904177,
+          "gradient_mae": 0.17043402072474573
+        },
+        "T2": {
+          "brain_mae": 0.381346500401084,
+          "lesion_mae": 0.45613966882797574,
+          "gradient_mae": 0.2244528939100089
+        },
+        "FLAIR": {
+          "brain_mae": 0.3906959751086103,
+          "lesion_mae": 0.5737279124809154,
+          "gradient_mae": 0.21858369570885536
+        }
+      },
+      "mean_visit_seconds": 12.841950095874605,
+      "mean_state_bytes": 1429012480.0,
+      "matched_panel_C_dice": {
+        "joint": 0.6427458202499685,
+        "r71_learned_panel_C": 0.4767026620808582,
+        "r71_adapted_panel_C": 0.5599783531657622
+      },
+      "r69_missing_FLAIR": {
+        "brain_mae": 0.37488458315028333,
+        "lesion_mae": 0.7171105709245912
+      }
+    },
+    "MU": {
+      "patients": 32,
+      "visits": 106,
+      "segmentation_dice": 0.6666253749944786,
+      "compartments": {
+        "1": {
+          "dice": 0.7685181336254214,
+          "nonempty_dice": 0.7742342107373312,
+          "volume_error_ml": 2.3769,
+          "empty_reference_fp_ml": 5.744
+        },
+        "2": {
+          "dice": 0.36032771938895397,
+          "nonempty_dice": 0.5093905152895274,
+          "volume_error_ml": 1.9102927083333334,
+          "empty_reference_fp_ml": 1.5671000000000004
+        },
+        "3": {
+          "dice": 0.8710302719690606,
+          "nonempty_dice": 0.8710302719690606,
+          "volume_error_ml": 5.9343921875,
+          "empty_reference_fp_ml": null
+        }
+      },
+      "missing_sequences": {
+        "CT1": {
+          "brain_mae": 0.40454637488971157,
+          "lesion_mae": 0.5535077950063472,
+          "gradient_mae": 0.23305242457168385
+        },
+        "T1": {
+          "brain_mae": 0.31387587563755615,
+          "lesion_mae": 0.3775973041619485,
+          "gradient_mae": 0.1671903492546537
+        },
+        "T2": {
+          "brain_mae": 0.35582858949589236,
+          "lesion_mae": 0.391100448059539,
+          "gradient_mae": 0.17980179411178043
+        },
+        "FLAIR": {
+          "brain_mae": 0.3926756811638673,
+          "lesion_mae": 0.5885417355069269,
+          "gradient_mae": 0.19197260797696397
+        }
+      },
+      "mean_visit_seconds": 24.013393772673652,
+      "mean_state_bytes": 3215278080.0
+    }
+  },
+  "usefulness_established": false,
+  "next": "Review full-volume accuracy, baseline comparisons, failure cases and training-boundary trend"
+}

@@ -1,0 +1,78 @@
+{
+  "as_of_utc": "2026-11-03T16:16:24.052867+00:00",
+  "scope": "R66 cohort execution status, not scientific acceptance",
+  "representation_fits_dispatched": 27,
+  "representation_fits_completed": 0,
+  "updates_per_fit": 4096,
+  "selection_every_updates": 512,
+  "seeds": [
+    17,
+    23,
+    31
+  ],
+  "representation_service": "world-model-r66-representations.service",
+  "service_state": [
+    "ExecMainStartTimestamp=Tue 2026-11-03 21:44:09 IST",
+    "ActiveState=active",
+    "SubState=running"
+  ],
+  "phase": "training 27 fixed representation fits",
+  "segmentation_fits_dispatched": 0,
+  "cohort_smoke": {
+    "status": "passed",
+    "training_batches": 2,
+    "additional_resume_check_update": 1,
+    "checkpoint_and_state_scores_exact": true,
+    "optimizer_values_reload_exact": true,
+    "resumed_update_max_parameter_difference": 4.507601261138916e-07,
+    "training_determinism": "CUDA adaptive_avg_pool3d backward has no deterministic implementation; identical reloads also differ on the next update. Checkpoint values and decoded scores reload exactly.",
+    "two_updates_seconds_with_loading": 0.7563446009298787,
+    "segmentation_masks_opened": 0,
+    "scoring_arrays_opened": 0,
+    "source_sha256": {
+      "data66.py": "675b7981469af7e02abd2be774599768898fb5e10c332e76b9d03b8874a897ee",
+      "representation66.py": "e849a98338cc48bd943a2ca38445641c37e00b440533cb246335b4df21ec7863",
+      "model66.py": "b0696f175f50c6b72534d2fb269dd67b4c58515dd9452fda2de8ab18e8011f63"
+    }
+  },
+  "resume_probe": [
+    {
+      "deterministic_cudnn": false,
+      "step_devices": [
+        "cpu",
+        "cpu"
+      ],
+      "before_equal": true,
+      "losses": [
+        0.8640464544296265,
+        0.8640464544296265
+      ],
+      "gradient_max_difference": 6.348825991153717e-06,
+      "parameter_max_difference": 3.4389086067676544e-07
+    },
+    {
+      "deterministic_cudnn": true,
+      "step_devices": [
+        "cpu",
+        "cpu"
+      ],
+      "before_equal": true,
+      "losses": [
+        0.8640464544296265,
+        0.8640464544296265
+      ],
+      "gradient_max_difference": 4.159985110163689e-06,
+      "parameter_max_difference": 3.762543201446533e-07
+    },
+    {
+      "strict_determinism_error": "adaptive_avg_pool3d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True)'. You can turn off determinism just for this operation, or you can use the 'warn_only=True' option, if that's acceptable for your application. You can also file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation."
+    }
+  ],
+  "sources": {
+    "data66.py": "675b7981469af7e02abd2be774599768898fb5e10c332e76b9d03b8874a897ee",
+    "representation66.py": "e849a98338cc48bd943a2ca38445641c37e00b440533cb246335b4df21ec7863",
+    "model66.py": "b0696f175f50c6b72534d2fb269dd67b4c58515dd9452fda2de8ab18e8011f63",
+    "launch-representation66.sh": "d7f9d141b772d2812e74910ce210d538afd14baff9a07bdd037d4f4d1ffaec28"
+  },
+  "remaining": "Await representation completion and lock, then run segmentation smoke and reference readiness before the 63 segmentation fits."
+}

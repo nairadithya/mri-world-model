@@ -1,0 +1,23 @@
+{
+  "study": "R59",
+  "status": "SOURCE_VOLUME_CHECK_PASSED",
+  "selected_cases": 6,
+  "selected_region_visit_measurements": 18,
+  "source_region_volumes_independently_verified": 18,
+  "coarse_zero_with_positive_source_count": 3,
+  "omitted_source_mm3_range": [
+    77.0,
+    982.0
+  ],
+  "coarse_voxel_mm3_range": [
+    617.0443431712965,
+    617.0443431712965
+  ],
+  "change_direction_disagreements": 1,
+  "all_selected_pregrids_match": true,
+  "selected_source_mri_and_target_masks_reconstructed_exact": true,
+  "both_forecast_contrast_intervals_independently_verified": true,
+  "scope": "Six deliberately selected examples; no prevalence or biological accuracy claim",
+  "verifier_sha256": "fb9176e1f7be33c4cc41c517056c4fd9935d0c0f628aa6ed5a3b55482647078d",
+  "privacy_note": "Individual case records are retained only in the private local original; this file contains aggregate results and protocol information."
+}

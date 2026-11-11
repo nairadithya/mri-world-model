@@ -1,0 +1,62 @@
+{
+  "status": "passed",
+  "manifest_sha256": "66a1b5c5ed98d41e50242ad99edfd0209a730837abadb4f3587de606c0d572b3",
+  "source_sha256": {
+    "/home/aditya/experiments/world-model-r67-caliper8-20261104/code/train67.py": "28dca5a07285cb619370ca40dea73d4b916f574ff1f1c96cc91ddb1cf8ee0195",
+    "/home/aditya/experiments/world-model-r67-caliper8-20261104/code/data67.py": "79c734081a2ea15e14993785977a71cd0736689d022fb103cef9391e9ca67e00",
+    "/home/aditya/experiments/world-model-r67-caliper8-20261104/code/assess67.py": "db99adf6f997cf155921226d4b61b3e5b3b8607991547626c5bf3316c9f718d7",
+    "/home/aditya/experiments/world-model-r65-lumiere-20261103/code/run65.py": "546accee86c8ac33fd78d8179a76edd4b8ed81b58b42426a608ddc87f0fca1df",
+    "/home/aditya/experiments/world-model-r65-lumiere-20261103/code/train65.py": "a4bcab8b4f97e9671440d0992bfc93474b1f4663fd922485e477d427f76ec3fc"
+  },
+  "smoke_sha256": "401cb6893a6a6ac6605ea172bee6f4e4e11c25b90f8a9fe622a126300b45830c",
+  "arms": {
+    "current": {
+      "initial": [
+        0.656136691570282,
+        0.7370349168777466
+      ],
+      "final": [
+        0.09930315613746643,
+        0.03881761431694031
+      ],
+      "reference": [
+        0.37995554255493424,
+        0.3982416322120657
+      ],
+      "passed": true,
+      "seconds": 15.233849930926226
+    },
+    "genuine": {
+      "initial": [
+        0.6197265386581421,
+        0.6938243508338928
+      ],
+      "final": [
+        0.09831343591213226,
+        0.04288503900170326
+      ],
+      "reference": [
+        0.37995554255493424,
+        0.3982416322120657
+      ],
+      "passed": true,
+      "seconds": 17.13180483004544
+    },
+    "donor": {
+      "initial": [
+        0.6377719640731812,
+        0.7201760411262512
+      ],
+      "final": [
+        0.10152755677700043,
+        0.042255330830812454
+      ],
+      "reference": [
+        0.37995554255493424,
+        0.3982416322120657
+      ],
+      "passed": true,
+      "seconds": 17.130622074007988
+    }
+  }
+}

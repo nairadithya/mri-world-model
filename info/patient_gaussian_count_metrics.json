@@ -1,0 +1,3958 @@
+{
+  "identity": "mu-amount-first-gaussian-v1",
+  "status": "no_eligible_checkpoint",
+  "quantity_gate_passed": false,
+  "location_training_started": false,
+  "selected_checkpoint": null,
+  "protocol": {
+    "identity": "mu-amount-first-gaussian-v1",
+    "family": "gaussian",
+    "variance_matching": "Gaussian sigma=logistic scale*pi/sqrt(3); identical raw scale parameterization",
+    "core_numerical_reference": "deterministic full discrete CDF sum over feasible counts and eight core-present patterns; does not change 64-sample gates",
+    "seed": 17,
+    "quantity_updates": 6000,
+    "location_updates_if_quantity_passes": 6000,
+    "samples": 64,
+    "random_stream": "SHA256 amount-first-v1:17:patient|cutoff|horizon; 52-bit midpoint uniforms",
+    "representative_sample": 0,
+    "order": [
+      "core",
+      "enhancing",
+      "cavity",
+      "flair_abnormality"
+    ],
+    "optimizer": "AdamW, lr5e-4, warmup100, cosine to1%, wd1e-4, clip12",
+    "sampling": "uniform horizon, then patient, then target within patient/horizon",
+    "selection": "fixed terminal quantity; eligible spatial candidates every1000",
+    "initialization": "copy scalar 17-32-32 backbone and frozen eight-scenario projection; count log median starts at log(max(1,1000*scalar mean)), logistic scale from scalar log variance floor0.1 cap2; trainable AR residual heads",
+    "training_losses": "joint Bernoulli and conditional native-count NLL; no location gradient into quantity",
+    "presence_initialization": "horizon-balanced fitting patient prevalence; no selection targets",
+    "domain": "native cutoff image support union current predicted anatomy; no future expansion",
+    "observation_context": {
+      "catalogue_sha256": "d0a562f8296cec97b62c204e537b7a48cc3120418ec23fcbe933143cea6a536f",
+      "observation_sha256": "d006424493442bd1bcd8fd5b15888b197aa3a95ef3f87aeed5df2f52e86ccacb",
+      "format": "structured-context-v1",
+      "spacing_mm": 2,
+      "scope": "fitting and selection only",
+      "compartments": 4,
+      "fixed_pairs_sha256": "47e8a1fd23df76676f7d255f07563f88a1566f7865f1e95e4e2b8f618ed75613",
+      "anatomy_readout": "native_five_category",
+      "model_identity": "mu-cavity-current-structured-v1",
+      "support_contract": "observed brain union native predicted anatomy; zero change preserves native map",
+      "target_contract": "all native five-category reference voxels, including cavity outside image support"
+    },
+    "scalar_sha256": "cf064a1356fc2f5fd0284ac324a837eef4660575d32e43923ebcdb9f13c885ae",
+    "population_sha256": "23b036ca3ec4165798678f5e173c87c28a7f14a8cb3d13a5f50531068174eb14",
+    "source_sha256": {
+      "train_amount_first.py": "7e97e5a74e7f3d34758c38d3744c5b82e653d0adfeb84eb7f5ba10d2c9f8c22d",
+      "amount_first.py": "19531ce159e652e9db5074cd375df7ec0c6d7d0119bae510b424c8b0c8b50c98",
+      "amount_first_location.py": "4d2e4ceb26c8e828211dd34a4ba7452880409e5d51acd19d2cc7345f95bf2c34",
+      "gaussian_count.py": "8a4a5d3e6567d869f90a85f734bbd71a2be033d88f6a7f430ba9b8c5ca558c00"
+    },
+    "reserved_patients_opened": 0,
+    "forecast_image_synthesis_claim": false
+  },
+  "smoke": {
+    "passed": true,
+    "quantity_updates": 2,
+    "location_smoke_updates": 1,
+    "native_maps_verified": 64,
+    "fixed_samples_replay_exact": true,
+    "native_nifti_count_replay_exact": true,
+    "discrete_normalization_and_tail_checks": true,
+    "seconds": 3.703745572012849,
+    "quantity_smoke_weights_discarded_before_fit": true,
+    "spatial_smoke_weights_discarded": true
+  },
+  "quantity_training": {
+    "updates": 6000,
+    "seconds": 31.404007268021815
+  },
+  "quantity_checkpoint_sha256": "3e6c6b372273a7427084dc40fc288c233289e775f7877790af51f99c7751602c",
+  "horizons": {
+    "12": {
+      "targets": 36,
+      "patients": 18,
+      "quantity_gate": {
+        "targets": 21,
+        "patients": 15,
+        "mean_mae_ml": 1.6877911585900518,
+        "persistence_mae_ml": 1.6919167964822714,
+        "crps_ml": 1.9955456624428431,
+        "scalar_crps_ml": 1.6929130290945371,
+        "mae_pass": true,
+        "crps_pass": false,
+        "passed": false
+      },
+      "compartments": {
+        "amount_first": {
+          "enhancing": {
+            "all": {
+              "targets": 36,
+              "patients": 18,
+              "mean_volume_mae_ml": 6.473783692551984,
+              "compartment_crps_ml": 5.6235480275419025,
+              "compartment_coverage90": 0.8611111111111112,
+              "compartment_width90_ml": 46.17608495553335
+            },
+            "nonempty": {
+              "targets": 35,
+              "patients": 18,
+              "mean_volume_mae_ml": 6.498082815221063,
+              "compartment_crps_ml": 5.620780891842312,
+              "compartment_coverage90": 0.875,
+              "compartment_width90_ml": 46.22793681974764,
+              "conditional_positive_crps_ml": 5.58700845638911,
+              "conditional_positive_mae_ml": 6.779750309332654,
+              "conditional_positive_coverage90": 0.8611111111111112,
+              "conditional_positive_width90_ml": 48.13717355772301,
+              "conditional_undefined_targets": 0
+            },
+            "empty": {
+              "targets": 1,
+              "patients": 1,
+              "mean_volume_mae_ml": 8.208109855651855,
+              "compartment_crps_ml": 3.2895097732543945,
+              "compartment_coverage90": 0.0,
+              "compartment_width90_ml": 29.628000259399414,
+              "expected_fp_ml": 8.208109855651855
+            }
+          },
+          "nonenhancing_core": {
+            "all": {
+              "targets": 36,
+              "patients": 18,
+              "mean_volume_mae_ml": 1.6732670348137617,
+              "compartment_crps_ml": 1.6223653650118246,
+              "compartment_coverage90": 0.9444444444444444,
+              "compartment_width90_ml": 7.398166971902053
+            },
+            "nonempty": {
+              "targets": 21,
+              "patients": 15,
+              "mean_volume_mae_ml": 1.6877911585900518,
+              "compartment_crps_ml": 1.9955456624428431,
+              "compartment_coverage90": 0.9333333333333333,
+              "compartment_width90_ml": 8.166978132724761,
+              "conditional_positive_crps_ml": 1.684539043241077,
+              "conditional_positive_mae_ml": 2.375734194450908,
+              "conditional_positive_coverage90": 0.7333333333333333,
+              "conditional_positive_width90_ml": 22.359651448991563,
+              "conditional_undefined_targets": 0
+            },
+            "empty": {
+              "targets": 15,
+              "patients": 9,
+              "mean_volume_mae_ml": 1.6601361749624763,
+              "compartment_crps_ml": 0.31552035830639025,
+              "compartment_coverage90": 1.0,
+              "compartment_width90_ml": 7.4384076435256885,
+              "expected_fp_ml": 1.6601361749624763
+            }
+          },
+          "flair_abnormality": {
+            "all": {
+              "targets": 36,
+              "patients": 18,
+              "mean_volume_mae_ml": 30.88008711073134,
+              "compartment_crps_ml": 23.64714245001475,
+              "compartment_coverage90": 0.625,
+              "compartment_width90_ml": 102.16003243128459
+            },
+            "nonempty": {
+              "targets": 36,
+              "patients": 18,
+              "mean_volume_mae_ml": 30.88008711073134,
+              "compartment_crps_ml": 23.64714245001475,
+              "compartment_coverage90": 0.625,
+              "compartment_width90_ml": 102.16003243128459,
+              "conditional_positive_crps_ml": 23.6471433573299,
+              "conditional_positive_mae_ml": 30.880088647206623,
+              "conditional_positive_coverage90": 0.625,
+              "conditional_positive_width90_ml": 102.16003243128459,
+              "conditional_undefined_targets": 0
+            },
+            "empty": {
+              "targets": 0,
+              "patients": 0,
+              "mean_volume_mae_ml": null,
+              "compartment_crps_ml": null,
+              "compartment_coverage90": null,
+              "compartment_width90_ml": null,
+              "expected_fp_ml": null
+            }
+          },
+          "cavity": {
+            "all": {
+              "targets": 36,
+              "patients": 18,
+              "mean_volume_mae_ml": 6.72798358855976,
+              "compartment_crps_ml": 6.274803737799327,
+              "compartment_coverage90": 0.9722222222222222,
+              "compartment_width90_ml": 41.77339128653208
+            },
+            "nonempty": {
+              "targets": 33,
+              "patients": 17,
+              "mean_volume_mae_ml": 7.088487205698209,
+              "compartment_crps_ml": 6.643348110072753,
+              "compartment_coverage90": 0.9705882352941176,
+              "compartment_width90_ml": 44.34047312596265,
+              "conditional_positive_crps_ml": 6.0187217531835335,
+              "conditional_positive_mae_ml": 6.749074609840617,
+              "conditional_positive_coverage90": 0.9705882352941176,
+              "conditional_positive_width90_ml": 51.87932625237633,
+              "conditional_undefined_targets": 0
+            },
+            "empty": {
+              "targets": 3,
+              "patients": 3,
+              "mean_volume_mae_ml": 1.2906198104222615,
+              "compartment_crps_ml": 0.24699729681015015,
+              "compartment_coverage90": 1.0,
+              "compartment_width90_ml": 4.505333503087361,
+              "expected_fp_ml": 1.2906198104222615
+            }
+          }
+        },
+        "scalar": {
+          "enhancing": {
+            "all": {
+              "targets": 36,
+              "patients": 18,
+              "mean_volume_mae_ml": 6.540199816226959,
+              "compartment_crps_ml": 5.550308276381758,
+              "compartment_coverage90": 0.7916666666666666,
+              "compartment_width90_ml": 36.93678214152654
+            },
+            "nonempty": {
+              "targets": 35,
+              "patients": 18,
+              "mean_volume_mae_ml": 6.531031514759417,
+              "compartment_crps_ml": 5.54491672112986,
+              "compartment_coverage90": 0.8055555555555556,
+              "compartment_width90_ml": 36.98869385321935,
+              "conditional_positive_crps_ml": 5.472905701233281,
+              "conditional_positive_mae_ml": 6.494163840457245,
+              "conditional_positive_coverage90": 0.8055555555555556,
+              "conditional_positive_width90_ml": 36.91549168471936,
+              "conditional_undefined_targets": 0
+            },
+            "empty": {
+              "targets": 1,
+              "patients": 1,
+              "mean_volume_mae_ml": 6.635107040405273,
+              "compartment_crps_ml": 3.1344010829925537,
+              "compartment_coverage90": 0.0,
+              "compartment_width90_ml": 22.380895614624023,
+              "expected_fp_ml": 6.635107040405273
+            }
+          },
+          "nonenhancing_core": {
+            "all": {
+              "targets": 36,
+              "patients": 18,
+              "mean_volume_mae_ml": 1.8643833589222696,
+              "compartment_crps_ml": 1.5197652734609113,
+              "compartment_coverage90": 0.9166666666666666,
+              "compartment_width90_ml": 4.865127737323443
+            },
+            "nonempty": {
+              "targets": 21,
+              "patients": 15,
+              "mean_volume_mae_ml": 1.8739709062708747,
+              "compartment_crps_ml": 1.6929130290945371,
+              "compartment_coverage90": 0.9333333333333333,
+              "compartment_width90_ml": 5.127649360895157,
+              "conditional_positive_crps_ml": 1.7856724152962367,
+              "conditional_positive_mae_ml": 2.0140228033065797,
+              "conditional_positive_coverage90": 0.5666666666666667,
+              "conditional_positive_width90_ml": 4.981483181317647,
+              "conditional_undefined_targets": 0
+            },
+            "empty": {
+              "targets": 15,
+              "patients": 9,
+              "mean_volume_mae_ml": 2.008236158501219,
+              "compartment_crps_ml": 1.0226086238054213,
+              "compartment_coverage90": 0.8611111111111112,
+              "compartment_width90_ml": 5.251929937689393,
+              "expected_fp_ml": 2.008236158501219
+            }
+          },
+          "flair_abnormality": {
+            "all": {
+              "targets": 36,
+              "patients": 18,
+              "mean_volume_mae_ml": 26.055831405851578,
+              "compartment_crps_ml": 22.75940257973141,
+              "compartment_coverage90": 0.7083333333333334,
+              "compartment_width90_ml": 92.38125599755182
+            },
+            "nonempty": {
+              "targets": 36,
+              "patients": 18,
+              "mean_volume_mae_ml": 26.055831405851578,
+              "compartment_crps_ml": 22.75940257973141,
+              "compartment_coverage90": 0.7083333333333334,
+              "compartment_width90_ml": 92.38125599755182,
+              "conditional_positive_crps_ml": 22.759402453899384,
+              "conditional_positive_mae_ml": 26.055831167433,
+              "conditional_positive_coverage90": 0.7083333333333334,
+              "conditional_positive_width90_ml": 92.38125599755182,
+              "conditional_undefined_targets": 0
+            },
+            "empty": {
+              "targets": 0,
+              "patients": 0,
+              "mean_volume_mae_ml": null,
+              "compartment_crps_ml": null,
+              "compartment_coverage90": null,
+              "compartment_width90_ml": null,
+              "expected_fp_ml": null
+            }
+          },
+          "cavity": {
+            "all": {
+              "targets": 36,
+              "patients": 18,
+              "mean_volume_mae_ml": 7.288019354351693,
+              "compartment_crps_ml": 5.554419162372748,
+              "compartment_coverage90": 0.7916666666666666,
+              "compartment_width90_ml": 13.553077061143187
+            },
+            "nonempty": {
+              "targets": 33,
+              "patients": 17,
+              "mean_volume_mae_ml": 7.717220148619483,
+              "compartment_crps_ml": 5.887448555406402,
+              "compartment_coverage90": 0.7794117647058824,
+              "compartment_width90_ml": 14.365573960192064,
+              "conditional_positive_crps_ml": 5.876021804178462,
+              "conditional_positive_mae_ml": 7.737348667838994,
+              "conditional_positive_coverage90": 0.7794117647058824,
+              "conditional_positive_width90_ml": 14.25308729445233,
+              "conditional_undefined_targets": 0
+            },
+            "empty": {
+              "targets": 3,
+              "patients": 3,
+              "mean_volume_mae_ml": 0.46117384483416873,
+              "compartment_crps_ml": 0.22322002798318863,
+              "compartment_coverage90": 1.0,
+              "compartment_width90_ml": 1.380473921696345,
+              "expected_fp_ml": 0.46117384483416873
+            }
+          }
+        },
+        "persistence": {
+          "enhancing": {
+            "all": {
+              "targets": 36,
+              "patients": 18,
+              "mean_volume_mae_ml": 7.036319986813599,
+              "compartment_crps_ml": 7.036319986813599,
+              "compartment_coverage90": 0.0,
+              "compartment_width90_ml": 0.0
+            },
+            "nonempty": {
+              "targets": 35,
+              "patients": 18,
+              "mean_volume_mae_ml": 7.029014428732571,
+              "compartment_crps_ml": 7.029014428732571,
+              "compartment_coverage90": 0.0,
+              "compartment_width90_ml": 0.0,
+              "conditional_positive_crps_ml": 7.029014428732571,
+              "conditional_positive_mae_ml": 7.029014428732571,
+              "conditional_positive_coverage90": 0.0,
+              "conditional_positive_width90_ml": 0.0,
+              "conditional_undefined_targets": 0
+            },
+            "empty": {
+              "targets": 1,
+              "patients": 1,
+              "mean_volume_mae_ml": 5.716000080108643,
+              "compartment_crps_ml": 5.716000080108643,
+              "compartment_coverage90": 0.0,
+              "compartment_width90_ml": 0.0,
+              "expected_fp_ml": 5.716000080108643
+            }
+          },
+          "nonenhancing_core": {
+            "all": {
+              "targets": 36,
+              "patients": 18,
+              "mean_volume_mae_ml": 1.8158056770658328,
+              "compartment_crps_ml": 1.8158056770658328,
+              "compartment_coverage90": 0.06944444444444445,
+              "compartment_width90_ml": 0.0
+            },
+            "nonempty": {
+              "targets": 21,
+              "patients": 15,
+              "mean_volume_mae_ml": 1.6919167964822714,
+              "compartment_crps_ml": 1.6919167964822714,
+              "compartment_coverage90": 0.0,
+              "compartment_width90_ml": 0.0,
+              "conditional_positive_crps_ml": 1.7790537081836233,
+              "conditional_positive_mae_ml": 1.7790537081836233,
+              "conditional_positive_coverage90": 0.0,
+              "conditional_positive_width90_ml": 0.0,
+              "conditional_undefined_targets": 1
+            },
+            "empty": {
+              "targets": 15,
+              "patients": 9,
+              "mean_volume_mae_ml": 2.5594630013047546,
+              "compartment_crps_ml": 2.5594630013047546,
+              "compartment_coverage90": 0.1388888888888889,
+              "compartment_width90_ml": 0.0,
+              "expected_fp_ml": 2.5594630013047546
+            }
+          },
+          "flair_abnormality": {
+            "all": {
+              "targets": 36,
+              "patients": 18,
+              "mean_volume_mae_ml": 26.384057601292927,
+              "compartment_crps_ml": 26.384057601292927,
+              "compartment_coverage90": 0.0,
+              "compartment_width90_ml": 0.0
+            },
+            "nonempty": {
+              "targets": 36,
+              "patients": 18,
+              "mean_volume_mae_ml": 26.384057601292927,
+              "compartment_crps_ml": 26.384057601292927,
+              "compartment_coverage90": 0.0,
+              "compartment_width90_ml": 0.0,
+              "conditional_positive_crps_ml": 26.384057601292927,
+              "conditional_positive_mae_ml": 26.384057601292927,
+              "conditional_positive_coverage90": 0.0,
+              "conditional_positive_width90_ml": 0.0,
+              "conditional_undefined_targets": 0
+            },
+            "empty": {
+              "targets": 0,
+              "patients": 0,
+              "mean_volume_mae_ml": null,
+              "compartment_crps_ml": null,
+              "compartment_coverage90": null,
+              "compartment_width90_ml": null,
+              "expected_fp_ml": null
+            }
+          },
+          "cavity": {
+            "all": {
+              "targets": 36,
+              "patients": 18,
+              "mean_volume_mae_ml": 5.733000622855292,
+              "compartment_crps_ml": 5.733000622855292,
+              "compartment_coverage90": 0.0,
+              "compartment_width90_ml": 0.0
+            },
+            "nonempty": {
+              "targets": 33,
+              "patients": 17,
+              "mean_volume_mae_ml": 6.070294781642802,
+              "compartment_crps_ml": 6.070294781642802,
+              "compartment_coverage90": 0.0,
+              "compartment_width90_ml": 0.0,
+              "conditional_positive_crps_ml": 6.070294781642802,
+              "conditional_positive_mae_ml": 6.070294781642802,
+              "conditional_positive_coverage90": 0.0,
+              "conditional_positive_width90_ml": 0.0,
+              "conditional_undefined_targets": 0
+            },
+            "empty": {
+              "targets": 3,
+              "patients": 3,
+              "mean_volume_mae_ml": 1.0693332850933075,
+              "compartment_crps_ml": 1.0693332850933075,
+              "compartment_coverage90": 0.0,
+              "compartment_width90_ml": 0.0,
+              "expected_fp_ml": 1.0693332850933075
+            }
+          }
+        }
+      },
+      "presence": {
+        "amount_first": {
+          "enhancing": {
+            "brier": 0.014413188906444004,
+            "false_absence": 0.0,
+            "false_presence": 0.013888888888888888,
+            "log_score": 0.08540989733102171,
+            "infinite_log_score_targets": 0,
+            "log_score_status": "finite",
+            "reliability": [
+              {
+                "lower": 0,
+                "upper": 0.2,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.2,
+                "upper": 0.4,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.4,
+                "upper": 0.6000000000000001,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.6,
+                "upper": 0.8,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.8,
+                "upper": 1.0,
+                "targets": 36,
+                "patients": 18,
+                "mean_probability": 0.9595795704258813,
+                "observed_frequency": 0.9861111111111112
+              }
+            ]
+          },
+          "nonenhancing_core": {
+            "brier": 0.2328410892448434,
+            "false_absence": 0.0,
+            "false_presence": 0.3333333333333333,
+            "log_score": 0.6586340533787602,
+            "infinite_log_score_targets": 0,
+            "log_score_status": "finite",
+            "reliability": [
+              {
+                "lower": 0,
+                "upper": 0.2,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.2,
+                "upper": 0.4,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.4,
+                "upper": 0.6000000000000001,
+                "targets": 36,
+                "patients": 18,
+                "mean_probability": 0.5533833114637269,
+                "observed_frequency": 0.6666666666666666
+              },
+              {
+                "lower": 0.6,
+                "upper": 0.8,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.8,
+                "upper": 1.0,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              }
+            ]
+          },
+          "flair_abnormality": {
+            "brier": 1.2996549022166921e-09,
+            "false_absence": 0.0,
+            "false_presence": 0.0,
+            "log_score": 3.314083234148333e-05,
+            "infinite_log_score_targets": 0,
+            "log_score_status": "finite",
+            "reliability": [
+              {
+                "lower": 0,
+                "upper": 0.2,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.2,
+                "upper": 0.4,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.4,
+                "upper": 0.6000000000000001,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.6,
+                "upper": 0.8,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.8,
+                "upper": 1.0,
+                "targets": 36,
+                "patients": 18,
+                "mean_probability": 0.9999668598175049,
+                "observed_frequency": 1.0
+              }
+            ]
+          },
+          "cavity": {
+            "brier": 0.09893592779139897,
+            "false_absence": 0.0,
+            "false_presence": 0.1111111111111111,
+            "log_score": 0.34958266851290776,
+            "infinite_log_score_targets": 0,
+            "log_score_status": "finite",
+            "reliability": [
+              {
+                "lower": 0,
+                "upper": 0.2,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.2,
+                "upper": 0.4,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.4,
+                "upper": 0.6000000000000001,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.6,
+                "upper": 0.8,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.8,
+                "upper": 1.0,
+                "targets": 36,
+                "patients": 18,
+                "mean_probability": 0.8717249383529028,
+                "observed_frequency": 0.8888888888888888
+              }
+            ]
+          }
+        },
+        "fitting_prevalence": {
+          "enhancing": {
+            "brier": 0.015127493724402162,
+            "false_absence": 0.0,
+            "false_presence": 0.013888888888888888,
+            "log_score": 0.0935087266551201,
+            "infinite_log_score_targets": 0,
+            "log_score_status": "finite",
+            "reliability": [
+              {
+                "lower": 0,
+                "upper": 0.2,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.2,
+                "upper": 0.4,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.4,
+                "upper": 0.6000000000000001,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.6,
+                "upper": 0.8,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.8,
+                "upper": 1.0,
+                "targets": 36,
+                "patients": 18,
+                "mean_probability": 0.9482758620689654,
+                "observed_frequency": 0.9861111111111112
+              }
+            ]
+          },
+          "nonenhancing_core": {
+            "brier": 0.23292376800105696,
+            "false_absence": 0.0,
+            "false_presence": 0.3333333333333333,
+            "log_score": 0.6588325333387041,
+            "infinite_log_score_targets": 0,
+            "log_score_status": "finite",
+            "reliability": [
+              {
+                "lower": 0,
+                "upper": 0.2,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.2,
+                "upper": 0.4,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.4,
+                "upper": 0.6000000000000001,
+                "targets": 36,
+                "patients": 18,
+                "mean_probability": 0.5632183908045978,
+                "observed_frequency": 0.6666666666666666
+              },
+              {
+                "lower": 0.6,
+                "upper": 0.8,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.8,
+                "upper": 1.0,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              }
+            ]
+          },
+          "flair_abnormality": {
+            "brier": 0.0,
+            "false_absence": 0.0,
+            "false_presence": 0.0,
+            "log_score": 0.0,
+            "infinite_log_score_targets": 0,
+            "log_score_status": "finite",
+            "reliability": [
+              {
+                "lower": 0,
+                "upper": 0.2,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.2,
+                "upper": 0.4,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.4,
+                "upper": 0.6000000000000001,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.6,
+                "upper": 0.8,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.8,
+                "upper": 1.0,
+                "targets": 36,
+                "patients": 18,
+                "mean_probability": 1.0,
+                "observed_frequency": 1.0
+              }
+            ]
+          },
+          "cavity": {
+            "brier": 0.09920949486942351,
+            "false_absence": 0.0,
+            "false_presence": 0.1111111111111111,
+            "log_score": 0.35086275360913527,
+            "infinite_log_score_targets": 0,
+            "log_score_status": "finite",
+            "reliability": [
+              {
+                "lower": 0,
+                "upper": 0.2,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.2,
+                "upper": 0.4,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.4,
+                "upper": 0.6000000000000001,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.6,
+                "upper": 0.8,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.8,
+                "upper": 1.0,
+                "targets": 36,
+                "patients": 18,
+                "mean_probability": 0.867816091954023,
+                "observed_frequency": 0.8888888888888888
+              }
+            ]
+          }
+        },
+        "current_persistence": {
+          "enhancing": {
+            "brier": 0.013888888888888888,
+            "false_absence": 0.0,
+            "false_presence": 0.013888888888888888,
+            "log_score": null,
+            "infinite_log_score_targets": 1,
+            "log_score_status": "positive_infinity",
+            "reliability": [
+              {
+                "lower": 0,
+                "upper": 0.2,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.2,
+                "upper": 0.4,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.4,
+                "upper": 0.6000000000000001,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.6,
+                "upper": 0.8,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.8,
+                "upper": 1.0,
+                "targets": 36,
+                "patients": 18,
+                "mean_probability": 1.0,
+                "observed_frequency": 0.9861111111111112
+              }
+            ]
+          },
+          "nonenhancing_core": {
+            "brier": 0.3194444444444444,
+            "false_absence": 0.05555555555555555,
+            "false_presence": 0.2638888888888889,
+            "log_score": null,
+            "infinite_log_score_targets": 12,
+            "log_score_status": "positive_infinity",
+            "reliability": [
+              {
+                "lower": 0,
+                "upper": 0.2,
+                "targets": 5,
+                "patients": 3,
+                "mean_probability": 0.0,
+                "observed_frequency": 0.3333333333333333
+              },
+              {
+                "lower": 0.2,
+                "upper": 0.4,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.4,
+                "upper": 0.6000000000000001,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.6,
+                "upper": 0.8,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.8,
+                "upper": 1.0,
+                "targets": 31,
+                "patients": 17,
+                "mean_probability": 1.0,
+                "observed_frequency": 0.6470588235294118
+              }
+            ]
+          },
+          "flair_abnormality": {
+            "brier": 0.0,
+            "false_absence": 0.0,
+            "false_presence": 0.0,
+            "log_score": 0.0,
+            "infinite_log_score_targets": 0,
+            "log_score_status": "finite",
+            "reliability": [
+              {
+                "lower": 0,
+                "upper": 0.2,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.2,
+                "upper": 0.4,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.4,
+                "upper": 0.6000000000000001,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.6,
+                "upper": 0.8,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.8,
+                "upper": 1.0,
+                "targets": 36,
+                "patients": 18,
+                "mean_probability": 1.0,
+                "observed_frequency": 1.0
+              }
+            ]
+          },
+          "cavity": {
+            "brier": 0.1111111111111111,
+            "false_absence": 0.0,
+            "false_presence": 0.1111111111111111,
+            "log_score": null,
+            "infinite_log_score_targets": 3,
+            "log_score_status": "positive_infinity",
+            "reliability": [
+              {
+                "lower": 0,
+                "upper": 0.2,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.2,
+                "upper": 0.4,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.4,
+                "upper": 0.6000000000000001,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.6,
+                "upper": 0.8,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.8,
+                "upper": 1.0,
+                "targets": 36,
+                "patients": 18,
+                "mean_probability": 1.0,
+                "observed_frequency": 0.8888888888888888
+              }
+            ]
+          }
+        }
+      },
+      "paired_patient_intervals": {
+        "enhancing": {
+          "all": {
+            "mean_volume_mae_ml_minus_scalar": {
+              "patients": 18,
+              "difference": -0.0664161236749755,
+              "ci95": [
+                -2.2010467259834208,
+                1.618343554271593
+              ],
+              "patients_worse": 9,
+              "patients_better": 9
+            },
+            "compartment_crps_ml_minus_scalar": {
+              "patients": 18,
+              "difference": 0.0732397511601448,
+              "ci95": [
+                -0.15030358938707244,
+                0.304666682643195
+              ],
+              "patients_worse": 9,
+              "patients_better": 9
+            },
+            "mean_volume_mae_ml_minus_persistence": {
+              "patients": 18,
+              "difference": -0.5625362942616144,
+              "ci95": [
+                -3.9102042522695326,
+                1.8551831932117542
+              ],
+              "patients_worse": 9,
+              "patients_better": 9
+            },
+            "compartment_crps_ml_minus_persistence": {
+              "patients": 18,
+              "difference": -1.4127719592716959,
+              "ci95": [
+                -2.315214888068537,
+                -0.5853871891895926
+              ],
+              "patients_worse": 3,
+              "patients_better": 15
+            },
+            "presence_brier_minus_fitting_prevalence": {
+              "patients": 18,
+              "difference": -0.000714304817958163,
+              "ci95": [
+                -0.0010649402982365831,
+                -5.588925303116838e-05
+              ],
+              "patients_worse": 1,
+              "patients_better": 17
+            },
+            "presence_brier_minus_current_persistence": {
+              "patients": 18,
+              "difference": 0.0005243000175551139,
+              "ci95": [
+                -0.0017160661738593148,
+                0.0016608433734849647
+              ],
+              "patients_worse": 17,
+              "patients_better": 1
+            }
+          },
+          "nonempty": {
+            "mean_volume_mae_ml_minus_scalar": {
+              "patients": 18,
+              "difference": -0.03294869953835455,
+              "ci95": [
+                -2.1898509902051755,
+                1.682625799108711
+              ],
+              "patients_worse": 9,
+              "patients_better": 9
+            },
+            "compartment_crps_ml_minus_scalar": {
+              "patients": 18,
+              "difference": 0.07586417071245335,
+              "ci95": [
+                -0.1482607610799648,
+                0.3079552820987172
+              ],
+              "patients_worse": 9,
+              "patients_better": 9
+            },
+            "mean_volume_mae_ml_minus_persistence": {
+              "patients": 18,
+              "difference": -0.5309316135115094,
+              "ci95": [
+                -3.899733660452896,
+                1.9027364572717087
+              ],
+              "patients_worse": 9,
+              "patients_better": 9
+            },
+            "compartment_crps_ml_minus_persistence": {
+              "patients": 18,
+              "difference": -1.4082335368902597,
+              "ci95": [
+                -2.3106733054957456,
+                -0.5835216148859924
+              ],
+              "patients_worse": 3,
+              "patients_better": 15
+            },
+            "presence_brier_minus_fitting_prevalence": {
+              "patients": 18,
+              "difference": -0.0010408249735028997,
+              "ci95": [
+                -0.0010755241997127665,
+                -0.0010114536794714967
+              ],
+              "patients_worse": 0,
+              "patients_better": 18
+            },
+            "presence_brier_minus_current_persistence": {
+              "patients": 18,
+              "difference": 0.0016345614712057796,
+              "ci95": [
+                0.0015998622449959125,
+                0.0016639327652371823
+              ],
+              "patients_worse": 18,
+              "patients_better": 0
+            }
+          }
+        },
+        "nonenhancing_core": {
+          "all": {
+            "mean_volume_mae_ml_minus_scalar": {
+              "patients": 18,
+              "difference": -0.1911163241085079,
+              "ci95": [
+                -0.5761520229124775,
+                0.09059923982972072
+              ],
+              "patients_worse": 10,
+              "patients_better": 8
+            },
+            "compartment_crps_ml_minus_scalar": {
+              "patients": 18,
+              "difference": 0.10260009155091313,
+              "ci95": [
+                -0.10959658124484122,
+                0.4307306772097945
+              ],
+              "patients_worse": 5,
+              "patients_better": 13
+            },
+            "mean_volume_mae_ml_minus_persistence": {
+              "patients": 18,
+              "difference": -0.14253864225207102,
+              "ci95": [
+                -0.4381600738981635,
+                0.0895782768726349
+              ],
+              "patients_worse": 10,
+              "patients_better": 8
+            },
+            "compartment_crps_ml_minus_persistence": {
+              "patients": 18,
+              "difference": -0.19344031205400825,
+              "ci95": [
+                -0.7988260013879174,
+                0.6541382838338097
+              ],
+              "patients_worse": 3,
+              "patients_better": 15
+            },
+            "presence_brier_minus_fitting_prevalence": {
+              "patients": 18,
+              "difference": -8.267875621355126e-05,
+              "ci95": [
+                -0.008040114557547823,
+                0.007404636972623153
+              ],
+              "patients_worse": 10,
+              "patients_better": 8
+            },
+            "presence_brier_minus_current_persistence": {
+              "patients": 18,
+              "difference": -0.08660335519960105,
+              "ci95": [
+                -0.23448121846721132,
+                0.051598617749243646
+              ],
+              "patients_worse": 9,
+              "patients_better": 9
+            }
+          },
+          "nonempty": {
+            "mean_volume_mae_ml_minus_scalar": {
+              "patients": 15,
+              "difference": -0.18617974768082302,
+              "ci95": [
+                -0.6157158693298698,
+                0.12423081544538343
+              ],
+              "patients_worse": 8,
+              "patients_better": 7
+            },
+            "compartment_crps_ml_minus_scalar": {
+              "patients": 15,
+              "difference": 0.30263263334830603,
+              "ci95": [
+                -0.06157502314696709,
+                0.8113898529236515
+              ],
+              "patients_worse": 5,
+              "patients_better": 10
+            },
+            "mean_volume_mae_ml_minus_persistence": {
+              "patients": 15,
+              "difference": -0.004125637892219735,
+              "ci95": [
+                -0.40272162706280745,
+                0.3540843139857882
+              ],
+              "patients_worse": 10,
+              "patients_better": 5
+            },
+            "compartment_crps_ml_minus_persistence": {
+              "patients": 15,
+              "difference": 0.3036288659605715,
+              "ci95": [
+                -0.5577695417962968,
+                1.4057229618107279
+              ],
+              "patients_worse": 5,
+              "patients_better": 10
+            },
+            "presence_brier_minus_fitting_prevalence": {
+              "patients": 15,
+              "difference": 0.007500902831380591,
+              "ci95": [
+                -8.297544788442043e-05,
+                0.013909998411067444
+              ],
+              "patients_worse": 12,
+              "patients_better": 3
+            },
+            "presence_brier_minus_current_persistence": {
+              "patients": 15,
+              "difference": 0.1316124102960391,
+              "ci95": [
+                -0.002635368494249605,
+                0.20214444826250358
+              ],
+              "patients_worse": 14,
+              "patients_better": 1
+            }
+          }
+        },
+        "flair_abnormality": {
+          "all": {
+            "mean_volume_mae_ml_minus_scalar": {
+              "patients": 18,
+              "difference": 4.824255704879761,
+              "ci95": [
+                -0.9323411934905582,
+                13.224320067962013
+              ],
+              "patients_worse": 12,
+              "patients_better": 6
+            },
+            "compartment_crps_ml_minus_scalar": {
+              "patients": 18,
+              "difference": 0.8877398702833388,
+              "ci95": [
+                -0.741416636440489,
+                2.6599705894788106
+              ],
+              "patients_worse": 8,
+              "patients_better": 10
+            },
+            "mean_volume_mae_ml_minus_persistence": {
+              "patients": 18,
+              "difference": 4.496029509438409,
+              "ci95": [
+                -1.9425981726911332,
+                13.186027722888523
+              ],
+              "patients_worse": 11,
+              "patients_better": 7
+            },
+            "compartment_crps_ml_minus_persistence": {
+              "patients": 18,
+              "difference": -2.7369151512781777,
+              "ci95": [
+                -6.063195392158296,
+                1.7408723125855137
+              ],
+              "patients_worse": 4,
+              "patients_better": 14
+            },
+            "presence_brier_minus_fitting_prevalence": {
+              "patients": 18,
+              "difference": 1.2996549022166921e-09,
+              "ci95": [
+                9.020580110035642e-10,
+                1.718900075362326e-09
+              ],
+              "patients_worse": 18,
+              "patients_better": 0
+            },
+            "presence_brier_minus_current_persistence": {
+              "patients": 18,
+              "difference": 1.2996549022166921e-09,
+              "ci95": [
+                9.020580110035642e-10,
+                1.718900075362326e-09
+              ],
+              "patients_worse": 18,
+              "patients_better": 0
+            }
+          },
+          "nonempty": {
+            "mean_volume_mae_ml_minus_scalar": {
+              "patients": 18,
+              "difference": 4.824255704879761,
+              "ci95": [
+                -0.9323411934905582,
+                13.224320067962013
+              ],
+              "patients_worse": 12,
+              "patients_better": 6
+            },
+            "compartment_crps_ml_minus_scalar": {
+              "patients": 18,
+              "difference": 0.8877398702833388,
+              "ci95": [
+                -0.741416636440489,
+                2.6599705894788106
+              ],
+              "patients_worse": 8,
+              "patients_better": 10
+            },
+            "mean_volume_mae_ml_minus_persistence": {
+              "patients": 18,
+              "difference": 4.496029509438409,
+              "ci95": [
+                -1.9425981726911332,
+                13.186027722888523
+              ],
+              "patients_worse": 11,
+              "patients_better": 7
+            },
+            "compartment_crps_ml_minus_persistence": {
+              "patients": 18,
+              "difference": -2.7369151512781777,
+              "ci95": [
+                -6.063195392158296,
+                1.7408723125855137
+              ],
+              "patients_worse": 4,
+              "patients_better": 14
+            },
+            "presence_brier_minus_fitting_prevalence": {
+              "patients": 18,
+              "difference": 1.2996549022166921e-09,
+              "ci95": [
+                9.020580110035642e-10,
+                1.718900075362326e-09
+              ],
+              "patients_worse": 18,
+              "patients_better": 0
+            },
+            "presence_brier_minus_current_persistence": {
+              "patients": 18,
+              "difference": 1.2996549022166921e-09,
+              "ci95": [
+                9.020580110035642e-10,
+                1.718900075362326e-09
+              ],
+              "patients_worse": 18,
+              "patients_better": 0
+            }
+          }
+        },
+        "cavity": {
+          "all": {
+            "mean_volume_mae_ml_minus_scalar": {
+              "patients": 18,
+              "difference": -0.5600357657919327,
+              "ci95": [
+                -2.1578135274764563,
+                0.5492452939661843
+              ],
+              "patients_worse": 10,
+              "patients_better": 8
+            },
+            "compartment_crps_ml_minus_scalar": {
+              "patients": 18,
+              "difference": 0.7203845754265785,
+              "ci95": [
+                -0.30635251790905993,
+                1.8781824548625285
+              ],
+              "patients_worse": 11,
+              "patients_better": 7
+            },
+            "mean_volume_mae_ml_minus_persistence": {
+              "patients": 18,
+              "difference": 0.9949829657044675,
+              "ci95": [
+                -1.6460102109962869,
+                4.86373158539128
+              ],
+              "patients_worse": 8,
+              "patients_better": 10
+            },
+            "compartment_crps_ml_minus_persistence": {
+              "patients": 18,
+              "difference": 0.5418031149440341,
+              "ci95": [
+                -3.055159527560075,
+                4.850382138705918
+              ],
+              "patients_worse": 7,
+              "patients_better": 11
+            },
+            "presence_brier_minus_fitting_prevalence": {
+              "patients": 18,
+              "difference": -0.0002735670780245583,
+              "ci95": [
+                -0.0012645242202627873,
+                0.0009824793473694594
+              ],
+              "patients_worse": 7,
+              "patients_better": 11
+            },
+            "presence_brier_minus_current_persistence": {
+              "patients": 18,
+              "difference": -0.012175183319712148,
+              "ci95": [
+                -0.04768081878404073,
+                0.016306629704772382
+              ],
+              "patients_worse": 15,
+              "patients_better": 3
+            }
+          },
+          "nonempty": {
+            "mean_volume_mae_ml_minus_scalar": {
+              "patients": 17,
+              "difference": -0.6287329429212738,
+              "ci95": [
+                -2.384133835651857,
+                0.5449460189022565
+              ],
+              "patients_worse": 9,
+              "patients_better": 8
+            },
+            "compartment_crps_ml_minus_scalar": {
+              "patients": 17,
+              "difference": 0.7558995546663508,
+              "ci95": [
+                -0.2900283049353782,
+                1.9772908259292736
+              ],
+              "patients_worse": 10,
+              "patients_better": 7
+            },
+            "mean_volume_mae_ml_minus_persistence": {
+              "patients": 17,
+              "difference": 1.018192424055408,
+              "ci95": [
+                -1.7592232118634616,
+                5.084419430901901
+              ],
+              "patients_worse": 7,
+              "patients_better": 10
+            },
+            "compartment_crps_ml_minus_persistence": {
+              "patients": 17,
+              "difference": 0.5730533284299514,
+              "ci95": [
+                -3.1322163619977585,
+                5.395033073118504
+              ],
+              "patients_worse": 7,
+              "patients_better": 10
+            },
+            "presence_brier_minus_fitting_prevalence": {
+              "patients": 17,
+              "difference": -0.0009919793967496512,
+              "ci95": [
+                -0.0015306671220053274,
+                -0.0005204346171708429
+              ],
+              "patients_worse": 4,
+              "patients_better": 13
+            },
+            "presence_brier_minus_current_persistence": {
+              "patients": 17,
+              "difference": 0.016480606149557656,
+              "ci95": [
+                0.01594191842430198,
+                0.016952150929136465
+              ],
+              "patients_worse": 17,
+              "patients_better": 0
+            }
+          }
+        }
+      },
+      "outside_domain_target_voxels": [
+        1330,
+        0,
+        16125,
+        6460
+      ],
+      "joint_energy_ml": {
+        "amount_first": 28.841268658638,
+        "scalar": 27.79035442405277,
+        "persistence": 31.674728022681343
+      }
+    },
+    "24": {
+      "targets": 22,
+      "patients": 13,
+      "quantity_gate": {
+        "targets": 12,
+        "patients": 8,
+        "mean_mae_ml": 1.4749424097438653,
+        "persistence_mae_ml": 1.2806458918688197,
+        "crps_ml": 2.0141297237326703,
+        "scalar_crps_ml": 1.3701665087913473,
+        "mae_pass": false,
+        "crps_pass": false,
+        "passed": false
+      },
+      "compartments": {
+        "amount_first": {
+          "enhancing": {
+            "all": {
+              "targets": 22,
+              "patients": 13,
+              "mean_volume_mae_ml": 13.557544193206688,
+              "compartment_crps_ml": 6.0340980123250905,
+              "compartment_coverage90": 0.8076923076923077,
+              "compartment_width90_ml": 62.54878492233081
+            },
+            "nonempty": {
+              "targets": 21,
+              "patients": 13,
+              "mean_volume_mae_ml": 12.932073609951214,
+              "compartment_crps_ml": 5.8463167150815325,
+              "compartment_coverage90": 0.8461538461538461,
+              "compartment_width90_ml": 60.55474648720179,
+              "conditional_positive_crps_ml": 6.055470014229799,
+              "conditional_positive_mae_ml": 13.45684996782205,
+              "conditional_positive_coverage90": 0.782051282051282,
+              "conditional_positive_width90_ml": 61.25978431946192,
+              "conditional_undefined_targets": 0
+            },
+            "empty": {
+              "targets": 1,
+              "patients": 1,
+              "mean_volume_mae_ml": 19.08665657043457,
+              "compartment_crps_ml": 6.295295715332031,
+              "compartment_coverage90": 0.0,
+              "compartment_width90_ml": 68.09700012207031,
+              "expected_fp_ml": 19.08665657043457
+            }
+          },
+          "nonenhancing_core": {
+            "all": {
+              "targets": 22,
+              "patients": 13,
+              "mean_volume_mae_ml": 1.4996434799753702,
+              "compartment_crps_ml": 1.1863666428969455,
+              "compartment_coverage90": 1.0,
+              "compartment_width90_ml": 11.538705737162859
+            },
+            "nonempty": {
+              "targets": 12,
+              "patients": 8,
+              "mean_volume_mae_ml": 1.4749424097438653,
+              "compartment_crps_ml": 2.0141297237326703,
+              "compartment_coverage90": 1.0,
+              "compartment_width90_ml": 14.157354906201363,
+              "conditional_positive_crps_ml": 1.5775206089019775,
+              "conditional_positive_mae_ml": 1.8910647320250669,
+              "conditional_positive_coverage90": 0.75,
+              "conditional_positive_width90_ml": 24.880583554506302,
+              "conditional_undefined_targets": 0
+            },
+            "empty": {
+              "targets": 10,
+              "patients": 9,
+              "mean_volume_mae_ml": 2.0002839151355953,
+              "compartment_crps_ml": 0.38730533089902663,
+              "compartment_coverage90": 1.0,
+              "compartment_width90_ml": 10.24177834060457,
+              "expected_fp_ml": 2.0002839151355953
+            }
+          },
+          "flair_abnormality": {
+            "all": {
+              "targets": 22,
+              "patients": 13,
+              "mean_volume_mae_ml": 42.97280915578206,
+              "compartment_crps_ml": 37.371214065796295,
+              "compartment_coverage90": 0.5769230769230769,
+              "compartment_width90_ml": 108.35719821391962
+            },
+            "nonempty": {
+              "targets": 22,
+              "patients": 13,
+              "mean_volume_mae_ml": 42.97280915578206,
+              "compartment_crps_ml": 37.371214065796295,
+              "compartment_coverage90": 0.5769230769230769,
+              "compartment_width90_ml": 108.35719821391962,
+              "conditional_positive_crps_ml": 37.37121514784984,
+              "conditional_positive_mae_ml": 42.97280817765456,
+              "conditional_positive_coverage90": 0.5769230769230769,
+              "conditional_positive_width90_ml": 108.35719821391962,
+              "conditional_undefined_targets": 0
+            },
+            "empty": {
+              "targets": 0,
+              "patients": 0,
+              "mean_volume_mae_ml": null,
+              "compartment_crps_ml": null,
+              "compartment_coverage90": null,
+              "compartment_width90_ml": null,
+              "expected_fp_ml": null
+            }
+          },
+          "cavity": {
+            "all": {
+              "targets": 22,
+              "patients": 13,
+              "mean_volume_mae_ml": 10.205876488716175,
+              "compartment_crps_ml": 10.092095158803156,
+              "compartment_coverage90": 0.8461538461538461,
+              "compartment_width90_ml": 53.05563138998472
+            },
+            "nonempty": {
+              "targets": 20,
+              "patients": 12,
+              "mean_volume_mae_ml": 10.417282862795725,
+              "compartment_crps_ml": 10.815847090548937,
+              "compartment_coverage90": 0.8333333333333334,
+              "compartment_width90_ml": 55.643392284711204,
+              "conditional_positive_crps_ml": 10.032482614119848,
+              "conditional_positive_mae_ml": 9.667538258764479,
+              "conditional_positive_coverage90": 0.8333333333333334,
+              "conditional_positive_width90_ml": 64.94839203357695,
+              "conditional_undefined_targets": 0
+            },
+            "empty": {
+              "targets": 2,
+              "patients": 2,
+              "mean_volume_mae_ml": 4.373992204666138,
+              "compartment_crps_ml": 0.798802375793457,
+              "compartment_coverage90": 1.0,
+              "compartment_width90_ml": 12.762500405311584,
+              "expected_fp_ml": 4.373992204666138
+            }
+          }
+        },
+        "scalar": {
+          "enhancing": {
+            "all": {
+              "targets": 22,
+              "patients": 13,
+              "mean_volume_mae_ml": 10.304894801897879,
+              "compartment_crps_ml": 5.567071911616204,
+              "compartment_coverage90": 0.7435897435897435,
+              "compartment_width90_ml": 45.99304679723886
+            },
+            "nonempty": {
+              "targets": 21,
+              "patients": 13,
+              "mean_volume_mae_ml": 9.801855826989199,
+              "compartment_crps_ml": 5.337587115092156,
+              "compartment_coverage90": 0.782051282051282,
+              "compartment_width90_ml": 44.98000126618605,
+              "conditional_positive_crps_ml": 5.329996731036748,
+              "conditional_positive_mae_ml": 9.841198309873922,
+              "conditional_positive_coverage90": 0.782051282051282,
+              "conditional_positive_width90_ml": 44.958078090961166,
+              "conditional_undefined_targets": 0
+            },
+            "empty": {
+              "targets": 1,
+              "patients": 1,
+              "mean_volume_mae_ml": 15.115913391113281,
+              "compartment_crps_ml": 7.422131538391113,
+              "compartment_coverage90": 0.0,
+              "compartment_width90_ml": 49.70053482055664,
+              "expected_fp_ml": 15.115913391113281
+            }
+          },
+          "nonenhancing_core": {
+            "all": {
+              "targets": 22,
+              "patients": 13,
+              "mean_volume_mae_ml": 1.752390814706301,
+              "compartment_crps_ml": 1.1797608075997768,
+              "compartment_coverage90": 0.8205128205128205,
+              "compartment_width90_ml": 6.641795157622068
+            },
+            "nonempty": {
+              "targets": 12,
+              "patients": 8,
+              "mean_volume_mae_ml": 1.4934088985125225,
+              "compartment_crps_ml": 1.3701665087913473,
+              "compartment_coverage90": 1.0,
+              "compartment_width90_ml": 7.599206729481618,
+              "conditional_positive_crps_ml": 1.6811389153202376,
+              "conditional_positive_mae_ml": 1.8788079085449378,
+              "conditional_positive_coverage90": 0.5,
+              "conditional_positive_width90_ml": 7.435921719918649,
+              "conditional_undefined_targets": 0
+            },
+            "empty": {
+              "targets": 10,
+              "patients": 9,
+              "mean_volume_mae_ml": 2.5300422741307154,
+              "compartment_crps_ml": 1.252656610475646,
+              "compartment_coverage90": 0.6111111111111112,
+              "compartment_width90_ml": 6.769945197635227,
+              "expected_fp_ml": 2.5300422741307154
+            }
+          },
+          "flair_abnormality": {
+            "all": {
+              "targets": 22,
+              "patients": 13,
+              "mean_volume_mae_ml": 43.78370642050719,
+              "compartment_crps_ml": 37.89172799770649,
+              "compartment_coverage90": 0.6025641025641025,
+              "compartment_width90_ml": 105.25506970821283
+            },
+            "nonempty": {
+              "targets": 22,
+              "patients": 13,
+              "mean_volume_mae_ml": 43.78370642050719,
+              "compartment_crps_ml": 37.89172799770649,
+              "compartment_coverage90": 0.6025641025641025,
+              "compartment_width90_ml": 105.25506970821283,
+              "conditional_positive_crps_ml": 37.891727465849655,
+              "conditional_positive_mae_ml": 43.783704562064926,
+              "conditional_positive_coverage90": 0.6025641025641025,
+              "conditional_positive_width90_ml": 105.25506970821283,
+              "conditional_undefined_targets": 0
+            },
+            "empty": {
+              "targets": 0,
+              "patients": 0,
+              "mean_volume_mae_ml": null,
+              "compartment_crps_ml": null,
+              "compartment_coverage90": null,
+              "compartment_width90_ml": null,
+              "expected_fp_ml": null
+            }
+          },
+          "cavity": {
+            "all": {
+              "targets": 22,
+              "patients": 13,
+              "mean_volume_mae_ml": 11.889026835847359,
+              "compartment_crps_ml": 10.00107232767802,
+              "compartment_coverage90": 0.6025641025641025,
+              "compartment_width90_ml": 14.531718941835257
+            },
+            "nonempty": {
+              "targets": 20,
+              "patients": 12,
+              "mean_volume_mae_ml": 12.727755864461264,
+              "compartment_crps_ml": 10.743503605326017,
+              "compartment_coverage90": 0.5694444444444444,
+              "compartment_width90_ml": 15.398179163535437,
+              "conditional_positive_crps_ml": 10.684966954092184,
+              "conditional_positive_mae_ml": 12.63596768014961,
+              "conditional_positive_coverage90": 0.4861111111111111,
+              "conditional_positive_width90_ml": 15.187669502364265,
+              "conditional_undefined_targets": 0
+            },
+            "empty": {
+              "targets": 2,
+              "patients": 2,
+              "mean_volume_mae_ml": 1.1876882202923298,
+              "compartment_crps_ml": 0.6871168464422226,
+              "compartment_coverage90": 1.0,
+              "compartment_width90_ml": 2.8821905851364136,
+              "expected_fp_ml": 1.1876882202923298
+            }
+          }
+        },
+        "persistence": {
+          "enhancing": {
+            "all": {
+              "targets": 22,
+              "patients": 13,
+              "mean_volume_mae_ml": 8.87014107253307,
+              "compartment_crps_ml": 8.87014107253307,
+              "compartment_coverage90": 0.0,
+              "compartment_width90_ml": 0.0
+            },
+            "nonempty": {
+              "targets": 21,
+              "patients": 13,
+              "mean_volume_mae_ml": 8.415833388001491,
+              "compartment_crps_ml": 8.415833388001491,
+              "compartment_coverage90": 0.0,
+              "compartment_width90_ml": 0.0,
+              "conditional_positive_crps_ml": 8.415833388001491,
+              "conditional_positive_mae_ml": 8.415833388001491,
+              "conditional_positive_coverage90": 0.0,
+              "conditional_positive_width90_ml": 0.0,
+              "conditional_undefined_targets": 0
+            },
+            "empty": {
+              "targets": 1,
+              "patients": 1,
+              "mean_volume_mae_ml": 12.821999549865723,
+              "compartment_crps_ml": 12.821999549865723,
+              "compartment_coverage90": 0.0,
+              "compartment_width90_ml": 0.0,
+              "expected_fp_ml": 12.821999549865723
+            }
+          },
+          "nonenhancing_core": {
+            "all": {
+              "targets": 22,
+              "patients": 13,
+              "mean_volume_mae_ml": 1.8890385176413338,
+              "compartment_crps_ml": 1.8890385176413338,
+              "compartment_coverage90": 0.038461538461538464,
+              "compartment_width90_ml": 0.0
+            },
+            "nonempty": {
+              "targets": 12,
+              "patients": 8,
+              "mean_volume_mae_ml": 1.2806458918688197,
+              "compartment_crps_ml": 1.2806458918688197,
+              "compartment_coverage90": 0.0,
+              "compartment_width90_ml": 0.0,
+              "conditional_positive_crps_ml": 1.2806458918688197,
+              "conditional_positive_mae_ml": 1.2806458918688197,
+              "conditional_positive_coverage90": 0.0,
+              "conditional_positive_width90_ml": 0.0,
+              "conditional_undefined_targets": 0
+            },
+            "empty": {
+              "targets": 10,
+              "patients": 9,
+              "mean_volume_mae_ml": 3.3231111789743104,
+              "compartment_crps_ml": 3.3231111789743104,
+              "compartment_coverage90": 0.05555555555555555,
+              "compartment_width90_ml": 0.0,
+              "expected_fp_ml": 3.3231111789743104
+            }
+          },
+          "flair_abnormality": {
+            "all": {
+              "targets": 22,
+              "patients": 13,
+              "mean_volume_mae_ml": 45.26746429541171,
+              "compartment_crps_ml": 45.26746429541171,
+              "compartment_coverage90": 0.0,
+              "compartment_width90_ml": 0.0
+            },
+            "nonempty": {
+              "targets": 22,
+              "patients": 13,
+              "mean_volume_mae_ml": 45.26746429541171,
+              "compartment_crps_ml": 45.26746429541171,
+              "compartment_coverage90": 0.0,
+              "compartment_width90_ml": 0.0,
+              "conditional_positive_crps_ml": 45.26746429541171,
+              "conditional_positive_mae_ml": 45.26746429541171,
+              "conditional_positive_coverage90": 0.0,
+              "conditional_positive_width90_ml": 0.0,
+              "conditional_undefined_targets": 0
+            },
+            "empty": {
+              "targets": 0,
+              "patients": 0,
+              "mean_volume_mae_ml": null,
+              "compartment_crps_ml": null,
+              "compartment_coverage90": null,
+              "compartment_width90_ml": null,
+              "expected_fp_ml": null
+            }
+          },
+          "cavity": {
+            "all": {
+              "targets": 22,
+              "patients": 13,
+              "mean_volume_mae_ml": 9.652757339370556,
+              "compartment_crps_ml": 9.652757339370556,
+              "compartment_coverage90": 0.0,
+              "compartment_width90_ml": 0.0
+            },
+            "nonempty": {
+              "targets": 20,
+              "patients": 12,
+              "mean_volume_mae_ml": 10.165028774076038,
+              "compartment_crps_ml": 10.165028774076038,
+              "compartment_coverage90": 0.0,
+              "compartment_width90_ml": 0.0,
+              "conditional_positive_crps_ml": 10.165028774076038,
+              "conditional_positive_mae_ml": 10.165028774076038,
+              "conditional_positive_coverage90": 0.0,
+              "conditional_positive_width90_ml": 0.0,
+              "conditional_undefined_targets": 0
+            },
+            "empty": {
+              "targets": 2,
+              "patients": 2,
+              "mean_volume_mae_ml": 2.379500076174736,
+              "compartment_crps_ml": 2.379500076174736,
+              "compartment_coverage90": 0.0,
+              "compartment_width90_ml": 0.0,
+              "expected_fp_ml": 2.379500076174736
+            }
+          }
+        }
+      },
+      "presence": {
+        "amount_first": {
+          "enhancing": {
+            "brier": 0.037059553284200054,
+            "false_absence": 0.0,
+            "false_presence": 0.038461538461538464,
+            "log_score": 0.16402939076917394,
+            "infinite_log_score_targets": 0,
+            "log_score_status": "finite",
+            "reliability": [
+              {
+                "lower": 0,
+                "upper": 0.2,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.2,
+                "upper": 0.4,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.4,
+                "upper": 0.6000000000000001,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.6,
+                "upper": 0.8,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.8,
+                "upper": 1.0,
+                "targets": 22,
+                "patients": 13,
+                "mean_probability": 0.9599536512142574,
+                "observed_frequency": 0.9615384615384616
+              }
+            ]
+          },
+          "nonenhancing_core": {
+            "brier": 0.25447092668525095,
+            "false_absence": 0.0,
+            "false_presence": 0.5256410256410257,
+            "log_score": 0.7021085748585258,
+            "infinite_log_score_targets": 0,
+            "log_score_status": "finite",
+            "reliability": [
+              {
+                "lower": 0,
+                "upper": 0.2,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.2,
+                "upper": 0.4,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.4,
+                "upper": 0.6000000000000001,
+                "targets": 22,
+                "patients": 13,
+                "mean_probability": 0.5604873597621918,
+                "observed_frequency": 0.47435897435897434
+              },
+              {
+                "lower": 0.6,
+                "upper": 0.8,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.8,
+                "upper": 1.0,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              }
+            ]
+          },
+          "flair_abnormality": {
+            "brier": 8.840211981245935e-10,
+            "false_absence": 0.0,
+            "false_presence": 0.0,
+            "log_score": 2.688977843633893e-05,
+            "infinite_log_score_targets": 0,
+            "log_score_status": "finite",
+            "reliability": [
+              {
+                "lower": 0,
+                "upper": 0.2,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.2,
+                "upper": 0.4,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.4,
+                "upper": 0.6000000000000001,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.6,
+                "upper": 0.8,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.8,
+                "upper": 1.0,
+                "targets": 22,
+                "patients": 13,
+                "mean_probability": 0.9999731106635852,
+                "observed_frequency": 1.0
+              }
+            ]
+          },
+          "cavity": {
+            "brier": 0.10168998435952917,
+            "false_absence": 0.0,
+            "false_presence": 0.11538461538461539,
+            "log_score": 0.35585657194412995,
+            "infinite_log_score_targets": 0,
+            "log_score_status": "finite",
+            "reliability": [
+              {
+                "lower": 0,
+                "upper": 0.2,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.2,
+                "upper": 0.4,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.4,
+                "upper": 0.6000000000000001,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.6,
+                "upper": 0.8,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.8,
+                "upper": 1.0,
+                "targets": 22,
+                "patients": 13,
+                "mean_probability": 0.8736332861276773,
+                "observed_frequency": 0.8846153846153846
+              }
+            ]
+          }
+        },
+        "fitting_prevalence": {
+          "enhancing": {
+            "brier": 0.03706610849467992,
+            "false_absence": 0.0,
+            "false_presence": 0.038461538461538464,
+            "log_score": 0.16401063622920092,
+            "infinite_log_score_targets": 0,
+            "log_score_status": "finite",
+            "reliability": [
+              {
+                "lower": 0,
+                "upper": 0.2,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.2,
+                "upper": 0.4,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.4,
+                "upper": 0.6000000000000001,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.6,
+                "upper": 0.8,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.8,
+                "upper": 1.0,
+                "targets": 22,
+                "patients": 13,
+                "mean_probability": 0.9523809523809524,
+                "observed_frequency": 0.9615384615384616
+              }
+            ]
+          },
+          "nonenhancing_core": {
+            "brier": 0.2572872453824835,
+            "false_absence": 0.0,
+            "false_presence": 0.5256410256410257,
+            "log_score": 0.7078227268866064,
+            "infinite_log_score_targets": 0,
+            "log_score_status": "finite",
+            "reliability": [
+              {
+                "lower": 0,
+                "upper": 0.2,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.2,
+                "upper": 0.4,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.4,
+                "upper": 0.6000000000000001,
+                "targets": 22,
+                "patients": 13,
+                "mean_probability": 0.5634920634920634,
+                "observed_frequency": 0.47435897435897434
+              },
+              {
+                "lower": 0.6,
+                "upper": 0.8,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.8,
+                "upper": 1.0,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              }
+            ]
+          },
+          "flair_abnormality": {
+            "brier": 0.0,
+            "false_absence": 0.0,
+            "false_presence": 0.0,
+            "log_score": 0.0,
+            "infinite_log_score_targets": 0,
+            "log_score_status": "finite",
+            "reliability": [
+              {
+                "lower": 0,
+                "upper": 0.2,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.2,
+                "upper": 0.4,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.4,
+                "upper": 0.6000000000000001,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.6,
+                "upper": 0.8,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.8,
+                "upper": 1.0,
+                "targets": 22,
+                "patients": 13,
+                "mean_probability": 1.0,
+                "observed_frequency": 1.0
+              }
+            ]
+          },
+          "cavity": {
+            "brier": 0.10247688819117388,
+            "false_absence": 0.0,
+            "false_presence": 0.11538461538461539,
+            "log_score": 0.35984789685773194,
+            "infinite_log_score_targets": 0,
+            "log_score_status": "finite",
+            "reliability": [
+              {
+                "lower": 0,
+                "upper": 0.2,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.2,
+                "upper": 0.4,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.4,
+                "upper": 0.6000000000000001,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.6,
+                "upper": 0.8,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.8,
+                "upper": 1.0,
+                "targets": 22,
+                "patients": 13,
+                "mean_probability": 0.9047619047619049,
+                "observed_frequency": 0.8846153846153846
+              }
+            ]
+          }
+        },
+        "current_persistence": {
+          "enhancing": {
+            "brier": 0.038461538461538464,
+            "false_absence": 0.0,
+            "false_presence": 0.038461538461538464,
+            "log_score": null,
+            "infinite_log_score_targets": 1,
+            "log_score_status": "positive_infinity",
+            "reliability": [
+              {
+                "lower": 0,
+                "upper": 0.2,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.2,
+                "upper": 0.4,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.4,
+                "upper": 0.6000000000000001,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.6,
+                "upper": 0.8,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.8,
+                "upper": 1.0,
+                "targets": 22,
+                "patients": 13,
+                "mean_probability": 1.0,
+                "observed_frequency": 0.9615384615384616
+              }
+            ]
+          },
+          "nonenhancing_core": {
+            "brier": 0.4871794871794872,
+            "false_absence": 0.0,
+            "false_presence": 0.4871794871794872,
+            "log_score": null,
+            "infinite_log_score_targets": 9,
+            "log_score_status": "positive_infinity",
+            "reliability": [
+              {
+                "lower": 0,
+                "upper": 0.2,
+                "targets": 1,
+                "patients": 1,
+                "mean_probability": 0.0,
+                "observed_frequency": 0.0
+              },
+              {
+                "lower": 0.2,
+                "upper": 0.4,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.4,
+                "upper": 0.6000000000000001,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.6,
+                "upper": 0.8,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.8,
+                "upper": 1.0,
+                "targets": 21,
+                "patients": 13,
+                "mean_probability": 1.0,
+                "observed_frequency": 0.47435897435897434
+              }
+            ]
+          },
+          "flair_abnormality": {
+            "brier": 0.0,
+            "false_absence": 0.0,
+            "false_presence": 0.0,
+            "log_score": 0.0,
+            "infinite_log_score_targets": 0,
+            "log_score_status": "finite",
+            "reliability": [
+              {
+                "lower": 0,
+                "upper": 0.2,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.2,
+                "upper": 0.4,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.4,
+                "upper": 0.6000000000000001,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.6,
+                "upper": 0.8,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.8,
+                "upper": 1.0,
+                "targets": 22,
+                "patients": 13,
+                "mean_probability": 1.0,
+                "observed_frequency": 1.0
+              }
+            ]
+          },
+          "cavity": {
+            "brier": 0.11538461538461539,
+            "false_absence": 0.0,
+            "false_presence": 0.11538461538461539,
+            "log_score": null,
+            "infinite_log_score_targets": 2,
+            "log_score_status": "positive_infinity",
+            "reliability": [
+              {
+                "lower": 0,
+                "upper": 0.2,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.2,
+                "upper": 0.4,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.4,
+                "upper": 0.6000000000000001,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.6,
+                "upper": 0.8,
+                "targets": 0,
+                "patients": 0,
+                "mean_probability": null,
+                "observed_frequency": null
+              },
+              {
+                "lower": 0.8,
+                "upper": 1.0,
+                "targets": 22,
+                "patients": 13,
+                "mean_probability": 1.0,
+                "observed_frequency": 0.8846153846153846
+              }
+            ]
+          }
+        }
+      },
+      "paired_patient_intervals": {
+        "enhancing": {
+          "all": {
+            "mean_volume_mae_ml_minus_scalar": {
+              "patients": 13,
+              "difference": 3.2526493913088093,
+              "ci95": [
+                0.9366025138359806,
+                6.27167810362119
+              ],
+              "patients_worse": 11,
+              "patients_better": 2
+            },
+            "compartment_crps_ml_minus_scalar": {
+              "patients": 13,
+              "difference": 0.4670261007088881,
+              "ci95": [
+                -0.3135355127545503,
+                1.2084017049807767
+              ],
+              "patients_worse": 9,
+              "patients_better": 4
+            },
+            "mean_volume_mae_ml_minus_persistence": {
+              "patients": 13,
+              "difference": 4.68740312067362,
+              "ci95": [
+                1.5443939883261921,
+                8.512564310612973
+              ],
+              "patients_worse": 11,
+              "patients_better": 2
+            },
+            "compartment_crps_ml_minus_persistence": {
+              "patients": 13,
+              "difference": -2.836043060207978,
+              "ci95": [
+                -4.568680154331601,
+                -1.3899740203832964
+              ],
+              "patients_worse": 1,
+              "patients_better": 12
+            },
+            "presence_brier_minus_fitting_prevalence": {
+              "patients": 13,
+              "difference": -6.555210479870047e-06,
+              "ci95": [
+                -0.0006879835353030884,
+                0.0013121699221999468
+              ],
+              "patients_worse": 1,
+              "patients_better": 12
+            },
+            "presence_brier_minus_current_persistence": {
+              "patients": 13,
+              "difference": -0.0014019851773384062,
+              "ci95": [
+                -0.007431968917986837,
+                0.0016346811782952729
+              ],
+              "patients_worse": 12,
+              "patients_better": 1
+            }
+          },
+          "nonempty": {
+            "mean_volume_mae_ml_minus_scalar": {
+              "patients": 13,
+              "difference": 3.1302177829620166,
+              "ci95": [
+                0.785374080714507,
+                6.183410901786426
+              ],
+              "patients_worse": 11,
+              "patients_better": 2
+            },
+            "compartment_crps_ml_minus_scalar": {
+              "patients": 13,
+              "difference": 0.5087295999893775,
+              "ci95": [
+                -0.2578365510472884,
+                1.2394294786911746
+              ],
+              "patients_worse": 9,
+              "patients_better": 4
+            },
+            "mean_volume_mae_ml_minus_persistence": {
+              "patients": 13,
+              "difference": 4.516240221949724,
+              "ci95": [
+                1.3599769949435425,
+                8.407580999657512
+              ],
+              "patients_worse": 11,
+              "patients_better": 2
+            },
+            "compartment_crps_ml_minus_persistence": {
+              "patients": 13,
+              "difference": -2.5695166729199577,
+              "ci95": [
+                -4.367134471705708,
+                -1.007162595712221
+              ],
+              "patients_worse": 2,
+              "patients_better": 11
+            },
+            "presence_brier_minus_fitting_prevalence": {
+              "patients": 13,
+              "difference": -0.0006607634460957141,
+              "ci95": [
+                -0.0006989989526718539,
+                -0.0006275466039329084
+              ],
+              "patients_worse": 0,
+              "patients_better": 13
+            },
+            "presence_brier_minus_current_persistence": {
+              "patients": 13,
+              "difference": 0.0016068102500494154,
+              "ci95": [
+                0.0015685747434732754,
+                0.0016400270922122212
+              ],
+              "patients_worse": 13,
+              "patients_better": 0
+            }
+          }
+        },
+        "nonenhancing_core": {
+          "all": {
+            "mean_volume_mae_ml_minus_scalar": {
+              "patients": 13,
+              "difference": -0.25274733473093086,
+              "ci95": [
+                -0.5656563565135002,
+                0.024333447237045367
+              ],
+              "patients_worse": 7,
+              "patients_better": 6
+            },
+            "compartment_crps_ml_minus_scalar": {
+              "patients": 13,
+              "difference": 0.006605835297168841,
+              "ci95": [
+                -0.41680243137555245,
+                0.5645789837273651
+              ],
+              "patients_worse": 5,
+              "patients_better": 8
+            },
+            "mean_volume_mae_ml_minus_persistence": {
+              "patients": 13,
+              "difference": -0.3893950376659632,
+              "ci95": [
+                -1.1206273632159887,
+                0.3310720701558666
+              ],
+              "patients_worse": 5,
+              "patients_better": 8
+            },
+            "compartment_crps_ml_minus_persistence": {
+              "patients": 13,
+              "difference": -0.7026718747443877,
+              "ci95": [
+                -1.8866766371943342,
+                0.7821999195103465
+              ],
+              "patients_worse": 1,
+              "patients_better": 12
+            },
+            "presence_brier_minus_fitting_prevalence": {
+              "patients": 13,
+              "difference": -0.0028163186972325156,
+              "ci95": [
+                -0.010826342029346776,
+                0.005076630647087019
+              ],
+              "patients_worse": 6,
+              "patients_better": 7
+            },
+            "presence_brier_minus_current_persistence": {
+              "patients": 13,
+              "difference": -0.23270856049423622,
+              "ci95": [
+                -0.41741037086883803,
+                -0.042383021248715444
+              ],
+              "patients_worse": 4,
+              "patients_better": 9
+            }
+          },
+          "nonempty": {
+            "mean_volume_mae_ml_minus_scalar": {
+              "patients": 8,
+              "difference": -0.018466488768657058,
+              "ci95": [
+                -0.3196249348421891,
+                0.23689050413668158
+              ],
+              "patients_worse": 6,
+              "patients_better": 2
+            },
+            "compartment_crps_ml_minus_scalar": {
+              "patients": 8,
+              "difference": 0.6439632149413228,
+              "ci95": [
+                -0.0177629615413025,
+                1.5886300549842418
+              ],
+              "patients_worse": 5,
+              "patients_better": 3
+            },
+            "mean_volume_mae_ml_minus_persistence": {
+              "patients": 8,
+              "difference": 0.19429651787504554,
+              "ci95": [
+                -0.5054469327908009,
+                1.0070669018779883
+              ],
+              "patients_worse": 5,
+              "patients_better": 3
+            },
+            "compartment_crps_ml_minus_persistence": {
+              "patients": 8,
+              "difference": 0.7334838318638504,
+              "ci95": [
+                -0.37926359004341065,
+                2.430783630453516
+              ],
+              "patients_worse": 3,
+              "patients_better": 5
+            },
+            "presence_brier_minus_fitting_prevalence": {
+              "patients": 8,
+              "difference": 0.0001332621504290159,
+              "ci95": [
+                -0.010791787919002059,
+                0.010118608979370631
+              ],
+              "patients_worse": 4,
+              "patients_better": 4
+            },
+            "presence_brier_minus_current_persistence": {
+              "patients": 8,
+              "difference": 0.19067244078484574,
+              "ci95": [
+                0.17974739071541468,
+                0.2006577876137874
+              ],
+              "patients_worse": 8,
+              "patients_better": 0
+            }
+          }
+        },
+        "flair_abnormality": {
+          "all": {
+            "mean_volume_mae_ml_minus_scalar": {
+              "patients": 13,
+              "difference": -0.8108972647251226,
+              "ci95": [
+                -9.043838119506834,
+                7.188251695877473
+              ],
+              "patients_worse": 4,
+              "patients_better": 9
+            },
+            "compartment_crps_ml_minus_scalar": {
+              "patients": 13,
+              "difference": -0.520513931910197,
+              "ci95": [
+                -3.4235810773494917,
+                2.725404925529774
+              ],
+              "patients_worse": 4,
+              "patients_better": 9
+            },
+            "mean_volume_mae_ml_minus_persistence": {
+              "patients": 13,
+              "difference": -2.2946551396296573,
+              "ci95": [
+                -12.133904499274035,
+                7.303168564576373
+              ],
+              "patients_worse": 4,
+              "patients_better": 9
+            },
+            "compartment_crps_ml_minus_persistence": {
+              "patients": 13,
+              "difference": -7.896250229615432,
+              "ci95": [
+                -13.803021896802461,
+                -2.7875574561265783
+              ],
+              "patients_worse": 2,
+              "patients_better": 11
+            },
+            "presence_brier_minus_fitting_prevalence": {
+              "patients": 13,
+              "difference": 8.840211981245935e-10,
+              "ci95": [
+                5.637603011202158e-10,
+                1.2124449455815268e-09
+              ],
+              "patients_worse": 13,
+              "patients_better": 0
+            },
+            "presence_brier_minus_current_persistence": {
+              "patients": 13,
+              "difference": 8.840211981245935e-10,
+              "ci95": [
+                5.637603011202158e-10,
+                1.2124449455815268e-09
+              ],
+              "patients_worse": 13,
+              "patients_better": 0
+            }
+          },
+          "nonempty": {
+            "mean_volume_mae_ml_minus_scalar": {
+              "patients": 13,
+              "difference": -0.8108972647251226,
+              "ci95": [
+                -9.043838119506834,
+                7.188251695877473
+              ],
+              "patients_worse": 4,
+              "patients_better": 9
+            },
+            "compartment_crps_ml_minus_scalar": {
+              "patients": 13,
+              "difference": -0.520513931910197,
+              "ci95": [
+                -3.4235810773494917,
+                2.725404925529774
+              ],
+              "patients_worse": 4,
+              "patients_better": 9
+            },
+            "mean_volume_mae_ml_minus_persistence": {
+              "patients": 13,
+              "difference": -2.2946551396296573,
+              "ci95": [
+                -12.133904499274035,
+                7.303168564576373
+              ],
+              "patients_worse": 4,
+              "patients_better": 9
+            },
+            "compartment_crps_ml_minus_persistence": {
+              "patients": 13,
+              "difference": -7.896250229615432,
+              "ci95": [
+                -13.803021896802461,
+                -2.7875574561265783
+              ],
+              "patients_worse": 2,
+              "patients_better": 11
+            },
+            "presence_brier_minus_fitting_prevalence": {
+              "patients": 13,
+              "difference": 8.840211981245935e-10,
+              "ci95": [
+                5.637603011202158e-10,
+                1.2124449455815268e-09
+              ],
+              "patients_worse": 13,
+              "patients_better": 0
+            },
+            "presence_brier_minus_current_persistence": {
+              "patients": 13,
+              "difference": 8.840211981245935e-10,
+              "ci95": [
+                5.637603011202158e-10,
+                1.2124449455815268e-09
+              ],
+              "patients_worse": 13,
+              "patients_better": 0
+            }
+          }
+        },
+        "cavity": {
+          "all": {
+            "mean_volume_mae_ml_minus_scalar": {
+              "patients": 13,
+              "difference": -1.6831503471311853,
+              "ci95": [
+                -4.903741838763921,
+                0.8770290894983102
+              ],
+              "patients_worse": 6,
+              "patients_better": 7
+            },
+            "compartment_crps_ml_minus_scalar": {
+              "patients": 13,
+              "difference": 0.09102283112513715,
+              "ci95": [
+                -0.5938846176251387,
+                0.7448339231980916
+              ],
+              "patients_worse": 8,
+              "patients_better": 5
+            },
+            "mean_volume_mae_ml_minus_persistence": {
+              "patients": 13,
+              "difference": 0.553119149345618,
+              "ci95": [
+                -2.2022135824442675,
+                4.228672089408607
+              ],
+              "patients_worse": 4,
+              "patients_better": 9
+            },
+            "compartment_crps_ml_minus_persistence": {
+              "patients": 13,
+              "difference": 0.4393378194326009,
+              "ci95": [
+                -2.529179350515971,
+                4.793793757756551
+              ],
+              "patients_worse": 4,
+              "patients_better": 9
+            },
+            "presence_brier_minus_fitting_prevalence": {
+              "patients": 13,
+              "difference": -0.0007869038316447308,
+              "ci95": [
+                -0.012794592842895124,
+                0.006985279174069847
+              ],
+              "patients_worse": 11,
+              "patients_better": 2
+            },
+            "presence_brier_minus_current_persistence": {
+              "patients": 13,
+              "difference": -0.013694631025086204,
+              "ci95": [
+                -0.06233235666637321,
+                0.016055573958650343
+              ],
+              "patients_worse": 11,
+              "patients_better": 2
+            }
+          },
+          "nonempty": {
+            "mean_volume_mae_ml_minus_scalar": {
+              "patients": 12,
+              "difference": -2.3104730016655393,
+              "ci95": [
+                -5.688356601529652,
+                0.13085473767585246
+              ],
+              "patients_worse": 4,
+              "patients_better": 8
+            },
+            "compartment_crps_ml_minus_scalar": {
+              "patients": 12,
+              "difference": 0.0723434852229224,
+              "ci95": [
+                -0.6637907928476731,
+                0.7720039853619209
+              ],
+              "patients_worse": 7,
+              "patients_better": 5
+            },
+            "mean_volume_mae_ml_minus_persistence": {
+              "patients": 12,
+              "difference": 0.25225408871968596,
+              "ci95": [
+                -2.5974911787029766,
+                4.229823764206636
+              ],
+              "patients_worse": 3,
+              "patients_better": 9
+            },
+            "compartment_crps_ml_minus_persistence": {
+              "patients": 12,
+              "difference": 0.6508183164729012,
+              "ci95": [
+                -2.5340440281977257,
+                5.353435802211365
+              ],
+              "patients_worse": 4,
+              "patients_better": 8
+            },
+            "presence_brier_minus_fitting_prevalence": {
+              "patients": 12,
+              "difference": 0.0069125188647385,
+              "ci95": [
+                0.006277758716702831,
+                0.007508517771974173
+              ],
+              "patients_worse": 12,
+              "patients_better": 0
+            },
+            "presence_brier_minus_current_persistence": {
+              "patients": 12,
+              "difference": 0.015982813649318996,
+              "ci95": [
+                0.015348053501283328,
+                0.01657881255655467
+              ],
+              "patients_worse": 12,
+              "patients_better": 0
+            }
+          }
+        }
+      },
+      "outside_domain_target_voxels": [
+        429,
+        0,
+        5312,
+        3902
+      ],
+      "joint_energy_ml": {
+        "amount_first": 43.94197644331517,
+        "scalar": 44.336359427525444,
+        "persistence": 52.08510063856075
+      }
+    }
+  },
+  "forecast_usefulness_established": false,
+  "infeasible_samples": [],
+  "retained_image_completion_tradeoff": "Frozen observation model: previously measured approximately 2.9% higher LUMIERE missing-FLAIR lesion MAE; no retraining or substituted checkpoint",
+  "timeline": {
+    "matched_horizons": 2,
+    "native_maps_verified": 128,
+    "same_quantity_samples_as_evaluation": true,
+    "representative_sample": 0,
+    "nifti_volume_roundtrip_exact": true,
+    "observation_and_completion_files_preserved": true,
+    "future_image_synthesis": false,
+    "status": "no_eligible_checkpoint"
+  },
+  "deterministic_core_comparison": {
+    "horizons": {
+      "12": {
+        "logistic": {
+          "all": {
+            "targets": 36,
+            "patients": 18,
+            "official_mean_mae_ml": 2.151346962692009,
+            "official_crps_ml": 1.635119918940796,
+            "cdf_mean_mae_ml": 2.004895888557341,
+            "cdf_crps_ml": 1.6033046728570246,
+            "cdf_crps_underprediction_ml": 1.4216594067143564,
+            "cdf_crps_overprediction_ml": 0.1816452661426683,
+            "absolute_64_mean_minus_cdf_mean_ml": 1.3609309240265812,
+            "signed_64_mean_minus_cdf_mean_ml": 0.025435792777339712,
+            "signed_64_crps_minus_cdf_crps_ml": 0.031815246083771134,
+            "presence_probability": 0.5513661048478551,
+            "presence_brier": 0.23296374127625702,
+            "presence_log_score": 0.6588793840079029,
+            "top1_sample_volume_share": 0.2322919412789701,
+            "top4_sample_volume_share": 0.5499745144980255,
+            "sample_median_ml": 0.22045833333333337,
+            "sample_mean_ml": 2.646399933637844,
+            "positive_sample_median_ml": 1.3387083333333334,
+            "positive_sample_mean_ml": 4.723538301614817,
+            "positive_sample_coverage90": null,
+            "positive_sample_width90_ml": 33.07423611111111,
+            "maximum_sample_ml": 869.178,
+            "persistence_mae_ml": 1.8158056770658328,
+            "scalar_crps_ml": 1.5197652734609113
+          },
+          "future_present": {
+            "targets": 21,
+            "patients": 15,
+            "official_mean_mae_ml": 2.08768299702141,
+            "official_crps_ml": 2.00678139179945,
+            "cdf_mean_mae_ml": 1.8450955250204382,
+            "cdf_crps_ml": 1.9527563536111132,
+            "cdf_crps_underprediction_ml": 1.822620975436809,
+            "cdf_crps_overprediction_ml": 0.13013537817430357,
+            "absolute_64_mean_minus_cdf_mean_ml": 1.3097057648922599,
+            "signed_64_mean_minus_cdf_mean_ml": 0.06715026503936967,
+            "signed_64_crps_minus_cdf_crps_ml": 0.054025038188336864,
+            "presence_probability": 0.5531407091352675,
+            "presence_brier": 0.19999576714896083,
+            "presence_log_score": 0.5926406524428721,
+            "top1_sample_volume_share": 0.2431004148556258,
+            "top4_sample_volume_share": 0.5686496873902828,
+            "sample_median_ml": 0.23650555555555558,
+            "sample_mean_ml": 2.8203427516751822,
+            "positive_sample_median_ml": 1.464222222222222,
+            "positive_sample_mean_ml": 5.122156977819903,
+            "positive_sample_coverage90": 0.8,
+            "positive_sample_width90_ml": 36.8602388888889,
+            "maximum_sample_ml": 665.028,
+            "persistence_mae_ml": 1.6919167964822714,
+            "scalar_crps_ml": 1.6929130290945371
+          },
+          "future_empty": {
+            "targets": 15,
+            "patients": 9,
+            "official_mean_mae_ml": 2.2315705188170627,
+            "official_crps_ml": 0.3352097718528024,
+            "cdf_mean_mae_ml": 2.857224990975569,
+            "cdf_crps_ml": 0.44651485265693946,
+            "cdf_crps_underprediction_ml": 0.0,
+            "cdf_crps_overprediction_ml": 0.44651485265693946,
+            "absolute_64_mean_minus_cdf_mean_ml": 1.3369864564081597,
+            "signed_64_mean_minus_cdf_mean_ml": -0.6256544721585064,
+            "signed_64_crps_minus_cdf_crps_ml": -0.11130508080413709,
+            "presence_probability": 0.5524344068986399,
+            "presence_brier": 0.3056214927368131,
+            "presence_log_score": 0.8050586034905991,
+            "top1_sample_volume_share": 0.24487381933013858,
+            "top4_sample_volume_share": 0.548015156742048,
+            "sample_median_ml": 0.19001851851851853,
+            "sample_mean_ml": 2.2315705188170627,
+            "positive_sample_median_ml": 1.2529074074074074,
+            "positive_sample_mean_ml": 3.937873452121841,
+            "positive_sample_coverage90": null,
+            "positive_sample_width90_ml": 19.708092592592592,
+            "maximum_sample_ml": 869.178,
+            "persistence_mae_ml": 2.5594630013047546,
+            "scalar_crps_ml": 1.0226086238054213
+          },
+          "presence_discrimination": {
+            "patient_balanced_auc": 0.6302083333333333,
+            "probability_range": [
+              0.5242438316345215,
+              0.5980824828147888
+            ],
+            "false_absence_targets_at_half": 0,
+            "false_presence_targets_at_half": 15
+          },
+          "numerical_reference_gate_not_used_for_selection": {
+            "mae_pass": false,
+            "crps_pass": false
+          }
+        },
+        "gaussian": {
+          "all": {
+            "targets": 36,
+            "patients": 18,
+            "official_mean_mae_ml": 1.6732670348137617,
+            "official_crps_ml": 1.6223653650118246,
+            "cdf_mean_mae_ml": 1.9161113158502312,
+            "cdf_crps_ml": 1.6060630036418881,
+            "cdf_crps_underprediction_ml": 1.4377422347256112,
+            "cdf_crps_overprediction_ml": 0.16832076891627717,
+            "absolute_64_mean_minus_cdf_mean_ml": 0.5573452778775102,
+            "signed_64_mean_minus_cdf_mean_ml": -0.02509343433110929,
+            "signed_64_crps_minus_cdf_crps_ml": 0.016302361369936253,
+            "presence_probability": 0.5533833114637269,
+            "presence_brier": 0.2328410892448434,
+            "presence_log_score": 0.6586340533787602,
+            "top1_sample_volume_share": 0.19459205655661618,
+            "top4_sample_volume_share": 0.5075298156383476,
+            "sample_median_ml": 0.2219861111111111,
+            "sample_mean_ml": 1.88693714245326,
+            "positive_sample_median_ml": 1.2940694444444445,
+            "positive_sample_mean_ml": 3.381871915128292,
+            "positive_sample_coverage90": null,
+            "positive_sample_width90_ml": 20.256444444444444,
+            "maximum_sample_ml": 311.095,
+            "persistence_mae_ml": 1.8158056770658328,
+            "scalar_crps_ml": 1.5197652734609113
+          },
+          "future_present": {
+            "targets": 21,
+            "patients": 15,
+            "official_mean_mae_ml": 1.6877911585900518,
+            "official_crps_ml": 1.9955456624428431,
+            "cdf_mean_mae_ml": 1.9222188443373862,
+            "cdf_crps_ml": 1.9607424806439622,
+            "cdf_crps_underprediction_ml": 1.8433730826847665,
+            "cdf_crps_overprediction_ml": 0.11736939795919567,
+            "absolute_64_mean_minus_cdf_mean_ml": 0.5410733290518484,
+            "signed_64_mean_minus_cdf_mean_ml": 0.0362020637578719,
+            "signed_64_crps_minus_cdf_crps_ml": 0.03480318179888112,
+            "presence_probability": 0.5550129734807545,
+            "presence_brier": 0.19827907696270577,
+            "presence_log_score": 0.589185015614492,
+            "top1_sample_volume_share": 0.19803413654434474,
+            "top4_sample_volume_share": 0.5177280744776088,
+            "sample_median_ml": 0.2356888888888889,
+            "sample_mean_ml": 2.0504866103331247,
+            "positive_sample_median_ml": 1.4190999999999998,
+            "positive_sample_mean_ml": 3.7269083382675894,
+            "positive_sample_coverage90": 0.7333333333333333,
+            "positive_sample_width90_ml": 22.35965,
+            "maximum_sample_ml": 311.095,
+            "persistence_mae_ml": 1.6919167964822714,
+            "scalar_crps_ml": 1.6929130290945371
+          },
+          "future_empty": {
+            "targets": 15,
+            "patients": 9,
+            "official_mean_mae_ml": 1.6601361749624763,
+            "official_crps_ml": 0.31552035830639025,
+            "cdf_mean_mae_ml": 2.1279052928994058,
+            "cdf_crps_ml": 0.42559399359460626,
+            "cdf_crps_underprediction_ml": 0.0,
+            "cdf_crps_overprediction_ml": 0.42559399359460626,
+            "absolute_64_mean_minus_cdf_mean_ml": 0.7095661389805787,
+            "signed_64_mean_minus_cdf_mean_ml": -0.4677691179369292,
+            "signed_64_crps_minus_cdf_crps_ml": -0.11007363528821595,
+            "presence_probability": 0.5545713829773443,
+            "presence_brier": 0.30791668138079203,
+            "presence_log_score": 0.8096689773867413,
+            "top1_sample_volume_share": 0.2072249127440743,
+            "top4_sample_volume_share": 0.513680052717371,
+            "sample_median_ml": 0.20395370370370372,
+            "sample_mean_ml": 1.6601361749624763,
+            "positive_sample_median_ml": 1.2063888888888892,
+            "positive_sample_mean_ml": 2.952997820187753,
+            "positive_sample_coverage90": null,
+            "positive_sample_width90_ml": 14.591000000000001,
+            "maximum_sample_ml": 298.406,
+            "persistence_mae_ml": 2.5594630013047546,
+            "scalar_crps_ml": 1.0226086238054213
+          },
+          "presence_discrimination": {
+            "patient_balanced_auc": 0.6302083333333333,
+            "probability_range": [
+              0.5286222100257874,
+              0.5964382886886597
+            ],
+            "false_absence_targets_at_half": 0,
+            "false_presence_targets_at_half": 15
+          },
+          "numerical_reference_gate_not_used_for_selection": {
+            "mae_pass": false,
+            "crps_pass": false
+          }
+        },
+        "nonempty_patient_failures": {
+          "logistic": {
+            "official": {
+              "mae_worse_than_persistence": 11,
+              "crps_worse_than_scalar": 5
+            },
+            "cdf": {
+              "mae_worse_than_persistence": 11,
+              "crps_worse_than_scalar": 5
+            }
+          },
+          "gaussian": {
+            "official": {
+              "mae_worse_than_persistence": 10,
+              "crps_worse_than_scalar": 5
+            },
+            "cdf": {
+              "mae_worse_than_persistence": 8,
+              "crps_worse_than_scalar": 4
+            }
+          }
+        },
+        "gaussian_minus_logistic_paired_intervals": {
+          "all": {
+            "official_mae_ml": {
+              "patients": 18,
+              "difference": -0.4780799278782474,
+              "ci95": [
+                -1.0318419413641096,
+                -0.06349297680167686
+              ],
+              "patients_worse": 4,
+              "patients_better": 14
+            },
+            "official_crps_ml": {
+              "patients": 18,
+              "difference": -0.01275455392897129,
+              "ci95": [
+                -0.030102560037953988,
+                0.0027331737180550895
+              ],
+              "patients_worse": 2,
+              "patients_better": 16
+            },
+            "cdf_mae_ml": {
+              "patients": 18,
+              "difference": -0.08878457270710897,
+              "ci95": [
+                -0.40260579008023145,
+                0.319232026471983
+              ],
+              "patients_worse": 5,
+              "patients_better": 13
+            },
+            "cdf_crps_ml": {
+              "patients": 18,
+              "difference": 0.0027583307848635798,
+              "ci95": [
+                -0.007341067230084634,
+                0.01876969121667138
+              ],
+              "patients_worse": 2,
+              "patients_better": 16
+            },
+            "presence_brier": {
+              "patients": 18,
+              "difference": -0.00012265203141363182,
+              "ci95": [
+                -0.001082457974855887,
+                0.0008627242483232015
+              ],
+              "patients_worse": 7,
+              "patients_better": 11
+            }
+          },
+          "future_present": {
+            "official_mae_ml": {
+              "patients": 15,
+              "difference": -0.39989183843135834,
+              "ci95": [
+                -0.9452477325499058,
+                -0.05940995181600251
+              ],
+              "patients_worse": 4,
+              "patients_better": 11
+            },
+            "official_crps_ml": {
+              "patients": 15,
+              "difference": -0.011235729356606801,
+              "ci95": [
+                -0.03097745355218649,
+                0.005346196492513026
+              ],
+              "patients_worse": 2,
+              "patients_better": 13
+            },
+            "cdf_mae_ml": {
+              "patients": 15,
+              "difference": 0.0771233193169473,
+              "ci95": [
+                -0.3456171470673914,
+                0.6201421221311307
+              ],
+              "patients_worse": 5,
+              "patients_better": 10
+            },
+            "cdf_crps_ml": {
+              "patients": 15,
+              "difference": 0.00798612703284894,
+              "ci95": [
+                -0.0044490225059023595,
+                0.026779573913434867
+              ],
+              "patients_worse": 3,
+              "patients_better": 12
+            },
+            "presence_brier": {
+              "patients": 15,
+              "difference": -0.0017166901862550829,
+              "ci95": [
+                -0.00232294385628603,
+                -0.0010043964560742323
+              ],
+              "patients_worse": 2,
+              "patients_better": 13
+            }
+          },
+          "future_empty": {
+            "official_mae_ml": {
+              "patients": 9,
+              "difference": -0.5714343438545862,
+              "ci95": [
+                -1.334665438781182,
+                -0.027053224833475158
+              ],
+              "patients_worse": 0,
+              "patients_better": 9
+            },
+            "official_crps_ml": {
+              "patients": 9,
+              "difference": -0.019689413546412078,
+              "ci95": [
+                -0.04191274791955948,
+                -0.002587959142746749
+              ],
+              "patients_worse": 0,
+              "patients_better": 9
+            },
+            "cdf_mae_ml": {
+              "patients": 9,
+              "difference": -0.7293196980761634,
+              "ci95": [
+                -1.333698803719278,
+                -0.3551729082821337
+              ],
+              "patients_worse": 0,
+              "patients_better": 9
+            },
+            "cdf_crps_ml": {
+              "patients": 9,
+              "difference": -0.020920859062333232,
+              "ci95": [
+                -0.05130994069001691,
+                -0.0038468670101665533
+              ],
+              "patients_worse": 0,
+              "patients_better": 9
+            },
+            "presence_brier": {
+              "patients": 9,
+              "difference": 0.002295188643978917,
+              "ci95": [
+                0.0009695146019918561,
+                0.0033101604876820657
+              ],
+              "patients_worse": 8,
+              "patients_better": 1
+            }
+          }
+        }
+      },
+      "24": {
+        "logistic": {
+          "all": {
+            "targets": 22,
+            "patients": 13,
+            "official_mean_mae_ml": 1.3457638363425548,
+            "official_crps_ml": 1.2003962563780637,
+            "cdf_mean_mae_ml": 2.282022061740374,
+            "cdf_crps_ml": 1.225093481155992,
+            "cdf_crps_underprediction_ml": 0.9202952907987073,
+            "cdf_crps_overprediction_ml": 0.3047981903572843,
+            "absolute_64_mean_minus_cdf_mean_ml": 1.0344541672532828,
+            "signed_64_mean_minus_cdf_mean_ml": -0.4085192780922305,
+            "signed_64_crps_minus_cdf_crps_ml": -0.024697224777928014,
+            "presence_probability": 0.5589554722492511,
+            "presence_brier": 0.25403036715966976,
+            "presence_log_score": 0.7012173163455138,
+            "top1_sample_volume_share": 0.31886058495721836,
+            "top4_sample_volume_share": 0.6259562037844297,
+            "sample_median_ml": 0.324474358974359,
+            "sample_mean_ml": 3.0997591417951464,
+            "positive_sample_median_ml": 1.6024102564102565,
+            "positive_sample_mean_ml": 5.431680257125885,
+            "positive_sample_coverage90": null,
+            "positive_sample_width90_ml": 25.704346153846153,
+            "maximum_sample_ml": 677.986,
+            "persistence_mae_ml": 1.8890385176413338,
+            "scalar_crps_ml": 1.1797608075997768
+          },
+          "future_present": {
+            "targets": 12,
+            "patients": 8,
+            "official_mean_mae_ml": 0.8192404707272848,
+            "official_crps_ml": 2.0256900899112225,
+            "cdf_mean_mae_ml": 1.7693485351862104,
+            "cdf_crps_ml": 1.9544797432495533,
+            "cdf_crps_underprediction_ml": 1.774374365964474,
+            "cdf_crps_overprediction_ml": 0.18010537728507922,
+            "absolute_64_mean_minus_cdf_mean_ml": 1.0669378999993522,
+            "signed_64_mean_minus_cdf_mean_ml": 0.19245249130390432,
+            "signed_64_crps_minus_cdf_crps_ml": 0.07121034666166907,
+            "presence_probability": 0.5623248095313709,
+            "presence_brier": 0.19195521036352386,
+            "presence_log_score": 0.5762954169406215,
+            "top1_sample_volume_share": 0.3000625398064849,
+            "top4_sample_volume_share": 0.6147025383730111,
+            "sample_median_ml": 0.4588958333333333,
+            "sample_mean_ml": 4.22744382917881,
+            "positive_sample_median_ml": 1.9097083333333333,
+            "positive_sample_mean_ml": 7.146382238874385,
+            "positive_sample_coverage90": 0.75,
+            "positive_sample_width90_ml": 32.237604166666664,
+            "maximum_sample_ml": 677.986,
+            "persistence_mae_ml": 1.2806458918688197,
+            "scalar_crps_ml": 1.3701665087913473
+          },
+          "future_empty": {
+            "targets": 10,
+            "patients": 9,
+            "official_mean_mae_ml": 2.440751870473226,
+            "official_crps_ml": 0.40852947367562187,
+            "cdf_mean_mae_ml": 3.563206224376188,
+            "cdf_crps_ml": 0.5513814320772784,
+            "cdf_crps_underprediction_ml": 0.0,
+            "cdf_crps_overprediction_ml": 0.5513814320772784,
+            "absolute_64_mean_minus_cdf_mean_ml": 1.192313195592973,
+            "signed_64_mean_minus_cdf_mean_ml": -1.1224543539029614,
+            "signed_64_crps_minus_cdf_crps_ml": -0.14285195840165651,
+            "presence_probability": 0.5608492725425296,
+            "presence_brier": 0.31492216089487335,
+            "presence_log_score": 0.8238785248442458,
+            "top1_sample_volume_share": 0.3285296922022069,
+            "top4_sample_volume_share": 0.6333207744076409,
+            "sample_median_ml": 0.23099999999999998,
+            "sample_mean_ml": 2.440751870473226,
+            "positive_sample_median_ml": 1.6004444444444443,
+            "positive_sample_mean_ml": 4.570766629820561,
+            "positive_sample_coverage90": null,
+            "positive_sample_width90_ml": 22.581000000000003,
+            "maximum_sample_ml": 144.431,
+            "persistence_mae_ml": 3.3231111789743104,
+            "scalar_crps_ml": 1.252656610475646
+          },
+          "presence_discrimination": {
+            "patient_balanced_auc": 0.5761371127224786,
+            "probability_range": [
+              0.5330740809440613,
+              0.6009469628334045
+            ],
+            "false_absence_targets_at_half": 0,
+            "false_presence_targets_at_half": 10
+          },
+          "numerical_reference_gate_not_used_for_selection": {
+            "mae_pass": false,
+            "crps_pass": false
+          }
+        },
+        "gaussian": {
+          "all": {
+            "targets": 22,
+            "patients": 13,
+            "official_mean_mae_ml": 1.4996434799753702,
+            "official_crps_ml": 1.1863666428969455,
+            "cdf_mean_mae_ml": 1.903262671903005,
+            "cdf_crps_ml": 1.2168590767029492,
+            "cdf_crps_underprediction_ml": 0.9322728018765165,
+            "cdf_crps_overprediction_ml": 0.2845862748264329,
+            "absolute_64_mean_minus_cdf_mean_ml": 0.5429249635307458,
+            "signed_64_mean_minus_cdf_mean_ml": -0.19303961652158563,
+            "signed_64_crps_minus_cdf_crps_ml": -0.030492433806003798,
+            "presence_probability": 0.5604873597621918,
+            "presence_brier": 0.25447092668525095,
+            "presence_log_score": 0.7021085748585258,
+            "top1_sample_volume_share": 0.24545278529260667,
+            "top4_sample_volume_share": 0.5615379692819339,
+            "sample_median_ml": 0.32412820512820517,
+            "sample_mean_ml": 2.4199568021755953,
+            "positive_sample_median_ml": 1.547705128205128,
+            "positive_sample_mean_ml": 4.234563469006866,
+            "positive_sample_coverage90": null,
+            "positive_sample_width90_ml": 19.39267948717949,
+            "maximum_sample_ml": 240.953,
+            "persistence_mae_ml": 1.8890385176413338,
+            "scalar_crps_ml": 1.1797608075997768
+          },
+          "future_present": {
+            "targets": 12,
+            "patients": 8,
+            "official_mean_mae_ml": 1.4749424097438653,
+            "official_crps_ml": 2.0141297237326703,
+            "cdf_mean_mae_ml": 1.6914604038047512,
+            "cdf_crps_ml": 1.9568837502109118,
+            "cdf_crps_underprediction_ml": 1.797121029375767,
+            "cdf_crps_overprediction_ml": 0.1597627208351452,
+            "absolute_64_mean_minus_cdf_mean_ml": 0.49659172039104726,
+            "signed_64_mean_minus_cdf_mean_ml": 0.13733987636041825,
+            "signed_64_crps_minus_cdf_crps_ml": 0.057245973521758184,
+            "presence_probability": 0.5637181513011456,
+            "presence_brier": 0.19067244078484574,
+            "presence_log_score": 0.5737171749984327,
+            "top1_sample_volume_share": 0.22965637419287727,
+            "top4_sample_volume_share": 0.5433397631992105,
+            "sample_median_ml": 0.4568125,
+            "sample_mean_ml": 3.1826169745375714,
+            "positive_sample_median_ml": 1.85775,
+            "positive_sample_mean_ml": 5.375000565157915,
+            "positive_sample_coverage90": 0.75,
+            "positive_sample_width90_ml": 23.85533333333333,
+            "maximum_sample_ml": 240.953,
+            "persistence_mae_ml": 1.2806458918688197,
+            "scalar_crps_ml": 1.3701665087913473
+          },
+          "future_empty": {
+            "targets": 10,
+            "patients": 9,
+            "official_mean_mae_ml": 2.0002839151355953,
+            "official_crps_ml": 0.38730533089902663,
+            "cdf_mean_mae_ml": 2.639017219192974,
+            "cdf_crps_ml": 0.5257321195773262,
+            "cdf_crps_underprediction_ml": 0.0,
+            "cdf_crps_overprediction_ml": 0.5257321195773262,
+            "absolute_64_mean_minus_cdf_mean_ml": 0.6653120577871179,
+            "signed_64_mean_minus_cdf_mean_ml": -0.6387333040573782,
+            "signed_64_crps_minus_cdf_crps_ml": -0.13842678867829958,
+            "presence_probability": 0.5622722937001122,
+            "presence_brier": 0.31645952375549036,
+            "presence_log_score": 0.8269697413711757,
+            "top1_sample_volume_share": 0.25539537391359296,
+            "top4_sample_volume_share": 0.5755988945714594,
+            "sample_median_ml": 0.2372222222222222,
+            "sample_mean_ml": 2.0002839151355953,
+            "positive_sample_median_ml": 1.5376666666666665,
+            "positive_sample_mean_ml": 3.7268675864643614,
+            "positive_sample_coverage90": null,
+            "positive_sample_width90_ml": 17.90705555555556,
+            "maximum_sample_ml": 88.881,
+            "persistence_mae_ml": 3.3231111789743104,
+            "scalar_crps_ml": 1.252656610475646
+          },
+          "presence_discrimination": {
+            "patient_balanced_auc": 0.5761371127224786,
+            "probability_range": [
+              0.536933958530426,
+              0.5987180471420288
+            ],
+            "false_absence_targets_at_half": 0,
+            "false_presence_targets_at_half": 10
+          },
+          "numerical_reference_gate_not_used_for_selection": {
+            "mae_pass": false,
+            "crps_pass": false
+          }
+        },
+        "nonempty_patient_failures": {
+          "logistic": {
+            "official": {
+              "mae_worse_than_persistence": 7,
+              "crps_worse_than_scalar": 5
+            },
+            "cdf": {
+              "mae_worse_than_persistence": 7,
+              "crps_worse_than_scalar": 3
+            }
+          },
+          "gaussian": {
+            "official": {
+              "mae_worse_than_persistence": 5,
+              "crps_worse_than_scalar": 5
+            },
+            "cdf": {
+              "mae_worse_than_persistence": 5,
+              "crps_worse_than_scalar": 3
+            }
+          }
+        },
+        "gaussian_minus_logistic_paired_intervals": {
+          "all": {
+            "official_mae_ml": {
+              "patients": 13,
+              "difference": 0.15387964363281542,
+              "ci95": [
+                -0.29392193042888093,
+                0.7428485041054396
+              ],
+              "patients_worse": 2,
+              "patients_better": 11
+            },
+            "official_crps_ml": {
+              "patients": 13,
+              "difference": -0.014029613481118131,
+              "ci95": [
+                -0.019952056623804264,
+                -0.008741826492433364
+              ],
+              "patients_worse": 0,
+              "patients_better": 13
+            },
+            "cdf_mae_ml": {
+              "patients": 13,
+              "difference": -0.3787593898373694,
+              "ci95": [
+                -0.7806041155202518,
+                0.2037902675586432
+              ],
+              "patients_worse": 1,
+              "patients_better": 12
+            },
+            "cdf_crps_ml": {
+              "patients": 13,
+              "difference": -0.008234404453042346,
+              "ci95": [
+                -0.01633825930411928,
+                0.0008858703835568514
+              ],
+              "patients_worse": 1,
+              "patients_better": 12
+            },
+            "presence_brier": {
+              "patients": 13,
+              "difference": 0.00044055952558120804,
+              "ci95": [
+                -0.0006134060313951051,
+                0.0015100408157649552
+              ],
+              "patients_worse": 7,
+              "patients_better": 6
+            }
+          },
+          "future_present": {
+            "official_mae_ml": {
+              "patients": 8,
+              "difference": 0.6557019390165806,
+              "ci95": [
+                -0.25631772354245186,
+                1.8709110775496813
+              ],
+              "patients_worse": 2,
+              "patients_better": 6
+            },
+            "official_crps_ml": {
+              "patients": 8,
+              "difference": -0.01156036617855231,
+              "ci95": [
+                -0.01997351322012643,
+                -0.0047774269245564925
+              ],
+              "patients_worse": 0,
+              "patients_better": 8
+            },
+            "cdf_mae_ml": {
+              "patients": 8,
+              "difference": -0.07788813138145884,
+              "ci95": [
+                -0.5486427312704864,
+                0.7246488670625834
+              ],
+              "patients_worse": 1,
+              "patients_better": 7
+            },
+            "cdf_crps_ml": {
+              "patients": 8,
+              "difference": 0.002404006961358588,
+              "ci95": [
+                -0.00529733580619276,
+                0.012452305813804063
+              ],
+              "patients_worse": 2,
+              "patients_better": 6
+            },
+            "presence_brier": {
+              "patients": 8,
+              "difference": -0.0012827695786781224,
+              "ci95": [
+                -0.0022468851914065223,
+                -0.0001541860100656597
+              ],
+              "patients_worse": 2,
+              "patients_better": 6
+            }
+          },
+          "future_empty": {
+            "official_mae_ml": {
+              "patients": 9,
+              "difference": -0.4404679553376304,
+              "ci95": [
+                -0.7951495045589076,
+                -0.14054144964449933
+              ],
+              "patients_worse": 0,
+              "patients_better": 9
+            },
+            "official_crps_ml": {
+              "patients": 9,
+              "difference": -0.02122414277659522,
+              "ci95": [
+                -0.03907352938420243,
+                -0.0077382399390141165
+              ],
+              "patients_worse": 0,
+              "patients_better": 9
+            },
+            "cdf_mae_ml": {
+              "patients": 9,
+              "difference": -0.9241890051832136,
+              "ci95": [
+                -1.4507013404059306,
+                -0.5044112311560948
+              ],
+              "patients_worse": 0,
+              "patients_better": 9
+            },
+            "cdf_crps_ml": {
+              "patients": 9,
+              "difference": -0.025649312499952157,
+              "ci95": [
+                -0.05037063817151517,
+                -0.008596429118643256
+              ],
+              "patients_worse": 0,
+              "patients_better": 9
+            },
+            "presence_brier": {
+              "patients": 9,
+              "difference": 0.0015373628606170087,
+              "ci95": [
+                0.00037431106846117504,
+                0.0025674043574145998
+              ],
+              "patients_worse": 8,
+              "patients_better": 1
+            }
+          }
+        }
+      }
+    },
+    "targets": 58,
+    "patient_horizon_rows": 31,
+    "exact_sample_replays": 116,
+    "cdf_method": "float64 sums over every feasible integer count and all16 presence patterns; no quadrature or Monte Carlo",
+    "official_gates_unchanged": true,
+    "cdf_reference_does_not_select_checkpoints": true,
+    "conditional_intervals": "exact equal-weight ranks within saved positive draws; descriptive, not a change to official scores",
+    "source_hashes": {
+      "logistic": {
+        "checkpoint": "654950e95b58bf28a361871b807da33dfb87895f7f5fd4c950a574319953d755",
+        "cases": "be5d6caf9a825135b7cb4e10f9596fdafa22cbeee7d19ce5365fa17b427c9336"
+      },
+      "gaussian": {
+        "checkpoint": "3e6c6b372273a7427084dc40fc288c233289e775f7877790af51f99c7751602c",
+        "cases": "c6b0817d0e6dc6c4d0c5b868669ccd2c751e9612a49e2bb9878032b677994713"
+      }
+    },
+    "seconds": 5.531319029047154,
+    "implementation_sha256": {
+      "src/patient_state/core_cdf.py": "8d84fe65eb40e59258609693eade4c336917fcf594b7f6d20eb69923e8aaa010",
+      "scripts/compare_count_families.py": "61142419fa43a5f9071a5fef6bec440b9329aaf185215bbd8e28deb4a775dff0"
+    }
+  },
+  "initialization_verification": {
+    "identical_original_raw_parameters": true,
+    "original_scalar_sha256": "cf064a1356fc2f5fd0284ac324a837eef4660575d32e43923ebcdb9f13c885ae",
+    "log_variance_matched": true,
+    "maximum_relative_variance_error": 1.1920928955078125e-07,
+    "warm_started_from_fitted_logistic": false
+  },
+  "verification": {
+    "regression_tests_passed": 9,
+    "original_logistic_and_gaussian_sample_replays": 116,
+    "deterministic_cdf_validated_against_exhaustive_small_support_pmf": true,
+    "cdf_finite_and_monotone_all_targets": true,
+    "native_map_conservation_verified": 192,
+    "no_probability_floor": true,
+    "no_sample_clipping_or_resampling": true,
+    "reserved_patients_opened": 0,
+    "local_checkpoint_hash_verified": true,
+    "preserved_logistic_checkpoint_unchanged": true,
+    "documentation_tests_passed": 27,
+    "archive_link_verification_passed": true,
+    "technical_handbook_passed": true
+  },
+  "artifacts": {
+    "gpu_root": "/home/aditya/experiments/world-model-mu-gaussian-count-20261108",
+    "local_root": "outputs/mu-gaussian-count-20261108",
+    "checkpoint": "build/quantity-terminal.pt",
+    "initial_checkpoint": "build/quantity-initial.pt",
+    "patient_results": "comparison/core-cdf-patients.json",
+    "target_results": "comparison/core-cdf-cases.json",
+    "timeline": "timeline/predictive",
+    "spatial_checkpoint": null
+  },
+  "conclusion": "No eligible checkpoint. Both official quantity gates fail. Gaussian reduces tail severity and Monte Carlo mean discrepancy, but deterministic nonempty-core CRPS is not improved and presence ranking is unchanged. No spatial fitting, extension or sweep."
+}

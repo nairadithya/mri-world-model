@@ -1,0 +1,4 @@
+# Add to the approved CUDA environment, preserving its installed PyTorch build.
+# The exact version used for the November 5 joint model and smoke tests.
+# On mosaic-gpu, install with --no-deps into the existing torch/numpy environment.
+dynamic-network-architectures==0.4.2

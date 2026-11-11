@@ -1,0 +1,213 @@
+{
+  "cohort": "LUMIERE",
+  "local_dispatch_service": "r65-lumiere-transfer-20261103.service",
+  "local_dispatch_service_observed_state": "active/running",
+  "local_dispatch_service_observed_pid": 2887,
+  "local_dispatch_service_restart_policy": "on-failure, 30 seconds",
+  "local_dispatch_service_restart_survival_tested": false,
+  "scope": "developmental within-visit image prediction with automated lesion proxies",
+  "membership_sha256": "0943aa68a363c77f0f57c411545e34fe94917a727d1a3202700397a383e2aea6",
+  "assigned_patients": {
+    "fitting": 55,
+    "selection": 18,
+    "pilot_scoring": 18
+  },
+  "file_eligible_visits": {
+    "fitting": 305,
+    "selection": 178,
+    "pilot_scoring": 116
+  },
+  "incomplete_visit_directories": 39,
+  "shape_xyz": [
+    182,
+    218,
+    182
+  ],
+  "spacing_mm": [
+    1,
+    1,
+    1
+  ],
+  "smoke": {
+    "status": "passed",
+    "cohort": "LUMIERE",
+    "membership_sha256": "0943aa68a363c77f0f57c411545e34fe94917a727d1a3202700397a383e2aea6",
+    "updates_per_arm": 2,
+    "arms": {
+      "A": {
+        "last_batch_wholebrain_mae": 0.6689541935920715,
+        "max_parameter_change": 0.00040030479431152344,
+        "prediction_reload_equal": true,
+        "optimizer_reload_equal": true
+      },
+      "B": {
+        "last_batch_wholebrain_mae": 0.6257274746894836,
+        "max_parameter_change": 0.00040030479431152344,
+        "prediction_reload_equal": true,
+        "optimizer_reload_equal": true
+      },
+      "C": {
+        "last_batch_wholebrain_mae": 0.634766161441803,
+        "max_parameter_change": 0.00040030479431152344,
+        "prediction_reload_equal": true,
+        "optimizer_reload_equal": true
+      }
+    },
+    "code_sha256": "546accee86c8ac33fd78d8179a76edd4b8ed81b58b42426a608ddc87f0fca1df",
+    "cache_manifest_sha256": "567e62aa6427673fbe34c568a013b4c7090ac12c38689deede2f1b314c201027"
+  },
+  "readiness": {
+    "status": "passed",
+    "cohort": "LUMIERE",
+    "membership_sha256": "0943aa68a363c77f0f57c411545e34fe94917a727d1a3202700397a383e2aea6",
+    "code_sha256": "546accee86c8ac33fd78d8179a76edd4b8ed81b58b42426a608ddc87f0fca1df",
+    "cache_manifest_sha256": "567e62aa6427673fbe34c568a013b4c7090ac12c38689deede2f1b314c201027",
+    "control": "mean of the two fixed target planes",
+    "patients": 2,
+    "updates_per_arm": 512,
+    "arms": {
+      "A": {
+        "initial_wholebrain_tumor_mae": [
+          0.9230809211730957,
+          1.5402188301086426
+        ],
+        "mean_control_wholebrain_tumor_mae": [
+          0.5181240439414978,
+          0.6873935461044312
+        ],
+        "final_wholebrain_tumor_mae": [
+          0.05176525563001633,
+          0.044806256890296936
+        ],
+        "encoder_decoder_changed": true,
+        "passed": true,
+        "seconds": 2.5291734740603715,
+        "parameters": 490594
+      },
+      "B": {
+        "initial_wholebrain_tumor_mae": [
+          0.9105393290519714,
+          1.5114736557006836
+        ],
+        "mean_control_wholebrain_tumor_mae": [
+          0.5181240439414978,
+          0.6873935461044312
+        ],
+        "final_wholebrain_tumor_mae": [
+          0.05454326421022415,
+          0.05032631754875183
+        ],
+        "encoder_decoder_changed": true,
+        "passed": true,
+        "seconds": 2.4715397270629182,
+        "parameters": 490594
+      },
+      "C": {
+        "initial_wholebrain_tumor_mae": [
+          0.9073894023895264,
+          1.5201010704040527
+        ],
+        "mean_control_wholebrain_tumor_mae": [
+          0.5181240439414978,
+          0.6873935461044312
+        ],
+        "final_wholebrain_tumor_mae": [
+          0.052084505558013916,
+          0.043063804507255554
+        ],
+        "encoder_decoder_changed": true,
+        "passed": true,
+        "seconds": 2.48307818104513,
+        "parameters": 490594
+      }
+    }
+  },
+  "scorer_check": {
+    "status": "passed",
+    "identity_prediction_errors_zero": true,
+    "baseline_fit_patients": 2,
+    "baseline_scores_diagnostic_only": {
+      "mean": {
+        "wholebrain_mae": 0.4403402830437806,
+        "tumor_mae": 0.6498437805287286,
+        "coverage90": null,
+        "nll": null,
+        "enhancing_mae": 0.7489062940719338,
+        "necrotic_nonenhancing_mae": 1.2672048202902606,
+        "edema_mae": 0.5542109873279433,
+        "tumor_contrast_error": 0.5396343316426724,
+        "boundary_gradient_mae": 0.1519427067249464
+      },
+      "ridge_A": {
+        "wholebrain_mae": 0.6221257256428064,
+        "tumor_mae": 1.1724197055882306,
+        "coverage90": null,
+        "nll": null,
+        "enhancing_mae": 0.797682906833683,
+        "necrotic_nonenhancing_mae": 2.0926239114308136,
+        "edema_mae": 1.2522205944153049,
+        "tumor_contrast_error": 0.8017195661124794,
+        "boundary_gradient_mae": 0.22662819134041787
+      },
+      "ridge_B": {
+        "wholebrain_mae": 0.5540793258105439,
+        "tumor_mae": 1.1337369957549193,
+        "coverage90": null,
+        "nll": null,
+        "enhancing_mae": 1.1906844190502803,
+        "necrotic_nonenhancing_mae": 1.9682938852629963,
+        "edema_mae": 1.028460544837264,
+        "tumor_contrast_error": 0.7652368516819096,
+        "boundary_gradient_mae": 0.19265216188943995
+      },
+      "ridge_C": {
+        "wholebrain_mae": 0.5528860315644648,
+        "tumor_mae": 1.1683278230543062,
+        "coverage90": null,
+        "nll": null,
+        "enhancing_mae": 1.2505998990358973,
+        "necrotic_nonenhancing_mae": 2.0473711826395196,
+        "edema_mae": 1.047493385496469,
+        "tumor_contrast_error": 0.7979314330862934,
+        "boundary_gradient_mae": 0.19363169174009692
+      }
+    },
+    "neural_fullvolume_scores_diagnostic_only": {
+      "wholebrain_mae": 0.5575270313940646,
+      "tumor_mae": 0.5270816408901333,
+      "coverage90": 0.20938805962792756,
+      "nll": 11.17879467161044,
+      "enhancing_mae": 0.5924089875475942,
+      "necrotic_nonenhancing_mae": 0.9140342304715973,
+      "edema_mae": 0.49559260656465554,
+      "tumor_contrast_error": 0.3406236490553944,
+      "boundary_gradient_mae": 0.19030077665001768
+    },
+    "neural_two_visit_seconds": 0.6102059830445796,
+    "total_seconds": 1.7265656680101529,
+    "runner_sha256": "a4bcab8b4f97e9671440d0992bfc93474b1f4663fd922485e477d427f76ec3fc",
+    "instrument_sha256": "546accee86c8ac33fd78d8179a76edd4b8ed81b58b42426a608ddc87f0fca1df",
+    "checker_sha256": "d26deaf62a915dc8735e16deb630962384ae0bf93cbd064130986f92dd25f44b"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "torch": "2.9.1+cu128",
+    "cuda": "12.8",
+    "numpy": "2.5.4",
+    "scipy": "1.16.3",
+    "nibabel": "5.3.2"
+  },
+  "source_sha256": {
+    "check65.py": "d26deaf62a915dc8735e16deb630962384ae0bf93cbd064130986f92dd25f44b",
+    "export65.py": "8f6a6aba32403c1abbe154017c3fbc7c65775b75b5fe3595db758e5e77eea3bd",
+    "launch65.sh": "f7f75cb69dd917ac5d70bdbc01ec90894fdbb9b25c7fa9d792e8402fec8f6465",
+    "lumiere65.py": "776af7c222f34b476514a41491a70c787600060c8a59d22b9c6689ced5a53a15",
+    "run65.py": "546accee86c8ac33fd78d8179a76edd4b8ed81b58b42426a608ddc87f0fca1df",
+    "train65.py": "a4bcab8b4f97e9671440d0992bfc93474b1f4663fd922485e477d427f76ec3fc"
+  },
+  "phase": "transferring selected atlas files; preparation and training queued",
+  "exit_code": null,
+  "job_pid": null,
+  "cohort_fit_lock_present": false,
+  "assessment_metrics_present": false
+}

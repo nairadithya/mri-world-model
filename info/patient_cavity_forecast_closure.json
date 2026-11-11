@@ -1,0 +1,55 @@
+{
+  "date": "2026-11-08",
+  "status": "closed_without_extension_or_light_retuning",
+  "model_identity": "mu-cavity-current-structured-v1",
+  "reason": "Nonempty core suppressed with narrow, poorly covering uncertainty; aggregate gains do not establish useful forecasting.",
+  "selected_steps": {
+    "anatomy": 500,
+    "volume": 500
+  },
+  "nonempty_core_24_week": {
+    "targets": 12,
+    "patients": 8,
+    "descriptive_subgroup_only": true,
+    "methods": {
+      "current": {
+        "volume_error_ml": 3.597085374970144,
+        "crps_ml": 3.528148816685037,
+        "coverage90": 0.0,
+        "width90_ml": 0.34652084938716143
+      },
+      "volume_current": {
+        "volume_error_ml": 1.4934088460480173,
+        "crps_ml": 1.3701663774748642,
+        "coverage90": 1.0,
+        "width90_ml": 7.599206729481618
+      },
+      "persistence": {
+        "volume_error_ml": 1.280645814180995,
+        "crps_ml": 1.280645814180995,
+        "coverage90": null,
+        "width90_ml": null
+      }
+    }
+  },
+  "preservation": {
+    "laptop_directory": "/home/adithya/projects/world-model/outputs/mu-cavity-forecast-20261107/frozen-recipe",
+    "selected_checkpoint_sha256_verified": {
+      "anatomy": "3a8575a5d7256d2b847e2f39dd20b089929e57f6e5b65f6de285be4d5efe9d94",
+      "volume": "cf064a1356fc2f5fd0284ac324a837eef4660575d32e43923ebcdb9f13c885ae"
+    },
+    "matched_case_records": 58,
+    "aggregate_matches_canonical_result": true,
+    "original_gpu_artifacts_retained": true
+  },
+  "retained_references": [
+    "cavity-supervised and original observation models",
+    "current-only scalar controls",
+    "frozen MU24 FLAIR-abnormality candidate",
+    "completed spatial forecasters as negative references"
+  ],
+  "next_direction": "Joint presence and conditional amount distribution followed by spatial decoding that preserves each sampled compartment count.",
+  "next_recipe_implemented": false,
+  "next_training_launched": false,
+  "reserved_images_opened": 0
+}

@@ -1,0 +1,35 @@
+{
+  "provenance": "Transcribed public aggregate values. Sources and interval definitions are recorded per study. No refitting or patient-level data.",
+  "r35": {
+    "state_source": "info/reviews/evidence/r35/metrics_r35.py.stdout.txt, lines 2 and 9",
+    "pair_source": "info/reviews/evidence/r35/correct_independent.py.stdout.txt, lines 1 and 2",
+    "state_interval": "ordinary 95% patient bootstrap",
+    "pair_interval": "family-12 adjusted patient bootstrap",
+    "state": {
+      "LUMIERE: spatial minus scalar-supervised": {
+        "difference": -0.3854589689104732,
+        "ci95": [-0.5184268445572771, -0.2481087079941672]
+      },
+      "SAILOR: spatial minus source mean": {
+        "difference": 0.12956489268105426,
+        "ci95": [-0.25714766246682996, 0.5098457248468479]
+      }
+    },
+    "paired_minus_independent": {
+      "LUMIERE": {
+        "difference": 0.010750627413411495,
+        "ci_family12": [-0.11500718063582582, 0.15689843053347896]
+      },
+      "SAILOR": {
+        "difference": 0.08428622224709112,
+        "ci_family12": [0.029480129474291007, 0.14401586621218176]
+      }
+    }
+  },
+  "corrected_adaptation": {
+    "source": "info/EXPERIMENTS.md, Compact scorecards / P0 and P1 developmental RANO results, corrected SAILOR K-shot table",
+    "support_patients": [0, 3, 5, 10, 15, 20],
+    "JEPA": [0.123, 0.252, 0.241, 0.253, 0.264, 0.263],
+    "CNN control": [0.261, 0.228, 0.225, 0.261, 0.264, 0.227]
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "status": "retained_metadata_checked",
+  "scope": "Read stored manifests, locks and measurements. Check retained predictions/images/fixed states exist at recorded sizes and retired exports are absent. No GPU inference, array replay, new bootstrap, or rehash of large prediction/state payloads. The runner checked retained result hashes before retirement.",
+  "stages": [
+    {
+      "seed": 17,
+      "phase": "fitting-selection",
+      "states": 966,
+      "payload_bytes": 339076448256,
+      "serialized_bytes": 339079281876,
+      "export_seconds": 563.6599750699243,
+      "manifest_sha256": "cc9644abace66c3d4a91ac85d1c5b14df00b1901d17df1cce752fdbbb144f649",
+      "retirement": {
+        "files_retired": 966,
+        "serialized_bytes_retired": 339079281876,
+        "all_absent": true,
+        "source_images_or_prior_artifacts_deleted": false
+      },
+      "scoring_export_manifest_after_model_lock": null
+    },
+    {
+      "seed": 17,
+      "phase": "scoring",
+      "states": 232,
+      "payload_bytes": 81434509312,
+      "serialized_bytes": 81435188816,
+      "export_seconds": 163.2426085609477,
+      "manifest_sha256": "88decfc60570530793fc792981dceaa1c0c773e0eb8b8cd41b852d442f3830f6",
+      "retirement": {
+        "files_retired": 232,
+        "serialized_bytes_retired": 81435188816,
+        "all_absent": true,
+        "source_images_or_prior_artifacts_deleted": false
+      },
+      "scoring_export_manifest_after_model_lock": true
+    },
+    {
+      "seed": 23,
+      "phase": "fitting-selection",
+      "states": 966,
+      "payload_bytes": 339076448256,
+      "serialized_bytes": 339079281876,
+      "export_seconds": 562.5427585890284,
+      "manifest_sha256": "c277faf51c576be33d0ee13de6d25cc9ae8446546128444fad489328964cf87a",
+      "retirement": {
+        "files_retired": 966,
+        "serialized_bytes_retired": 339079281876,
+        "all_absent": true,
+        "source_images_or_prior_artifacts_deleted": false
+      },
+      "scoring_export_manifest_after_model_lock": null
+    },
+    {
+      "seed": 23,
+      "phase": "scoring",
+      "states": 232,
+      "payload_bytes": 81434509312,
+      "serialized_bytes": 81435188816,
+      "export_seconds": 148.48109841591213,
+      "manifest_sha256": "38b1fee4e6e71d9002b0aa3300d6e2244cf50b0f4d4a06e15b8461fe9696e475",
+      "retirement": {
+        "files_retired": 232,
+        "serialized_bytes_retired": 81435188816,
+        "all_absent": true,
+        "source_images_or_prior_artifacts_deleted": false
+      },
+      "scoring_export_manifest_after_model_lock": true
+    },
+    {
+      "seed": 31,
+      "phase": "fitting-selection",
+      "states": 966,
+      "payload_bytes": 339076448256,
+      "serialized_bytes": 339079281876,
+      "export_seconds": 565.0964776440524,
+      "manifest_sha256": "e34dceaa331dd4bb85509895c0824aefb3022a0fabe3a86ad71d015e33d56277",
+      "retirement": {
+        "files_retired": 966,
+        "serialized_bytes_retired": 339079281876,
+        "all_absent": true,
+        "source_images_or_prior_artifacts_deleted": false
+      },
+      "scoring_export_manifest_after_model_lock": null
+    },
+    {
+      "seed": 31,
+      "phase": "scoring",
+      "states": 232,
+      "payload_bytes": 81434509312,
+      "serialized_bytes": 81435188816,
+      "export_seconds": 167.07861940504517,
+      "manifest_sha256": "5e048c19046c3b52ec9018f5c628855112a8e5496eaed288f51a39d08ac223df",
+      "retirement": {
+        "files_retired": 232,
+        "serialized_bytes_retired": 81435188816,
+        "all_absent": true,
+        "source_images_or_prior_artifacts_deleted": false
+      },
+      "scoring_export_manifest_after_model_lock": true
+    }
+  ],
+  "cohort_exported_states": 3594,
+  "cohort_payload_bytes": 1261532872704,
+  "cohort_serialized_bytes": 1261543412076,
+  "fixed_fitting_and_scoring_states_retained": 24,
+  "scoring_prediction_files_retained": 348,
+  "comparison_images_retained": 12,
+  "selected_models_locked": 9,
+  "paired_initialization_and_draws_match": true,
+  "fitting_scoring_encoder_identities_match": true,
+  "model_lock_sha256": "bc424991cf1345748e7b98fe9bfe3b4caee40e030f8de35b8245b3a0a0055c39",
+  "patient_vectors_sha256": "80c71aa838823625b2c94ccec8972110db23ea214660b63cd3f90bc87a62b766",
+  "paired_analysis_inputs_sha256": "dc9af9c5ac3c634b58e5bc5d009436d81783dcd29aec2b53b04b4087601975b0",
+  "empty_reference_visit_counts": {
+    "1": 17,
+    "2": 6,
+    "3": 4
+  },
+  "all_foreground_empty_visit_count": 4,
+  "disk_free_bytes_after_completion": 590862794752
+}

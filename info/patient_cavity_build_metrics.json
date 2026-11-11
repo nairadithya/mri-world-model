@@ -1,0 +1,144 @@
+{
+  "date": "2026-11-06",
+  "status": "single-seed joint fine-tune running; no new performance claim",
+  "preparation": {
+    "fitting_visits": 281,
+    "fitting_cavity_nonempty_visits": 238,
+    "selection_visits": 106,
+    "selection_cavity_nonempty_visits": 97,
+    "reserved_images_opened": 0,
+    "source_masks_verified": "all prepared MU fitting/selection labels exactly agree outside formerly ignored cavity",
+    "images_and_timing": "unchanged; referenced without copying",
+    "parent_catalogue_sha256": "ad7ff11d926702aaec80f86f45098cb0014d97f739867ed1ebb534ffa7180a08"
+  },
+  "smoke": {
+    "passed": true,
+    "updates": 2,
+    "checkpoint_max_difference": [
+      0.0,
+      0.0
+    ],
+    "state_max_difference": 0.0,
+    "encoder_changed": true,
+    "peak_allocated_bytes": 12568494592
+  },
+  "full_volume_smoke": {
+    "datasets": [
+      "LUMIERE",
+      "MU"
+    ],
+    "current_and_four_missing_sequences": true,
+    "instrument_only": true
+  },
+  "timeline_smoke": {
+    "chronological_visits": 2,
+    "saved_five_category_state": true,
+    "viewer_cavity_column_visually_checked": true,
+    "useful_anatomy": false
+  },
+  "review": {
+    "groups": {
+      "fitting_12": {
+        "targets": 55,
+        "patients": 29,
+        "flags": {
+          "core_persistent_nonempty": 26,
+          "substantial_cavity_volume_change": 16,
+          "core_resolved_in_annotation": 5,
+          "substantial_core_reduction": 6,
+          "core_appeared_in_annotation": 5,
+          "core_cavity_exchange_review": 5,
+          "bidirectional_exchange_review": 1,
+          "core_both_empty": 19
+        }
+      },
+      "fitting_24": {
+        "targets": 32,
+        "patients": 21,
+        "flags": {
+          "core_appeared_in_annotation": 6,
+          "core_persistent_nonempty": 10,
+          "substantial_core_reduction": 5,
+          "substantial_cavity_volume_change": 12,
+          "core_cavity_exchange_review": 3,
+          "core_both_empty": 13,
+          "core_resolved_in_annotation": 3
+        }
+      },
+      "selection_12": {
+        "targets": 36,
+        "patients": 18,
+        "flags": {
+          "core_appeared_in_annotation": 7,
+          "core_persistent_nonempty": 14,
+          "core_resolved_in_annotation": 5,
+          "substantial_core_reduction": 1,
+          "substantial_cavity_volume_change": 10,
+          "core_both_empty": 10
+        }
+      },
+      "selection_24": {
+        "targets": 22,
+        "patients": 13,
+        "flags": {
+          "core_appeared_in_annotation": 7,
+          "core_persistent_nonempty": 5,
+          "substantial_cavity_volume_change": 12,
+          "core_cavity_exchange_review": 1,
+          "core_resolved_in_annotation": 6,
+          "substantial_core_reduction": 2,
+          "core_both_empty": 4
+        }
+      }
+    },
+    "review_queue_cases": 6,
+    "catalogue_sha256": "d0a562f8296cec97b62c204e537b7a48cc3120418ec23fcbe933143cea6a536f",
+    "reserved_images_opened": 0,
+    "scope": "Reference-only retrospective supervision inspection; no new model fitted, labels not changed",
+    "limitations": "Common-support voxel transitions need image review; registration and annotation inconsistency remain possible. LUMIERE cavity is unknown. No expert adjudication completed."
+  },
+  "visual_review": {
+    "cases": 6,
+    "expert_adjudicated": false,
+    "targets_relabelled": false,
+    "finding": "Local core/cavity exchange can coexist with little net core-volume change; estimation error is distinct from reference-defined later changes."
+  },
+  "image_support_cavity_exclusions": {
+    "fitting": {
+      "total_cavity_ml": 2381.545,
+      "outside_image_support_ml": 30.973,
+      "fraction": 0.013005422950227689
+    },
+    "selection": {
+      "total_cavity_ml": 1527.392,
+      "outside_image_support_ml": 14.476,
+      "fraction": 0.009477593178437493
+    },
+    "correction": "New anatomy loss/scoring cover the full annotated field. Image losses retain foreground. Frozen baseline inference unchanged."
+  },
+  "schedule": {
+    "steps": 12500,
+    "select_every": 1250,
+    "patch_size": 128,
+    "accumulate": 2,
+    "lr": 0.0001,
+    "seed": 17,
+    "full_volume_selection": true
+  },
+  "observed_progress": {
+    "update": 325,
+    "seconds_per_update": 0.6169687548605726
+  },
+  "runtime_estimate_hours_including_matched_evaluation": [
+    6,
+    8
+  ],
+  "source_archive_sha256": "a31f6bd87a1e10879e7f4fb5c0d8e349eb85767d7cd60b4828400179f74ee1f7",
+  "reserved_images_opened": 0,
+  "reserved_assessment": "deferred; narrow candidate and all forecast/scalar checkpoints preserved",
+  "verification": {
+    "cavity_tests": 4,
+    "existing_patient_state_tests": 17,
+    "structured_forecast_tests": 6
+  }
+}

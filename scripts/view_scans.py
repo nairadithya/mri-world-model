@@ -152,7 +152,7 @@ def build_index(root: str, meta_dir: str | None = None) -> dict:
                 if not (f.endswith(".nii") or f.endswith(".nii.gz")):
                     continue
                 stem = _scan_name(f)
-                kind = "base" if stem in BASE_NAMES else "overlay"
+                kind = "base" if stem in BASE_NAMES or stem.startswith("predicted_") else "overlay"
                 rel = os.path.relpath(os.path.join(spath, f), root)
                 files.append({"name": stem, "rel": rel, "kind": kind})
             smeta: dict[str, str] = {}
@@ -172,7 +172,13 @@ def build_index(root: str, meta_dir: str | None = None) -> dict:
                 sessions.append({"id": pdir if sdir == "." else sdir,
                                  "meta": smeta, "files": files})
         if sessions:
-            patients.append({"id": pdir, "meta": pmeta, "sessions": sessions})
+            timeline_path = os.path.join(ppath, "timeline.json")
+            timeline = None
+            if os.path.isfile(timeline_path):
+                with open(timeline_path) as f:
+                    timeline = json.load(f)
+            patients.append({"id": pdir, "meta": pmeta, "sessions": sessions,
+                             "timeline": timeline})
     return {"root": os.path.abspath(root), "patients": patients}
 
 
@@ -218,6 +224,18 @@ button:hover{background:#2c3a4c}
 #hud{position:absolute;left:8px;bottom:8px;color:var(--mut);font-size:11px;pointer-events:none;
 background:rgba(10,13,18,.6);padding:3px 7px;border-radius:5px}
 .pill{color:var(--mut);font-size:11px;border:1px solid var(--edge);border-radius:999px;padding:2px 8px}
+#timeline{max-height:42vh;overflow:auto;padding:0 14px;background:var(--panel);border-top:1px solid var(--edge)}
+#timeline table{border-collapse:collapse;width:100%;font-size:12px;margin:10px 0}
+#timeline th,#timeline td{padding:7px;text-align:left;border-bottom:1px solid var(--edge)}
+#timeline p{font-size:12px;color:var(--mut)}
+#timeline button{margin:2px}
+@media(max-width:1100px){
+  #app{grid-template-columns:1fr;grid-template-rows:170px minmax(0,1fr)}
+  #side{border-right:0;border-bottom:1px solid var(--edge);min-height:0}
+  #side h1{padding:6px 10px}#searchwrap{padding:4px 10px}#tree{padding-bottom:4px}
+  #meta{display:none}#bar{gap:6px;padding:5px 8px}#timeline{padding:0 8px;max-height:35vh}
+  #timeline table{min-width:900px}#timeline h3{font-size:13px;margin:8px 0}
+}
 </style></head><body>
 <div id="app">
  <div id="side">
@@ -236,6 +254,7 @@ background:rgba(10,13,18,.6);padding:3px 7px;border-radius:5px}
    <span class="pill" id="status">load a scan</span>
   </div>
   <div id="viewer"><canvas id="gl"></canvas><div id="hud"></div></div>
+  <div id="timeline" hidden></div>
  </div>
 </div>
 <script src="/vendor/niivue.umd.js"></script>
@@ -244,7 +263,7 @@ window.__INDEX__ = @@INDEX@@;
 const nv = new niivue.Niivue({backColor:[0.03,0.05,0.08,1], show3Dcrosshair:true,
   isColorbar:false, isRadiologicalConvention:false});
 const ready=nv.attachTo('gl');   // async: volumes added before it resolves get wiped
-const state={base:null, overlays:[]};
+const state={base:null, overlays:[], context:null};
 const $=id=>document.getElementById(id);
 $('rootlabel').textContent=window.__INDEX__.root;
 
@@ -259,7 +278,7 @@ async function refresh(){
   const list=[];
   if(state.base) list.push({url:itemUrl(state.base.rel),name:state.base.name,colormap:'gray',opacity:1});
   for(const o of state.overlays)
-    list.push({url:itemUrl(o.rel),name:o.name,colormap:$('cmap').value,opacity:parseFloat($('op').value)});
+    list.push({url:itemUrl(o.rel),name:o.name,colormap:o.colormap||$('cmap').value,opacity:parseFloat($('op').value)});
   // NiiVue 0.69: loadVolumes APPENDS, and extra option fields break its
   // getFileExt(name||url) — so clear, load by URL only, then style.
   clearVolumes();
@@ -269,11 +288,12 @@ async function refresh(){
   nv.updateGLVolume();
   $('status').textContent=(state.base?state.base.name:'—')+
     (state.overlays.length?('  +'+state.overlays.length+' overlay'+(state.overlays.length>1?'s':'')):'');
-  $('hud').textContent=state.base?('base '+state.base.name):'';
+  $('hud').textContent=state.context||(state.base?('base '+state.base.name):'');
 }
 let queue=Promise.resolve();
 const run=fn=>{queue=queue.then(fn,fn);return queue;};   // serialize refreshes
 function pick(rel,name,kind){
+  state.context=null;
   const parts=rel.split('/');
   if(parts.length>=2)showMeta(parts[0],parts[1],name);
   if(kind==='base'){state.base={rel,name};state.overlays=[];}
@@ -339,6 +359,110 @@ function showMeta(pid,sid,file){
   if(file) h+='<div class="msec"><div class="mtitle">file</div>'+
     '<div class="mrow"><span>name</span><b>'+file+'</b></div></div>';
   $('metabody').innerHTML=h;
+  showTimeline(p);
+}
+function showTimeline(patient){
+  const panel=$('timeline'); panel.replaceChildren();
+  const timeline=patient.timeline; panel.hidden=!timeline;
+  if(!timeline)return;
+  const title=document.createElement('h3'); title.textContent='Patient timeline · '+patient.id;
+  panel.appendChild(title);
+  const note=document.createElement('p');
+  note.textContent=timeline.version>=2 ? timeline.scope+' '+(timeline.forecast_uncertainty||'') : timeline.scope+' Current volumes are model estimates (mL). Forecasts use persistence at +12/+24 nominal weeks. Forecast uncertainty is not fitted. Comparisons use a later model segmentation, not ground truth.';
+  if(timeline.anatomy_note)note.textContent+=' '+timeline.anatomy_note;
+  panel.appendChild(note);
+  const table=document.createElement('table');
+  const header=table.insertRow();
+  const hasCavity=timeline.visits.some(v=>Object.hasOwn(v.current_volumes_ml,'resection_cavity'));
+  const acquisition=timeline.visits.some(v=>v.acquisition);
+  const volumeKeys=['enhancing','necrotic_non_enhancing','edema_flair',...(hasCavity?['resection_cavity']:[])];
+  for(const label of ['Visit','Enhancing','Non-enhancing / necrotic','Edema / FLAIR',...(hasCavity?['Resection cavity']:[]),'Images and anatomy',acquisition?'Hypothetical acquisition scores':'Issued forecasts',acquisition?'Actual evidence':'Previous forecast vs observation']){
+    const th=document.createElement('th');th.textContent=label;header.appendChild(th);
+  }
+  function openImages(base,overlay,context){
+    const b=findByRel(base);if(!b)return;
+    state.base={rel:b.rel,name:b.name};state.overlays=[];
+    state.context=context||null;
+    const o=findByRel(overlay);if(o)state.overlays.push({rel:o.rel,name:o.name});
+    run(refresh);
+  }
+  function button(cell,label,fn){const b=document.createElement('button');b.textContent=label;b.onclick=fn;cell.appendChild(b);}
+  for(const visit of timeline.visits){
+    const row=table.insertRow();row.insertCell().textContent=visit.visit;
+    const volumeCells=volumeKeys.map(()=>row.insertCell());
+    function showVolumes(values){volumeKeys.forEach((key,i)=>volumeCells[i].textContent=values[key]==null?'Not modeled':values[key].toFixed(2));}
+    showVolumes(visit.current_volumes_ml);
+    const prefix=patient.id+'/'+visit.visit+'/';const images=row.insertCell();
+    const anatomicalBase=prefix+(visit.input_sequences.includes('FLAIR')?'FLAIR':'T1')+'.nii.gz';
+    if(visit.anatomy_readouts){
+      const selected=document.createElement('div');images.appendChild(selected);
+      function showAnatomy(name,open){
+        const readout=visit.anatomy_readouts[name];
+        selected.textContent=readout.label+' · '+(readout.cavity_status||readout.definition);
+        showVolumes(readout.volumes_ml);
+        if(open)openImages(anatomicalBase,patient.id+'/'+readout.segmentation,selected.textContent+' · Volumes (mL) derive from this displayed map.');
+      }
+      for(const name of ['native','conditional_legacy'].filter(n=>visit.anatomy_readouts[n]))button(images,visit.anatomy_readouts[name].label,()=>showAnatomy(name,true));
+      showAnatomy(visit.displayed_anatomy||'native',false);
+    }else button(images,'Current anatomy',()=>openImages(prefix+'FLAIR.nii.gz',prefix+'segmentation.nii.gz'));
+    button(images,visit.input_sequences.includes('FLAIR')?'Reconstructed FLAIR':'Missing FLAIR prediction',()=>openImages(prefix+'predicted_FLAIR.nii.gz'));
+    const forecasts=row.insertCell();
+    if(visit.acquisition){
+      forecasts.textContent=Object.entries(visit.acquisition.hypothetical_candidates).map(([s,v])=>s+': predicted utility '+v.toFixed(3)).join(' · ');
+      forecasts.textContent+=' · '+(visit.acquisition.chosen_next?'Next actual reveal: '+visit.acquisition.chosen_next:'Fixed observation budget reached')+' · No calibrated uncertainty';
+    }
+    for(const f of visit.forecasts){
+      const block=document.createElement('div'); forecasts.appendChild(block);
+      button(block,'+'+f.horizon_nominal_weeks+' wk · '+f.method,()=>openImages(f.image?patient.id+'/'+f.image:prefix+'FLAIR.nii.gz',patient.id+'/'+f.segmentation,f.method+' issued at '+visit.visit+' for nominal week '+f.forecast_week+' · '+f.uncertainty_status));
+      if(f.distribution){
+        const values=document.createElement('div');
+        values.textContent='Sample mean [90% interval], enhancing / core / edema'+(f.distribution.mean_ml.length===4?' / cavity':'')+': '+f.distribution.lower90_ml.map((v,i)=>f.distribution.mean_ml[i].toFixed(1)+' ['+v.toFixed(1)+'–'+f.distribution.upper90_ml[i].toFixed(1)+']').join(' / ')+' mL';
+        block.appendChild(values);
+      }
+      if(f.representative_sample!==undefined){
+        const mapVolumes=document.createElement('div');
+        mapVolumes.textContent='Displayed sample '+f.representative_sample+' map volumes (enhancing / core / edema / cavity): '+Object.values(f.volumes_ml).map(v=>v.toFixed(3)).join(' / ')+' mL';
+        block.appendChild(mapVolumes);
+      }
+      if(f.presence_probability){
+        const presence=document.createElement('div');
+        presence.textContent='Presence probability (enhancing / core / edema / cavity): '+f.presence_probability.map(v=>(100*v).toFixed(1)+'%').join(' / ');
+        block.appendChild(presence);
+        const conditional=document.createElement('div');
+        conditional.textContent='Amount conditional on presence, mean [90% interval]: '+f.distribution.conditional_positive.map(v=>v.defined?v.mean_ml.toFixed(3)+' ['+v.lower90_ml.toFixed(3)+'–'+v.upper90_ml.toFixed(3)+']':'No positive sample among 64').join(' / ')+' mL';
+        block.appendChild(conditional);
+      }
+      if(f.history_used){const inputs=document.createElement('div');inputs.textContent='Observations used: '+f.history_used.join(', ');block.appendChild(inputs);}
+      if(f.entropy)button(block,'Anatomy uncertainty',()=>openImages(patient.id+'/'+f.entropy,null,'Sample disagreement; calibration must be assessed against later observations'));
+    }
+    const comparison=row.insertCell();
+    if(visit.acquisition)comparison.textContent='Actually observed: '+visit.acquisition.actually_observed.join(', ')+'. Predicted images are completion outputs, not observations. '+visit.acquisition.cost+'.';
+    else if(!visit.previous_forecast_comparisons.length)comparison.textContent='No observation within ±4 wk of an issued horizon';
+    for(const c of visit.previous_forecast_comparisons){
+      const line=document.createElement('div');
+      line.textContent=c.issued_at+' · '+c.method+' +'+c.horizon_nominal_weeks+' wk (offset '+c.target_offset_nominal_weeks+'): volume error '+Object.values(c.volume_error_ml).map(v=>v.toFixed(2)).join(' / ')+' mL';
+      if(c.comparison_kind==='reference_labels'){
+        line.textContent+=' · Reference-defined '+c.change_group+' (original three compartments); cavity '+(c.cavity_change_group||'not classified');
+        if(c.coverage90)line.textContent+=' · Evaluation marginal interval coverage '+c.coverage90.map(v=>v?'yes':'no').join(' / ');
+        if(c.width90_ml)line.textContent+=' · Marginal interval widths '+c.width90_ml.map(v=>v.toFixed(1)).join(' / ')+' mL';
+        line.textContent+=' · Point error above uses the displayed map (representative scenario for learned forecasts); evaluation mean and marginal metrics are distinct.';
+      }
+      if(c.observed_change_ml)line.textContent+=' · Observed '+c.change_group+': Δ '+c.observed_change_ml.map(v=>v.toFixed(1)).join(' / ')+'; predicted Δ '+c.predicted_change_ml.map(v=>v.toFixed(1)).join(' / ')+' mL · interval covered '+c.coverage90.map(v=>v?'yes':'no').join(' / ');
+      comparison.appendChild(line);
+      button(comparison,'Compare anatomy',()=>{
+        const base=findByRel(prefix+'FLAIR.nii.gz');
+        const current=findByRel(c.reference_segmentation?patient.id+'/'+c.reference_segmentation:prefix+'segmentation.nii.gz');
+        const prior=findByRel(patient.id+'/'+(c.forecast_segmentation||c.issued_at+'/segmentation.nii.gz'));
+        if(!base||!current||!prior)return;
+        state.base={rel:base.rel,name:base.name};
+        state.overlays=[{rel:current.rel,name:c.reference||'Current anatomy',colormap:'red'},
+                        {rel:prior.rel,name:c.method+' forecast',colormap:'blue'}];
+        state.context=(c.reference||'Current model anatomy')+': red · '+c.method+' forecast from '+c.issued_at+': blue · Nominal target offset '+c.target_offset_nominal_weeks+' weeks';
+        run(refresh);
+      });
+    }
+  }
+  panel.appendChild(table);
 }
 render('');
 $('search').oninput=e=>render(e.target.value);

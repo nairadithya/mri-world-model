@@ -1,0 +1,266 @@
+{
+  "status": "representations_locked_segmentation_pending",
+  "recorded_utc": "2026-11-03T22:51:16.927501+00:00",
+  "representation_fits_completed": 27,
+  "updates_per_fit": 4096,
+  "selections_per_fit": 8,
+  "preferred_kib": 64,
+  "selection_mae_by_budget": {
+    "16": 0.49744055845776053,
+    "64": 0.48733895920365344,
+    "256": 0.47842480603343
+  },
+  "selection_deficit_from_best": {
+    "16": 0.019015752424330512,
+    "64": 0.008914153170223427,
+    "256": 0.0
+  },
+  "panel_means_by_budget": {
+    "16": {
+      "A": 0.503355329782243,
+      "B": 0.5020393083793364,
+      "C": 0.4869270372117023
+    },
+    "64": {
+      "A": 0.4944483138298903,
+      "B": 0.4924649975015778,
+      "C": 0.4751035662794923
+    },
+    "256": {
+      "A": 0.48677849580060367,
+      "B": 0.48362398564359826,
+      "C": 0.4648719366560882
+    }
+  },
+  "fits": [
+    {
+      "kib": 16,
+      "panel": "A",
+      "seed": 17,
+      "selected_step": 3584,
+      "selection_wholebrain_mae": 0.5041765680559113,
+      "peak_allocated_bytes": 5860724736
+    },
+    {
+      "kib": 16,
+      "panel": "B",
+      "seed": 17,
+      "selected_step": 4096,
+      "selection_wholebrain_mae": 0.5065697138398387,
+      "peak_allocated_bytes": 5860724736
+    },
+    {
+      "kib": 16,
+      "panel": "C",
+      "seed": 17,
+      "selected_step": 4096,
+      "selection_wholebrain_mae": 0.4864613329859848,
+      "peak_allocated_bytes": 5860724736
+    },
+    {
+      "kib": 64,
+      "panel": "A",
+      "seed": 17,
+      "selected_step": 4096,
+      "selection_wholebrain_mae": 0.49361859002605285,
+      "peak_allocated_bytes": 5860832256
+    },
+    {
+      "kib": 64,
+      "panel": "B",
+      "seed": 17,
+      "selected_step": 3584,
+      "selection_wholebrain_mae": 0.4941554749758137,
+      "peak_allocated_bytes": 5860832256
+    },
+    {
+      "kib": 64,
+      "panel": "C",
+      "seed": 17,
+      "selected_step": 4096,
+      "selection_wholebrain_mae": 0.47168254133964105,
+      "peak_allocated_bytes": 5860832256
+    },
+    {
+      "kib": 256,
+      "panel": "A",
+      "seed": 17,
+      "selected_step": 4096,
+      "selection_wholebrain_mae": 0.49050889751204274,
+      "peak_allocated_bytes": 5861262336
+    },
+    {
+      "kib": 256,
+      "panel": "B",
+      "seed": 17,
+      "selected_step": 4096,
+      "selection_wholebrain_mae": 0.48459155550759575,
+      "peak_allocated_bytes": 5867996160
+    },
+    {
+      "kib": 256,
+      "panel": "C",
+      "seed": 17,
+      "selected_step": 4096,
+      "selection_wholebrain_mae": 0.4644061375546241,
+      "peak_allocated_bytes": 5874729984
+    },
+    {
+      "kib": 16,
+      "panel": "A",
+      "seed": 23,
+      "selected_step": 4096,
+      "selection_wholebrain_mae": 0.5066360184438216,
+      "peak_allocated_bytes": 5874192384
+    },
+    {
+      "kib": 16,
+      "panel": "B",
+      "seed": 23,
+      "selected_step": 4096,
+      "selection_wholebrain_mae": 0.5069995186965097,
+      "peak_allocated_bytes": 5874192384
+    },
+    {
+      "kib": 16,
+      "panel": "C",
+      "seed": 23,
+      "selected_step": 3584,
+      "selection_wholebrain_mae": 0.49080562823311447,
+      "peak_allocated_bytes": 5860724736
+    },
+    {
+      "kib": 64,
+      "panel": "A",
+      "seed": 23,
+      "selected_step": 4096,
+      "selection_wholebrain_mae": 0.5031692864110386,
+      "peak_allocated_bytes": 5860832256
+    },
+    {
+      "kib": 64,
+      "panel": "B",
+      "seed": 23,
+      "selected_step": 3584,
+      "selection_wholebrain_mae": 0.49622388602035156,
+      "peak_allocated_bytes": 5860832256
+    },
+    {
+      "kib": 64,
+      "panel": "C",
+      "seed": 23,
+      "selected_step": 3584,
+      "selection_wholebrain_mae": 0.47938491072976863,
+      "peak_allocated_bytes": 5860832256
+    },
+    {
+      "kib": 256,
+      "panel": "A",
+      "seed": 23,
+      "selected_step": 4096,
+      "selection_wholebrain_mae": 0.4848931882362314,
+      "peak_allocated_bytes": 5867959296
+    },
+    {
+      "kib": 256,
+      "panel": "B",
+      "seed": 23,
+      "selected_step": 4096,
+      "selection_wholebrain_mae": 0.48428865415494865,
+      "peak_allocated_bytes": 5874693120
+    },
+    {
+      "kib": 256,
+      "panel": "C",
+      "seed": 23,
+      "selected_step": 3584,
+      "selection_wholebrain_mae": 0.469693737506682,
+      "peak_allocated_bytes": 5874693120
+    },
+    {
+      "kib": 16,
+      "panel": "A",
+      "seed": 31,
+      "selected_step": 4096,
+      "selection_wholebrain_mae": 0.49925340284699593,
+      "peak_allocated_bytes": 5874155520
+    },
+    {
+      "kib": 16,
+      "panel": "B",
+      "seed": 31,
+      "selected_step": 4096,
+      "selection_wholebrain_mae": 0.4925486926016609,
+      "peak_allocated_bytes": 5874155520
+    },
+    {
+      "kib": 16,
+      "panel": "C",
+      "seed": 31,
+      "selected_step": 4096,
+      "selection_wholebrain_mae": 0.4835141504160076,
+      "peak_allocated_bytes": 5874155520
+    },
+    {
+      "kib": 64,
+      "panel": "A",
+      "seed": 31,
+      "selected_step": 4096,
+      "selection_wholebrain_mae": 0.48655706505257945,
+      "peak_allocated_bytes": 5860832256
+    },
+    {
+      "kib": 64,
+      "panel": "B",
+      "seed": 31,
+      "selected_step": 4096,
+      "selection_wholebrain_mae": 0.487015631508568,
+      "peak_allocated_bytes": 5860832256
+    },
+    {
+      "kib": 64,
+      "panel": "C",
+      "seed": 31,
+      "selected_step": 3584,
+      "selection_wholebrain_mae": 0.4742432467690672,
+      "peak_allocated_bytes": 5867529216
+    },
+    {
+      "kib": 256,
+      "panel": "A",
+      "seed": 31,
+      "selected_step": 4096,
+      "selection_wholebrain_mae": 0.4849334016535368,
+      "peak_allocated_bytes": 5874656256
+    },
+    {
+      "kib": 256,
+      "panel": "B",
+      "seed": 31,
+      "selected_step": 4096,
+      "selection_wholebrain_mae": 0.4819917472682504,
+      "peak_allocated_bytes": 5874656256
+    },
+    {
+      "kib": 256,
+      "panel": "C",
+      "seed": 31,
+      "selected_step": 4096,
+      "selection_wholebrain_mae": 0.46051593490695847,
+      "peak_allocated_bytes": 5874656256
+    }
+  ],
+  "verification": {
+    "independent_patient_aggregation_max_error": 2.220446049250313e-16,
+    "selection_checkpoints_match": true,
+    "matched_draws": true,
+    "matched_panel_initialization": true,
+    "learned_fitting_selection_states": 13041,
+    "extra_random_and_scoring_states": 19305,
+    "preferred_size_rule_recomputed": true
+  },
+  "representation_lock_sha256": "7db678d7d38814130cb5ce348b392226aa063ba12a358824dcd3fb91d63b3cbf",
+  "lock_unix_time": 1793744833.5910037,
+  "segmentation_masks_opened_before_lock": 0,
+  "scientific_limit": "Selection whole-brain appearance only. Lesion retention, segmentation reuse, and all joint acceptance decisions remain unassessed."
+}

@@ -1,0 +1,1312 @@
+{
+  "source_sha256": {
+    "plots/reviewed_reference_metrics.json": "35e4048d6219144f967d35abf0355368b038035b67b2c633d4b5dbfd83d201ae",
+    "r36_phase1_metrics.json": "5fd08fb735011ab90203b1d79bee869e7c30aeae6f7c48315166fb53854660a6",
+    "r38_full_metrics.json": "0bdc7fd9b802f7c3b2d256314b7b86ee83ddb69622692bd30d88497a55a54d83",
+    "r40_full_metrics.json": "89bf1e240da91fc4356261e72b64e32ab1b5dff8bef7913c6dcefd1fd23ef7c8",
+    "preaudit_revisit_metrics.json": "2df9b1c061d9debc898204658b3a8dbc5e4d18e079eb4c00a43c57cfc8b5c42e",
+    "r47_anatomical_signal_metrics.json": "ffa5b6e4bcf17e5dbca00a057a92d6f65f14e3d479e51d4050729caab9bd7c35",
+    "r49_pretraining_state_metrics.json": "ebda6008b35be832ef28cf9c2501c40f250ba35e04834dacc3168108768c0e6c",
+    "r50_r51_clinical_metrics.json": "39abf28cc96ec49e22f82ec7fe5217051bf4af654da0087d7353b514c272bd63",
+    "r50_r51_v2_clinical_metrics.json": "3ad6f988b61f5610fd4c4270a080248f5cd8f0238e4b67c8da78ff843693f0d6",
+    "r50_r51_v3_clinical_metrics.json": "8ea94f089bb3fb3061ea180eb715c27275d7ea6b1e47ea2e2cda23dbebe9f369",
+    "r52_spatial_token_encoder_metrics.json": "dd331a80f44f4480188e3737a4b8e72740cd1056affc20f5c69633e62439674f",
+    "r53_flair_prediction_metrics.json": "3186b3dde3df31ed658ffa16426a6a17b529200708f2b58c0caa13c3bc3108c3",
+    "r56_regional_state_metrics.json": "a4797199fc83a05cad7ee75c314ffb28f5d8148d9149f67643d032e42453ff60",
+    "r57_regional_graph_metrics.json": "4fd5888d76893076c80fb6ee3135848cf9da76f3acea42eedba41dd2476e1e80",
+    "r58_spatial_latent_forecast_metrics.json": "bca6e74ab56bd98887188eaf572be0a2d40a0d6278cd0a168cd37ec061011192",
+    "r48_learning_investigation_metrics.json": "afaa9397900f122c811cb03a7f09d2d03444d4d3be562a1ec41996afff0ada29",
+    "r54_flair_learnability_metrics.json": "0f36a8f3fdc80dc615f03a1cdfdfbe55319b9740355568d313916c79fe082551",
+    "r55_decoder_capacity_metrics.json": "93e23454964a52f42aee3df8f0e62d1f97ba13aefae3daf249b67bf87932957f",
+    "r59_measured_history_metrics.json": "4807fa130e31d8d771b5c52ee650f628bf7ea95700b825b294eda6307bfa1fd8",
+    "r60_regional_source_target_metrics.json": "62791c6e15815504013e9bbdc2d24a4df73847424903799cec75d8e68443c032",
+    "r61_corrected_history_metrics.json": "35ce04e12e9b207a283e8581951267d5491ef185cfca8625c281049b4d626bf9",
+    "r62_mu_history_metrics.json": "d1ea5dd40e1a4721cb6e59b6a9e235265d85c9ad590b2d4a2990e1f09ee473cd"
+  },
+  "figures": [
+    {
+      "name": "r35_state_and_change",
+      "title": "R35: state learning does not establish added paired information",
+      "caption": "State intervals are ordinary 95% patient bootstraps. Observed-change intervals are family-12 adjusted 99.583% intervals. Scores average three fitted seeds. LUMIERE has 149 visits from 26 patients and 117 pairs from 23; SAILOR has 269 visits and 242 pairs from 27. The spatial model also receives dense mask supervision, so the state gain does not isolate architecture. Both scans are observed for paired change. Cohort-specific controls and panel scales differ. The JSON cites the reviewed numerical receipts, including the corrected independent-state comparison.",
+      "sources": [
+        "plots/reviewed_reference_metrics.json"
+      ],
+      "values": [
+        {
+          "panel": "Current state; different controls by cohort",
+          "label": "LUMIERE: spatial minus scalar-supervised",
+          "difference": -0.3854589689104732,
+          "interval": [
+            -0.5184268445572771,
+            -0.2481087079941672
+          ],
+          "interval_key": "ci95"
+        },
+        {
+          "panel": "Current state; different controls by cohort",
+          "label": "SAILOR: spatial minus source mean",
+          "difference": 0.12956489268105426,
+          "interval": [
+            -0.25714766246682996,
+            0.5098457248468479
+          ],
+          "interval_key": "ci95"
+        },
+        {
+          "panel": "Observed change: paired head minus independent state subtraction",
+          "label": "LUMIERE",
+          "difference": 0.010750627413411495,
+          "interval": [
+            -0.11500718063582582,
+            0.15689843053347896
+          ],
+          "interval_key": "ci_family12"
+        },
+        {
+          "panel": "Observed change: paired head minus independent state subtraction",
+          "label": "SAILOR",
+          "difference": 0.08428622224709112,
+          "interval": [
+            0.029480129474291007,
+            0.14401586621218176
+          ],
+          "interval_key": "ci_family12"
+        }
+      ]
+    },
+    {
+      "name": "corrected_adaptation",
+      "title": "Corrected-cache adaptation reverses the old zero-shot ordering",
+      "caption": "Recorded corrected SAILOR response-category scores. Lines connect evaluated support sizes; no uncertainty estimates are supplied. The CNN column is the recorded control, not the entire historical CNN sweep. SAILOR is reused development data and the response-code mapping lacks independent confirmation. These curves supersede the legacy adaptation plots as a description of the corrected cache; they are not anatomical transfer evidence.",
+      "sources": [
+        "plots/reviewed_reference_metrics.json"
+      ],
+      "values": {
+        "source": "info/EXPERIMENTS.md, Compact scorecards / P0 and P1 developmental RANO results, corrected SAILOR K-shot table",
+        "support_patients": [
+          0,
+          3,
+          5,
+          10,
+          15,
+          20
+        ],
+        "JEPA": [
+          0.123,
+          0.252,
+          0.241,
+          0.253,
+          0.264,
+          0.263
+        ],
+        "CNN control": [
+          0.261,
+          0.228,
+          0.225,
+          0.261,
+          0.264,
+          0.227
+        ]
+      }
+    },
+    {
+      "name": "r36_observed_change",
+      "title": "R36: added encoder accessibility remains unresolved",
+      "caption": "Points show paired patient-uniform error differences across three fitted seeds. Lines are family-three adjusted 98.33% patient-bootstrap intervals on 117 observed pairs from 23 LUMIERE development patients. A is state-only, B is unbalanced change, C is change-balanced, and D adds nuisance training. This is observed change, not forecasting. Negative values favor the first arm.",
+      "sources": [
+        "r36_phase1_metrics.json"
+      ],
+      "values": [
+        {
+          "panel": "Matched frozen readouts; both scans observed",
+          "label": "Change-balanced \u2212 state-only",
+          "difference": 0.0019487072284540491,
+          "interval": [
+            -0.004489509304709028,
+            0.007941077916512497
+          ],
+          "interval_key": "family_adjusted_ci"
+        },
+        {
+          "panel": "Matched frozen readouts; both scans observed",
+          "label": "Change-balanced \u2212 unbalanced",
+          "difference": -0.003067225471056698,
+          "interval": [
+            -0.007994764111781858,
+            0.002643562764073338
+          ],
+          "interval_key": "family_adjusted_ci"
+        },
+        {
+          "panel": "Matched frozen readouts; both scans observed",
+          "label": "Nuisance-trained \u2212 change-balanced",
+          "difference": 0.0024976095959822002,
+          "interval": [
+            -0.0003736735320874224,
+            0.005686569436786902
+          ],
+          "interval_key": "family_adjusted_ci"
+        }
+      ]
+    },
+    {
+      "name": "r38_joint_training",
+      "title": "R38: joint training did not establish a forecasting gain",
+      "caption": "Lines are adjusted 99.5% patient-bootstrap intervals for the selected forecast contrasts. The fixed comparison uses 75 pairs from 18 reused LUMIERE patients and averages fitted seed scores. Joint history also failed current-state retention. Intervals crossing zero do not establish equivalence.",
+      "sources": [
+        "r38_full_metrics.json"
+      ],
+      "values": [
+        {
+          "panel": "Forecast contrasts",
+          "label": "Joint history \u2212 joint latest",
+          "difference": 0.0017909344396291142,
+          "interval": [
+            -0.10021764350613867,
+            0.09426359708419194
+          ],
+          "interval_key": "ci_99_5"
+        },
+        {
+          "panel": "Forecast contrasts",
+          "label": "Joint history \u2212 detached history",
+          "difference": 0.020334319729777506,
+          "interval": [
+            -0.06903793461890781,
+            0.10308392157788318
+          ],
+          "interval_key": "ci_99_5"
+        },
+        {
+          "panel": "Forecast contrasts",
+          "label": "Joint history \u2212 persistence",
+          "difference": 0.0998810421991891,
+          "interval": [
+            -0.03577003311836498,
+            0.2655879715502949
+          ],
+          "interval_key": "ci_99_5"
+        },
+        {
+          "panel": "Forecast contrasts",
+          "label": "Joint history \u2212 empirical change",
+          "difference": 0.1463882205386115,
+          "interval": [
+            0.012658426907302208,
+            0.281944395526234
+          ],
+          "interval_key": "ci_99_5"
+        }
+      ]
+    },
+    {
+      "name": "r40_supplied_horizon",
+      "title": "R40: a supplied horizon did not establish useful history",
+      "caption": "Points are paired patient-uniform CRPS differences; lines are the recorded ordinary 95% patient-bootstrap intervals, not multiplicity-adjusted intervals. The assessment has 75 pairs from 18 reused LUMIERE patients. The realized week-bin horizon is supplied retrospectively. This does not test prospective prediction at a known appointment time.",
+      "sources": [
+        "r40_full_metrics.json"
+      ],
+      "values": [
+        {
+          "panel": "History with supplied horizon minus each control",
+          "label": "Latest + horizon",
+          "difference": -0.0006187927537238094,
+          "interval": [
+            -0.017474118726022694,
+            0.01583384816855912
+          ],
+          "interval_key": "ci95"
+        },
+        {
+          "panel": "History with supplied horizon minus each control",
+          "label": "Persistence",
+          "difference": -0.008304660040878015,
+          "interval": [
+            -0.05058914745020832,
+            0.030465254111164432
+          ],
+          "interval_key": "ci95"
+        },
+        {
+          "panel": "History with supplied horizon minus each control",
+          "label": "Empirical change",
+          "difference": 0.01613242515095837,
+          "interval": [
+            -0.04356085538399168,
+            0.07728021702302812
+          ],
+          "interval_key": "ci95"
+        },
+        {
+          "panel": "History with supplied horizon minus each control",
+          "label": "Ridge + horizon",
+          "difference": 0.024891769826680257,
+          "interval": [
+            -0.011942217779960511,
+            0.07259280478637538
+          ],
+          "interval_key": "ci95"
+        }
+      ]
+    },
+    {
+      "name": "r41_r44_r46_forecast_controls",
+      "title": "Forecasting controls on reused LUMIERE patients",
+      "caption": "Lines are ordinary 95% patient-bootstrap intervals. Each row tests its own matched control: native versus whole-image history, pretrained versus random ViT history, and inclusion versus omission of postoperative or scanner context. These adaptive pilots are not independent replications or a pooled estimate. Small pilot budgets limit conclusions about convergence.",
+      "sources": [
+        "preaudit_revisit_metrics.json"
+      ],
+      "values": [
+        {
+          "panel": "Separate exploratory pilots; 18 scoring patients each",
+          "label": "R41: native crop \u2212 whole image",
+          "difference": -0.0017286933574100947,
+          "interval": [
+            -0.004979778024780512,
+            0.0016321682746004347
+          ],
+          "interval_key": "ci95"
+        },
+        {
+          "panel": "Separate exploratory pilots; 18 scoring patients each",
+          "label": "R42: pretrained \u2212 random ViT",
+          "difference": -0.013897017358399849,
+          "interval": [
+            -0.03141571560202737,
+            0.004509367324887387
+          ],
+          "interval_key": "ci95"
+        },
+        {
+          "panel": "Separate exploratory pilots; 18 scoring patients each",
+          "label": "R44: postoperative context",
+          "difference": 0.0007212391337300923,
+          "interval": [
+            -0.010310239178176065,
+            0.014198319794342192
+          ],
+          "interval_key": "ci95"
+        },
+        {
+          "panel": "Separate exploratory pilots; 18 scoring patients each",
+          "label": "R46: scanner context",
+          "difference": 0.06507951635651273,
+          "interval": [
+            0.006604138180874621,
+            0.12617629392584478
+          ],
+          "interval_key": "ci95"
+        }
+      ]
+    },
+    {
+      "name": "r43_rollout",
+      "title": "R43: continuous dynamics versus matched discrete transitions",
+      "caption": "Points are continuous-minus-discrete CRPS differences and lines are ordinary 95% patient-bootstrap intervals. The same fitted models propagate their predictions through successive steps; the eligible patient subset changes with horizon. Time is nominal LUMIERE week-bin time, not exact scan-day time. There is no pooling across horizons.",
+      "sources": [
+        "preaudit_revisit_metrics.json"
+      ],
+      "values": [
+        {
+          "panel": "Propagated rollout",
+          "label": "Step 1; 18 patients",
+          "difference": 0.10955078128598135,
+          "interval": [
+            0.038688963704094914,
+            0.19776035980078693
+          ],
+          "interval_key": "ci95"
+        },
+        {
+          "panel": "Propagated rollout",
+          "label": "Step 2; 17 patients",
+          "difference": 0.1772738953062871,
+          "interval": [
+            0.03251080316193531,
+            0.33584126178565377
+          ],
+          "interval_key": "ci95"
+        },
+        {
+          "panel": "Propagated rollout",
+          "label": "Step 3; 13 patients",
+          "difference": 0.25388172836501116,
+          "interval": [
+            -0.05282125942672385,
+            0.5877133848956697
+          ],
+          "interval_key": "ci95"
+        }
+      ]
+    },
+    {
+      "name": "r45_r46_response_controls",
+      "title": "R45/R46: response assessment and perfusion forecasting",
+      "caption": "Lines are ordinary 95% patient-bootstrap intervals. R45 assesses binary response after both scans are observed, on 48 pairs from 16 reused LUMIERE patients. R46 forecasts anatomy from cutoff structural measurements with or without perfusion, on 238 pairs from 27 SAILOR development patients. Panels have different units, tasks, and scales. Neither comparison establishes the tested incremental benefit.",
+      "sources": [
+        "preaudit_revisit_metrics.json"
+      ],
+      "values": [
+        {
+          "panel": "R45: observed binary response; 16 LUMIERE patients",
+          "label": "R45: paired \u2212 separate encoders",
+          "difference": -0.1827924648059632,
+          "interval": [
+            -0.35786534225007904,
+            0.03469553536389604
+          ],
+          "interval_key": "ci95"
+        },
+        {
+          "panel": "R45: observed binary response; 16 LUMIERE patients",
+          "label": "R45: paired \u2212 later image",
+          "difference": 0.03326969603519234,
+          "interval": [
+            -0.032550190789909325,
+            0.09760163164633516
+          ],
+          "interval_key": "ci95"
+        },
+        {
+          "panel": "R46: anatomical forecasting; 27 SAILOR patients",
+          "label": "R46: perfusion \u2212 structural",
+          "difference": 0.18926543974019255,
+          "interval": [
+            -0.00251106476699207,
+            0.5599985537513223
+          ],
+          "interval_key": "ci95"
+        },
+        {
+          "panel": "R46: anatomical forecasting; 27 SAILOR patients",
+          "label": "R46: perfusion \u2212 missingness",
+          "difference": 0.1767629556977885,
+          "interval": [
+            -0.01347541562010926,
+            0.5343280680946824
+          ],
+          "interval_key": "ci95"
+        }
+      ]
+    },
+    {
+      "name": "r47_current_state_transfer",
+      "title": "R47: current-state gain in-domain, no established history gain",
+      "caption": "Lines are recorded adjusted 97.5% patient-bootstrap intervals. Current measured anatomy and the retrospectively supplied interval improve the in-domain distributional score against persistence. The history increment is unresolved and the current-state advantage does not transfer. Panels use independent axis limits. Source results average two repeated nested partitions; locked source models supply developmental transfer predictions.",
+      "sources": [
+        "r47_anatomical_signal_metrics.json"
+      ],
+      "values": [
+        {
+          "panel": "LUMIERE: 48 development patients",
+          "label": "Current + horizon \u2212 persistence",
+          "difference": -0.11346911381528295,
+          "interval": [
+            -0.19566688189378342,
+            -0.031457383645897494
+          ],
+          "interval_key": "ci97_5"
+        },
+        {
+          "panel": "LUMIERE: 48 development patients",
+          "label": "History + horizon \u2212 current + horizon",
+          "difference": -0.02223731297591305,
+          "interval": [
+            -0.059148572982331026,
+            0.009701585461779474
+          ],
+          "interval_key": "ci97_5"
+        },
+        {
+          "panel": "SAILOR: 27 development patients",
+          "label": "Current + horizon \u2212 persistence",
+          "difference": 0.1537660578018197,
+          "interval": [
+            0.027129485988046136,
+            0.2898810606704715
+          ],
+          "interval_key": "ci97_5"
+        },
+        {
+          "panel": "SAILOR: 27 development patients",
+          "label": "History + horizon \u2212 current + horizon",
+          "difference": 0.03222691875565243,
+          "interval": [
+            0.012435807948169255,
+            0.05552548740440095
+          ],
+          "interval_key": "ci97_5"
+        }
+      ]
+    },
+    {
+      "name": "r49_pretraining_scores",
+      "title": "R49: matched pretraining improves overlap, absolute Dice stays low",
+      "caption": "Points are means of patient-uniform scores over two fitted seeds on 60 visits from 13 reused LUMIERE scoring patients. No arm-wise uncertainty is supplied here. Architecture, supervision, patient draws, and selection opportunities are matched. Dice is unitless with 1 indicating perfect overlap. The next figure gives the paired uncertainty and volume-retention criterion.",
+      "sources": [
+        "r49_pretraining_state_metrics.json"
+      ],
+      "values": [
+        {
+          "metric": "dice",
+          "arm": "pretrained",
+          "value": 0.1981761106608158
+        },
+        {
+          "metric": "dice",
+          "arm": "random",
+          "value": 0.15814305579124863
+        },
+        {
+          "metric": "mae",
+          "arm": "pretrained",
+          "value": 1.1140824464290557
+        },
+        {
+          "metric": "mae",
+          "arm": "random",
+          "value": 1.2506728008752257
+        }
+      ]
+    },
+    {
+      "name": "r49_pretraining_contrasts",
+      "title": "R49: paired evidence for an initialization benefit",
+      "caption": "Lines are adjusted 97.5% patient-bootstrap intervals over 13 scoring patients. Both seeds favor pretraining for Dice. The volume interval crosses zero but its upper limit passes the specified +0.05 retention allowance. This supports initialization under the matched recipe, not clinical utility or temporal understanding. Panels have different units.",
+      "sources": [
+        "r49_pretraining_state_metrics.json"
+      ],
+      "values": [
+        {
+          "panel": "Nonempty mask overlap",
+          "label": "Nonempty Dice",
+          "difference": 0.04003305486956717,
+          "interval": [
+            0.01956272534334193,
+            0.059458892178316035
+          ],
+          "interval_key": "ci97_5"
+        },
+        {
+          "panel": "Current volume error",
+          "label": "Volume MAE",
+          "difference": -0.13659035444617001,
+          "interval": [
+            -0.29553238208919896,
+            0.036304273527092576
+          ],
+          "interval_key": "ci97_5"
+        }
+      ]
+    },
+    {
+      "name": "r50_r51_clinical_objectives",
+      "title": "R50/R51: no accepted primary JEPA gain across the three recipes",
+      "caption": "Lines are family-three adjusted 98.33% patient-bootstrap intervals for observed four-class response log loss on 10 reused scoring patients. Versions change bundled training choices and are not a controlled single-factor ablation. v3 recovers fitting readiness; v1 and v2 retain their readiness limitations. Independent panel scales preserve visible uncertainty. The observed-response task is not future forecasting.",
+      "sources": [
+        "r50_r51_clinical_metrics.json",
+        "r50_r51_v2_clinical_metrics.json",
+        "r50_r51_v3_clinical_metrics.json"
+      ],
+      "values": [
+        {
+          "panel": "v1",
+          "label": "Direct BrainIAC \u2212 DenseNet",
+          "difference": 0.05112214343373824,
+          "interval": [
+            -0.03795752372958518,
+            0.15974966787345551
+          ],
+          "interval_key": "ci_family3"
+        },
+        {
+          "panel": "v1",
+          "label": "JEPA \u2212 direct supervision",
+          "difference": 0.04207192480817284,
+          "interval": [
+            0.008911966213789799,
+            0.07176642046228324
+          ],
+          "interval_key": "ci_family3"
+        },
+        {
+          "panel": "v1",
+          "label": "JEPA \u2212 shuffled teacher",
+          "difference": 0.01069743353198791,
+          "interval": [
+            -0.016572986615957044,
+            0.03452437254703805
+          ],
+          "interval_key": "ci_family3"
+        },
+        {
+          "panel": "v2",
+          "label": "Direct BrainIAC \u2212 DenseNet",
+          "difference": 0.052448838581924076,
+          "interval": [
+            -0.027291189323541507,
+            0.1455387197825496
+          ],
+          "interval_key": "ci_family3"
+        },
+        {
+          "panel": "v2",
+          "label": "JEPA \u2212 direct supervision",
+          "difference": -0.014798213810232663,
+          "interval": [
+            -0.042184719636629175,
+            0.004354626481835567
+          ],
+          "interval_key": "ci_family3"
+        },
+        {
+          "panel": "v2",
+          "label": "JEPA \u2212 shuffled teacher",
+          "difference": -0.01364010572550769,
+          "interval": [
+            -0.03983493012178752,
+            0.005202077985423905
+          ],
+          "interval_key": "ci_family3"
+        },
+        {
+          "panel": "v3",
+          "label": "Direct BrainIAC \u2212 DenseNet",
+          "difference": -0.16139953103426036,
+          "interval": [
+            -0.30540091375924355,
+            0.008607077613512521
+          ],
+          "interval_key": "ci_family3"
+        },
+        {
+          "panel": "v3",
+          "label": "JEPA \u2212 direct supervision",
+          "difference": 0.002675799915001198,
+          "interval": [
+            -0.0022368343925360835,
+            0.008289020459420177
+          ],
+          "interval_key": "ci_family3"
+        },
+        {
+          "panel": "v3",
+          "label": "JEPA \u2212 shuffled teacher",
+          "difference": -0.006602124875091509,
+          "interval": [
+            -0.020552542243314365,
+            0.00632695408620225
+          ],
+          "interval_key": "ci_family3"
+        }
+      ]
+    },
+    {
+      "name": "r52_token_interface",
+      "title": "R52: a token-interface replacement was not established",
+      "caption": "The candidate is the compact CNN, so all signs are CNN minus BrainIAC. Lines are family-three adjusted 98.33% patient-bootstrap intervals on 13 reused LUMIERE patients. Both encoders use the same 216 by 64 token interface and fresh readouts. Mean Dice is about 0.0666 for both. The figure does not identify whether information was lost in the backbone, interface, or readout.",
+      "sources": [
+        "r52_spatial_token_encoder_metrics.json"
+      ],
+      "values": [
+        {
+          "panel": "Fresh token-only anatomical readouts",
+          "label": "Nonempty Dice",
+          "difference": 0.00015019018067868365,
+          "interval": [
+            -0.016150246445534887,
+            0.018828876714980253
+          ],
+          "interval_key": "ci_family3"
+        },
+        {
+          "panel": "Volume retention",
+          "label": "Volume MAE",
+          "difference": -0.09908486228440921,
+          "interval": [
+            -0.22233229662635184,
+            0.02365009901921308
+          ],
+          "interval_key": "ci_family3"
+        }
+      ]
+    },
+    {
+      "name": "r53_image_prediction",
+      "title": "R53: small completion gain, no useful image-forecast gain",
+      "caption": "Lines are family-five adjusted 99% patient-bootstrap intervals. Completion uses 13 scoring patients and forecasting uses 10. Errors are in standardized image-intensity units, not physical tissue units. The small completion improvement misses the fixed useful-gain criterion. Separate panel scales avoid hiding the near-zero forecast contrasts.",
+      "sources": [
+        "r53_flair_prediction_metrics.json"
+      ],
+      "values": [
+        {
+          "panel": "Standardized FLAIR completion",
+          "label": "Pretrained \u2212 random",
+          "difference": -0.01450408387249514,
+          "interval": [
+            -0.021487099997153654,
+            -0.009191704890961914
+          ],
+          "interval_key": "ci_family5"
+        },
+        {
+          "panel": "Standardized future FLAIR",
+          "label": "Pretrained \u2212 random",
+          "difference": 0.00016107761449059564,
+          "interval": [
+            -0.0017044396533184097,
+            0.0011220702528767557
+          ],
+          "interval_key": "ci_family5"
+        },
+        {
+          "panel": "Standardized future FLAIR",
+          "label": "History \u2212 latest",
+          "difference": 6.477909984466956e-05,
+          "interval": [
+            -0.001422155769301519,
+            0.0010691396488100356
+          ],
+          "interval_key": "ci_family5"
+        },
+        {
+          "panel": "Standardized future FLAIR",
+          "label": "History \u2212 persistence",
+          "difference": 0.0005527218984166027,
+          "interval": [
+            -0.0008064037979393808,
+            0.001442118177810911
+          ],
+          "interval_key": "ci_family5"
+        },
+        {
+          "panel": "Standardized future FLAIR",
+          "label": "History \u2212 mean change",
+          "difference": -0.005538460638798532,
+          "interval": [
+            -0.006432386307674673,
+            -0.004511697816560845
+          ],
+          "interval_key": "ci_family5"
+        }
+      ]
+    },
+    {
+      "name": "r56_r57_regional_context",
+      "title": "Regional context helps one current-state endpoint",
+      "caption": "R56 uses ordinary 95% patient-bootstrap intervals; R57 uses family-three adjusted 98.33% intervals. Both score 10 reused patients. R56 scores all regions; R57's primary endpoint scores nonempty regions. Context improves R57 against self-only messages, but adjacency and history increments remain unresolved. These coarse log-count targets predate R60's source-volume correction and require separate confirmation. Panels have different endpoints.",
+      "sources": [
+        "r56_regional_state_metrics.json",
+        "r57_regional_graph_metrics.json"
+      ],
+      "values": [
+        {
+          "panel": "R56: current-state assimilation",
+          "label": "History filter \u2212 latest",
+          "difference": -0.008503057802879516,
+          "interval": [
+            -0.040886311471547254,
+            0.026522997379522833
+          ],
+          "interval_key": "ci95"
+        },
+        {
+          "panel": "R57: context, adjacency, and history",
+          "label": "Graph history \u2212 self-only",
+          "difference": -0.1645593830418484,
+          "interval": [
+            -0.27486314417137037,
+            -0.05616202142483023
+          ],
+          "interval_key": "ci_family3"
+        },
+        {
+          "panel": "R57: context, adjacency, and history",
+          "label": "Graph history \u2212 shuffled adjacency",
+          "difference": 0.009941575103808858,
+          "interval": [
+            -0.06170143209240149,
+            0.07287097008737102
+          ],
+          "interval_key": "ci_family3"
+        },
+        {
+          "panel": "R57: context, adjacency, and history",
+          "label": "Graph history \u2212 graph latest",
+          "difference": 0.06731054667486007,
+          "interval": [
+            -0.05381040555487295,
+            0.18377149169278748
+          ],
+          "interval_key": "ci_family3"
+        }
+      ]
+    },
+    {
+      "name": "r58_future_features",
+      "title": "R58: future-feature alignment did not improve anatomical forecasting",
+      "caption": "Lines are family-three adjusted 98.33% patient-bootstrap intervals on eight reused scoring patients. Current automated measurements are supplied at inference; future inputs are excluded. Teacher and encoder are frozen. Targets are the coarse regional log-count measurements later questioned by R59 and corrected in R60.",
+      "sources": [
+        "r58_spatial_latent_forecast_metrics.json"
+      ],
+      "values": [
+        {
+          "panel": "JEPA history minus each control",
+          "label": "Direct history",
+          "difference": 0.024837225735979917,
+          "interval": [
+            -0.001541402200602865,
+            0.047472376049548015
+          ],
+          "interval_key": "ci_family3"
+        },
+        {
+          "panel": "JEPA history minus each control",
+          "label": "Shuffled teacher history",
+          "difference": 0.03619671467179259,
+          "interval": [
+            0.021274351489849002,
+            0.056053219747486616
+          ],
+          "interval_key": "ci_family3"
+        },
+        {
+          "panel": "JEPA history minus each control",
+          "label": "JEPA latest",
+          "difference": 0.029848059435583957,
+          "interval": [
+            0.018310313045322126,
+            0.04106505308627241
+          ],
+          "interval_key": "ci_family3"
+        }
+      ]
+    },
+    {
+      "name": "r48_fitting_duration",
+      "title": "R48: the short fitting check stopped too early",
+      "caption": "Recorded checkpoints on the same two fitting examples. Lines connect measurements, with no uncertainty band or interpolated observations. Both arms pass the full original fitting criterion by 512 updates. This diagnoses optimization duration; it is not held-out generalization or evidence of pretrained superiority. Dice is unitless.",
+      "sources": [
+        "r48_learning_investigation_metrics.json"
+      ],
+      "values": [
+        {
+          "arm": "pretrained",
+          "updates": [
+            128,
+            129,
+            256,
+            384,
+            512
+          ],
+          "mean_dice": [
+            0.3108634650707245,
+            0.27763888239860535,
+            0.3799230754375458,
+            0.5028276443481445,
+            0.5934543609619141
+          ]
+        },
+        {
+          "arm": "random",
+          "updates": [
+            128,
+            129,
+            256,
+            384,
+            512
+          ],
+          "mean_dice": [
+            0.30585187673568726,
+            0.30616986751556396,
+            0.43413829803466797,
+            0.6239228248596191,
+            0.7223420143127441
+          ]
+        }
+      ]
+    },
+    {
+      "name": "r54_individual_fitting",
+      "title": "R54: fitting remains weak even on two examples",
+      "caption": "Points are the two examples' relative MAE reductions against their best image control, multiplied by 100. Shape and color identify examples; they are not bootstrap samples or error bars. The best control can differ between completion and forecasting examples. Frozen and trainable describe the MRI encoder. None meets the substantial-fit criterion. These are fitting-only diagnostics, not held-out performance.",
+      "sources": [
+        "r54_flair_learnability_metrics.json"
+      ],
+      "values": [
+        {
+          "arm": "completion-F",
+          "percent_mae_reduction": [
+            -19.425007287660613,
+            6.786171679893149
+          ]
+        },
+        {
+          "arm": "completion-T",
+          "percent_mae_reduction": [
+            -13.504538115284737,
+            7.094535212530662
+          ]
+        },
+        {
+          "arm": "forecast-F-H",
+          "percent_mae_reduction": [
+            12.854125903994895,
+            -7.5836057123065626
+          ]
+        },
+        {
+          "arm": "forecast-F-L",
+          "percent_mae_reduction": [
+            12.3713280870682,
+            -7.426512664862761
+          ]
+        },
+        {
+          "arm": "forecast-T-H",
+          "percent_mae_reduction": [
+            11.544854029947382,
+            -10.52089115165009
+          ]
+        },
+        {
+          "arm": "forecast-T-L",
+          "percent_mae_reduction": [
+            11.785836444439346,
+            -8.892496524202231
+          ]
+        }
+      ]
+    },
+    {
+      "name": "r55_decoder_fitting",
+      "title": "R55: bypassing the MRI encoder did not resolve image fidelity",
+      "caption": "Recorded mean scores on two current fitting images, in standardized intensity units. Codes-only and codes-plus-decoder runs fit target-specific spatial codes. MRI continuation uses the matched additional duration. Lines connect recorded checkpoints; no uncertainty is supplied. None met the full individual-image fitting criterion. These curves do not measure forecasting or generalization. R54's preceding fitting diagnosis also failed its substantial-fit criterion.",
+      "sources": [
+        "r55_decoder_capacity_metrics.json"
+      ],
+      "values": [
+        {
+          "arm": "Z",
+          "metric": "mae",
+          "updates": [
+            0,
+            2,
+            32,
+            128,
+            256,
+            512
+          ],
+          "values": [
+            0.34828083638254154,
+            0.345770830681244,
+            0.3423232402210612,
+            0.33719699788087887,
+            0.3318395875921832,
+            0.32458732827086817
+          ]
+        },
+        {
+          "arm": "Z",
+          "metric": "gradient_mae",
+          "updates": [
+            0,
+            2,
+            32,
+            128,
+            256,
+            512
+          ],
+          "values": [
+            0.14146765276929252,
+            0.14123310058221794,
+            0.14095544797099768,
+            0.14041964254370118,
+            0.13985191956772097,
+            0.13907932091075736
+          ]
+        },
+        {
+          "arm": "ZD",
+          "metric": "mae",
+          "updates": [
+            0,
+            2,
+            32,
+            128,
+            256,
+            512
+          ],
+          "values": [
+            0.34828083638254154,
+            0.46285359064424336,
+            0.37567007709350775,
+            0.3373427289024439,
+            0.32704320995494957,
+            0.3095722920900719
+          ]
+        },
+        {
+          "arm": "ZD",
+          "metric": "gradient_mae",
+          "updates": [
+            0,
+            2,
+            32,
+            128,
+            256,
+            512
+          ],
+          "values": [
+            0.14146765276929252,
+            0.1469814912349353,
+            0.14399986572254253,
+            0.13972103882068213,
+            0.1383228830760153,
+            0.1364308042435827
+          ]
+        },
+        {
+          "arm": "MRI",
+          "metric": "mae",
+          "updates": [
+            0,
+            2,
+            32,
+            128,
+            256,
+            512
+          ],
+          "values": [
+            0.34828083638254154,
+            0.476139337271684,
+            0.39568541555993714,
+            0.34690571135525095,
+            0.332600882965038,
+            0.3108867821408857
+          ]
+        },
+        {
+          "arm": "MRI",
+          "metric": "gradient_mae",
+          "updates": [
+            0,
+            2,
+            32,
+            128,
+            256,
+            512
+          ],
+          "values": [
+            0.14146765276929252,
+            0.14682180816407664,
+            0.14486080232876028,
+            0.14080673614141662,
+            0.1391401297464791,
+            0.1358990829646814
+          ]
+        }
+      ]
+    },
+    {
+      "name": "r59_coarse_measured_history",
+      "title": "R59: measured-history comparison before target correction",
+      "caption": "Lines are family-two adjusted 97.5% patient-bootstrap intervals on 30 history pairs from eight reused patients. This comparison uses the old coarse-grid log-count targets. R59's separate inspection of six deliberately selected examples found erased burden and a change-direction disagreement; those examples cannot estimate prevalence. R60 quantifies the defect and R61 repeats the comparison with source-volume targets. Do not compare absolute R59 and R61 errors as a single-factor sampling correction: the logarithm's volume units also changed.",
+      "sources": [
+        "r59_measured_history_metrics.json"
+      ],
+      "values": [
+        {
+          "panel": "Historical coarse targets; eight scoring patients",
+          "label": "History \u2212 current only",
+          "difference": -0.0006648376694103862,
+          "interval": [
+            -0.0010322375457263637,
+            -0.00032285604777769136
+          ],
+          "interval_key": "ci_family2"
+        },
+        {
+          "panel": "Historical coarse targets; eight scoring patients",
+          "label": "History \u2212 persistence",
+          "difference": 0.00935524598521956,
+          "interval": [
+            0.0033699137359244386,
+            0.015063436907454143
+          ],
+          "interval_key": "ci_family2"
+        }
+      ]
+    },
+    {
+      "name": "r60_target_correction",
+      "title": "R60: coarse sampling erased burden and reversed some changes",
+      "caption": "Bars show endpoint-pooled counts divided by all compared region-compartment cells in each partition. Labels give numerator/denominator; these are not percentages among positive cells or patient-uniform forecast scores. No sampling uncertainty is supplied. Source-volume aggregation conserves physical volume. This is a target diagnostic across 322 visits, not a model comparison or proof of biological mask accuracy.",
+      "sources": [
+        "r60_regional_source_target_metrics.json"
+      ],
+      "values": [
+        {
+          "numerator": "positive_source_cells_erased_by_coarse_grid",
+          "denominator": "regional_compartment_cells",
+          "groups": [
+            "fitting",
+            "selection",
+            "scoring"
+          ],
+          "counts": [
+            357,
+            120,
+            128
+          ],
+          "totals": [
+            4680,
+            1608,
+            1440
+          ]
+        },
+        {
+          "numerator": "change_direction_disagreements",
+          "denominator": "adjacent_change_cells",
+          "groups": [
+            "fitting",
+            "selection",
+            "scoring"
+          ],
+          "counts": [
+            60,
+            22,
+            20
+          ],
+          "totals": [
+            3552,
+            1272,
+            960
+          ]
+        }
+      ]
+    },
+    {
+      "name": "r61_r62_measured_history",
+      "title": "Corrected measured history still loses to persistence",
+      "caption": "Points show patient-uniform regional MAE of log(1 + volume in mL), not raw mL. Both earlier and current measurements are supplied to history regressions. Persistence copies current measured burden. Trend selects zero and coincides with persistence. No arm-wise uncertainty is supplied. Panels use independent scales and different anatomical tasks: three automated compartments in R61, four reviewed-mask compartments including cavity in R62. Absolute errors are not a cross-cohort leaderboard. All scoring patients are development evidence; MU's forty reserved patients remain unopened.",
+      "sources": [
+        "r61_corrected_history_metrics.json",
+        "r62_mu_history_metrics.json"
+      ],
+      "values": [
+        {
+          "study": "R61",
+          "arm": "P",
+          "mae": 0.2809482494318463
+        },
+        {
+          "study": "R61",
+          "arm": "E",
+          "mae": 0.2899380720247167
+        },
+        {
+          "study": "R61",
+          "arm": "T",
+          "mae": 0.2809482494318463
+        },
+        {
+          "study": "R61",
+          "arm": "L",
+          "mae": 0.2893030550140833
+        },
+        {
+          "study": "R61",
+          "arm": "H",
+          "mae": 0.2884909577534413
+        },
+        {
+          "study": "R61",
+          "arm": "S",
+          "mae": 0.2893927033739673
+        },
+        {
+          "study": "R62",
+          "arm": "P",
+          "mae": 0.165866402846332
+        },
+        {
+          "study": "R62",
+          "arm": "E",
+          "mae": 0.18287403011195047
+        },
+        {
+          "study": "R62",
+          "arm": "T",
+          "mae": 0.165866402846332
+        },
+        {
+          "study": "R62",
+          "arm": "L",
+          "mae": 0.1826484746173861
+        },
+        {
+          "study": "R62",
+          "arm": "H",
+          "mae": 0.18256411322089433
+        },
+        {
+          "study": "R62",
+          "arm": "S",
+          "mae": 0.1822228777297543
+        }
+      ]
+    },
+    {
+      "name": "r61_r62_history_intervals",
+      "title": "Small history increments do not beat persistence",
+      "caption": "Lines are family-two adjusted 97.5% paired patient-bootstrap intervals. R61's history-minus-current interval excludes zero but the gain misses the fixed 5% practical threshold. R62's corresponding interval crosses zero. Both history-minus-persistence intervals favor persistence. Panels have independent scales and different compartment definitions; do not pool their estimates.",
+      "sources": [
+        "r61_corrected_history_metrics.json",
+        "r62_mu_history_metrics.json"
+      ],
+      "values": [
+        {
+          "panel": "R61: LUMIERE; 8 patients, 30 pairs",
+          "label": "History \u2212 current only",
+          "difference": -0.0008120972606420387,
+          "interval": [
+            -0.0013127761501534646,
+            -0.000386419620389631
+          ],
+          "interval_key": "ci_family2"
+        },
+        {
+          "panel": "R61: LUMIERE; 8 patients, 30 pairs",
+          "label": "History \u2212 persistence",
+          "difference": 0.007542708321594954,
+          "interval": [
+            0.0013797584508621603,
+            0.011602709298836344
+          ],
+          "interval_key": "ci_family2"
+        },
+        {
+          "panel": "R62: MU; 18 patients, 33 triples",
+          "label": "History \u2212 current only",
+          "difference": -8.43613964917989e-05,
+          "interval": [
+            -0.0005956111688718345,
+            0.0004383283162600874
+          ],
+          "interval_key": "ci_family2"
+        },
+        {
+          "panel": "R62: MU; 18 patients, 33 triples",
+          "label": "History \u2212 persistence",
+          "difference": 0.016697710374562316,
+          "interval": [
+            0.00784909527739777,
+            0.02518548452063509
+          ],
+          "interval_key": "ci_family2"
+        }
+      ]
+    },
+    {
+      "name": "r61_r62_error_strata",
+      "title": "Learned corrections help changed cells but add empty-cell error",
+      "caption": "Descriptive patient-uniform error strata for the same R61 and R62 scoring cohorts. Empty and nonempty refer to the future target; changed cells exceed the fixed 0.1 log1p-mL absolute-change threshold. Strata overlap and must not be added. No stratum-specific intervals are supplied. Each panel has its own scale. The overall criterion still favors persistence.",
+      "sources": [
+        "r61_corrected_history_metrics.json",
+        "r62_mu_history_metrics.json"
+      ],
+      "values": [
+        {
+          "study": "R61",
+          "arm": "P",
+          "metrics": [
+            "mae",
+            "nonempty_mae",
+            "empty_mae",
+            "changed_mae"
+          ],
+          "values": [
+            0.2809482494318463,
+            0.8856804454027419,
+            0.059882018542968506,
+            1.021446290886635
+          ]
+        },
+        {
+          "study": "R61",
+          "arm": "H",
+          "metrics": [
+            "mae",
+            "nonempty_mae",
+            "empty_mae",
+            "changed_mae"
+          ],
+          "values": [
+            0.2884909577534413,
+            0.8779887909671402,
+            0.07550328599971186,
+            1.007026593198196
+          ]
+        },
+        {
+          "study": "R62",
+          "arm": "P",
+          "metrics": [
+            "mae",
+            "nonempty_mae",
+            "empty_mae",
+            "changed_mae"
+          ],
+          "values": [
+            0.165866402846332,
+            0.5100868480392827,
+            0.011732570063499549,
+            0.6093980372327811
+          ]
+        },
+        {
+          "study": "R62",
+          "arm": "H",
+          "metrics": [
+            "mae",
+            "nonempty_mae",
+            "empty_mae",
+            "changed_mae"
+          ],
+          "values": [
+            0.18256411322089433,
+            0.481645528845031,
+            0.04728019019730434,
+            0.5675014630229717
+          ]
+        }
+      ]
+    },
+    {
+      "name": "r62_development_cohort",
+      "title": "MU development allocation and history eligibility",
+      "caption": "Assigned and history-eligible patient counts are overlapping categories, not stacked groups. The eligible partitions provide 107, 47, and 33 triples respectively. Metadata anomalies and missing released files exclude affected comparisons. Forty separately reserved patients remain unopened and are not represented by image or mask measurements in this plot.",
+      "sources": [
+        "r62_mu_history_metrics.json"
+      ],
+      "values": {
+        "groups": [
+          "fitting",
+          "selection",
+          "pilot_scoring"
+        ],
+        "assigned": [
+          99,
+          32,
+          32
+        ],
+        "eligible": [
+          52,
+          20,
+          18
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,170 @@
+{
+  "study": "R53",
+  "date": "2026-11-01",
+  "status": "PROTOCOL_FIXED_TRAINING_NOT_STARTED",
+  "scope": "Reused LUMIERE development patients; metadata and scoring-field preparation only",
+  "inventory": {
+    "status": "MEMBERSHIP_FIXED_NO_TRAINING",
+    "groups": {
+      "fitting": {
+        "patients": 40,
+        "completion_visits": 195,
+        "forecast_pairs": 195,
+        "history_pairs": 153,
+        "history_patients": 30,
+        "history_length_counts": {
+          "1": 42,
+          "2": 25,
+          "3": 21,
+          "4": 107
+        },
+        "same_week_forecast_pairs": 16,
+        "future_gap_week_range": [
+          0,
+          87
+        ],
+        "unique_required_visits": 253
+      },
+      "selection": {
+        "patients": 11,
+        "completion_visits": 67,
+        "forecast_pairs": 67,
+        "history_pairs": 55,
+        "history_patients": 8,
+        "history_length_counts": {
+          "1": 12,
+          "2": 6,
+          "3": 5,
+          "4": 44
+        },
+        "same_week_forecast_pairs": 4,
+        "future_gap_week_range": [
+          0,
+          30
+        ],
+        "unique_required_visits": 85
+      },
+      "scoring": {
+        "patients": 13,
+        "completion_visits": 60,
+        "forecast_pairs": 60,
+        "history_pairs": 45,
+        "history_patients": 10,
+        "history_length_counts": {
+          "1": 15,
+          "2": 5,
+          "3": 4,
+          "4": 36
+        },
+        "same_week_forecast_pairs": 10,
+        "future_gap_week_range": [
+          0,
+          18
+        ],
+        "unique_required_visits": 90
+      }
+    },
+    "source_sha256": {
+      "prepared.json": "5b444dc63487d6555d04f002c34cf08ba6b6e75b12bb306b628540566200d112",
+      "manifest-private.json": "5324b7ce51f2c5ea9aa2ee8ec7308cfe02300c2cf0320b8cdda32821e8cf0082",
+      "anatomy_harmonization.json": "c65bdecfe9b6a9f3da548ea1249a95cb3037a3f6876c00f8bd1ba9613c148a57"
+    },
+    "script_sha256": "5592691321eafe99f834b71481ad4330659d17618f54f8fc0ad74e05d590469c",
+    "scoring_voxel_arrays_opened": false,
+    "all_patient_groups_disjoint": true,
+    "unseen26_and_sailor_excluded": true,
+    "full_chronology_adjacency_verified": true,
+    "common_pregrid": {
+      "affine": [
+        [
+          1.0,
+          0.0,
+          -0.0,
+          -96.0
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0,
+          -132.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -78.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "shape": [
+        193,
+        229,
+        193
+      ]
+    },
+    "sequence_order": [
+      "CT1",
+      "T1",
+      "T2",
+      "FLAIR"
+    ],
+    "manifest_sha256": "cd1e3cb2fa8db1740f6777091d3ae979d86f915998349e7fe4fce9b9ff7420f9"
+  },
+  "scoring_field": {
+    "status": "SCORING_FIELD_FIXED",
+    "fitting_patients": 40,
+    "fitting_visits": 195,
+    "brain_voxels": 133171,
+    "ssim_centers": 79275,
+    "region_voxels": {
+      "left_inferior": 24813,
+      "left_middle": 31613,
+      "left_superior": 10581,
+      "right_inferior": 24372,
+      "right_middle": 31273,
+      "right_superior": 10519
+    },
+    "voxel_to_world": [
+      [
+        2.0104166666666665,
+        0.0,
+        0.0,
+        -95.49479166666667
+      ],
+      [
+        0.0,
+        2.3854166666666665,
+        0.0,
+        -131.30729166666666
+      ],
+      [
+        0.0,
+        0.0,
+        2.0104166666666665,
+        -77.49479166666667
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "voxel_sizes_mm": [
+      2.0104166666666665,
+      2.3854166666666665,
+      2.0104166666666665
+    ],
+    "field_sha256": "f5fca8396279f4ea8db2f548bec1350b3eaf82b6b219504bcf00f94ad4228a62",
+    "manifest_sha256": "cd1e3cb2fa8db1740f6777091d3ae979d86f915998349e7fe4fce9b9ff7420f9",
+    "script_sha256": "8cff11a1a07f746e64a57d0290f7629e57d0125f139788181da39ce2dd95df7b",
+    "rule": "patient-uniform fitting T1 nonzero occupancy >= 0.5; erode one voxel in all axes",
+    "uses_lesion_masks": false,
+    "uses_selection_or_scoring_images": false
+  }
+}

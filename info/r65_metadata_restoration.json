@@ -1,0 +1,13 @@
+{
+  "membership_sha256": "4df898761ecdb299bc87f99749fbebc8faab294043d454c4055850fcc676e2d6",
+  "matches_r62_public_record": true,
+  "groups": {
+    "reserved": 40,
+    "fitting": 99,
+    "selection": 32,
+    "pilot_scoring": 32
+  },
+  "image_files_downloaded": 0,
+  "segmentation_measurements_opened": 0,
+  "next_step": "Retrieve only development patient paths after obtaining the official transfer client."
+}

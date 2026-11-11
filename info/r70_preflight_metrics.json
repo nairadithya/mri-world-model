@@ -1,0 +1,91 @@
+{
+  "status": "passed",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "source_sha256": {
+    "experiment70.py": "7899aec6e224e13aae0fe6cee1bb3e6cea56b1fb2d0dfa560210779371d45bca",
+    "model70.py": "48d1ebac091bd1aa306f9d811839cef7767171aa814df39afa6075e42f828ff1",
+    "model66.py": "b0696f175f50c6b72534d2fb269dd67b4c58515dd9452fda2de8ab18e8011f63",
+    "data66.py": "675b7981469af7e02abd2be774599768898fb5e10c332e76b9d03b8874a897ee",
+    "preflight66.py": "90e6f341933f29336065fb38e31d0f497d09a7a36a73b5de2259d108aa93f378",
+    "protocol.md": "68e24a8e22d389fb162f8333cb45ea519a4d9c792c2e1660acc450c1a281c4c6"
+  },
+  "control_mae_per_example": [
+    0.44060909997981584,
+    0.4400714661077454
+  ],
+  "smoke": {
+    "0": {
+      "status": "passed",
+      "losses": [
+        1.0772595405578613,
+        1.073757529258728
+      ],
+      "two_update_seconds": 0.46366544102784246,
+      "peak_allocated_bytes": 3517357056,
+      "model_optimizer_prediction_score_reload_exact": true,
+      "decoder_only_training": true,
+      "initial_sha256": "78af883c468cfc033baf1da24fd9f049b4a992a2527641d509a65950e2fd8827"
+    },
+    "1": {
+      "status": "passed",
+      "losses": [
+        1.0892308950424194,
+        1.021513819694519
+      ],
+      "two_update_seconds": 0.20201479096431285,
+      "peak_allocated_bytes": 3521366016,
+      "model_optimizer_prediction_score_reload_exact": true,
+      "decoder_only_training": true,
+      "initial_sha256": "78af883c468cfc033baf1da24fd9f049b4a992a2527641d509a65950e2fd8827"
+    }
+  },
+  "readiness": {
+    "0": {
+      "status": "ready",
+      "initial_mae_per_example": [
+        0.9111770987510681,
+        0.9470810294151306
+      ],
+      "final_mae_per_example": [
+        0.3707943260669708,
+        0.3574117124080658
+      ],
+      "passed_per_example": [
+        true,
+        true
+      ],
+      "updates": 512,
+      "initial_sha256": "78af883c468cfc033baf1da24fd9f049b4a992a2527641d509a65950e2fd8827",
+      "draw_sha256": "a7f78b90b348a41e21cab097df5ae0c3405f4cf644d48326a7ed6c53fdb7fea8",
+      "update_seconds_total": 51.35139732598327,
+      "peak_allocated_bytes": 3524899328,
+      "peak_reserved_bytes": 5144313856,
+      "arm_seconds": 51.601739100995474
+    },
+    "1": {
+      "status": "ready",
+      "initial_mae_per_example": [
+        0.9246629476547241,
+        0.958472490310669
+      ],
+      "final_mae_per_example": [
+        0.3997618854045868,
+        0.39087769389152527
+      ],
+      "passed_per_example": [
+        true,
+        true
+      ],
+      "updates": 512,
+      "initial_sha256": "78af883c468cfc033baf1da24fd9f049b4a992a2527641d509a65950e2fd8827",
+      "draw_sha256": "a7f78b90b348a41e21cab097df5ae0c3405f4cf644d48326a7ed6c53fdb7fea8",
+      "update_seconds_total": 51.44583475100808,
+      "peak_allocated_bytes": 3516882432,
+      "peak_reserved_bytes": 5142216704,
+      "arm_seconds": 51.6752582360059
+    }
+  },
+  "total_seconds": 107.03787195193581,
+  "raw_mri_arrays_opened_by_readouts": 0,
+  "segmentation_masks_opened": 0
+}

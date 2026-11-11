@@ -1,0 +1,415 @@
+{
+  "status": "preflight_complete_cohort_not_dispatched",
+  "scope": "R66 two-fitting-patient mask-free preflight",
+  "smoke": {
+    "cohort": "LUMIERE",
+    "membership_sha256": "0943aa68a363c77f0f57c411545e34fe94917a727d1a3202700397a383e2aea6",
+    "panel": "C",
+    "seed": 17,
+    "model_sha256": "b0696f175f50c6b72534d2fb269dd67b4c58515dd9452fda2de8ab18e8011f63",
+    "preflight_sha256": "90e6f341933f29336065fb38e31d0f497d09a7a36a73b5de2259d108aa93f378",
+    "catalogue_sha256": "c99c4b0bbddef17b9d8880b0bd89f79caa02985ebdc8c7fc2477df7526121e7c",
+    "real_segmentation_labels_opened": 0,
+    "scoring_arrays_opened": 0,
+    "status": "passed",
+    "budgets": {
+      "16": {
+        "payload_bytes_per_visit": 16384,
+        "state_shape": [
+          2,
+          16,
+          16,
+          16
+        ],
+        "parameters": 551932,
+        "encoder_parameters": 220954,
+        "decoder_parameters": 330978,
+        "update_seconds_including_upload": [
+          0.3668755720136687,
+          0.1639035060070455
+        ],
+        "losses": [
+          1.1903536319732666,
+          1.1038538217544556
+        ],
+        "peak_allocated_bytes": 5883011584,
+        "saved_state_two_visit_score_seconds": 0.15784669993445277,
+        "wholebrain_mae": [
+          0.8072049617767334,
+          0.83822101354599
+        ],
+        "checkpoint_prediction_equal": true,
+        "optimizer_values_equal": true,
+        "state_reload_equal": true,
+        "decoder_only_flair_update_seconds": [
+          0.09163737902417779,
+          0.09458109689876437
+        ],
+        "decoder_only_peak_allocated_bytes_with_probe_models_resident": 3615792640,
+        "max_parameter_change": 0.00040030479431152344,
+        "encoder_gradient_max": 0.11141312122344971,
+        "decoder_gradient_max": 0.975914478302002,
+        "encoder_parameter_max_change": 0.00040030479431152344,
+        "decoder_parameter_max_change": 0.00040030479431152344
+      },
+      "64": {
+        "payload_bytes_per_visit": 65536,
+        "state_shape": [
+          8,
+          16,
+          16,
+          16
+        ],
+        "parameters": 552706,
+        "encoder_parameters": 221344,
+        "decoder_parameters": 331362,
+        "update_seconds_including_upload": [
+          0.1648393109207973,
+          0.16320228902623057
+        ],
+        "losses": [
+          1.2351336479187012,
+          1.1547114849090576
+        ],
+        "peak_allocated_bytes": 5889808384,
+        "saved_state_two_visit_score_seconds": 0.1720015030587092,
+        "wholebrain_mae": [
+          0.9328990578651428,
+          1.0113048553466797
+        ],
+        "checkpoint_prediction_equal": true,
+        "optimizer_values_equal": true,
+        "state_reload_equal": true,
+        "decoder_only_flair_update_seconds": [
+          0.08909821801353246,
+          0.09058669290971011
+        ],
+        "decoder_only_peak_allocated_bytes_with_probe_models_resident": 3622655488,
+        "max_parameter_change": 0.00040027499198913574,
+        "encoder_gradient_max": 0.5577553510665894,
+        "decoder_gradient_max": 2.4163689613342285,
+        "encoder_parameter_max_change": 0.00040027499198913574,
+        "decoder_parameter_max_change": 0.0004002721980214119
+      },
+      "256": {
+        "payload_bytes_per_visit": 262144,
+        "state_shape": [
+          32,
+          16,
+          16,
+          16
+        ],
+        "parameters": 555802,
+        "encoder_parameters": 222904,
+        "decoder_parameters": 332898,
+        "update_seconds_including_upload": [
+          0.22700662002898753,
+          0.16343091696035117
+        ],
+        "losses": [
+          1.2024176120758057,
+          1.0791915655136108
+        ],
+        "peak_allocated_bytes": 5888004608,
+        "saved_state_two_visit_score_seconds": 0.16925868391990662,
+        "wholebrain_mae": [
+          0.7786679267883301,
+          0.8411957621574402
+        ],
+        "checkpoint_prediction_equal": true,
+        "optimizer_values_equal": true,
+        "state_reload_equal": true,
+        "decoder_only_flair_update_seconds": [
+          0.08915248909033835,
+          0.08860070095397532
+        ],
+        "decoder_only_peak_allocated_bytes_with_probe_models_resident": 3616668160,
+        "max_parameter_change": 0.00040030479431152344,
+        "encoder_gradient_max": 0.2654839754104614,
+        "decoder_gradient_max": 0.6483712792396545,
+        "encoder_parameter_max_change": 0.00040030479431152344,
+        "decoder_parameter_max_change": 0.00040027499198913574
+      }
+    },
+    "timing_scope": "Single two-update planning probe per budget, first step cold; actual FLAIR target, no segmentation labels.",
+    "image_or_support_files_opened": 4
+  },
+  "readiness": {
+    "cohort": "LUMIERE",
+    "membership_sha256": "0943aa68a363c77f0f57c411545e34fe94917a727d1a3202700397a383e2aea6",
+    "panel": "C",
+    "seed": 17,
+    "model_sha256": "b0696f175f50c6b72534d2fb269dd67b4c58515dd9452fda2de8ab18e8011f63",
+    "preflight_sha256": "90e6f341933f29336065fb38e31d0f497d09a7a36a73b5de2259d108aa93f378",
+    "catalogue_sha256": "c99c4b0bbddef17b9d8880b0bd89f79caa02985ebdc8c7fc2477df7526121e7c",
+    "real_segmentation_labels_opened": 0,
+    "scoring_arrays_opened": 0,
+    "status": "passed",
+    "updates_per_budget": 512,
+    "control": "mean of the two normalized complete FLAIR volumes",
+    "control_mae_per_example": [
+      0.44060909997981584,
+      0.4400714661077454
+    ],
+    "criterion": "each example final<=0.5*its initial and final<its mean-control error",
+    "budgets": {
+      "16": {
+        "status": "ready",
+        "initial_mae_per_example": [
+          1.0209506750106812,
+          1.1104791164398193
+        ],
+        "final_mae_per_example": [
+          0.4290190041065216,
+          0.4177989959716797
+        ],
+        "passed_per_example": [
+          true,
+          true
+        ],
+        "updates": 512,
+        "update_seconds_total": 84.31146916700527,
+        "seconds_per_update": 0.16467083821680717,
+        "peak_allocated_bytes": 5882421760,
+        "draw_sha256": "a7f78b90b348a41e21cab097df5ae0c3405f4cf644d48326a7ed6c53fdb7fea8",
+        "payload_bytes_per_visit": 16384
+      },
+      "64": {
+        "status": "ready",
+        "initial_mae_per_example": [
+          1.0557613372802734,
+          1.1209932565689087
+        ],
+        "final_mae_per_example": [
+          0.38824692368507385,
+          0.3857782483100891
+        ],
+        "passed_per_example": [
+          true,
+          true
+        ],
+        "updates": 512,
+        "update_seconds_total": 84.4922587829642,
+        "seconds_per_update": 0.16502394293547695,
+        "peak_allocated_bytes": 5889217024,
+        "draw_sha256": "a7f78b90b348a41e21cab097df5ae0c3405f4cf644d48326a7ed6c53fdb7fea8",
+        "payload_bytes_per_visit": 65536
+      },
+      "256": {
+        "status": "ready",
+        "initial_mae_per_example": [
+          1.0304254293441772,
+          1.0720382928848267
+        ],
+        "final_mae_per_example": [
+          0.3636915683746338,
+          0.3531913757324219
+        ],
+        "passed_per_example": [
+          true,
+          true
+        ],
+        "updates": 512,
+        "update_seconds_total": 84.51010771200527,
+        "seconds_per_update": 0.16505880412501028,
+        "peak_allocated_bytes": 5896344064,
+        "draw_sha256": "a7f78b90b348a41e21cab097df5ae0c3405f4cf644d48326a7ed6c53fdb7fea8",
+        "payload_bytes_per_visit": 262144
+      }
+    },
+    "image_or_support_files_opened": 4
+  },
+  "cost_projection": {
+    "status": "measured_planning_projection_not_dispatch_approval",
+    "host": "mosaic-gpu",
+    "cohort_fits": 90,
+    "updates_per_fit": 4096,
+    "real_segmentation_labels_opened": 0,
+    "timing_scope": "One host session; two fitting volumes; 512-update representation means and five timed proxy updates after two warmups. No comparative speed claim.",
+    "segmentation_proxy": "Actual FLAIR targets and two-output FLAIR loss on the specified frozen decoder and skip-connected direct architecture. These probe weights are discarded. Four-class cross-entropy and soft-Dice costs are not measured before representation lock.",
+    "representation_ready_sizes": [
+      "16",
+      "64",
+      "256"
+    ],
+    "representation_not_ready_sizes": [],
+    "decoder_flair_surrogates": {
+      "16": {
+        "timed_updates": 5,
+        "warmup_updates": 2,
+        "update_seconds": [
+          0.0927093249047175,
+          0.09305701206903905,
+          0.09282120398711413,
+          0.09260383399669081,
+          0.09266617498360574
+        ],
+        "median_update_seconds": 0.0927093249047175,
+        "peak_allocated_bytes": 3539622400,
+        "losses": [
+          0.8827210068702698,
+          0.8830605149269104,
+          0.8629482984542847,
+          0.9204173684120178,
+          0.8437618017196655
+        ],
+        "scored_forward_seconds": [
+          0.038183944998309016,
+          0.03792960708960891,
+          0.03810669493395835,
+          0.0378512570168823,
+          0.03826774505432695
+        ],
+        "median_scored_forward_seconds": 0.03810669493395835,
+        "parameters": 330978
+      },
+      "64": {
+        "timed_updates": 5,
+        "warmup_updates": 2,
+        "update_seconds": [
+          0.09262376499827951,
+          0.0925393250072375,
+          0.09236437489744276,
+          0.09246644505765289,
+          0.09201291692443192
+        ],
+        "median_update_seconds": 0.09246644505765289,
+        "peak_allocated_bytes": 3539823616,
+        "losses": [
+          1.1038087606430054,
+          1.087570309638977,
+          0.8973942399024963,
+          0.9112352728843689,
+          0.8554627299308777
+        ],
+        "scored_forward_seconds": [
+          0.0380871050292626,
+          0.037915137014351785,
+          0.03828920400701463,
+          0.037877677008509636,
+          0.03787394694518298
+        ],
+        "median_scored_forward_seconds": 0.037915137014351785,
+        "parameters": 331362
+      },
+      "256": {
+        "timed_updates": 5,
+        "warmup_updates": 2,
+        "update_seconds": [
+          0.09249871503561735,
+          0.09223883599042892,
+          0.0924173149978742,
+          0.092020747018978,
+          0.09228914603590965
+        ],
+        "median_update_seconds": 0.09228914603590965,
+        "peak_allocated_bytes": 3540628480,
+        "losses": [
+          0.9264532327651978,
+          0.9407642483711243,
+          0.9147897362709045,
+          0.8897832632064819,
+          0.8491111397743225
+        ],
+        "scored_forward_seconds": [
+          0.03792869590688497,
+          0.03831988503225148,
+          0.03797081601805985,
+          0.03816988493781537,
+          0.0378707560012117
+        ],
+        "median_scored_forward_seconds": 0.03797081601805985,
+        "parameters": 332898
+      }
+    },
+    "direct_image_flair_surrogate": {
+      "timed_updates": 5,
+      "warmup_updates": 2,
+      "update_seconds": [
+        0.16727448208257556,
+        0.16753274097573012,
+        0.16697725397534668,
+        0.16715744300745428,
+        0.1673075120197609
+      ],
+      "median_update_seconds": 0.16727448208257556,
+      "peak_allocated_bytes": 6197642752,
+      "losses": [
+        0.794577419757843,
+        0.7556968331336975,
+        0.7060643434524536,
+        0.6650356650352478,
+        0.6539196372032166
+      ],
+      "scored_forward_seconds": [
+        0.07801766402553767,
+        0.07775791501626372,
+        0.07828285195864737,
+        0.07797732402104884,
+        0.07795923401135951
+      ],
+      "median_scored_forward_seconds": 0.07797732402104884,
+      "parameters": 366330
+    },
+    "seconds_by_phase": {
+      "representation_updates": 18238.59616766218,
+      "segmentation_decoder_update_proxy": 20456.93332672119,
+      "direct_segmentation_update_proxy": 6166.406507492065,
+      "representation_selection": 3198.2769313389435,
+      "decoder_selection_proxy": 2921.8595526739955,
+      "direct_selection_proxy": 999.357384653762,
+      "state_export_conservative_encoder_plus_decoder_proxy": 2690.685227348353,
+      "assessment_proxy": 438.4332997086458
+    },
+    "nominal_projected_hours": 15.308485665999761,
+    "high_planning_scenario_hours": 29.893589746128054,
+    "high_scenario_definition": "Double the unmeasured segmentation-stage proxy work, then add 25% to all work for unmeasured I/O and service overhead. This is not a measured confidence interval.",
+    "limits": [
+      "not a runtime guarantee",
+      "no segmentation reference/readout fits or labels used",
+      "catalogue, dataset preparation, original source validation, model implementation, and scientific review time excluded",
+      "two CPU-resident examples do not measure random full-cohort disk loading",
+      "export estimate includes decoder work and is intentionally conservative",
+      "all 90 fits retained in projection even if a size is not ready; no cohort dispatch is authorized by this projection"
+    ],
+    "cost_script_sha256": "f92a02d5f2a390c5f4e0ddbc90d40d55b1a9c24fa915bbac3eaba3b4fce5fdc6",
+    "model_sha256": "b0696f175f50c6b72534d2fb269dd67b4c58515dd9452fda2de8ab18e8011f63"
+  },
+  "payload_checks": {
+    "16": {
+      "files_checked": 2,
+      "bytes_each": 16384
+    },
+    "64": {
+      "files_checked": 2,
+      "bytes_each": 65536
+    },
+    "256": {
+      "files_checked": 2,
+      "bytes_each": 262144
+    }
+  },
+  "cohort_fits_dispatched": 0,
+  "segmentation_fits_dispatched": 0,
+  "environment": {
+    "python": "3.12.14",
+    "torch": "2.9.1+cu128",
+    "numpy": "2.5.4",
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 5090"
+  },
+  "source_sha256": {
+    "cost66.py": "f92a02d5f2a390c5f4e0ddbc90d40d55b1a9c24fa915bbac3eaba3b4fce5fdc6",
+    "export66.py": "019f9d2b894b63fd29624e2bd669a8c7f25c866c5b6b1b1d31bc876b088c3e63",
+    "model66.py": "b0696f175f50c6b72534d2fb269dd67b4c58515dd9452fda2de8ab18e8011f63",
+    "preflight66.py": "90e6f341933f29336065fb38e31d0f497d09a7a36a73b5de2259d108aa93f378"
+  },
+  "remaining_implementation": [
+    "cohort representation fitting and selection",
+    "preferred-size and representation locking",
+    "learned and random state export for both applications",
+    "segmentation reference readiness and fitting",
+    "segmentation readout fitting",
+    "joint paired-bootstrap acceptance evaluation"
+  ]
+}

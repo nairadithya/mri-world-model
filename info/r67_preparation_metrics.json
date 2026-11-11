@@ -1,0 +1,265 @@
+{
+  "status": "metadata_preflight_complete_registration_pending",
+  "cohort": "LUMIERE",
+  "groups": {
+    "fitting": {
+      "base_patients": 55,
+      "base_visits": 305,
+      "upstream_incomplete_visit_directories": 26,
+      "no_preceding_eligible_visit": 55,
+      "single_eligible_visit_patients": 3,
+      "history_patients": 52,
+      "history_visits": 250,
+      "no_exact_gap_fitting_donor": 13,
+      "eligible_patients": 52,
+      "eligible_visits": 237,
+      "same_week_pairs": 27,
+      "pairs_skipping_incomplete_visits": 3,
+      "nominal_gap_weeks_min_median_max": [
+        0,
+        11,
+        42
+      ],
+      "nominal_gap_week_counts": {
+        "0": 27,
+        "1": 22,
+        "2": 7,
+        "3": 10,
+        "4": 8,
+        "5": 8,
+        "6": 5,
+        "7": 7,
+        "8": 9,
+        "9": 4,
+        "10": 8,
+        "11": 5,
+        "12": 18,
+        "13": 20,
+        "14": 19,
+        "15": 15,
+        "16": 13,
+        "17": 7,
+        "18": 8,
+        "19": 3,
+        "20": 3,
+        "21": 2,
+        "22": 3,
+        "24": 2,
+        "25": 2,
+        "42": 2
+      },
+      "excluded_donor_gap_week_counts": {
+        "26": 1,
+        "27": 1,
+        "29": 1,
+        "30": 1,
+        "32": 1,
+        "36": 1,
+        "38": 1,
+        "40": 1,
+        "41": 1,
+        "44": 1,
+        "45": 1,
+        "48": 1,
+        "155": 1
+      },
+      "unique_donor_prior_visits": 178,
+      "maximum_donor_reuse": 4,
+      "donor_anchor_week_difference_min_median_max": [
+        0,
+        2,
+        141
+      ]
+    },
+    "selection": {
+      "base_patients": 18,
+      "base_visits": 178,
+      "upstream_incomplete_visit_directories": 7,
+      "no_preceding_eligible_visit": 18,
+      "single_eligible_visit_patients": 1,
+      "history_patients": 17,
+      "history_visits": 160,
+      "no_exact_gap_fitting_donor": 2,
+      "eligible_patients": 17,
+      "eligible_visits": 158,
+      "same_week_pairs": 6,
+      "pairs_skipping_incomplete_visits": 3,
+      "nominal_gap_weeks_min_median_max": [
+        0,
+        11.0,
+        25
+      ],
+      "nominal_gap_week_counts": {
+        "0": 6,
+        "1": 6,
+        "2": 10,
+        "3": 5,
+        "4": 11,
+        "5": 4,
+        "6": 7,
+        "7": 5,
+        "8": 8,
+        "9": 9,
+        "10": 7,
+        "11": 10,
+        "12": 15,
+        "13": 15,
+        "14": 21,
+        "15": 6,
+        "16": 4,
+        "17": 1,
+        "18": 5,
+        "19": 2,
+        "25": 1
+      },
+      "excluded_donor_gap_week_counts": {
+        "23": 1,
+        "50": 1
+      },
+      "unique_donor_prior_visits": 92,
+      "maximum_donor_reuse": 8,
+      "donor_anchor_week_difference_min_median_max": [
+        0,
+        3.0,
+        129
+      ]
+    },
+    "scoring": {
+      "base_patients": 18,
+      "base_visits": 116,
+      "upstream_incomplete_visit_directories": 6,
+      "no_preceding_eligible_visit": 18,
+      "single_eligible_visit_patients": 0,
+      "history_patients": 18,
+      "history_visits": 98,
+      "no_exact_gap_fitting_donor": 4,
+      "eligible_patients": 18,
+      "eligible_visits": 94,
+      "same_week_pairs": 6,
+      "pairs_skipping_incomplete_visits": 4,
+      "nominal_gap_weeks_min_median_max": [
+        0,
+        13.0,
+        30
+      ],
+      "nominal_gap_week_counts": {
+        "0": 6,
+        "1": 8,
+        "2": 4,
+        "3": 5,
+        "4": 4,
+        "6": 2,
+        "7": 2,
+        "9": 1,
+        "10": 1,
+        "11": 2,
+        "12": 6,
+        "13": 9,
+        "14": 13,
+        "15": 5,
+        "16": 3,
+        "17": 7,
+        "18": 2,
+        "19": 4,
+        "20": 2,
+        "22": 1,
+        "24": 1,
+        "25": 2,
+        "26": 1,
+        "27": 1,
+        "29": 1,
+        "30": 1
+      },
+      "excluded_donor_gap_week_counts": {
+        "23": 1,
+        "47": 1,
+        "49": 1,
+        "87": 1
+      },
+      "unique_donor_prior_visits": 72,
+      "maximum_donor_reuse": 4,
+      "donor_anchor_week_difference_min_median_max": [
+        0,
+        3.5,
+        116
+      ]
+    }
+  },
+  "upstream_incomplete_visits_total": 39,
+  "donor_rule": "Different fitting patient; exactly equal nominal week gap; four prior sequences; nearest donor anchor nominal week, ties by SHA256 R67-panelC-v1:group:recipient-stem:donor-anchor-stem. Only donor previous images enter inference. One fixed map across all seeds and training/evaluation.",
+  "timing_rule": "Week bins are nominal; suffix establishes order only. Same-week pairs retained at gap zero. No elapsed-time or clinical covariates supplied to any model.",
+  "current_panel": [
+    "postcontrast_T1",
+    "precontrast_T1",
+    "T2"
+  ],
+  "previous_panel": [
+    "postcontrast_T1",
+    "precontrast_T1",
+    "T2",
+    "FLAIR"
+  ],
+  "registration_jobs_before_deduplication": 978,
+  "registration_jobs_unique": 978,
+  "same_target_visit_set_for_all_conditions": true,
+  "current_flair_loaded": false,
+  "image_arrays_loaded": 0,
+  "segmentation_measurements_loaded": 0,
+  "model_fits_started": 0,
+  "registration_performed": false,
+  "counts_final_after_registration": false,
+  "historical_r65a_fit_seconds_including_selection": [
+    {
+      "seed": 17,
+      "arm": "A",
+      "seconds": 299.8587940930156
+    },
+    {
+      "seed": 17,
+      "arm": "B",
+      "seconds": 322.28533626999706
+    },
+    {
+      "seed": 17,
+      "arm": "C",
+      "seconds": 343.0213658059947
+    },
+    {
+      "seed": 23,
+      "arm": "A",
+      "seconds": 305.02698681503534
+    },
+    {
+      "seed": 23,
+      "arm": "B",
+      "seconds": 332.4373528639553
+    },
+    {
+      "seed": 23,
+      "arm": "C",
+      "seconds": 341.07128865702543
+    },
+    {
+      "seed": 31,
+      "arm": "A",
+      "seconds": 292.3255132320337
+    },
+    {
+      "seed": 31,
+      "arm": "B",
+      "seconds": 323.0834823229816
+    },
+    {
+      "seed": 31,
+      "arm": "C",
+      "seconds": 357.2505942620337
+    }
+  ],
+  "historical_r65a_nine_fit_seconds_sum": 2916.3607143220725,
+  "provenance": {
+    "catalogue_sha256": "5b45adddb413c7273df0c3ed013e4b9787f188efdca1ae5e06d71c21bc33a20b",
+    "inventory_sha256": "928e6472e3e0806398ae417a00cd5e0800b44f4d988e90291d5e90b77aca5cad",
+    "private_pairs_sha256": "2bb978fe9e8483d970126148c5dc4ba980c546c4f59af8e3bb4948cfb40f4e9b",
+    "script_sha256": "2ca070c606cc4a86e09cf7d74e4a6552f8c2d22dbdbcb0c38bb4e240b6c10928"
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "status": "passed_one_visit_probe_only",
+  "date": "2026-11-04",
+  "visits": 1,
+  "seed": 17,
+  "gate": 1,
+  "selected_step": 4096,
+  "checkpoint_sha256": "49e48d8d80daa5904585e26130cae567736eabc072ea8ad3d56756b1dd4c72de",
+  "probe_sha256": "a425a009dcbeb7bda874f79b05630be82068119810c040ba6ab504fa58897d68",
+  "raw_receipt_sha256": "63238a5a02059ca715af174e4fc9a632f8db2e7304b598d2bc9f740d9c1dcca4",
+  "raw_receipt_host": "mosaic-gpu",
+  "raw_receipt_path": "/home/aditya/experiments/world-model-complete-state-footprint-20261104/public-footprint.json",
+  "source_correction": "The raw receipt calls the second FLAIR output logvariance. It is Laplace log-scale, not log-variance. Only the field label is corrected here; the measured zero difference is unchanged.",
+  "torch": "2.9.1+cu128",
+  "cuda": "12.8",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "cpu_threads": 4,
+  "cudnn_benchmark": false,
+  "tensors": {
+    "compact": {"shape": [1, 8, 16, 16, 16], "dtype": "float16", "bytes": 65536},
+    "feature0": {"shape": [1, 8, 192, 224, 192], "dtype": "float32", "bytes": 264241152},
+    "feature1": {"shape": [1, 16, 96, 112, 96], "dtype": "float32", "bytes": 66060288},
+    "feature2": {"shape": [1, 32, 48, 56, 48], "dtype": "float32", "bytes": 16515072},
+    "feature3": {"shape": [1, 64, 24, 28, 24], "dtype": "float32", "bytes": 4128768}
+  },
+  "payload_bytes": 351010816,
+  "serialized_bytes": 351013337,
+  "state_sha256": "73c1cfee3db0c23ab3712193de2798469e81254d0da351adbccb1c830c7e1d3d",
+  "input_float32_bytes": 86652384,
+  "source_input_bytes": 43326192,
+  "source_dtype": "float16",
+  "source_four_channel_file_bytes_including_unused_flair": 57768384,
+  "payload_over_float32_input": 4.050792370582672,
+  "payload_over_stored_float16_input": 8.101584741165343,
+  "device_to_cpu_seconds_single_run": 0.1637279939604923,
+  "save_fsync_seconds_single_run": 0.36085718299727887,
+  "first_postwrite_load_seconds": 0.11748531798366457,
+  "warm_repeats": {
+    "load": {
+      "seconds": [0.0720994109287858, 0.06694159400649369, 0.061419176985509694, 0.06648028502240777, 0.06350201298482716],
+      "median": 0.06648028502240777, "min": 0.061419176985509694, "max": 0.0720994109287858
+    },
+    "transfer": {
+      "seconds": [0.019037132966332138, 0.01875780406408012, 0.018680843990296125, 0.01904567307792604, 0.018170264083892107],
+      "median": 0.01875780406408012, "min": 0.018170264083892107, "max": 0.01904567307792604
+    },
+    "decode": {
+      "seconds": [0.03865888400468975, 0.038564434042200446, 0.03858515399042517, 0.03860909410286695, 0.03860538499429822],
+      "median": 0.03860538499429822, "min": 0.038564434042200446, "max": 0.03865888400468975
+    },
+    "load_transfer_decode": {
+      "seconds": [0.1297954278998077, 0.12426383211277425, 0.11868517496623099, 0.12413505220320076, 0.12027766206301749],
+      "median": 0.12413505220320076, "min": 0.11868517496623099, "max": 0.1297954278998077
+    }
+  },
+  "timing_scope": "One fitting visit. Six eager loads without mmap: first postwrite plus five warm page-cache repeats. Pageable CPU tensors, blocking CUDA copy, synchronized CUDA timings. Validation outside timing. Load-transfer-decode is the sum of the three contiguous measured stages. No cold-disk, throughput, optimized-loader, or training-runtime claim.",
+  "preprobe_load_average": [1.15, 1.24, 1.54],
+  "host_logical_cpus": 32,
+  "preprobe_gpu_utilization_percent": 0,
+  "preprobe_disk_available_bytes": 633129406464,
+  "tensor_roundtrip_exact": true,
+  "flair_mean_max_difference": 0.0,
+  "flair_logscale_max_difference": 0.0,
+  "model_unchanged": true,
+  "image_files_opened": 1,
+  "segmentation_masks_opened": 0,
+  "timed_loads_completed": 6,
+  "timed_loads_failed": 0,
+  "cohort_visits": 599,
+  "one_encoder_cohort_payload_bytes": 210255478784,
+  "six_encoder_cohort_payload_bytes": 1261532872704,
+  "cohort_export_launched": false,
+  "segmentation_fitting_launched": false
+}

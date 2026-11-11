@@ -1,0 +1,500 @@
+{
+  "status": "nine_fits_complete",
+  "fits": [
+    {
+      "seed": 17,
+      "kind": "learned",
+      "updates": 4096,
+      "selected_step": 4096,
+      "selection_primary_dice": 0.4767026620808582,
+      "initial_readout_sha256": "b5cda1a778b4d46848e56f73167a8349d63d69ecdb8130517d30cb6865ce61b3",
+      "draw_sha256": "e7dc58eb192fbc044210589e6e62306ec920f3e86ce3116ac4ed1b600476eee0",
+      "checkpoint": "fits-v1/17-learned/best.pt",
+      "checkpoint_sha256": "4d2481a2f2d9eec3c635eca09a22e7bd99fcce62d32c629a3c249d11a99923a6",
+      "curve": "fits-v1/17-learned/curve.json",
+      "curve_sha256": "b6fa40b53adddb551fb1ab95057a99b9fb60b2809c2a1a544c49d9c1197b222e",
+      "seconds_including_selection": 1426.6561160120182,
+      "peak_allocated_bytes": 4061949952,
+      "model_parameter_count": 338340,
+      "selected_reload_fitting_score": {
+        "classes": {
+          "1": {
+            "reference_voxels": 4094,
+            "predicted_voxels": 4431,
+            "intersection_voxels": 3098,
+            "dice": 0.7268035190615836,
+            "nonempty_reference_dice": 0.7268035190615836,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 1333
+          },
+          "2": {
+            "reference_voxels": 353,
+            "predicted_voxels": 2431,
+            "intersection_voxels": 235,
+            "dice": 0.16882183908045978,
+            "nonempty_reference_dice": 0.16882183908045978,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 2196
+          },
+          "3": {
+            "reference_voxels": 15095,
+            "predicted_voxels": 31370,
+            "intersection_voxels": 13175,
+            "dice": 0.5670935112450232,
+            "nonempty_reference_dice": 0.5670935112450232,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 18195
+          }
+        },
+        "primary_dice": 0.4875729564623555,
+        "empty_case": false
+      }
+    },
+    {
+      "seed": 17,
+      "kind": "random",
+      "updates": 4096,
+      "selected_step": 4096,
+      "selection_primary_dice": 0.3853526562572449,
+      "initial_readout_sha256": "b5cda1a778b4d46848e56f73167a8349d63d69ecdb8130517d30cb6865ce61b3",
+      "draw_sha256": "e7dc58eb192fbc044210589e6e62306ec920f3e86ce3116ac4ed1b600476eee0",
+      "checkpoint": "fits-v1/17-random/best.pt",
+      "checkpoint_sha256": "abd2767464175ee35254528925b692192a2532f4c99dc502dac6fdf3276fa56d",
+      "curve": "fits-v1/17-random/curve.json",
+      "curve_sha256": "64eea0ffca86e4d1030d5c2a91f24353acaf59f6de2edc0a6f60b7d0a92982d9",
+      "seconds_including_selection": 1326.3839684189297,
+      "peak_allocated_bytes": 4065785344,
+      "model_parameter_count": 338340,
+      "selected_reload_fitting_score": {
+        "classes": {
+          "1": {
+            "reference_voxels": 4094,
+            "predicted_voxels": 5133,
+            "intersection_voxels": 3576,
+            "dice": 0.7751165059065785,
+            "nonempty_reference_dice": 0.7751165059065785,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 1557
+          },
+          "2": {
+            "reference_voxels": 353,
+            "predicted_voxels": 2981,
+            "intersection_voxels": 158,
+            "dice": 0.09478104379124175,
+            "nonempty_reference_dice": 0.09478104379124175,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 2823
+          },
+          "3": {
+            "reference_voxels": 15095,
+            "predicted_voxels": 36176,
+            "intersection_voxels": 12690,
+            "dice": 0.4950166760936982,
+            "nonempty_reference_dice": 0.4950166760936982,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 23486
+          }
+        },
+        "primary_dice": 0.45497140859717283,
+        "empty_case": false
+      }
+    },
+    {
+      "seed": 17,
+      "kind": "direct",
+      "updates": 4096,
+      "selected_step": 2560,
+      "selection_primary_dice": 0.5599783531657622,
+      "initial_readout_sha256": "b5cda1a778b4d46848e56f73167a8349d63d69ecdb8130517d30cb6865ce61b3",
+      "draw_sha256": "e7dc58eb192fbc044210589e6e62306ec920f3e86ce3116ac4ed1b600476eee0",
+      "checkpoint": "fits-v1/17-direct/best.pt",
+      "checkpoint_sha256": "b014f9755447f8f94eb981015f7c9c1aae0b73d6c5244c0f6b8c56c32c711703",
+      "curve": "fits-v1/17-direct/curve.json",
+      "curve_sha256": "962b3763cc3d5b6be9cdc9b5a5ad602a234131295d94371f1ad05d22fa67113d",
+      "seconds_including_selection": 1283.9359719660133,
+      "peak_allocated_bytes": 6054550016,
+      "model_parameter_count": 559684,
+      "selected_reload_fitting_score": {
+        "classes": {
+          "1": {
+            "reference_voxels": 4094,
+            "predicted_voxels": 4310,
+            "intersection_voxels": 3817,
+            "dice": 0.9083769633507853,
+            "nonempty_reference_dice": 0.9083769633507853,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 493
+          },
+          "2": {
+            "reference_voxels": 353,
+            "predicted_voxels": 1946,
+            "intersection_voxels": 284,
+            "dice": 0.24706394084384514,
+            "nonempty_reference_dice": 0.24706394084384514,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 1662
+          },
+          "3": {
+            "reference_voxels": 15095,
+            "predicted_voxels": 35042,
+            "intersection_voxels": 14915,
+            "dice": 0.5949697827951413,
+            "nonempty_reference_dice": 0.5949697827951413,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 20127
+          }
+        },
+        "primary_dice": 0.5834702289965906,
+        "empty_case": false
+      }
+    },
+    {
+      "seed": 23,
+      "kind": "learned",
+      "updates": 4096,
+      "selected_step": 4096,
+      "selection_primary_dice": 0.4487850660335433,
+      "initial_readout_sha256": "fcaf3dd3d72361de40be0bbc4fa65ea4b89eb8ba6b434ee406b70888aee09414",
+      "draw_sha256": "22f6500caa9433fad88abdf2557ac0823e0e137bfada16ffa451b399e047f988",
+      "checkpoint": "fits-v1/23-learned/best.pt",
+      "checkpoint_sha256": "9d540933f3da452cfae42ae884ed40a240350a2fdff47cfd02de6fd90bee86a6",
+      "curve": "fits-v1/23-learned/curve.json",
+      "curve_sha256": "1cf179705b28040d90566505316e686627f6fd4b086f9f156bb4f9b287aa026f",
+      "seconds_including_selection": 1518.6141269109212,
+      "peak_allocated_bytes": 4063229440,
+      "model_parameter_count": 338340,
+      "selected_reload_fitting_score": {
+        "classes": {
+          "1": {
+            "reference_voxels": 4094,
+            "predicted_voxels": 5002,
+            "intersection_voxels": 3862,
+            "dice": 0.8491644678979772,
+            "nonempty_reference_dice": 0.8491644678979772,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 1140
+          },
+          "2": {
+            "reference_voxels": 353,
+            "predicted_voxels": 872,
+            "intersection_voxels": 74,
+            "dice": 0.12081632653061225,
+            "nonempty_reference_dice": 0.12081632653061225,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 798
+          },
+          "3": {
+            "reference_voxels": 15095,
+            "predicted_voxels": 30556,
+            "intersection_voxels": 14274,
+            "dice": 0.6253532233686009,
+            "nonempty_reference_dice": 0.6253532233686009,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 16282
+          }
+        },
+        "primary_dice": 0.5317780059323968,
+        "empty_case": false
+      }
+    },
+    {
+      "seed": 23,
+      "kind": "random",
+      "updates": 4096,
+      "selected_step": 4096,
+      "selection_primary_dice": 0.3756699540773478,
+      "initial_readout_sha256": "fcaf3dd3d72361de40be0bbc4fa65ea4b89eb8ba6b434ee406b70888aee09414",
+      "draw_sha256": "22f6500caa9433fad88abdf2557ac0823e0e137bfada16ffa451b399e047f988",
+      "checkpoint": "fits-v1/23-random/best.pt",
+      "checkpoint_sha256": "9d2d09a3d9fbf4245ca31dc703cbe093769885deb22cc070fcb6a36ce5032a78",
+      "curve": "fits-v1/23-random/curve.json",
+      "curve_sha256": "64870ec85fe546bf0ab9de3b1bfac66a28d9f50f871e4bec9f8caeca4e861b5e",
+      "seconds_including_selection": 1382.6024193769554,
+      "peak_allocated_bytes": 4065785344,
+      "model_parameter_count": 338340,
+      "selected_reload_fitting_score": {
+        "classes": {
+          "1": {
+            "reference_voxels": 4094,
+            "predicted_voxels": 9172,
+            "intersection_voxels": 3955,
+            "dice": 0.5962611186491783,
+            "nonempty_reference_dice": 0.5962611186491783,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 5217
+          },
+          "2": {
+            "reference_voxels": 353,
+            "predicted_voxels": 10118,
+            "intersection_voxels": 289,
+            "dice": 0.05520007640148983,
+            "nonempty_reference_dice": 0.05520007640148983,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 9829
+          },
+          "3": {
+            "reference_voxels": 15095,
+            "predicted_voxels": 31447,
+            "intersection_voxels": 13457,
+            "dice": 0.5782733874779769,
+            "nonempty_reference_dice": 0.5782733874779769,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 17990
+          }
+        },
+        "primary_dice": 0.40991152750954835,
+        "empty_case": false
+      }
+    },
+    {
+      "seed": 23,
+      "kind": "direct",
+      "updates": 4096,
+      "selected_step": 3584,
+      "selection_primary_dice": 0.5326423184290094,
+      "initial_readout_sha256": "fcaf3dd3d72361de40be0bbc4fa65ea4b89eb8ba6b434ee406b70888aee09414",
+      "draw_sha256": "22f6500caa9433fad88abdf2557ac0823e0e137bfada16ffa451b399e047f988",
+      "checkpoint": "fits-v1/23-direct/best.pt",
+      "checkpoint_sha256": "8fae3ac8528d710b4126f0863112471d0efdd1a60085c2b4442d4c676d98d8b8",
+      "curve": "fits-v1/23-direct/curve.json",
+      "curve_sha256": "0cfc1beac5a41a511ca95523620b85fefeaa17628edf0712d60cf4c782b47e46",
+      "seconds_including_selection": 1280.360536958091,
+      "peak_allocated_bytes": 6054550016,
+      "model_parameter_count": 559684,
+      "selected_reload_fitting_score": {
+        "classes": {
+          "1": {
+            "reference_voxels": 4094,
+            "predicted_voxels": 4324,
+            "intersection_voxels": 3904,
+            "dice": 0.927536231884058,
+            "nonempty_reference_dice": 0.927536231884058,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 420
+          },
+          "2": {
+            "reference_voxels": 353,
+            "predicted_voxels": 2687,
+            "intersection_voxels": 321,
+            "dice": 0.21118421052631578,
+            "nonempty_reference_dice": 0.21118421052631578,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 2366
+          },
+          "3": {
+            "reference_voxels": 15095,
+            "predicted_voxels": 49496,
+            "intersection_voxels": 14181,
+            "dice": 0.43910142279884196,
+            "nonempty_reference_dice": 0.43910142279884196,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 35315
+          }
+        },
+        "primary_dice": 0.5259406217364052,
+        "empty_case": false
+      }
+    },
+    {
+      "seed": 31,
+      "kind": "learned",
+      "updates": 4096,
+      "selected_step": 3584,
+      "selection_primary_dice": 0.5083150520301749,
+      "initial_readout_sha256": "0b2d9779aa84aa4de65b819575dc0fe73181fa8549d212b3e0fdfc05061928a0",
+      "draw_sha256": "5c5290b2328c8f833d3f9642364c32bd51ac2945d556d96b89b2ec69dbe5f10f",
+      "checkpoint": "fits-v1/31-learned/best.pt",
+      "checkpoint_sha256": "7dae9a87b0d86f7b5ee30a72aaa28439d4243092b9d39f5356a4a306a5276ee6",
+      "curve": "fits-v1/31-learned/curve.json",
+      "curve_sha256": "3024fdb7b5865d1ccd5cb387e8ead38619489f9ff6deca411a99b7dcd662d0a6",
+      "seconds_including_selection": 1651.676679092925,
+      "peak_allocated_bytes": 4063229440,
+      "model_parameter_count": 338340,
+      "selected_reload_fitting_score": {
+        "classes": {
+          "1": {
+            "reference_voxels": 4094,
+            "predicted_voxels": 4567,
+            "intersection_voxels": 3752,
+            "dice": 0.8664126544278952,
+            "nonempty_reference_dice": 0.8664126544278952,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 815
+          },
+          "2": {
+            "reference_voxels": 353,
+            "predicted_voxels": 2884,
+            "intersection_voxels": 165,
+            "dice": 0.10194624652455977,
+            "nonempty_reference_dice": 0.10194624652455977,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 2719
+          },
+          "3": {
+            "reference_voxels": 15095,
+            "predicted_voxels": 30507,
+            "intersection_voxels": 14662,
+            "dice": 0.6430419718433402,
+            "nonempty_reference_dice": 0.6430419718433402,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 15845
+          }
+        },
+        "primary_dice": 0.537133624265265,
+        "empty_case": false
+      }
+    },
+    {
+      "seed": 31,
+      "kind": "random",
+      "updates": 4096,
+      "selected_step": 4096,
+      "selection_primary_dice": 0.44815323087824815,
+      "initial_readout_sha256": "0b2d9779aa84aa4de65b819575dc0fe73181fa8549d212b3e0fdfc05061928a0",
+      "draw_sha256": "5c5290b2328c8f833d3f9642364c32bd51ac2945d556d96b89b2ec69dbe5f10f",
+      "checkpoint": "fits-v1/31-random/best.pt",
+      "checkpoint_sha256": "0c79e22e33d6ae3167229c575f7b52c3709e9335e5e079ec46d4ecfbda046b51",
+      "curve": "fits-v1/31-random/curve.json",
+      "curve_sha256": "48a6d752dc8b66f4c72c6d2e4ec51df18ee77ccf2c90066338466f831323afe1",
+      "seconds_including_selection": 1615.2414192690048,
+      "peak_allocated_bytes": 4065785344,
+      "model_parameter_count": 338340,
+      "selected_reload_fitting_score": {
+        "classes": {
+          "1": {
+            "reference_voxels": 4094,
+            "predicted_voxels": 3639,
+            "intersection_voxels": 3505,
+            "dice": 0.906504590715117,
+            "nonempty_reference_dice": 0.906504590715117,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 134
+          },
+          "2": {
+            "reference_voxels": 353,
+            "predicted_voxels": 479,
+            "intersection_voxels": 282,
+            "dice": 0.6778846153846154,
+            "nonempty_reference_dice": 0.6778846153846154,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 197
+          },
+          "3": {
+            "reference_voxels": 15095,
+            "predicted_voxels": 30192,
+            "intersection_voxels": 14167,
+            "dice": 0.6256541612383245,
+            "nonempty_reference_dice": 0.6256541612383245,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 16025
+          }
+        },
+        "primary_dice": 0.736681122446019,
+        "empty_case": false
+      }
+    },
+    {
+      "seed": 31,
+      "kind": "direct",
+      "updates": 4096,
+      "selected_step": 4096,
+      "selection_primary_dice": 0.5456274480296291,
+      "initial_readout_sha256": "0b2d9779aa84aa4de65b819575dc0fe73181fa8549d212b3e0fdfc05061928a0",
+      "draw_sha256": "5c5290b2328c8f833d3f9642364c32bd51ac2945d556d96b89b2ec69dbe5f10f",
+      "checkpoint": "fits-v1/31-direct/best.pt",
+      "checkpoint_sha256": "6fc0f692e3110552171d082a90ba8d5a88b0b7f84d00bc1db24360f35b9ebbdf",
+      "curve": "fits-v1/31-direct/curve.json",
+      "curve_sha256": "794a708a66763b522d675f3412eab412658d7622bc04972046e589aabf95b53f",
+      "seconds_including_selection": 1291.6788575690007,
+      "peak_allocated_bytes": 6054550016,
+      "model_parameter_count": 559684,
+      "selected_reload_fitting_score": {
+        "classes": {
+          "1": {
+            "reference_voxels": 4094,
+            "predicted_voxels": 4314,
+            "intersection_voxels": 3828,
+            "dice": 0.9105613701236918,
+            "nonempty_reference_dice": 0.9105613701236918,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 486
+          },
+          "2": {
+            "reference_voxels": 353,
+            "predicted_voxels": 2120,
+            "intersection_voxels": 248,
+            "dice": 0.20056611403154065,
+            "nonempty_reference_dice": 0.20056611403154065,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 1872
+          },
+          "3": {
+            "reference_voxels": 15095,
+            "predicted_voxels": 20415,
+            "intersection_voxels": 14355,
+            "dice": 0.8085046465784286,
+            "nonempty_reference_dice": 0.8085046465784286,
+            "empty_reference": false,
+            "false_positive_volume_mm3": null,
+            "false_positive_any": null,
+            "all_case_false_positive_volume_mm3": 6060
+          }
+        },
+        "primary_dice": 0.6398773769112204,
+        "empty_case": false
+      }
+    }
+  ]
+}

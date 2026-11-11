@@ -1,0 +1,139 @@
+{
+  "snapshot_utc": "2026-11-05T20:34:25.427387+00:00",
+  "status": "context preparation running; one-seed program queued behind preparation",
+  "MU_timing": {
+    "source": {
+      "url": "https://www.cancerimagingarchive.net/wp-content/uploads/MU-Glioma-Post_ClinicalData-July2025.xlsx",
+      "sha256": "4341badf954511d67fc52b82b3b488ed7323f7e46d249a354ff9b3a62269c79b",
+      "headers": {
+        "BQ": "Number of Days from Diagnosis to 1st MRI (Timepoint_1) ",
+        "BR": "Number of Days from Diagnosis to 2nd MRI (Timepoint_2) ",
+        "BS": "Number of Days from Diagnosis to 3rd MRI (Timepoint_3) ",
+        "BT": "Number of Days from Diagnosis to 4th MRI (Timepoint_4) ",
+        "BU": "Number of Days from Diagnosis to 5th MRI (Timepoint_5) ",
+        "BV": "Number of Days from Diagnosis to 6th MRI (Timepoint_6) "
+      },
+      "join": "PatientID and exact Timepoint_N; no ordinal-to-day interpolation"
+    },
+    "counts": {
+      "fitting": {
+        "LUMIERE": {
+          "12": {
+            "targets": 127,
+            "patients": 38
+          },
+          "24": {
+            "targets": 79,
+            "patients": 33
+          }
+        },
+        "MU": {
+          "12": {
+            "targets": 55,
+            "patients": 29
+          },
+          "24": {
+            "targets": 32,
+            "patients": 21
+          }
+        }
+      },
+      "selection": {
+        "LUMIERE": {
+          "12": {
+            "targets": 112,
+            "patients": 16
+          },
+          "24": {
+            "targets": 89,
+            "patients": 15
+          }
+        },
+        "MU": {
+          "12": {
+            "targets": 36,
+            "patients": 18
+          },
+          "24": {
+            "targets": 22,
+            "patients": 13
+          }
+        }
+      }
+    },
+    "issue_counts": {
+      "nonincreasing clinical dates; whole trajectory excluded": 1,
+      "no usable exact timing join": 4
+    },
+    "reserved_images_opened": 0,
+    "segmentation_measurements_read": 0,
+    "scope": "metadata eligibility only; spatial correspondence still requires verification"
+  },
+  "MU_geometry": {
+    "cases": 6,
+    "support_dice_range": [
+      0.9231715341613871,
+      0.9849813707808346
+    ],
+    "t1_correlation_range": [
+      0.6112851035774322,
+      0.9000054669864906
+    ],
+    "maximum_coarse_translation_mm": 0,
+    "geometry_headers_match": true,
+    "scope": "Six metadata-selected development cases; no cohort-wide registration guarantee",
+    "source_registration": "SRI24 rigid 1mm, https://doi.org/10.1038/s41597-025-06011-7",
+    "reserved_images_opened": 0
+  },
+  "smokes": {
+    "structured-smoke-anatomy-v1": {
+      "passed": true,
+      "updates": 2,
+      "full_volume_replay_exact": true,
+      "mean_update_seconds": 0.23955749801825732,
+      "peak_cuda_bytes": 1855932416
+    },
+    "structured-smoke-current-v1": {
+      "passed": true,
+      "updates": 2,
+      "full_volume_replay_exact": true,
+      "mean_update_seconds": 0.45607890596147627,
+      "peak_cuda_bytes": 1855932416
+    },
+    "structured-smoke-volume-v1": {
+      "passed": true,
+      "updates": 2,
+      "full_volume_replay_exact": true,
+      "mean_update_seconds": 0.22507292695809156,
+      "peak_cuda_bytes": 295131136
+    },
+    "structured-smoke-final-v1": {
+      "passed": true,
+      "updates": 2,
+      "full_volume_replay_exact": true,
+      "mean_update_seconds": 0.30191624257713556,
+      "peak_cuda_bytes": 1856354304
+    }
+  },
+  "timeline_verification": {
+    "passed": true,
+    "visits": 3,
+    "distributions_checked": 12,
+    "exact_map_and_image_replays": 4,
+    "maximum_map_distribution_volume_difference_ml": 6.103515630684342e-06,
+    "comparisons_after_latest_observation": 6,
+    "scope": "Engineering consistency; not predictive capability"
+  },
+  "prepared_contexts": 299,
+  "eligible_contexts": 656,
+  "program_pid": 2661576,
+  "program_steps_per_configuration": 6000,
+  "program_configurations": [
+    "volume-current",
+    "volume-history",
+    "anatomy-current",
+    "anatomy-history"
+  ],
+  "forecast_usefulness_established": false,
+  "reserved_images_opened": 0
+}

@@ -1,0 +1,112 @@
+{
+  "status": "passed",
+  "manifest_sha256": "66a1b5c5ed98d41e50242ad99edfd0209a730837abadb4f3587de606c0d572b3",
+  "source_sha256": {
+    "/home/aditya/experiments/world-model-r67-caliper8-20261104/code/train67.py": "28dca5a07285cb619370ca40dea73d4b916f574ff1f1c96cc91ddb1cf8ee0195",
+    "/home/aditya/experiments/world-model-r67-caliper8-20261104/code/data67.py": "79c734081a2ea15e14993785977a71cd0736689d022fb103cef9391e9ca67e00",
+    "/home/aditya/experiments/world-model-r67-caliper8-20261104/code/assess67.py": "db99adf6f997cf155921226d4b61b3e5b3b8607991547626c5bf3316c9f718d7",
+    "/home/aditya/experiments/world-model-r65-lumiere-20261103/code/run65.py": "546accee86c8ac33fd78d8179a76edd4b8ed81b58b42426a608ddc87f0fca1df",
+    "/home/aditya/experiments/world-model-r65-lumiere-20261103/code/train65.py": "a4bcab8b4f97e9671440d0992bfc93474b1f4663fd922485e477d427f76ec3fc"
+  },
+  "arms": {
+    "current": {
+      "losses": [
+        0.8859125375747681,
+        0.7034366130828857
+      ],
+      "initial_sha256": "7b1f479ce5d9af0715324a5c7d3abcfc5fec5c48207dda16699b7cd6075a034f",
+      "optimizer_reload": "passed",
+      "input_checks": {
+        "target_flair_leakage": "passed",
+        "history_and_timing": "passed",
+        "current_only_ignores_history": "passed",
+        "registered_flair_matches_input": null
+      },
+      "batch_timings": [
+        {
+          "batch_loading_seconds": 0.020083633018657565,
+          "update_seconds": 0.46562945807818323,
+          "total_seconds": 0.4857130910968408
+        },
+        {
+          "batch_loading_seconds": 0.021266338997520506,
+          "update_seconds": 0.008244117954745889,
+          "total_seconds": 0.029510456952266395
+        }
+      ],
+      "reload_plane_mae": [
+        0.5533916354179382,
+        0.5447326302528381
+      ],
+      "wholebrain_mae": 0.6719883403437418
+    },
+    "genuine": {
+      "losses": [
+        0.8263059854507446,
+        0.7163779139518738
+      ],
+      "initial_sha256": "7b1f479ce5d9af0715324a5c7d3abcfc5fec5c48207dda16699b7cd6075a034f",
+      "optimizer_reload": "passed",
+      "input_checks": {
+        "target_flair_leakage": "passed",
+        "history_and_timing": "passed",
+        "current_only_ignores_history": null,
+        "registered_flair_matches_input": "passed"
+      },
+      "batch_timings": [
+        {
+          "batch_loading_seconds": 0.0339939899276942,
+          "update_seconds": 0.008655656012706459,
+          "total_seconds": 0.04264964594040066
+        },
+        {
+          "batch_loading_seconds": 0.02055649203248322,
+          "update_seconds": 0.0082362579414621,
+          "total_seconds": 0.02879274997394532
+        }
+      ],
+      "reload_plane_mae": [
+        0.5272969603538513,
+        0.5668159127235413
+      ],
+      "wholebrain_mae": 0.6251435536714324
+    },
+    "donor": {
+      "losses": [
+        0.8662380576133728,
+        0.7368987202644348
+      ],
+      "initial_sha256": "7b1f479ce5d9af0715324a5c7d3abcfc5fec5c48207dda16699b7cd6075a034f",
+      "optimizer_reload": "passed",
+      "input_checks": {
+        "target_flair_leakage": "passed",
+        "history_and_timing": "passed",
+        "current_only_ignores_history": null,
+        "registered_flair_matches_input": null
+      },
+      "batch_timings": [
+        {
+          "batch_loading_seconds": 0.03645540005527437,
+          "update_seconds": 0.008902646019123495,
+          "total_seconds": 0.04535804607439786
+        },
+        {
+          "batch_loading_seconds": 0.019963913946412504,
+          "update_seconds": 0.00821340805850923,
+          "total_seconds": 0.028177322004921734
+        }
+      ],
+      "reload_plane_mae": [
+        0.537764310836792,
+        0.5927595496177673
+      ],
+      "wholebrain_mae": 0.6589943282363763
+    }
+  },
+  "selection_timing": {
+    "arm": "donor",
+    "visits": 105,
+    "seconds": 34.00483470794279,
+    "wholebrain_mae": 0.7183497026637083
+  }
+}

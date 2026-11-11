@@ -35,7 +35,11 @@ def prepare_continuation(pins_path: Path):
     if digest(payload_path) != pins["original_payload_sha256"]:
         raise ValueError("original run payload changed")
     payload = read_json(payload_path)
-    original = WORKSPACE / "study/stages/r38-fixed-study-02/fit"
+    original = (
+        Path(pins["reuse_from"])
+        if "reuse_from" in pins
+        else WORKSPACE / "study/stages/r38-fixed-study-02/fit"
+    )
     if payload["contract"]["scientific_plan"] != json.loads(json.dumps(asdict(PLAN))):
         raise ValueError("scientific plan differs from original run")
     for file in ("model.py", "data.py", "protocol.py", "baselines.py", "assessment.py"):
@@ -45,19 +49,22 @@ def prepare_continuation(pins_path: Path):
             != payload["contract"]["implementation_source"]["files"][path]
         ):
             raise ValueError(f"scientific primitive changed: {path}")
-    if set(pins["reused_cells"]) != {"OH_42", "OL_42", "JH_42", "JL_42"}:
-        raise ValueError("continuation must reuse exactly the four seed42 cells")
+    seed42_cells = {"OH_42", "OL_42", "JH_42", "JL_42"}
+    seed42_43_cells = seed42_cells | {"OH_43", "OL_43", "JH_43", "JL_43"}
+    if set(pins["reused_cells"]) not in (seed42_cells, seed42_43_cells):
+        raise ValueError("continuation must reuse completed seed42 or seed42/43 cells")
     for label, sha in pins["reused_cells"].items():
         if digest(original / label / "epoch20.pt") != sha:
             raise ValueError("original checkpoint differs from preserved local backup")
+    reused_fraction = len(pins["reused_cells"]) / (len(PLAN.arms) * len(PLAN.seeds))
     projection = read_json(WORKSPACE / "study/projection-r38-fixed-study-02.json")
     required_gpu = (
         projection["required_gpu_with_reserves_cleanup"]
-        - projection["phases"]["updates"]["gpu_seconds"] / 3
+        - projection["phases"]["updates"]["gpu_seconds"] * reused_fraction
     )
     required_cpu = (
         projection["required_cpu_with_reserves_cleanup"]
-        - projection["phases"]["updates"]["cpu_seconds"] / 3
+        - projection["phases"]["updates"]["cpu_seconds"] * reused_fraction
     )
     if (
         required_gpu > pins["remaining_allowance"]["gpu_seconds"]
@@ -87,13 +94,16 @@ def run(pins_path: Path, output: Path, check_only: bool):
     output.mkdir(parents=True, exist_ok=False)
     os.chmod(output, 0o700)
     source = SourceIdentity.capture()
+    reused_contract_digest = pins.get(
+        "reused_contract_digest", canonical_hash(payload["contract"])
+    )
     contract = {
         **payload["contract"],
         "implementation_source": source.to_dict(),
         "continuation": {
             **pins,
-            "original_contract_digest": canonical_hash(payload["contract"]),
-            "operator_direction": "October30: finish unchanged R38, reusing completed seed42; no custom supervisor",
+            "original_contract_digest": reused_contract_digest,
+            "operator_direction": "October30: finish unchanged R38, reusing completed cells; no custom supervisor",
             "entrypoint_sha256": digest(Path(__file__)),
             "started_utc": datetime.now(timezone.utc).isoformat(),
             "prior_failure_retained": True,
@@ -157,13 +167,16 @@ def run(pins_path: Path, output: Path, check_only: bool):
                 identity,
                 initialization,
                 sha,
-                canonical_hash(payload["contract"]),
+                reused_contract_digest,
             )
+        reused_updates = (
+            len(pins["reused_cells"]) * PLAN.epochs * PLAN.updates_per_epoch
+        )
         result = {
-            "status": "CONTINUATION_INPUTS_AND_FOUR_COMPLETED_CELLS_VERIFIED",
+            "status": "CONTINUATION_INPUTS_AND_COMPLETED_CELLS_VERIFIED",
             "gpu_updates": 0,
             "reused_cells": list(pins["reused_cells"]),
-            "remaining_updates": 41920,
+            "remaining_updates": PLAN.total_updates - reused_updates,
             "cohort_rows": {
                 name: len(data.select(name))
                 for name in (

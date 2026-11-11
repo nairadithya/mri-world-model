@@ -1,0 +1,84 @@
+{
+  "scope": "dated implementation and launch receipt; not learned forecasting results",
+  "observation_sha256": "87e2349c54fafd133a08246fd0d920956687faf640c8a080edc2f2cd1dc3ae59",
+  "observation_comparison_population": {
+    "patients": 18,
+    "visits": 178,
+    "matched_input": [
+      "CT1",
+      "T1",
+      "T2"
+    ]
+  },
+  "mu_inspection": {
+    "cases": 6,
+    "mapping_defects_found": false,
+    "reserved_opened": 0,
+    "cavity_confusion_remains": true
+  },
+  "forecast_targets": {
+    "fitting": {
+      "12": {
+        "pairs": 127,
+        "patients": 38
+      },
+      "24": {
+        "pairs": 79,
+        "patients": 33
+      }
+    },
+    "selection": {
+      "12": {
+        "pairs": 112,
+        "patients": 16
+      },
+      "24": {
+        "pairs": 89,
+        "patients": 15
+      }
+    }
+  },
+  "checks": {
+    "contract_tests_passed": 17,
+    "real_train_reload_arms": [
+      "current",
+      "history"
+    ],
+    "full_volume_horizons": [
+      12,
+      24
+    ],
+    "full_volume_controls": [
+      "persistence",
+      "current",
+      "history"
+    ],
+    "subsequent_states_saved": 4,
+    "unified_cli_chronological_visits": 2,
+    "viewer_visually_checked": true
+  },
+  "training": {
+    "status": "running",
+    "seed": 17,
+    "steps_per_arm": 8000,
+    "sequence": [
+      "current",
+      "history",
+      "full selection evaluation and predictive timeline"
+    ],
+    "frozen_observation": true,
+    "evaluation_samples": 16,
+    "useful_forecasting_established": false
+  },
+  "source_sha256": {
+    "src/patient_state/temporal.py": "033208f2c5042d8e73d296eb8bf4ebc92629ce1b60deb0992bac3b0698e0f46a",
+    "src/patient_state/forecast_training.py": "b9ba9dad209ef2c8241c9c13237bf41e453249ad1b9b42d0900466d421a09ea5",
+    "src/patient_state/forecast_inference.py": "cf88773510d7d23b603f64b96d09a9c60004e92735a3ed864cce917119120dc6",
+    "src/patient_state/pipeline.py": "e0d68f03a086016e53015bedc38fb068d5f3ca7ea3e706a7e515f0da1fd42bde",
+    "scripts/patient_state.py": "e5b7de1f0da50c065b38aff12faf6dc1027d8745aaeb461d138db44851cd81ad",
+    "scripts/evaluate_patient_forecasts.py": "2a2a7de73ab40fea3da8d7c07ce46f0cd7a764f0072cb783df9436a0871fe285",
+    "scripts/train_patient_forecasting.sh": "036ba20ffbff0e7bcce99ee3da893f94313986bc78b38982e40f76cfb95baa9a",
+    "scripts/inspect_patient_observation.py": "845efba86360fd590292255fad2ed77ba47169889e4d48aa0fcd83903e6ae8d4",
+    "tests/test_patient_state.py": "18da9c47df75f098cee36f5f086135f44c9ea86e827d91bbc99f2ee4ab2d523f"
+  }
+}

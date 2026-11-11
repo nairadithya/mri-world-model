@@ -1,0 +1,17 @@
+{
+  "scope": "Local analysis source and published aggregate bytes at exploratory closeout. Selected checkpoints were replayed; intermediate checkpoints were hash-checked only.",
+  "sha256": {
+    "analysis_source": {
+      "path": "scratch/observable-state/analyze63.py",
+      "sha256": "10ad00f716ca8c35253fc4d9aa95dd61db9cf0a5afa55f4ebeec8b2b48fed5c7"
+    },
+    "aggregate": {
+      "path": "info/r63_observable_state_metrics.json",
+      "sha256": "a1697efcb8d88c0f699a6a3da6746f527ddaf105da1aaaf75cf7e03c603002c7"
+    },
+    "verification": {
+      "path": "info/r63_observable_state_verification.json",
+      "sha256": "685f4cc5a6c55e7226221d42704d353600a5765bd6b50db89333f8d40d1251fb"
+    }
+  }
+}

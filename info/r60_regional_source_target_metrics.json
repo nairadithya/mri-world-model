@@ -1,0 +1,74 @@
+{
+  "study": "R60",
+  "status": "SOURCE_VOLUME_TARGETS_VERIFIED",
+  "contract": "source-voxel-regional-mm3-v1",
+  "units": "mm3",
+  "transformed_target": "log1p(volumes_mm3 / 1000)",
+  "groups": {
+    "fitting": {
+      "visits": 195,
+      "patients": 40,
+      "regional_compartment_cells": 4680,
+      "positive_source_cells_erased_by_coarse_grid": 357,
+      "coarse_positive_source_empty_cells": 0,
+      "visits_with_erased_positive_cells": 159,
+      "adjacent_pairs": 148,
+      "change_direction_disagreements": 60,
+      "adjacent_change_cells": 3552,
+      "outside_mm3": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "selection": {
+      "visits": 67,
+      "patients": 11,
+      "regional_compartment_cells": 1608,
+      "positive_source_cells_erased_by_coarse_grid": 120,
+      "coarse_positive_source_empty_cells": 0,
+      "visits_with_erased_positive_cells": 48,
+      "adjacent_pairs": 53,
+      "change_direction_disagreements": 22,
+      "adjacent_change_cells": 1272,
+      "outside_mm3": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "scoring": {
+      "visits": 60,
+      "patients": 13,
+      "regional_compartment_cells": 1440,
+      "positive_source_cells_erased_by_coarse_grid": 128,
+      "coarse_positive_source_empty_cells": 0,
+      "visits_with_erased_positive_cells": 50,
+      "adjacent_pairs": 40,
+      "change_direction_disagreements": 20,
+      "adjacent_change_cells": 960,
+      "outside_mm3": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "all_regional_volumes_independently_reconstructed": true,
+  "all_source_volumes_conserved": true,
+  "fixed_r59_measurements_reproduced": 18,
+  "old_target_arrays_unchanged": true,
+  "model_training_performed": false,
+  "new_forecast_scores_available": false,
+  "comparison_scope": "Endpoint-pooled counts across the existing state cohort, not patient-uniform forecast scores",
+  "source_voxel_center_assignment": true,
+  "fractional_geometric_intersections": false,
+  "manifest_sha256": "ec14ddbd023b643f0a6ac106065d848affc758092c7e12b55e49119c6b6f1485",
+  "implementation_sha256": {
+    "build_regional_targets.py": "c7747de7578ee94644c8afe8cdb20cf35bc0a81b3b87981d01fc2c882388edc8",
+    "regional_targets.py": "4b9abef1e38e5d61a1e31b589e9db6cc2e15a8c3dbf4966ef3961915a7530203",
+    "geometry.py": "f09b91bf2ec829297c64efb6606726a3206c98d7dacff4c2cc6db28c5d61fb2d"
+  },
+  "verifier_sha256": "70ee23bc5d1b596d79086872b44ecf690f3ba0e1379e0f9634cf77639be9885f",
+  "reader_sha256": "67da28cb12be19d569e55788c8d3659b2224cf62c2a8e96dcf4aed43c99b3d7d"
+}

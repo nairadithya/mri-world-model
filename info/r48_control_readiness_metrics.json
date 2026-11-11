@@ -1,0 +1,682 @@
+{
+  "experiment": "R48",
+  "status": "LEARNING_SANITY_FAILED",
+  "scope": "Source-only two-patient learning instrument, not a pretraining-superiority or generalization experiment",
+  "arms": {
+    "pretrained": {
+      "initial": {
+        "loss": 3.044084310531616,
+        "loss_components": {
+          "volume": 0.9736892580986023,
+          "bce": 1.0784142017364502,
+          "dice": 0.9919807314872742
+        },
+        "hard_dice": [
+          [
+            3.6778227685552167e-10,
+            0.004691394045948982,
+            0.011129296384751797
+          ],
+          [
+            3.537318771229536e-10,
+            0.0040736268274486065,
+            0.01666088216006756
+          ]
+        ],
+        "mean_dice": 0.006092533469200134,
+        "volume_mae": 2.1346077919006348,
+        "volume_absolute_errors": [
+          [
+            1.794477939605713,
+            3.3699798583984375,
+            0.4940948486328125
+          ],
+          [
+            3.143306255340576,
+            3.0663318634033203,
+            0.9394540786743164
+          ]
+        ],
+        "predicted_voxels": [
+          [
+            2699,
+            13610,
+            12152
+          ],
+          [
+            2739,
+            13229,
+            11428
+          ]
+        ],
+        "target_voxels": [
+          [
+            20.0,
+            32.0,
+            68.0
+          ],
+          [
+            88.0,
+            27.0,
+            96.0
+          ]
+        ]
+      },
+      "final": {
+        "loss": 1.1850048303604126,
+        "loss_components": {
+          "volume": 0.03005119040608406,
+          "bce": 0.2049109935760498,
+          "dice": 0.9500426054000854
+        },
+        "hard_dice": [
+          [
+            0.2209944725036621,
+            0.3265306055545807,
+            0.4011799395084381
+          ],
+          [
+            0.38596490025520325,
+            0.17363344132900238,
+            0.35687732696533203
+          ]
+        ],
+        "mean_dice": 0.3108634650707245,
+        "volume_mae": 0.058050792664289474,
+        "volume_absolute_errors": [
+          [
+            0.07808208465576172,
+            0.042461395263671875,
+            0.0313873291015625
+          ],
+          [
+            0.06734657287597656,
+            0.06991004943847656,
+            0.05911731719970703
+          ]
+        ],
+        "predicted_voxels": [
+          [
+            161,
+            164,
+            271
+          ],
+          [
+            368,
+            284,
+            442
+          ]
+        ],
+        "target_voxels": [
+          [
+            20.0,
+            32.0,
+            68.0
+          ],
+          [
+            88.0,
+            27.0,
+            96.0
+          ]
+        ]
+      },
+      "criterion_conditions": {
+        "all_six_dice_at_least_0_25": false,
+        "mean_dice_at_least_0_50": false,
+        "native_volume_mae_at_most_0_50": true,
+        "training_loss_halved": true
+      },
+      "learning_criterion_met": false,
+      "input_swap_volume_mae": 0.5809535980224609,
+      "zero_image": {
+        "loss": 2.146200656890869,
+        "loss_components": {
+          "volume": 0.167354553937912,
+          "bce": 0.9862772822380066,
+          "dice": 0.9925689697265625
+        },
+        "hard_dice": [
+          [
+            4.9999993478877514e-08,
+            3.1249999921101335e-08,
+            1.4705882733778708e-08
+          ],
+          [
+            1.1363636254202447e-08,
+            3.7037032996067865e-08,
+            1.0416666640367112e-08
+          ]
+        ],
+        "mean_dice": 2.579553459725048e-08,
+        "volume_mae": 0.3183768689632416,
+        "volume_absolute_errors": [
+          [
+            0.7432832717895508,
+            0.1638631820678711,
+            0.2059326171875
+          ],
+          [
+            0.6093902587890625,
+            0.08094596862792969,
+            0.10684585571289062
+          ]
+        ],
+        "predicted_voxels": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "target_voxels": [
+          [
+            20.0,
+            32.0,
+            68.0
+          ],
+          [
+            88.0,
+            27.0,
+            96.0
+          ]
+        ]
+      },
+      "input_swap_prediction_mean_absolute_change": 0.579117476940155,
+      "two_row_initialization_backbone_hash": "18cf54c93ed77a6b3574551a9745d0e938c0c276e8f0de42b4720fd714009f07",
+      "exact_checkpoint_prediction_replay": true,
+      "optimizer_reload_verified": true,
+      "encoder_changed": true,
+      "real_vs_noise_fused_features_relative_l2": null,
+      "median_update_seconds": 0.08119567751418799,
+      "projected_two_arm_128_updates_seconds": 20.786093443632126,
+      "peak_allocated_gib": 2.645920753479004,
+      "wall_seconds": 14.688792094995733
+    },
+    "random": {
+      "initial": {
+        "loss": 2.55926251411438,
+        "loss_components": {
+          "volume": 0.5473638772964478,
+          "bce": 1.0197851657867432,
+          "dice": 0.9921135306358337
+        },
+        "hard_dice": [
+          [
+            0.0025399131700396538,
+            0.007241457235068083,
+            0.009798270650207996
+          ],
+          [
+            0.010286081582307816,
+            0.0061887577176094055,
+            0.013793103396892548
+          ]
+        ],
+        "mean_dice": 0.008307931013405323,
+        "volume_mae": 1.1754873991012573,
+        "volume_absolute_errors": [
+          [
+            0.9137115478515625,
+            1.7158775329589844,
+            0.3151111602783203
+          ],
+          [
+            2.1604042053222656,
+            1.4412002563476562,
+            0.5066194534301758
+          ]
+        ],
+        "predicted_voxels": [
+          [
+            5492,
+            8806,
+            13812
+          ],
+          [
+            9245,
+            3851,
+            13824
+          ]
+        ],
+        "target_voxels": [
+          [
+            20.0,
+            32.0,
+            68.0
+          ],
+          [
+            88.0,
+            27.0,
+            96.0
+          ]
+        ]
+      },
+      "final": {
+        "loss": 1.1804358959197998,
+        "loss_components": {
+          "volume": 0.030058106407523155,
+          "bce": 0.20069462060928345,
+          "dice": 0.9496831893920898
+        },
+        "hard_dice": [
+          [
+            0.2083333283662796,
+            0.2612244784832001,
+            0.39080458879470825
+          ],
+          [
+            0.42718446254730225,
+            0.1764705926179886,
+            0.37109375
+          ]
+        ],
+        "mean_dice": 0.30585187673568726,
+        "volume_mae": 0.05727164074778557,
+        "volume_absolute_errors": [
+          [
+            0.11268806457519531,
+            0.0237579345703125,
+            0.026083946228027344
+          ],
+          [
+            0.15962886810302734,
+            0.0036907196044921875,
+            0.017780303955078125
+          ]
+        ],
+        "predicted_voxels": [
+          [
+            172,
+            213,
+            280
+          ],
+          [
+            324,
+            279,
+            416
+          ]
+        ],
+        "target_voxels": [
+          [
+            20.0,
+            32.0,
+            68.0
+          ],
+          [
+            88.0,
+            27.0,
+            96.0
+          ]
+        ]
+      },
+      "criterion_conditions": {
+        "all_six_dice_at_least_0_25": false,
+        "mean_dice_at_least_0_50": false,
+        "native_volume_mae_at_most_0_50": true,
+        "training_loss_halved": true
+      },
+      "learning_criterion_met": false,
+      "input_swap_volume_mae": 0.6024987101554871,
+      "zero_image": {
+        "loss": 2.1475067138671875,
+        "loss_components": {
+          "volume": 0.18013879656791687,
+          "bce": 0.9750601053237915,
+          "dice": 0.9923076629638672
+        },
+        "hard_dice": [
+          [
+            4.9999993478877514e-08,
+            3.1249999921101335e-08,
+            1.4705882733778708e-08
+          ],
+          [
+            1.1363636254202447e-08,
+            3.7037032996067865e-08,
+            1.0416666640367112e-08
+          ]
+        ],
+        "mean_dice": 2.579553459725048e-08,
+        "volume_mae": 0.35449695587158203,
+        "volume_absolute_errors": [
+          [
+            0.520268440246582,
+            0.18930625915527344,
+            0.12505817413330078
+          ],
+          [
+            0.8324050903320312,
+            0.27222347259521484,
+            0.18772029876708984
+          ]
+        ],
+        "predicted_voxels": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "target_voxels": [
+          [
+            20.0,
+            32.0,
+            68.0
+          ],
+          [
+            88.0,
+            27.0,
+            96.0
+          ]
+        ]
+      },
+      "input_swap_prediction_mean_absolute_change": 0.6222076416015625,
+      "two_row_initialization_backbone_hash": "85ee937cf86cd98930c0b037bb6f0986caa12d9f141f861f47de1cdc1cebcccc",
+      "exact_checkpoint_prediction_replay": true,
+      "optimizer_reload_verified": true,
+      "encoder_changed": true,
+      "real_vs_noise_fused_features_relative_l2": null,
+      "median_update_seconds": 0.08191707500373013,
+      "projected_two_arm_128_updates_seconds": 20.970771200954914,
+      "peak_allocated_gib": 3.0850377082824707,
+      "wall_seconds": 12.150603555026464
+    }
+  },
+  "verification": {
+    "status": "REPLAY_AND_SCORERS_PASSED",
+    "scope": "No refitting, no checkpoint or threshold selection, no assessment patients",
+    "premise_to_question": "A coarse 6-cubed ViT map with this decoder and loss should learn six sparse compartment masks in 128 updates.",
+    "target_voxels_per_example_compartment": [
+      [
+        20.0,
+        32.0,
+        68.0
+      ],
+      [
+        88.0,
+        27.0,
+        96.0
+      ]
+    ],
+    "foreground_fraction_per_example_compartment": [
+      [
+        0.0014467592118307948,
+        0.002314814832061529,
+        0.004918981343507767
+      ],
+      [
+        0.006365740671753883,
+        0.001953125,
+        0.0069444444961845875
+      ]
+    ],
+    "foreground_pos_weights": [
+      100.0,
+      100.0,
+      100.0
+    ],
+    "arms": {
+      "pretrained": {
+        "checkpoint_sha256": "a12337656afe110be56036303cd1f83e291df2ea676d8a368d2121dfc1a6c24d",
+        "exact_full_prediction_replay": true,
+        "trainable_parameters": 88607302,
+        "trainable_parameter_tensors": 153,
+        "all_parameter_optimizer_steps": [
+          128
+        ],
+        "independent_numpy_dice_and_native_mae": true,
+        "independent_weighted_bce": 0.2049109786748886,
+        "true_positive_voxels": [
+          [
+            20.0,
+            32.0,
+            68.0
+          ],
+          [
+            88.0,
+            27.0,
+            96.0
+          ]
+        ],
+        "false_positive_voxels": [
+          [
+            141.0,
+            132.0,
+            203.0
+          ],
+          [
+            280.0,
+            257.0,
+            346.0
+          ]
+        ],
+        "false_negative_voxels": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "precision": [
+          [
+            0.12422360479831696,
+            0.19512194395065308,
+            0.2509225010871887
+          ],
+          [
+            0.239130437374115,
+            0.09507042169570923,
+            0.2171945720911026
+          ]
+        ],
+        "recall": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0,
+            1.0
+          ]
+        ],
+        "foreground_bce_by_compartment": [
+          0.01633104495704174,
+          0.031316425651311874,
+          0.06130020692944527
+        ],
+        "background_bce_by_compartment": [
+          0.21701212227344513,
+          0.12349589914083481,
+          0.16527727246284485
+        ],
+        "predicted_to_target_voxel_ratio": [
+          [
+            8.050000190734863,
+            5.125,
+            3.9852941036224365
+          ],
+          [
+            4.181818008422852,
+            10.518518447875977,
+            4.604166507720947
+          ]
+        ]
+      },
+      "random": {
+        "checkpoint_sha256": "555835d2aade7d1f41a19099f270af4cc14528a6ee0cf72ae54ea5bbd98eecb8",
+        "exact_full_prediction_replay": true,
+        "trainable_parameters": 88607302,
+        "trainable_parameter_tensors": 153,
+        "all_parameter_optimizer_steps": [
+          128
+        ],
+        "independent_numpy_dice_and_native_mae": true,
+        "independent_weighted_bce": 0.20069463551044464,
+        "true_positive_voxels": [
+          [
+            20.0,
+            32.0,
+            68.0
+          ],
+          [
+            88.0,
+            27.0,
+            95.0
+          ]
+        ],
+        "false_positive_voxels": [
+          [
+            152.0,
+            181.0,
+            212.0
+          ],
+          [
+            236.0,
+            252.0,
+            321.0
+          ]
+        ],
+        "false_negative_voxels": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "precision": [
+          [
+            0.11627907305955887,
+            0.15023474395275116,
+            0.24285714328289032
+          ],
+          [
+            0.2716049253940582,
+            0.09677419066429138,
+            0.22836539149284363
+          ]
+        ],
+        "recall": [
+          [
+            1.0,
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0,
+            0.9895833134651184
+          ]
+        ],
+        "foreground_bce_by_compartment": [
+          0.012783459387719631,
+          0.015454418957233429,
+          0.04300697147846222
+        ],
+        "background_bce_by_compartment": [
+          0.20515908300876617,
+          0.1623363196849823,
+          0.16334356367588043
+        ],
+        "predicted_to_target_voxel_ratio": [
+          [
+            8.600000381469727,
+            6.65625,
+            4.117647171020508
+          ],
+          [
+            3.6818182468414307,
+            10.333333015441895,
+            4.333333492279053
+          ]
+        ]
+      }
+    },
+    "limitation": "Sparse targets and oversized predictions locate the failure but do not identify whether representation resolution, optimization time, decoder, or weighting causes it. No further fix was tested.",
+    "constant_controls": {
+      "mean_mask_dice": [
+        [
+          0.3448275923728943,
+          0.7111111283302307,
+          0.6325581669807434
+        ],
+        [
+          0.95652174949646,
+          0.6352941393852234,
+          0.790123462677002
+        ]
+      ],
+      "mean_volume_mae": 0.2913948893547058
+    }
+  },
+  "provenance": {
+    "execution": {
+      "phase": "learn",
+      "code_sha256": "66bef4db30d5d6100b63ceec0164741205fee62c69427e13102a510c18351483",
+      "brief_sha256": "6778e55390292a69fc246206258096496696d1cd1152f4258c436d0f8dcb5efe",
+      "imported_code_sha256": {
+        "anatomical.py": "d53789e11f3d6867034c471af3b539093906b30018d96eb56c089c578ada9e52",
+        "common.py": "e1e65ca35f9607370d820ffd05058f64cc3810e348df1c1a7283279beb19c03b"
+      },
+      "official_weights_sha256": "f22bdbcae26823a9d9e8aee883c6f24386ba4617339c12269848b6666cc62693",
+      "prepared_metadata_sha256": "5b444dc63487d6555d04f002c34cf08ba6b6e75b12bb306b628540566200d112",
+      "normalizer": {
+        "mean": [
+          8.621078909198651,
+          7.719306075251142,
+          10.493755878058746
+        ],
+        "scale": [
+          1.9686875911071167,
+          2.825355504507285,
+          1.3576285624902449
+        ],
+        "source_cutoff_visits": 262,
+        "source_patients": 51
+      },
+      "source_only": true,
+      "assessment_images_opened": false,
+      "selected_rows": 2,
+      "distinct_source_patients": 2,
+      "steps": 128
+    },
+    "aggregate_sha256": "ba3705c2d570e25333e8c7aa1a7235b3e365f89871a9972e66d7276831a02348",
+    "verification_script_sha256": "41c572005fd24be0ec7ca97a5c3d6b63680a20953567ccb4feb568685ef1a8b9",
+    "smoke_status": "SMOKE_PASSED"
+  },
+  "limits": [
+    "Two source training examples, no held-out performance or superiority claim",
+    "Positive compartment targets selected for learning sanity, not representative prevalence",
+    "Automated masks are not expert biological truth",
+    "Whole-brain current MRI and availability are the only inputs",
+    "The recipe changes multiple parts of R42 and cannot isolate its failure cause",
+    "Priority 1 clinical supervised comparator and JEPA attribution remain pending"
+  ],
+  "priority1_remaining": [
+    "Noncollapsed patient-held-out state comparison",
+    "Faithful supervised comparator",
+    "Same-backbone direct-objective versus JEPA attribution",
+    "Fresh independent validation"
+  ]
+}

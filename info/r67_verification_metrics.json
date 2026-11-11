@@ -1,0 +1,23 @@
+{
+  "status": "passed",
+  "scope": "Saved receipts and five bootstrap contrasts, one persistence equality, existing single reload/canonical scorer receipt; no refit or exhaustive replay",
+  "fits": 9,
+  "updates_per_fit": 4096,
+  "same_initialization_and_draws": true,
+  "earliest_selection_minima": true,
+  "common_scoring_visits": 64,
+  "common_scoring_patients": 18,
+  "private_prediction_files": 704,
+  "five_contrasts": {
+    "genuine_minus_current_lesion_mae": "reproduced_from_saved_patient_vectors",
+    "genuine_minus_donor_lesion_mae": "reproduced_from_saved_patient_vectors",
+    "genuine_minus_current_boundary_gradient_mae": "reproduced_from_saved_patient_vectors",
+    "genuine_minus_donor_boundary_gradient_mae": "reproduced_from_saved_patient_vectors",
+    "genuine_minus_current_nonlesion_mae": "reproduced_from_saved_patient_vectors"
+  },
+  "persistence_one_visit_exact_equal": true,
+  "existing_reload_and_canonical_check": "passed",
+  "fitting_wall_seconds": 3407.0,
+  "assessment_wall_seconds": 240.0,
+  "completed_at": "2026-11-05T00:09:50+05:30"
+}

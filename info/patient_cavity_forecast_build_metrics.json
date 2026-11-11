@@ -1,0 +1,91 @@
+{
+  "status": "completed",
+  "identity": {
+    "catalogue_sha256": "d0a562f8296cec97b62c204e537b7a48cc3120418ec23fcbe933143cea6a536f",
+    "observation_sha256": "d006424493442bd1bcd8fd5b15888b197aa3a95ef3f87aeed5df2f52e86ccacb",
+    "format": "structured-context-v1",
+    "spacing_mm": 2,
+    "scope": "fitting and selection only",
+    "compartments": 4,
+    "fixed_pairs_sha256": "47e8a1fd23df76676f7d255f07563f88a1566f7865f1e95e4e2b8f618ed75613",
+    "anatomy_readout": "native_five_category",
+    "model_identity": "mu-cavity-current-structured-v1",
+    "support_contract": "observed brain union native predicted anatomy; zero change preserves native map",
+    "target_contract": "all native five-category reference voxels, including cavity outside image support"
+  },
+  "verification": {
+    "passed": true,
+    "timelines": 3,
+    "visits": 5,
+    "maps_checked": 24,
+    "distributions_checked": 6,
+    "reference_comparisons": 4,
+    "exact_saved_state_observation_replays": 5,
+    "scope": "Engineering consistency; no predictive capability or calibration claim"
+  },
+  "execution": {
+    "status": "completed",
+    "completed_unix_time": 1794035231.849526,
+    "scope": "development selection, no predictive success assumed",
+    "reserved_images_opened": 0
+  },
+  "models": {
+    "anatomy": {
+      "checkpoint_sha256": "3a8575a5d7256d2b847e2f39dd20b089929e57f6e5b65f6de285be4d5efe9d94",
+      "selected_step": 500,
+      "selected_score": 0.7241781363704711,
+      "last_selection_scores": [
+        {
+          "step": 5000,
+          "score": 0.7823865050858272
+        },
+        {
+          "step": 5500,
+          "score": 0.7855958226014347
+        },
+        {
+          "step": 6000,
+          "score": 0.7814254946651822
+        }
+      ],
+      "training": {
+        "steps": 6000,
+        "elapsed_seconds": 769.4204475450097,
+        "mean_update_seconds": 0.06679839968299105,
+        "best_score": 0.7241781363704711,
+        "forecast_usefulness_established": false,
+        "boundary_review_required": true
+      }
+    },
+    "volume": {
+      "checkpoint_sha256": "cf064a1356fc2f5fd0284ac324a837eef4660575d32e43923ebcdb9f13c885ae",
+      "selected_step": 500,
+      "selected_score": 0.14430373191833495,
+      "last_selection_scores": [
+        {
+          "step": 5000,
+          "score": 0.14806455612182617
+        },
+        {
+          "step": 5500,
+          "score": 0.14814784228801725
+        },
+        {
+          "step": 6000,
+          "score": 0.14769484887520473
+        }
+      ],
+      "training": {
+        "steps": 6000,
+        "elapsed_seconds": 92.64269021595828,
+        "mean_update_seconds": 0.01503139528791265,
+        "best_score": 0.14430373191833495,
+        "forecast_usefulness_established": false,
+        "boundary_review_required": true
+      }
+    }
+  },
+  "runtime_seconds_since_restart": 2568.4091124534607,
+  "reserved_images_opened": 0,
+  "predictive_milestone_achieved": false
+}

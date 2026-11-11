@@ -1,0 +1,45 @@
+{
+  "counts": {
+    "arm_cells": 60,
+    "counterfactual_pairs": 15360,
+    "image_predictions": 18432,
+    "manifest_files": 1176,
+    "readout_predictions": 92160
+  },
+  "environment": {
+    "cuda_runtime": "12.8",
+    "cudnn": 91002,
+    "gpu": "NVIDIA GeForce RTX 5090",
+    "numpy": "2.5.4",
+    "python": "3.12.14",
+    "torch": "2.9.1+cu128"
+  },
+  "manifest_sha256": "644eb68cdf9857c6b0795ddcba1c179fc868abf634884f26194d9794fa81cff3",
+  "maximum_absolute_errors": {
+    "audit_current": 0.0,
+    "audit_hidden": 0.0,
+    "audit_hidden_opposite": 0.0,
+    "audit_intervention_opposite": 0.0,
+    "chance_prediction": 0.0,
+    "counterfactual_probability": 0.0,
+    "feature_mean": 0.0,
+    "feature_std": 0.0,
+    "fit_mean": 0.0,
+    "fit_var": 0.0,
+    "image_fit_target_mean": 0.0,
+    "image_input": 0.0,
+    "image_prediction": 0.0,
+    "image_target": 0.0,
+    "mlp_prediction": 0.0,
+    "ridge_prediction": 0.0,
+    "ridge_weights": 0.0,
+    "target": 0.0
+  },
+  "protocol_sha256": "3ba7055a04783db75bc18e6bcfbf3f6f8fcbb026f9421d9807461f240d7703e3",
+  "source_sha256": "73fb1d356d778777a1f9de3ade9825b3ff4d4eafc2db007d32d9afb25c228b96",
+  "status": "passed",
+  "tolerances": {
+    "image_prediction": 1e-06,
+    "readout_prediction": 2e-05
+  }
+}

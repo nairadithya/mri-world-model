@@ -48,3 +48,12 @@ logs/
 .DS_Store
 Thumbs.db
 *~
+
+# Local report includes controlled-access research figures (previously under outputs).
+/docs/report/
+
+# Private case provenance and local research workspaces
+/scratch/
+/.audit/
+/report/CASE_FIGURES.md
+/report/make_case_figures.py

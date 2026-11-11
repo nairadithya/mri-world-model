@@ -1,0 +1,105 @@
+{
+  "status": "nine_fits_locked",
+  "manifest_sha256": "66a1b5c5ed98d41e50242ad99edfd0209a730837abadb4f3587de606c0d572b3",
+  "source_sha256": {
+    "/home/aditya/experiments/world-model-r67-caliper8-20261104/code/train67.py": "28dca5a07285cb619370ca40dea73d4b916f574ff1f1c96cc91ddb1cf8ee0195",
+    "/home/aditya/experiments/world-model-r67-caliper8-20261104/code/data67.py": "79c734081a2ea15e14993785977a71cd0736689d022fb103cef9391e9ca67e00",
+    "/home/aditya/experiments/world-model-r67-caliper8-20261104/code/assess67.py": "db99adf6f997cf155921226d4b61b3e5b3b8607991547626c5bf3316c9f718d7",
+    "/home/aditya/experiments/world-model-r65-lumiere-20261103/code/run65.py": "546accee86c8ac33fd78d8179a76edd4b8ed81b58b42426a608ddc87f0fca1df",
+    "/home/aditya/experiments/world-model-r65-lumiere-20261103/code/train65.py": "a4bcab8b4f97e9671440d0992bfc93474b1f4663fd922485e477d427f76ec3fc"
+  },
+  "readiness_sha256": "d38d9005b6301c21e95f2135c8eb01782c995b33f178a57e84f3183d5c42a73a",
+  "updates": 4096,
+  "fits": [
+    {
+      "seed": 17,
+      "arm": "current",
+      "step": 3584,
+      "checkpoint": "/home/aditya/experiments/world-model-r67-caliper8-20261104/fits/17-current/best.pt",
+      "sha256": "fa6e518bba9bfe0348ec76cc1f74279ff73f2fefdef6e193bc8f37e267a06086",
+      "initial_sha256": "7b1f479ce5d9af0715324a5c7d3abcfc5fec5c48207dda16699b7cd6075a034f",
+      "draw_sha256": "6b9e73ac119f3f63b7dfa16673e2997f2497522bfd5806d66dec8137bef3b355",
+      "selection_mae": 0.36418401287376995
+    },
+    {
+      "seed": 17,
+      "arm": "genuine",
+      "step": 4096,
+      "checkpoint": "/home/aditya/experiments/world-model-r67-caliper8-20261104/fits/17-genuine/best.pt",
+      "sha256": "35de06f59b4a5b6c34ba7694d0fafb8170ab6edb9bfff0151903867025497296",
+      "initial_sha256": "7b1f479ce5d9af0715324a5c7d3abcfc5fec5c48207dda16699b7cd6075a034f",
+      "draw_sha256": "6b9e73ac119f3f63b7dfa16673e2997f2497522bfd5806d66dec8137bef3b355",
+      "selection_mae": 0.33466411098047927
+    },
+    {
+      "seed": 17,
+      "arm": "donor",
+      "step": 4096,
+      "checkpoint": "/home/aditya/experiments/world-model-r67-caliper8-20261104/fits/17-donor/best.pt",
+      "sha256": "2b5f2c7d68dfcf865063546c7e5f55b1a19aac7c6889ef1ab27411662965027b",
+      "initial_sha256": "7b1f479ce5d9af0715324a5c7d3abcfc5fec5c48207dda16699b7cd6075a034f",
+      "draw_sha256": "6b9e73ac119f3f63b7dfa16673e2997f2497522bfd5806d66dec8137bef3b355",
+      "selection_mae": 0.3659830624497482
+    },
+    {
+      "seed": 23,
+      "arm": "current",
+      "step": 4096,
+      "checkpoint": "/home/aditya/experiments/world-model-r67-caliper8-20261104/fits/23-current/best.pt",
+      "sha256": "735cb817408453e5f3a955941e05d51c1705bb992b373f8891f5c9d63a666a15",
+      "initial_sha256": "8589e201348b724bf3d1fb604f1a10914a3501bc519ac8ab9e996f9c00c346d3",
+      "draw_sha256": "31e9f852c2ffca3d290a04c10617c5a610f12abeebacadd3cf400f0593c83a74",
+      "selection_mae": 0.3640695909527104
+    },
+    {
+      "seed": 23,
+      "arm": "genuine",
+      "step": 4096,
+      "checkpoint": "/home/aditya/experiments/world-model-r67-caliper8-20261104/fits/23-genuine/best.pt",
+      "sha256": "8fdfe7fc4595d54596b343f787e34d29a1e71d787a4a20ec54860cfbe9ecd9e5",
+      "initial_sha256": "8589e201348b724bf3d1fb604f1a10914a3501bc519ac8ab9e996f9c00c346d3",
+      "draw_sha256": "31e9f852c2ffca3d290a04c10617c5a610f12abeebacadd3cf400f0593c83a74",
+      "selection_mae": 0.33111882017248356
+    },
+    {
+      "seed": 23,
+      "arm": "donor",
+      "step": 3584,
+      "checkpoint": "/home/aditya/experiments/world-model-r67-caliper8-20261104/fits/23-donor/best.pt",
+      "sha256": "8fbbc864a647f7bf4c7d23a3decc76eeba58a57e67b6f6ede5898f1283d3351b",
+      "initial_sha256": "8589e201348b724bf3d1fb604f1a10914a3501bc519ac8ab9e996f9c00c346d3",
+      "draw_sha256": "31e9f852c2ffca3d290a04c10617c5a610f12abeebacadd3cf400f0593c83a74",
+      "selection_mae": 0.368773351715069
+    },
+    {
+      "seed": 31,
+      "arm": "current",
+      "step": 4096,
+      "checkpoint": "/home/aditya/experiments/world-model-r67-caliper8-20261104/fits/31-current/best.pt",
+      "sha256": "afb3e9900626b5cf9a1240968491b763f494a50a83535998c44292378e03887b",
+      "initial_sha256": "88ed020f82ecfba787ed1357372adaff274fd54375c6a30f5e0de33302e21c4e",
+      "draw_sha256": "dd00d40c621a8d7635e0a7692485e574e2d67bdf9f6087490f45cbeba298bfd4",
+      "selection_mae": 0.3626385271445598
+    },
+    {
+      "seed": 31,
+      "arm": "genuine",
+      "step": 4096,
+      "checkpoint": "/home/aditya/experiments/world-model-r67-caliper8-20261104/fits/31-genuine/best.pt",
+      "sha256": "b88fec7c34f5d8c7436319cd5ed3d000f96befc7625ef9cc45faecc6759f235e",
+      "initial_sha256": "88ed020f82ecfba787ed1357372adaff274fd54375c6a30f5e0de33302e21c4e",
+      "draw_sha256": "dd00d40c621a8d7635e0a7692485e574e2d67bdf9f6087490f45cbeba298bfd4",
+      "selection_mae": 0.33123808900331003
+    },
+    {
+      "seed": 31,
+      "arm": "donor",
+      "step": 4096,
+      "checkpoint": "/home/aditya/experiments/world-model-r67-caliper8-20261104/fits/31-donor/best.pt",
+      "sha256": "a78be026ebd97823a2c01737f2e53ab6c91af31ec1498e6cdc021042cf9ed1cc",
+      "initial_sha256": "88ed020f82ecfba787ed1357372adaff274fd54375c6a30f5e0de33302e21c4e",
+      "draw_sha256": "dd00d40c621a8d7635e0a7692485e574e2d67bdf9f6087490f45cbeba298bfd4",
+      "selection_mae": 0.36505983954975957
+    }
+  ]
+}

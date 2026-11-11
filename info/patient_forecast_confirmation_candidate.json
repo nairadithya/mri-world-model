@@ -1,0 +1,43 @@
+{
+  "status": "candidate preserved; independent assessment deferred by operator",
+  "date": "2026-11-06",
+  "candidate": "MU 24-week FLAIR-abnormality point segmentation, current-only",
+  "checkpoint_sha256": "10195e452c9cfe722f71f6db9bf4bef717806beb3974410cbf1d129dceb5e92b",
+  "observation_sha256": "87e2349c54fafd133a08246fd0d920956687faf640c8a080edc2f2cd1dc3ae59",
+  "source_archive_sha256": "cbe767ad7353d5a476aaddc87175e327ada626bef1bdfb962e1881040836c3d4",
+  "selected_update": 4000,
+  "prediction": "Frozen observation plus eight-scenario anatomical mixture; point map is weighted scenario-vote argmax, not the highest-weight scenario displayed by default in the viewer",
+  "inputs": "Four current structural sequences and availability, current predicted anatomy and volumes, nominal requested horizon 24 weeks; no history or future observations",
+  "horizon": "24 weeks, target tolerance 28 recorded MU days; nearest eligible target, original deterministic tie order",
+  "eligibility": "Original MU history-eligible metadata contract, even though the selected predictor is current-only; same prepared geometry and label conventions",
+  "primary_confirmation_endpoint": "Patient-mean future label-3 Dice difference versus frozen observation persistence on all eligible targets; paired patient bootstrap 95% interval; no empty-target-only success claim",
+  "confirmation_interpretation": "A positive lower paired interval would confirm only this narrow annotation-prediction comparison; report absolute effect size, failures and size of eligible cohort. It does not establish clinical utility or the original joint claim.",
+  "secondary_confirmation_endpoints": [
+    "Persistent-nonempty label-3 cases with reference volume change greater than max(2 mL,20%); no tuning or new threshold search",
+    "Privileged current-reference persistence comparison on common valid grid, evaluation-only",
+    "All-compartment errors, point volume errors, interval coverage and width retained as limitations"
+  ],
+  "candidate_selection": "Post-hoc developmental interpretation; new independent patient evidence required",
+  "confirmation_population": "Not opened or selected in this analysis. Pre-existing forty reserved MU patients remain unopened; metadata feasibility and a separate access decision precede outcome access. Reused fitting, selection and pilot-scoring patients cannot supply independent confirmation.",
+  "excluded_claims": [
+    "Nonenhancing/core trajectory forecasting",
+    "Calibrated volume uncertainty",
+    "General multi-dataset forecasting",
+    "Incremental historical benefit",
+    "Biological or causal evolution",
+    "Demonstrated future FLAIR image synthesis"
+  ],
+  "next_substantial_training_priority": "Explicit cavity/core supervision and reliable longitudinal annotations; do not reuse this forecast as an observation postprocessor without current-task evaluation",
+  "preserved_all_checkpoint_hashes": {
+    "current": "10195e452c9cfe722f71f6db9bf4bef717806beb3974410cbf1d129dceb5e92b",
+    "history": "efef2b6f5f2d21058ac93fde17fdd546aaf0121f89710e53b1effdbba786213e",
+    "volume_current": "b6c18585227ad83f8511d26f1d7d61f2bd8c93e00913edd5b719320a65b16286",
+    "volume_history": "e08a48d61e1eb64b29a991f8609c8354deddfcb2507929d3a7a9feb0a2d087d6"
+  },
+  "reserved_images_opened": 0,
+  "new_training_updates": 0,
+  "assessment_deferral": {
+    "date": "2026-11-06",
+    "decision": "Keep all forty reserved patients unopened, including new metadata feasibility. Revisit one preplanned independent assessment alongside the eventual integrated model. No candidate weights, exploratory results, or endpoints changed."
+  }
+}

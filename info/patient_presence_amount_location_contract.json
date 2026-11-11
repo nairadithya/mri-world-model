@@ -1,0 +1,150 @@
+{
+  "contract_id": "presence-amount-location-contract-v1",
+  "date": "2026-11-08",
+  "status": "implemented; terminal quantity gate failed; no spatial fitting or eligible checkpoint",
+  "closed_recipe": {
+    "identity": "mu-cavity-current-structured-v1",
+    "closure_sha256": "3be92c32fcba3161995c182f0d09eb12b8bf37b89587b59f53c1f09206de5136",
+    "final": true,
+    "extension_or_light_retuning": false
+  },
+  "scientific_question": "Can the model localize uncertain future tissue more accurately than persistence while preserving a credible distribution of whether and how much tissue exists?",
+  "population": {
+    "dataset": "MU development only",
+    "fitting_pairs": 87,
+    "selection_pairs": 58,
+    "horizons_weeks": [
+      12,
+      24
+    ],
+    "matching": "unchanged original pairs and four-week target window",
+    "reused_selection": true,
+    "reserved_access": false
+  },
+  "state": {
+    "observation_sha256": "d006424493442bd1bcd8fd5b15888b197aa3a95ef3f87aeed5df2f52e86ccacb",
+    "frozen": true,
+    "forecast_inputs": "declared cutoff state, availability, requested horizon; current-only initially",
+    "future_reference_inputs": false,
+    "compartments": [
+      "enhancing",
+      "nonenhancing_core",
+      "flair_abnormality",
+      "cavity"
+    ]
+  },
+  "presence": {
+    "variable": "Z_c",
+    "event": "at least one native reference voxel of compartment c; annotation presence, not adjudicated biological truth",
+    "prediction": "explicit p(Z | cutoff state, horizon), with marginal presence probabilities",
+    "loss": "proper log score for the presence distribution; unknown annotation events masked",
+    "evaluation": [
+      "marginal Brier",
+      "marginal log score",
+      "reliability with sample counts and patient uncertainty",
+      "false absence and false presence at a predeclared 0.5 marginal-probability threshold"
+    ],
+    "threshold_used_for_sampling": false,
+    "infer_presence_from_near_zero_interval": false,
+    "future_reference_presence": "supervision and evaluation grouping only"
+  },
+  "amount": {
+    "variable": "V | Z",
+    "positive_support": "positive voxel counts when Z_c=1; exactly zero when Z_c=0",
+    "joint_support": "sum of foreground counts <= N, the declared cutoff-derived anatomical-domain capacity; background is the remainder",
+    "domain": "fixed from cutoff data before forecasting; same across horizons and compared methods; cannot use future anatomy",
+    "reference": "frozen improved-state scalar predictor, plus persistence",
+    "evaluation": [
+      "unconditional mixture volume CRPS including zero mass",
+      "conditional positive-amount scores on reference-present cases",
+      "mean-volume MAE",
+      "joint dependence score",
+      "90% coverage and width, conditional and unconditional separately"
+    ],
+    "legacy_scalar_conditional_undefined": "if its positive mass is zero, report conditional distribution undefined; never remove that case from unconditional comparison",
+    "unknown_labels": "unknown, not absent"
+  },
+  "location": {
+    "variable": "exclusive native compartment map S | Z,V,cutoff state,horizon",
+    "quantization": "integer counts are authoritative; any continuous proposal is explicitly quantized upstream with per-compartment error <= one native voxel and must preserve Z and total capacity",
+    "conservation": "decoded count equals the supplied integer count for every compartment in every sample; no overlap; background fills remaining domain",
+    "infeasible_policy": "retain sample identifier, requested quantities, capacity and failure reason; no silent clipping, dropping, renormalization or rejection resampling",
+    "eligibility": "any unreported or unresolved infeasible sample, count mismatch or overlap fails implementation acceptance",
+    "target_outside_cutoff_domain": "report and score as a miss; do not expand domain from future references",
+    "image_readout": "conditioned on the same sampled map and declared state"
+  },
+  "selection": {
+    "scope": "all original selection targets, separately at 12 and 24 weeks; no favorable horizon or presence-subset replacement",
+    "weights": "mean over targets within each patient, then equal patients; equal horizons for ranking",
+    "nonempty_core_subset": "future reference core count > 0, applied only by the evaluator after forecast generation",
+    "gate_margin": 0.0,
+    "gate_type": "development point-estimate constraint, not a clinical tolerance or population noninferiority claim",
+    "hard_constraints_each_horizon": [
+      {
+        "metric": "expected sample-wise core Dice on reference-present core targets",
+        "operator": ">=",
+        "control": "new-state persistence core Dice"
+      },
+      {
+        "metric": "MAE of unconditional predictive mean core volume on reference-present targets",
+        "operator": "<=",
+        "control": "new-state persistence core volume MAE"
+      },
+      {
+        "metric": "unconditional core volume CRPS on reference-present targets",
+        "operator": "<=",
+        "control": "frozen improved-state scalar core volume CRPS"
+      }
+    ],
+    "undefined_gate": "ineligible, never silently waived",
+    "ranking_among_eligible": "highest patient/horizon/compartment-balanced expected sample-wise Dice over all four compartments; then lower marginal presence Brier; then lower unconditional volume CRPS; then earlier update",
+    "no_eligible_outcome": "no_eligible_checkpoint; retain final and diagnostic checkpoints but label none selected or accepted",
+    "future_presence_used_to_select_prediction_for_case": false,
+    "sampling": "exact finite-mixture expectations where available; otherwise fix and record the Monte Carlo draw count and shared random stream before any fitting; no resampling to pass a gate",
+    "sampling_rule_fixed_before_fit_required": true,
+    "report": [
+      "all checkpoint constraint values",
+      "eligible checkpoints",
+      "paired patient intervals",
+      "reference-present and reference-empty metrics",
+      "per-patient failures",
+      "compartment-specific presence and amount uncertainty"
+    ]
+  },
+  "scientific_assessment": {
+    "localization": "expected sample-wise compartment Dice against persistence; separate nonempty/empty and stable/changed results, plus spatial proper scores",
+    "distribution": "unconditional and conditional volume-distribution scores against frozen scalar control, with paired patient intervals and coverage/width",
+    "presence": "proper probability scores against fitting-only horizon-specific presence prevalence and deterministic current-state persistence",
+    "quantity_conservation_is_forecasting_evidence": false,
+    "eligibility_is_forecasting_evidence": false,
+    "joint_claim": "requires evidence for improved localization and credible presence/amount distributions; report unresolved contrasts without a useful-forecasting claim",
+    "independent_confirmation": false
+  },
+  "display": {
+    "representative_map": "one predeclared sampled scenario selected without target information; display its exact map-derived volumes and scenario identity",
+    "distribution_mean": "mean of volume samples, separately labeled; never described as the representative map volume",
+    "marginal_argmax_map": "if shown, separately labeled; its derived volumes are neither the scenario amounts nor distribution mean",
+    "presence_probabilities": "display explicitly alongside conditional positive-amount and unconditional intervals"
+  },
+  "before_fit_remaining": [],
+  "new_fit_launched": true,
+  "implementation": {
+    "identity": "mu-amount-first-v1",
+    "compartment_order": [
+      "core",
+      "enhancing",
+      "cavity",
+      "flair_abnormality"
+    ],
+    "presence": "autoregressive Bernoulli",
+    "amount": "autoregressive discretized logistic on log native count, truncated to remaining capacity with one voxel reserved per later present compartment",
+    "samples": 64,
+    "streams": "SHA256 amount-first-v1:17:patient|cutoff|horizon, midpoint uniforms; shared across methods",
+    "quantity_fit": "one seed17, 6000 updates, terminal candidate; AdamW inherited schedule",
+    "early_exit": "nonempty-core mean MAE <= persistence AND CRPS <= frozen scalar, separately at each horizon; otherwise no spatial fit",
+    "location_fit": "if quantity passes, freeze quantity; 6000 updates; all58 selection every1000; existing full eligibility/ranking unchanged",
+    "allocation": "descending native ranking, ascending flat voxel index ties; sequential core/enhancing/cavity/FLAIR; exact requested counts",
+    "representative_sample": 0
+  },
+  "completed_result": "patient_amount_first_metrics.json"
+}

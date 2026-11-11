@@ -1,0 +1,73 @@
+{
+  "status": "passed",
+  "preflight_only": false,
+  "states": 3594,
+  "payload_bytes_each": 65536,
+  "total_payload_bytes": 235536384,
+  "seconds": 380.47651577403303,
+  "encoders": [
+    {
+      "seed": 17,
+      "condition": 0,
+      "encoder_sha256": "61fc3da5e3ead188a7ceff508eeff072b2b8d92d1c58f73fcde58c310ab6f1da",
+      "frozen_unchanged": true,
+      "exported": 597,
+      "reused": 2,
+      "selected_step": 4096
+    },
+    {
+      "seed": 17,
+      "condition": 1,
+      "encoder_sha256": "e475d198dd515e50f8ec8e73e5fc15993bfa26acd5a7df9b8d216792050a119e",
+      "frozen_unchanged": true,
+      "exported": 597,
+      "reused": 2,
+      "selected_step": 4096
+    },
+    {
+      "seed": 23,
+      "condition": 0,
+      "encoder_sha256": "07b897e92c7316dcc64b4126907e8df16764133894a9c43c4fee4cc308c07395",
+      "frozen_unchanged": true,
+      "exported": 599,
+      "reused": 0,
+      "selected_step": 3584
+    },
+    {
+      "seed": 23,
+      "condition": 1,
+      "encoder_sha256": "a109bb09d0b68114869e6826fa18d62d3ac46136f5825fcc32bf89c5482b1640",
+      "frozen_unchanged": true,
+      "exported": 599,
+      "reused": 0,
+      "selected_step": 3584
+    },
+    {
+      "seed": 31,
+      "condition": 0,
+      "encoder_sha256": "9963b53aa2ac313e638c2441ad687a261d22ca2c9edb20b640f92e5ea6c8a6b1",
+      "frozen_unchanged": true,
+      "exported": 599,
+      "reused": 0,
+      "selected_step": 4096
+    },
+    {
+      "seed": 31,
+      "condition": 1,
+      "encoder_sha256": "75ca5408812f9d89d0c543f946fa5d980e34f2557f3debec5d79f77868364157",
+      "frozen_unchanged": true,
+      "exported": 599,
+      "reused": 0,
+      "selected_step": 3584
+    }
+  ],
+  "manifest_sha256": "da5bcc25adc5135989fb289fe4663224c1a24da791b63545b2e00dcda98f1285",
+  "source_sha256": {
+    "experiment70.py": "7899aec6e224e13aae0fe6cee1bb3e6cea56b1fb2d0dfa560210779371d45bca",
+    "model70.py": "48d1ebac091bd1aa306f9d811839cef7767171aa814df39afa6075e42f828ff1",
+    "model66.py": "b0696f175f50c6b72534d2fb269dd67b4c58515dd9452fda2de8ab18e8011f63",
+    "data66.py": "675b7981469af7e02abd2be774599768898fb5e10c332e76b9d03b8874a897ee",
+    "preflight66.py": "90e6f341933f29336065fb38e31d0f497d09a7a36a73b5de2259d108aa93f378",
+    "protocol.md": "68e24a8e22d389fb162f8333cb45ea519a4d9c792c2e1660acc450c1a281c4c6"
+  }
+}

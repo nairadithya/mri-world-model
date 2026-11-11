@@ -1,0 +1,91 @@
+{
+  "study": "R58",
+  "scope": "Post-hoc descriptive target and horizon checks; no model selection or training",
+  "groups": {
+    "fitting": {
+      "history_pairs": 119,
+      "patients": 24,
+      "future_zero_fraction": 0.7475264800785634,
+      "both_zero_fraction": 0.6881563652396986,
+      "changed_over_point1_fraction": 0.28185306687910855,
+      "appearance_fraction": 0.05118696889530222,
+      "disappearance_fraction": 0.05937011483886483,
+      "persistence_mae": 0.31214529893113,
+      "mean_signed_change": -0.023767683462114213,
+      "future_mean_logcount": 0.5764131593632189,
+      "patient_persistence_mae_min_median_max": [
+        0.09763211011886597,
+        0.25532446934117214,
+        0.7797176738580068
+      ],
+      "nominal_gap_weeks_pair_weighted_min_median_max": [
+        1.0,
+        14.0,
+        87.0
+      ],
+      "nominal_gap_weeks_patient_weighted_mean": 14.960463263588261,
+      "same_week_pair_count": 0
+    },
+    "selection": {
+      "history_pairs": 45,
+      "patients": 6,
+      "future_zero_fraction": 0.8209986772486773,
+      "both_zero_fraction": 0.7836309523809524,
+      "changed_over_point1_fraction": 0.19176587301587297,
+      "appearance_fraction": 0.038591269841269836,
+      "disappearance_fraction": 0.03736772486772486,
+      "persistence_mae": 0.2864011572151588,
+      "mean_signed_change": 0.06471019896565292,
+      "future_mean_logcount": 0.45693805624568273,
+      "patient_persistence_mae_min_median_max": [
+        0.1530420652457646,
+        0.19413830621374978,
+        0.579923003911972
+      ],
+      "nominal_gap_weeks_pair_weighted_min_median_max": [
+        1.0,
+        13.0,
+        30.0
+      ],
+      "nominal_gap_weeks_patient_weighted_mean": 12.593650793650795,
+      "same_week_pair_count": 0
+    },
+    "scoring": {
+      "history_pairs": 30,
+      "patients": 8,
+      "future_zero_fraction": 0.7919766865079364,
+      "both_zero_fraction": 0.7251984126984128,
+      "changed_over_point1_fraction": 0.25229414682539686,
+      "appearance_fraction": 0.04594494047619046,
+      "disappearance_fraction": 0.06677827380952381,
+      "persistence_mae": 0.3396715985256292,
+      "mean_signed_change": -0.09620371595438985,
+      "future_mean_logcount": 0.4411006317666125,
+      "patient_persistence_mae_min_median_max": [
+        0.12640129100708736,
+        0.36529040502177346,
+        0.709550549586614
+      ],
+      "nominal_gap_weeks_pair_weighted_min_median_max": [
+        1.0,
+        11.0,
+        18.0
+      ],
+      "nominal_gap_weeks_patient_weighted_mean": 12.193452380952383,
+      "same_week_pair_count": 0
+    }
+  },
+  "weighting": "Equal weight per patient, then per pair, then per regional-compartment cell; interval quantiles explicitly pair-weighted",
+  "cautions": [
+    "Automated mask-derived counts are not adjudicated biological change",
+    "Intervals are nominal week bins, not exact scan-day intervals",
+    "Split differences are descriptive and do not establish their cause"
+  ],
+  "source_hashes": {
+    "diagnose58.py": "7472c9abb00968dadddc16c817d4fa2f0c560d5a5930d56ed45b0143d7d462f3",
+    "membership-private.json": "26c996c2d6eb434a09f96a7a428e4a251bb759b6c59f123439afbaf4c2fcfc30",
+    "fitting.npz": "5f3da15c07bae06711ebec5973c2031b9aa9647ab7a96a7580c18660e0c854b6",
+    "selection.npz": "c5488d76cda51b190f1b39be2840497fefba547d4979e263f3042a28d167a5d0",
+    "scoring.npz": "47534793f4698cbffc2a1e16b532116f8696765b99ceede22b7f4e1868725a5d"
+  }
+}
