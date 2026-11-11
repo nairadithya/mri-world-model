@@ -20,10 +20,10 @@ This tool reads the zip's central directory with tiny ranged fetches, then
 pulls **only the entries you ask for** — so 5 patients cost ~1–2 GB, not 32 GB.
 
 ```bash
-python3 scripts/lumiere_fetch.py --list                              # archive contents
-python3 scripts/lumiere_fetch.py --n 5 --out data/lumiere            # first 5 patients
-python3 scripts/lumiere_fetch.py --patients Patient-001 Patient-002 --out data/lumiere
-python3 scripts/lumiere_fetch.py --full --out data/lumiere           # entire 32.6 GB (resumable)
+python3 scripts/data/lumiere_fetch.py --list                              # archive contents
+python3 scripts/data/lumiere_fetch.py --n 5 --out data/lumiere            # first 5 patients
+python3 scripts/data/lumiere_fetch.py --patients Patient-001 Patient-002 --out data/lumiere
+python3 scripts/data/lumiere_fetch.py --full --out data/lumiere           # entire 32.6 GB (resumable)
 ```
 
 Verified on the real archive: 91 patients (`Imaging/Patient-XXX/week-NNN/
@@ -62,10 +62,10 @@ SAILOR is hosted on EBRAINS. Request access before fetching if your account is
 not authorized:
 
 ```bash
-uv run python scripts/sailor_request_access.py
-uv run python scripts/sailor_fetch.py --list
-uv run python scripts/sailor_fetch.py --all --out data/sailor
-uv run python scripts/sailor_fetch.py --match 'rawdata_BIDS*' --out data/sailor
+uv run python scripts/data/sailor_request_access.py
+uv run python scripts/data/sailor_fetch.py --list
+uv run python scripts/data/sailor_fetch.py --all --out data/sailor
+uv run python scripts/data/sailor_fetch.py --match 'rawdata_BIDS*' --out data/sailor
 ```
 
 The fetcher uses `KG_TOKEN` when no refresh token is set. If
@@ -81,4 +81,4 @@ Reachable from here: Figshare API + downloads ✓, GitHub ✓, HuggingFace ✓,
 Nature/arXiv ✓, TCIA website ✓ (but **not** its API/GCS subdomains), PhysioNet
 page ✓ (downloads need login), Zenodo ✗ (bot-blocked 403; fine in a browser).
 
-Run `python3 scripts/access_probe.py` on *your* network for a fresh table.
+Run `python3 scripts/data/access_probe.py` on *your* network for a fresh table.

@@ -1,7 +1,7 @@
 """Small exact checks for retrospective interpretation, run on mosaic-gpu."""
 import unittest
 import numpy as np
-from scripts.interpret_structured_forecasts import attribution,dice_counts,interval
+from scripts.patient_state.interpret_structured_forecasts import attribution,dice_counts,interval
 
 
 class InterpretationTests(unittest.TestCase):

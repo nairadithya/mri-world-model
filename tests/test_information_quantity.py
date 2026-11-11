@@ -4,7 +4,7 @@ import torch
 from src.patient_state.structured import weighted_quantile,VolumeChangePredictor
 from src.patient_state.information_quantity import InformationQuantity
 from src.patient_state.state_descriptors import DIMENSION,regional_descriptor,patch_geometry
-from scripts.train_amount_first import draw,balanced_groups
+from scripts.experiments.quantity.train_amount_first import draw,balanced_groups
 
 
 class InformationContracts(unittest.TestCase):

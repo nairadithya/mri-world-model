@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-BUILDER = ROOT / "scripts/build_technical_handbook.py"
+BUILDER = ROOT / "scripts/maintenance/build_technical_handbook.py"
 PYTHON = sys.executable
 
 
@@ -16,10 +16,10 @@ class TechnicalHandbookTest(unittest.TestCase):
     def setUp(self) -> None:
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
-        (self.root / "scripts").mkdir()
+        (self.root / "scripts/maintenance").mkdir(parents=True)
         (self.root / "info/handbook/chapters").mkdir(parents=True)
-        (self.root / "scripts/documentation_sources.py").write_bytes((ROOT / "scripts/documentation_sources.py").read_bytes())
-        (self.root / "scripts/build_technical_handbook.py").write_bytes(BUILDER.read_bytes())
+        (self.root / "scripts/maintenance/documentation_sources.py").write_bytes((ROOT / "scripts/maintenance/documentation_sources.py").read_bytes())
+        (self.root / "scripts/maintenance/build_technical_handbook.py").write_bytes(BUILDER.read_bytes())
         self.layout = '<!doctype html><nav>{{NAV}}</nav><main>{{CONTENT}}</main><i>{{IDENTITY}}</i><b>{{CHAPTER_COUNT}}</b>'
         self.set_layout()
 

@@ -19,7 +19,7 @@ R62 added MU-Glioma-Post for development. Its forty hash-reserved patients remai
 
 ## Compute and historical execution
 
-- **Historical GPU host:** `mosaic-gpu` is being retired from this project. Its old paths describe historical execution; consult `info/ARTIFACTS.md` for verified preservation and removal status. Do not restore or launch project jobs there as routine maintenance. If research is explicitly reopened, use a newly authorized external compute environment. Never run heavy tests, feature extraction, or training on this CPU-only laptop.
+- **Historical GPU host:** `mosaic-gpu` has been retired from this project. Its old paths describe historical execution; consult `info/ARTIFACTS.md` for verified preservation and removal status. Do not restore or launch project jobs there as routine maintenance. If research is explicitly reopened, use a newly authorized external compute environment. Never run heavy tests, feature extraction, or training on this CPU-only laptop.
 - **Local laptop:** Use only for lightweight editing, git operations, doc checks, and SSH orchestration.
 - **Privacy:** SAILOR is controlled-access. Do not upload SAILOR data to cloud viewers or public hosts. Never commit `data/`, `checkpoints/`, `outputs/`, `.venv/`, or `.env`.
 
@@ -45,7 +45,7 @@ R62 added MU-Glioma-Post for development. Its forty hash-reserved patients remai
   - `EXPERIMENTS.md` — measurements, controls, uncertainty, corrections, and withdrawals (preserving historical D, A, I, R, G, V, E, and K3 IDs).
   - `METHODS.md` — definitions, fixed protocols, evaluation rules, and reproduction commands.
   - `NOTES_AND_INSIGHTS.md` — reasoning, interpretation, and open questions.
-  - `technical_handbook.html` — generated prerequisite-first educational guide (edit `info/handbook/` and run `python3 -B scripts/build_technical_handbook.py --check`).
+  - `technical_handbook.html` — generated prerequisite-first educational guide (edit `info/handbook/` and run `python3 -B scripts/maintenance/build_technical_handbook.py --check`).
   - `archive/` & `documentation_sources/` — immutable historical records and snapshots. Never edit archived files in place.
 - `kaggle/` — legacy/pushable Kaggle notebooks (`.py` is source of truth; keep `.ipynb` synchronized via `uv run --extra dev jupytext --to ipynb <file>.py`).
 
@@ -59,8 +59,8 @@ When recording new experimental results or updating docs:
 4. **Run the fast verification suite before committing doc updates:**
    ```bash
    python3 -B -m unittest discover -s tests -p 'test_documentation*.py' -v
-   python3 -B scripts/documentation_sources.py verify
-   python3 -B scripts/build_technical_handbook.py --check
+   python3 -B scripts/maintenance/documentation_sources.py verify
+   python3 -B scripts/maintenance/build_technical_handbook.py --check
    ```
 
 ## Setup & common commands
@@ -76,7 +76,7 @@ uv sync --extra viewer   # + playwright for shot_viewer.py
 .venv/bin/python -B -m unittest discover -s tests -p 'test_spatial*.py' -v
 
 # Check notebook pairs (.py <-> .ipynb)
-uv run --extra dev python -B scripts/check_notebook_pairs.py
+uv run --extra dev python -B scripts/maintenance/check_notebook_pairs.py
 
 # Local scan explorer (client-side NiiVue; binds 127.0.0.1 only)
 .venv/bin/python scripts/view_scans.py                                   # SAILOR derivatives
@@ -96,5 +96,5 @@ uv run --extra dev python -B scripts/check_notebook_pairs.py
 
 | Rule | Enforcement |
 |---|---|
-| Kaggle `.py` notebook sources and executable `.ipynb` pairs must stay synchronized; `.py` is the source of truth. | `uv run --extra dev python scripts/check_notebook_pairs.py` (also run in `.github/workflows/notebook-pairs.yml`); regression fixture: `tests/test_notebook_pair_check.py`. |
-| Consolidated documentation links, archive hashes, and baseline IDs must remain valid. | `python3 -B scripts/documentation_sources.py verify` and `python3 -B -m unittest discover -s tests -p 'test_documentation*.py' -v`. |
+| Kaggle `.py` notebook sources and executable `.ipynb` pairs must stay synchronized; `.py` is the source of truth. | `uv run --extra dev python scripts/maintenance/check_notebook_pairs.py` (also run in `.github/workflows/notebook-pairs.yml`); regression fixture: `tests/test_notebook_pair_check.py`. |
+| Consolidated documentation links, archive hashes, and baseline IDs must remain valid. | `python3 -B scripts/maintenance/documentation_sources.py verify` and `python3 -B -m unittest discover -s tests -p 'test_documentation*.py' -v`. |

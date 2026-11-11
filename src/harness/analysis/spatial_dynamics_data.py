@@ -52,7 +52,7 @@ def configure_torch():
 
 def load_bound_inputs():
     # Reuse the independently reviewed E adapter without altering its approved bytes.
-    from scripts.run_spatial_noise_ablation import load_inputs, make_contract, gap_days
+    from scripts.experiments.spatial.run_spatial_noise_ablation import load_inputs, make_contract, gap_days
     data = load_inputs()
     old_contract = make_contract(data)
     visits = {v["visit_id"]: v for v in data["objects"]["prepared"]["visits"]}
@@ -196,7 +196,7 @@ def extract_cache(root, out, device="cuda"):
                   "encoder_path": str(data["files"]["checkpoint"].relative_to(root)),
                   "runtime_source_sha256": {p: digest(root / p) for p in (
                       "src/harness/analysis/spatial_dynamics_data.py", "src/model/representation.py",
-                      "src/preprocessing/transforms.py", "scripts/run_spatial_noise_ablation.py")},
+                      "src/preprocessing/transforms.py", "scripts/experiments/spatial/run_spatial_noise_ablation.py")},
                   "original_cache_provenance": data["feature_obj"]["provenance"]}
     payload = {"schema": "r37-spatial-cache-v1", "provenance": provenance, "compartment_order": list(COMPARTMENTS), "visit_ids": identifiers,
                "maps": all_maps, "availability": torch.stack(available), "feature_mean": mean,
@@ -277,7 +277,7 @@ class SpatialData:
         return prediction.numpy() * np.asarray(norm["scale"]) + np.asarray(norm["mean"])
 
     def changed_latest(self, row, encoder, root, condition):
-        from scripts.run_spatial_noise_ablation import BASE
+        from scripts.experiments.spatial.run_spatial_noise_ablation import BASE
         prepared = json.loads((BASE / "training_prepared.json").read_text())
         visit = next(v for v in prepared["visits"] if v["visit_id"] == row["cutoff_visit_id"])
         image, availability, _ = load_image(Path(root) / "data/lumiere_preprocessed", visit)

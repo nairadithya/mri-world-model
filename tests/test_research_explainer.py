@@ -6,7 +6,7 @@ import unittest
 from pathlib import Path
 
 
-SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "verify_research_explainer.py"
+SCRIPT = Path(__file__).resolve().parents[1] / "scripts/maintenance/verify_research_explainer.py"
 REQUIRED_CLAIMS = (
     "0bed48b",
     "067ed6c",
@@ -26,15 +26,15 @@ class ResearchExplainerVerifierTest(unittest.TestCase):
     def run_verifier(self, link):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            (root / "scripts").mkdir()
+            (root / "scripts/maintenance").mkdir(parents=True)
             info = root / "info"
-            info.mkdir()
-            shutil.copy2(SCRIPT, root / "scripts" / SCRIPT.name)
+            info.mkdir(parents=True)
+            shutil.copy2(SCRIPT, root / "scripts/maintenance" / SCRIPT.name)
             (info / "research_run.html").write_text(
                 self.page(link), encoding="utf-8"
             )
             return subprocess.run(
-                [sys.executable, "-B", str(root / "scripts" / SCRIPT.name)],
+                [sys.executable, "-B", str(root / "scripts/maintenance" / SCRIPT.name)],
                 capture_output=True,
                 text=True,
                 check=False,
@@ -49,16 +49,16 @@ class ResearchExplainerVerifierTest(unittest.TestCase):
     def test_accepts_existing_local_file_fragment(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            (root / "scripts").mkdir()
+            (root / "scripts/maintenance").mkdir(parents=True)
             info = root / "info"
-            info.mkdir()
-            shutil.copy2(SCRIPT, root / "scripts" / SCRIPT.name)
+            info.mkdir(parents=True)
+            shutil.copy2(SCRIPT, root / "scripts/maintenance" / SCRIPT.name)
             (info / "source.md").write_text("# target", encoding="utf-8")
             (info / "research_run.html").write_text(
                 self.page("source.md#target"), encoding="utf-8"
             )
             result = subprocess.run(
-                [sys.executable, "-B", str(root / "scripts" / SCRIPT.name)],
+                [sys.executable, "-B", str(root / "scripts/maintenance" / SCRIPT.name)],
                 capture_output=True,
                 text=True,
                 check=False,

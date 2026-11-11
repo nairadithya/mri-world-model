@@ -4,8 +4,8 @@ import sys
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from scripts.summarize_delta_representation import average
-from scripts.refresh_research_run import section
+from scripts.experiments.representation.summarize_delta_representation import average
+from scripts.maintenance.refresh_research_run import section
 
 
 class SummaryTests(unittest.TestCase):

@@ -35,7 +35,7 @@ AMENDMENT_GPU = 5350.0
 BUDGET_ONLY_FILES = frozenset((
     'src/harness/analysis/joint_dynamics/authority.py',
     'src/harness/analysis/joint_dynamics/execution.py',
-    'scripts/run_joint_dynamics.py', 'tests/test_joint_budget_amendment.py'))
+    'scripts/experiments/spatial/run_joint_dynamics.py', 'tests/test_joint_budget_amendment.py'))
 Record = dict[str, Any]
 
 

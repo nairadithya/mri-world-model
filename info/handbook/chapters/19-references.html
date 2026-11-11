@@ -28,8 +28,8 @@
 <p>The diagrams here are conceptual. They contain no participant scans or individual predictions. SAILOR remains controlled-access. Do not upload its images, private inventories, model inputs, or participant-level outputs to a public viewer or publication supplement. Releasing code or aggregate reporting does not authorize releasing a dataset or trained weights; data-use and disclosure review are separate requirements.</p>
 <p>Source-only fitting is a scientific restriction. Local-only handling is a privacy restriction. Passing one does not imply passing the other. The handbook's source comparison and page checks do not replace either.</p>
 <h3>Build the reader, not the experiments</h3>
-<pre><code>python3 -B scripts/build_technical_handbook.py
-python3 -B scripts/build_technical_handbook.py --check</code></pre>
+<pre><code>python3 -B scripts/maintenance/build_technical_handbook.py
+python3 -B scripts/maintenance/build_technical_handbook.py --check</code></pre>
 <p>These commands regenerate this page and check its source identity, links, and chapter prerequisites. They do not launch research jobs, verify every statement semantically, or perform inference. <a href="handbook/README.md">The maintenance guide</a> describes the authored sources and independent-review requirement. Existing research reproduction commands remain in <a href="METHODS.md#reproduce-the-saved-aggregation">Methods</a>; they require private artifacts and are not executed by the handbook builder.</p>
 <h3>Background reading, in teaching order</h3>
 <p>The following references explain background mechanisms. They are not a systematic literature review or evidence of a matched advantage for this project. No verbatim external passage is reproduced.</p>

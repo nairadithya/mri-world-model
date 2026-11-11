@@ -184,7 +184,7 @@ class RegionalTargetTests(unittest.TestCase):
 
     def command(self):
         script = (
-            Path(__file__).resolve().parents[1] / "scripts/build_regional_targets.py"
+            Path(__file__).resolve().parents[1] / "scripts/data/build_regional_targets.py"
         )
         return [
             sys.executable,

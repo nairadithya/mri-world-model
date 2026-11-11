@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 import torch
 
-from scripts.continue_delta_representation_run import completed_probe_seed, ensure_probe_launch, merge, wait
+from scripts.experiments.representation.continue_delta_representation_run import completed_probe_seed, ensure_probe_launch, merge, wait
 
 
 class ContinuationTests(unittest.TestCase):
@@ -27,15 +27,15 @@ class ContinuationTests(unittest.TestCase):
 
     def test_queued_jobs_wait_without_launching_or_retrying(self):
         records = []
-        with patch("scripts.continue_delta_representation_run.status", side_effect=["QUEUED", "RUNNING", "COMPLETE"]), \
-             patch("scripts.continue_delta_representation_run.time.sleep") as sleep:
+        with patch("scripts.experiments.representation.continue_delta_representation_run.status", side_effect=["QUEUED", "RUNNING", "COMPLETE"]), \
+             patch("scripts.experiments.representation.continue_delta_representation_run.time.sleep") as sleep:
             wait(["owned/job"], 3600, lambda *args: records.append(args))
         self.assertEqual(sleep.call_count, 2)
         self.assertEqual([entry[1]["owned/job"] for entry in records], ["QUEUED", "RUNNING", "COMPLETE"])
 
     def test_failed_job_stops(self):
-        with patch("scripts.continue_delta_representation_run.status", return_value="ERROR"), \
-             patch("scripts.continue_delta_representation_run.time.sleep") as sleep:
+        with patch("scripts.experiments.representation.continue_delta_representation_run.status", return_value="ERROR"), \
+             patch("scripts.experiments.representation.continue_delta_representation_run.time.sleep") as sleep:
             with self.assertRaisesRegex(RuntimeError, "did not complete"):
                 wait(["owned/job"], 3600, lambda *_: None)
         sleep.assert_not_called()
@@ -45,7 +45,7 @@ class ContinuationTests(unittest.TestCase):
             root = Path(directory)
             (root / "logs").mkdir()
             (root / "logs/push-probes42.log").write_text("legacy push receipt")
-            with patch("scripts.continue_delta_representation_run.command") as command:
+            with patch("scripts.experiments.representation.continue_delta_representation_run.command") as command:
                 ensure_probe_launch(root, 42, lambda *_: None)
             command.assert_not_called()
 
@@ -60,7 +60,7 @@ class ContinuationTests(unittest.TestCase):
                     return "GPU 16.77h 13.23h 30.00h"
                 self.assertTrue((root / "probes43-launch-intent.json").exists())
                 return "pushed"
-            with patch("scripts.continue_delta_representation_run.command", side_effect=command):
+            with patch("scripts.experiments.representation.continue_delta_representation_run.command", side_effect=command):
                 ensure_probe_launch(root, 43, lambda *_: None)
                 ensure_probe_launch(root, 43, lambda *_: None)
             self.assertEqual(len(calls), 2)
@@ -71,18 +71,18 @@ class ContinuationTests(unittest.TestCase):
         with TemporaryDirectory() as directory:
             root = Path(directory)
             (root / "logs").mkdir()
-            with patch("scripts.continue_delta_representation_run.command",
+            with patch("scripts.experiments.representation.continue_delta_representation_run.command",
                        side_effect=["GPU 16.77h 13.23h 30.00h", RuntimeError("push response lost")]):
                 with self.assertRaisesRegex(RuntimeError, "response lost"):
                     ensure_probe_launch(root, 43, lambda *_: None)
-            with patch("scripts.continue_delta_representation_run.command") as command:
+            with patch("scripts.experiments.representation.continue_delta_representation_run.command") as command:
                 ensure_probe_launch(root, 43, lambda *_: None)
             command.assert_not_called()
 
     def test_unaffordable_new_work_stops_before_intent_or_push(self):
         with TemporaryDirectory() as directory:
             root = Path(directory)
-            with patch("scripts.continue_delta_representation_run.command", return_value="GPU 28h 2h 30h") as command:
+            with patch("scripts.experiments.representation.continue_delta_representation_run.command", return_value="GPU 28h 2h 30h") as command:
                 with self.assertRaisesRegex(RuntimeError, "GPU ceiling"):
                     ensure_probe_launch(root, 43, lambda *_: None)
             self.assertEqual(command.call_count, 1)
@@ -118,8 +118,8 @@ class ContinuationTests(unittest.TestCase):
             self.assertFalse(completed_probe_seed(Path(directory), 43, Path(directory) / "r35"))
 
     def test_wait_remains_bounded(self):
-        with patch("scripts.continue_delta_representation_run.status", return_value="RUNNING"), \
-             patch("scripts.continue_delta_representation_run.time.sleep") as sleep:
+        with patch("scripts.experiments.representation.continue_delta_representation_run.status", return_value="RUNNING"), \
+             patch("scripts.experiments.representation.continue_delta_representation_run.time.sleep") as sleep:
             with self.assertRaisesRegex(RuntimeError, "ceiling reached"):
                 wait(["owned/job"], 0, lambda *_: None)
         sleep.assert_not_called()

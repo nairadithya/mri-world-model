@@ -12,7 +12,7 @@ from .protocol import StageRequest, digest, read_json
 
 
 def execute_work(request: StageRequest, work: StageWork) -> ArtifactManifest:
-    from scripts.run_joint_dynamics import perform_operation
+    from scripts.experiments.spatial.run_joint_dynamics import perform_operation
     return perform_operation(request, work)
 
 

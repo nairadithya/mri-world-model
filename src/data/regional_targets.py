@@ -23,7 +23,7 @@ def load_regional_targets(
         or manifest.get("transformed_target") != "log1p(volumes_mm3 / 1000)"
     ):
         raise ValueError(
-            "incompatible regional targets; rebuild with scripts/build_regional_targets.py"
+            "incompatible regional targets; rebuild with scripts/data/build_regional_targets.py"
         )
     if group not in ("fitting", "selection", "scoring"):
         raise ValueError("unknown regional target group")

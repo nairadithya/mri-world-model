@@ -20,11 +20,11 @@ Preservation uses the verified November 6 archives plus the November 11 compact 
 | Layer | Contents and verification |
 |---|---|
 | `outputs/mosaic-archive-20261106/` | Original inputs, selected observation models, earlier study code, measurements, and provenance. [Archive receipts](../outputs/mosaic-archive-20261106/archives-complete.json), [recorded local digest verification](../outputs/mosaic-archive-20261106/laptop-verified.json), and [reconstruction index](../outputs/mosaic-archive-20261106/reconstruction-index.jsonl). |
-| `outputs/cleanup-20261111/study-closeout-compact-20261111.tar.zst` | Subsequent checkpoints, evaluations, code, configuration, and provenance. Local transfer and final GPU retirement are still in progress. |
+| `outputs/cleanup-20261111/study-closeout-compact-20261111.tar.zst` | Subsequent checkpoints, evaluations, code, configuration, and provenance. [Local checksum verification](../outputs/cleanup-20261111/laptop-compact-verification.json) passed before GPU retirement. |
 | [Per-file retention plan](../outputs/cleanup-20261111/remote-compact-preservation-plan.json) | Distinguishes new retained material, previously archived originals, and regenerable input/state/context/timeline caches. |
 | [Historical archive inventory](../outputs/cleanup-20261111/retained-historical-archive-index.json) | All fourteen earlier archives remain present with their recorded sizes; digest verification is retained from the earlier receipt. |
 
-The compact archive was compared against its GPU source files before transfer. Its local checksum must pass before remote removal. The temporary full snapshot and transfer chunks are working files, not additional preservation layers.
+The compact archive was compared against its GPU source files before transfer. Its local checksum passed before remote removal. The temporary full snapshot and transfer chunks are working files, not additional preservation layers.
 
 ### Earlier archive map
 
@@ -62,10 +62,14 @@ The compact archive retains the original experiment-root names. Existing local r
 
 The [experiment ledger](EXPERIMENTS.md) owns outcomes and the [protocol ledger](METHODS.md) owns reproduction details. Other private historical fits and source snapshots remain under `outputs/`, `checkpoints/`, and `scratch/`; their paths in the research record are historical. This catalog does not imply that every historical weight or array is available.
 
+## GPU retirement
+
+The project was removed from `mosaic-gpu` after preservation. The [removal receipt](../outputs/cleanup-20261111/gpu-cleanup-receipt.json) and [final sweep](../outputs/cleanup-20261111/gpu-final-verification.json) record no remaining project-named files, processes, user services, temporary archives, or editable installs in the checked locations. Shared system journals, administrator backups, and incidental references in unrelated chats were not erased.
+
 ## Restoring a study
 
 1. Start with its recorded protocol and aggregate result. Identify the selected checkpoint and information cutoff before restoring files.
-2. Consult both archive layers and the reconstruction index. Restore into a new authorized compute environment; earlier absolute host paths are historical.
+2. Consult both archive layers and the reconstruction index. For exact historical replay, use the archived original source and directory layout: relocated tools have changed file paths and source hashes. The [script path map](../scripts/PATHS.json) maps old entry points to their organized locations. Restore into a new authorized compute environment; earlier absolute host paths are historical.
 3. Recreate omitted caches from the archived inputs and code. Restore symlinks using the [recorded link map](../outputs/cleanup-20261111/remote-symlinks.txt) where needed.
 4. Check identities and saved-artifact replay before numerical work. Do not use reserved patients for restoration or verification.
 

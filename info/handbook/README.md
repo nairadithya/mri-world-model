@@ -7,8 +7,8 @@ The generated reader is [technical_handbook.html](../technical_handbook.html). I
 Edit the numbered HTML fragments in `chapters/` or the page design in `layout.html`. Then run:
 
 ```bash
-python3 -B scripts/build_technical_handbook.py
-python3 -B scripts/build_technical_handbook.py --check
+python3 -B scripts/maintenance/build_technical_handbook.py
+python3 -B scripts/maintenance/build_technical_handbook.py --check
 ```
 
 The builder writes only `info/technical_handbook.html`. The check mode writes nothing. Run these commands from the repository root. No third-party package or network service is needed to build or read the page.

@@ -153,7 +153,7 @@ class ForecastContractTests(unittest.TestCase):
         self.assertFalse(torch.equal(a,b))
 
     def test_volume_intervals_report_width_and_misses(self):
-        from scripts.evaluate_patient_forecasts import distribution_scores
+        from scripts.patient_state.evaluate_patient_forecasts import distribution_scores
         result=distribution_scores([[2,3,4],[2,3,4]],[2,5,4])
         self.assertEqual(result['coverage90'],[1.,0.,1.])
         self.assertEqual(result['width90_ml'],[0.,0.,0.])

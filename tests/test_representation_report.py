@@ -8,8 +8,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import numpy as np
 
-from scripts.report_representation_run import aggregate, compare, load_predictions
-from scripts.render_representation_report import render
+from scripts.experiments.representation.report_representation_run import aggregate, compare, load_predictions
+from scripts.experiments.representation.render_representation_report import render
 
 
 class RepresentationReportTests(unittest.TestCase):

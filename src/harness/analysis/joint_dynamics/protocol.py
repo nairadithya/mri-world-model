@@ -337,7 +337,7 @@ def gap_weeks(previous: str, current: str) -> float:
 
 def source_hashes(repo: Path = REPO) -> dict[str, str]:
     paths = set(repo.glob('src/**/*.py')) | set(repo.glob('tests/test_joint*.py'))
-    paths.add(repo / 'scripts/run_joint_dynamics.py')
+    paths.add(repo / 'scripts/experiments/spatial/run_joint_dynamics.py')
     required = ('authority.py', 'baselines.py', 'assessment.py', 'protocol.py',
                 'data.py', 'model.py', 'fitting.py', '__init__.py')
     for name in required:

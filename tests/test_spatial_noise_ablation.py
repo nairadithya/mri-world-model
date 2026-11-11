@@ -9,7 +9,7 @@ from unittest import mock
 import numpy as np
 import torch
 
-SCRIPT = Path(__file__).resolve().parents[1] / "scripts/run_spatial_noise_ablation.py"
+SCRIPT = Path(__file__).resolve().parents[1] / "scripts/experiments/spatial/run_spatial_noise_ablation.py"
 spec = importlib.util.spec_from_file_location("spatial_noise_ablation", SCRIPT)
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)

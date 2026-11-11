@@ -23,7 +23,7 @@ The review inspected all 46 existing numerical exports across the two legacy set
 
 ## Legacy figure inventory
 
-Each row names the original PNG/PDF stem and its counterpart under `review_plots/`. Both versions use `metrics.json`, a September 2026 historical snapshot. Its old source paths are historical references, not the current documentation map. The export footer links this review so a standalone figure retains its status.
+Each row names the original PNG/PDF stem and its retained counterpart under `review_plots/`. The unreferenced original exports were retired from the working tree on November 11; exact copies and hashes are in the private `outputs/cleanup-20261111/retired-exports/` archive. Running the historical builder recreates those originals. Both versions use `metrics.json`, a September 2026 historical snapshot. Its old source paths are historical references, not the current documentation map. The export footer links this review so a standalone figure retains its status.
 
 | Original stem | Reviewer stem | Scope or disposition |
 |---|---|---|

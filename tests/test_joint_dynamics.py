@@ -40,7 +40,7 @@ def row(patient: str = 'source', suffix: str = '') -> protocol.ForecastRow:
 
 
 def runner_module():
-    path = Path(__file__).resolve().parents[1] / 'scripts/run_joint_dynamics.py'
+    path = Path(__file__).resolve().parents[1] / 'scripts/experiments/spatial/run_joint_dynamics.py'
     spec = importlib.util.spec_from_file_location('r38_runner_test', path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)

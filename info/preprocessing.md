@@ -122,7 +122,7 @@ accurate.
 
 ## Verification: raw-vs-MNI deltas on identical pairs (2026-09-07/08, COMPLETE)
 
-Design (`scripts/raw_mni_deltas.py`): for every consecutive MNI pair with
+Design (`scripts/data/raw_mni_deltas.py`): for every consecutive MNI pair with
 both sessions linked in `raw-mni-link.tsv` (243 pairs — exactly the
 cross-site eval set), compute mean|Δ| on 96³ for (a) the two RAW sessions
 (`t1wc/t1w/t2w/t2wflair`, canonical reorientation, crude foreground mask =

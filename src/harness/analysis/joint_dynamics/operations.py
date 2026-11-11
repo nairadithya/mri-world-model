@@ -78,7 +78,7 @@ def essential_checks(out: Path, *, preparation: bool = False) -> None:
     import py_compile
     for path in sorted((REPO / 'src/harness/analysis/joint_dynamics').glob('*.py')):
         py_compile.compile(str(path), cfile=str(out / (path.name + 'c')), doraise=True)
-    py_compile.compile(str(REPO / 'scripts/run_joint_dynamics.py'),
+    py_compile.compile(str(REPO / 'scripts/experiments/spatial/run_joint_dynamics.py'),
                        cfile=str(out / 'run_joint_dynamics.pyc'), doraise=True)
 
 

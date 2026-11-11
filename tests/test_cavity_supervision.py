@@ -3,7 +3,7 @@ import unittest
 import numpy as np
 import torch
 from src.patient_state.losses import joint_loss
-from scripts.inspect_cavity_transitions import transition_record
+from scripts.patient_state.inspect_cavity_transitions import transition_record
 
 
 class CavitySupervisionTests(unittest.TestCase):

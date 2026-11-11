@@ -5,7 +5,7 @@ import shutil
 import tempfile
 import unittest
 
-from scripts.refresh_research_run import r37_evidence, r37_section
+from scripts.maintenance.refresh_research_run import r37_evidence, r37_section
 
 ROOT = Path(__file__).resolve().parents[1]
 CLOSURE = Path("info/documentation_sources/updates/2026-10-26/closure.json")

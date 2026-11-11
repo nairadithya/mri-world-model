@@ -6,7 +6,7 @@ import unittest
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts/maintenance"))
 from documentation_sources import NAMES, sha, verify
 
 
@@ -62,10 +62,10 @@ class DocumentationSourcesTests(unittest.TestCase):
 
     def test_cli_verify_prints_report_without_writing_receipt(self):
         import shutil
-        script_dir = self.root / "scripts"
-        script_dir.mkdir()
+        script_dir = self.root / "scripts/maintenance"
+        script_dir.mkdir(parents=True)
         script = script_dir / "documentation_sources.py"
-        shutil.copy(ROOT / "scripts/documentation_sources.py", script)
+        shutil.copy(ROOT / "scripts/maintenance/documentation_sources.py", script)
         for name in (*NAMES, "SOURCE_COVERAGE.md"):
             shutil.copy(self.drafts / name, self.root / "info" / name)
         package = self.root / "info/documentation_sources"
@@ -79,10 +79,10 @@ class DocumentationSourcesTests(unittest.TestCase):
 
     def test_cli_verify_failure_preserves_existing_receipt(self):
         import shutil
-        script_dir = self.root / "scripts"
-        script_dir.mkdir()
+        script_dir = self.root / "scripts/maintenance"
+        script_dir.mkdir(parents=True)
         script = script_dir / "documentation_sources.py"
-        shutil.copy(ROOT / "scripts/documentation_sources.py", script)
+        shutil.copy(ROOT / "scripts/maintenance/documentation_sources.py", script)
         for name in (*NAMES, "SOURCE_COVERAGE.md"):
             shutil.copy(self.drafts / name, self.root / "info" / name)
         receipt = self.package / "verification.json"
