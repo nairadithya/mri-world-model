@@ -1,0 +1,27 @@
+{
+  "recorded_date": "2026-11-11",
+  "base_commit": "9a64eba",
+  "scope": "Closed-study work log and obsolete one-time GPU launcher; no patient data or model artifacts.",
+  "records": [
+    {
+      "original_path": "info/TODO.md",
+      "archive_path": "info/archive/2026-11-11/TODO.original.md",
+      "sha256": "8a37b7e7a062a319acaedcc72f90757a9352ad118bfa139d48374146e4ee613d",
+      "bytes": 114486
+    },
+    {
+      "original_path": "info/TODO.md (relocated navigation copy)",
+      "archive_path": "info/archive/2026-11-11/WORK_LOG.md",
+      "sha256": "397c1b47760bc7be3ed016bd3c9fcd716cda1bf4ce80d242632a059bfc81ef44",
+      "bytes": 115418,
+      "transformation": "Relative Markdown links rebased; exact source separately retained."
+    },
+    {
+      "original_path": "scripts/wait_for_cavity_forecasting.sh",
+      "archive_path": "info/archive/2026-11-11/wait_for_cavity_forecasting.sh",
+      "sha256": "9bb795d48e0b17fbace63a2739064e197bceacf68eca151fa9538cc82c891615",
+      "bytes": 574,
+      "reason": "One-off capacity waiter hard-coded to the retired GPU run; no longer an executable project entry point."
+    }
+  ]
+}

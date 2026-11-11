@@ -4,7 +4,7 @@
 
 Research repo: longitudinal glioma MRI using LUMIERE for development and SAILOR for developmental transfer. The research direction is **world models for MRI**: maintaining a patient-state representation from available observations and predicting aspects of future observations (with uncertainty) while separating acquisition nuisance.
 
-Read `info/README.md` for the documentation map and `info/RESEARCH_SUMMARY.md` for the dated synthesis through R62. Use `info/TODO.md` for deferred dependencies and the work log, `info/EXPERIMENTS.md` for completed outcomes, `info/METHODS.md` for protocols, and `info/NOTES_AND_INSIGHTS.md` for reasoning. Before implementing a new experiment, follow [`info/research_guardrails.md`](info/research_guardrails.md).
+Read `info/README.md` for the documentation map and `info/STUDY_SUMMARY.md` for the final synthesis. `info/RESEARCH_SUMMARY.md` is the dated synthesis through R62. Use `info/TODO.md` for closure and deferred dependencies, and its archived work log for historical decisions, `info/EXPERIMENTS.md` for completed outcomes, `info/METHODS.md` for protocols, and `info/NOTES_AND_INSIGHTS.md` for reasoning. Before implementing a new experiment, follow [`info/research_guardrails.md`](info/research_guardrails.md).
 
 R62 added MU-Glioma-Post for development. Its forty hash-reserved patients remain unopened; do not load their images or segmentation measurements as part of routine development or verification. The fixed membership and cohort roles are documented in `info/METHODS.md`.
 
@@ -15,11 +15,11 @@ R62 added MU-Glioma-Post for development. Its forty hash-reserved patients remai
 3. **Keep execution lean — no compliance theater:**
    - **Direct implementation on one branch.** Do not split one experiment across multiple git worktrees, spawn competing design subagents for straightforward code, or run multi-round review gates before testing if the code runs.
    - **Never build custom process/budget-killing supervisors.** Compute budgets are scoping guidelines, not software lockouts. Do not wrap training runs in custom process-tree monitors or hash-locked budget ledgers that abort long GPU runs on transient errors.
-   - **Run a quick real-data smoke test first.** Verify 1–2 real batches end-to-end (load → train step → save/reload → score) on `mosaic-gpu` before launching a multi-seed training matrix.
+   - **Run a quick real-data smoke test first.** If research is explicitly reopened, verify 1–2 real batches end-to-end (load → train step → save/reload → score) on the authorized compute host before launching a multi-seed training matrix.
 
-## Compute & execution (`mosaic-gpu` first)
+## Compute and historical execution
 
-- **Primary GPU host (`mosaic-gpu` over SSH):** Do not run heavy tests, feature extraction, or training on this laptop (CPU-only). Run GPU workloads, tests, and experiments over SSH on `mosaic-gpu` (including workloads that would previously have gone to Kaggle).
+- **Historical GPU host:** `mosaic-gpu` is being retired from this project. Its old paths describe historical execution; consult `info/ARTIFACTS.md` for verified preservation and removal status. Do not restore or launch project jobs there as routine maintenance. If research is explicitly reopened, use a newly authorized external compute environment. Never run heavy tests, feature extraction, or training on this CPU-only laptop.
 - **Local laptop:** Use only for lightweight editing, git operations, doc checks, and SSH orchestration.
 - **Privacy:** SAILOR is controlled-access. Do not upload SAILOR data to cloud viewers or public hosts. Never commit `data/`, `checkpoints/`, `outputs/`, `.venv/`, or `.env`.
 
@@ -39,7 +39,9 @@ R62 added MU-Glioma-Post for development. Its forty hash-reserved patients remai
   - `documentation_sources.py` & `render_documentation_coverage.py` — verifies archive hashes, local links, and historical ID coverage.
   - Data & viewer scripts: `preprocess.py`, `preprocess_qa.py`, `bet_repair.py`, `raw_mni_deltas.py`, `view_scans.py`, `shot_viewer.py`.
 - `info/` — canonical research record:
-  - `TODO.md` — closure status, deferred dependencies, and dated work log.
+  - `TODO.md` — closure status and deferred dependencies; links the archived work log.
+  - `STUDY_SUMMARY.md` — final synthesis linking the owning records.
+  - `ARTIFACTS.md` — private preservation map and GPU retirement status.
   - `EXPERIMENTS.md` — measurements, controls, uncertainty, corrections, and withdrawals (preserving historical D, A, I, R, G, V, E, and K3 IDs).
   - `METHODS.md` — definitions, fixed protocols, evaluation rules, and reproduction commands.
   - `NOTES_AND_INSIGHTS.md` — reasoning, interpretation, and open questions.
