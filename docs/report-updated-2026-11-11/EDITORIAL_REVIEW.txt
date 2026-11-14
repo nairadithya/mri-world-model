@@ -1,0 +1,164 @@
+CURRENT REVISION
+
+Chapters 1, 2, 4 and 5 carry the earlier revisions. Chapters 6-8 now follow
+the abstract's question through testing, results and interpretation:
+
+- Chapter 6 explains the geometry, cutoff, training, replay and numerical
+  checks by the failure each prevents. Material corrections and withdrawals
+  remain visible, without a dated execution narrative.
+- Chapter 7 groups current anatomy and cavity supervision before completion,
+  then distinguishes forecasting, added history and acquisition. The reasons
+  for each comparison accompany the numerical results. Reported result
+  values, denominators, uncertainty and reference conditions are retained;
+  the concluding inventory of prospective clinical-data eligibility is
+  condensed into the clinical limitations in Chapter 8.
+- Chapter 8 answers the motivating question directly. It preserves the
+  specific 24-week current-only FLAIR result and its development scope while
+  explaining the absence of a consistent useful history gain. Administrative
+  closure details are omitted from the academic conclusion.
+
+The abstract is unchanged in this revision and supplies the order and scope
+of the concluding argument. Original chapter, table and figure labels are
+preserved; LaTeX updates their numbering after the result sections move.
+Calendar dates are absent from the revised chapter prose. The institutional
+header and bibliographic dates remain part of the template and references.
+
+The package now includes 30 aggregate snapshots, source hashes and an evidence
+map, both plot generators, every figure asset, LaTeX source and the compiled
+PDF. Canonical records and the original report package remain unchanged.
+No data extraction, model fitting or reserved-patient inspection was performed.
+
+Writing references used across the revisions:
+- Adithya Nair's technical writing: https://adithyanair.com/blog/new-design/
+- Gopen and Swan, The Science of Scientific Writing:
+  https://courses.ems.psu.edu/styleforstudents/print/c10_p6.html
+- Whitesides, Writing a Paper:
+  https://www.gmwgroup.harvard.edu/publications/whitesides-group-writing-paper
+
+VERIFICATION OF THE CURRENT PACKAGE
+
+The final PDF contains 46 pages. Three XeLaTeX passes succeeded from a
+standalone package copy outside the repository, with no undefined references,
+missing characters or overfull boxes. The revised chapters and automatic
+lists were rendered and visually inspected. The abstract, Chapters 1-5 and
+bibliography retain their prior extracted text.
+
+All LaTeX inputs and figure files are present. Thirty bundled aggregate
+snapshots match their canonical source hashes. Both figure scripts run from
+the bundled inputs; regenerated labels and numerical axis text match the
+packaged plots. Four raster renderings vary with the installed IBM Plex font
+variant, so the supplied PDF/PNG assets are preserved. Package checksums cover
+the final deliverables and support files.
+
+The 27 repository documentation tests pass. Source/archive verification
+checks 757 local links and passes; the technical-handbook check passes.
+
+The earlier review below records its own version, scope and checks. Its page
+count and build details describe that version, not the current PDF.
+
+------------------------------------------------------------
+
+EDITORIAL REWRITE — NOVEMBER 12, 2026
+
+Scope: the November 11 updated report, including the abstract, eight chapters,
+tables, captions, bibliography and nine embedded figures. Acknowledgements are
+excluded from editing and remain byte-for-byte identical to the starting copy.
+The original report and canonical research records are unchanged.
+
+The rewrite follows the comparative review plan prepared for this edition.
+Its purpose is clearer scientific writing. It makes no authorship claim and
+uses no automated authorship-detection score.
+
+DECISIONS ACROSS THE TWENTY REVIEW FAMILIES
+
+1. Inflated diction: replaced the unsupported intensifier in the conclusion
+   with the measured direction of the FLAIR result. Retained technical uses
+   such as the strongest tested ridge penalty.
+2. Terminology drift: replaced visible experiment codes with descriptive
+   study names, consistently across prose, tables, captions and plot titles.
+3. Noun stacks: expanded image-loss support, full-volume evaluation and
+   historical-input descriptions into statements of the actual operations.
+4. Unsupported interpretation: replaced generic lessons with the measured
+   comparison or removed the sentence when it added no information.
+5. Repeated templates: shortened repeated intervention and simulator summaries.
+   Retained parallel wording for matched experimental arms.
+6. Forced contrast: removed rhetorical contrasts and kept distinctions between
+   actual controls, target sources and prediction-time inputs.
+7. Formulaic transitions: removed generic implementation/testing introductions
+   and replaced them with the report's actual procedures.
+8. Artificial symmetry: reviewed; no blanket changes. The institutional chapter
+   structure, matched comparisons and genuine compartment lists remain.
+9. Generic filler: removed reusable commentary that did not explain this study.
+10. Missing answer: the abstract and conclusion now state that earlier MRI
+    history did not establish a consistent, practically useful forecasting
+    gain in the tested development cohorts. Specific current-only gains remain.
+11. Administrative residue: described the retained forecast model, its possible
+    independent evaluation and the rule that stopped spatial fitting.
+12. Undefined criteria: recovered interval levels, the volume-change threshold,
+    historical inputs and voxel-allocation constraints from the study records.
+13. Evidence strength: preserved development status, reused cohorts, automated
+    versus reviewed targets, retrospective timing, uncertainty and withdrawals.
+14. Vague attribution: replaced the external multimodal study's vague cohort
+    comparison with its internal and external AUCs.
+15. Citation defects: checked external source records and literature claims.
+    Added exact-version links for three version-specific preprints; one has a
+    different title in its latest version. All twenty bibliography entries are
+    cited and all citation keys resolve.
+16. Assistant remnants: reviewed; none requiring removal in the report body.
+17. Formatting artifacts: checked source and rendered output for unresolved
+    references, leaked markup, clipped text and damaged symbols.
+18. Revision seams: removed repeated intervention, score and closure summaries;
+    kept the repetition needed for standalone abstracts and captions.
+19. Figure rhetoric: replaced experiment codes and conclusion-like titles with
+    descriptions of the plotted comparisons. Regenerated four aggregate plots.
+20. Genre and cultural false positives: retained Acknowledgements, institutional
+    formatting, necessary scientific caution and standard technical language.
+
+PROTECTED CONTENT AND CHECKS
+
+The experimental result values, sample counts, units, horizons, comparators,
+intervals and direction of effect remain intact. Numerical token comparison
+found no removed or changed result values. Added numbers are the literature
+AUCs, explicit confidence levels and the existing volume-change threshold.
+A redundant evidence date in the results introduction was removed; it remains
+in the abstract, introduction and bibliography.
+
+Source equality checks confirm unchanged Acknowledgements and bundled metric
+snapshots. The plot generator verified the aggregate hashes before rendering.
+The likelihood and sample-quantile explanations were checked against recorded
+corrections. No new experiments or patient-level measurements were performed.
+
+The report was rebuilt with three XeLaTeX passes. The local TeX installation
+needed the previously prepared format and font tree in /tmp/report-build.
+The final PDF has 45 pages and no undefined references or overfull boxes.
+Acknowledgements also match the original extracted PDF text exactly.
+The PDF was rendered for page inspection; long-form results, figures, tables,
+automatic lists and bibliography were included in the inspection.
+
+Repository documentation checks: 27 tests passed; archived-source verification
+passed; technical-handbook consistency check passed.
+
+PUBLIC SOURCE NOTES
+
+The literature review uses the report's numbered references. Verification used
+arXiv abstracts or versioned papers, CVF proceedings, publisher pages, PubMed,
+authors' source records and dataset catalogs. Search-result metadata was used
+when a public landing page was inaccessible. This is not a full-text audit of
+every source or a replication of external studies.
+
+In particular, the Figshare landing page returned an access error; its dataset
+identity and version were corroborated by the NLM Dataset Catalog. The EBRAINS
+record was searchable but its dynamic page exposed no readable text. These
+access limits did not justify changing or removing either citation.
+
+Version links now included in the bibliography:
+https://arxiv.org/abs/2603.08385v2
+https://arxiv.org/abs/2606.14957v5
+https://arxiv.org/abs/2604.16955v1
+
+Source for the explicit internal/external AUC comparison:
+https://arxiv.org/abs/2509.15470
+
+Editorial guidance and research sources are documented in the preceding review
+plan, including the user's guide:
+https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing

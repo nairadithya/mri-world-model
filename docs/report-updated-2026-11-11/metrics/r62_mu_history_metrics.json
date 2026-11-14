@@ -1,0 +1,379 @@
+{
+  "study": "R62",
+  "status": "USEFUL_HISTORY_NOT_ESTABLISHED",
+  "scores": {
+    "P": {
+      "mae": 0.165866402846332,
+      "tumor_mae": 0.19109149057087305,
+      "cavity_mae": 0.09019113967270895,
+      "nonempty_mae": 0.5100868480392827,
+      "empty_mae": 0.011732570063499549,
+      "changed_mae": 0.6093980372327811,
+      "predicted_change_rms": 0.0,
+      "patients": 18,
+      "triples": 33
+    },
+    "E": {
+      "mae": 0.18287403011195047,
+      "tumor_mae": 0.2050161530751326,
+      "cavity_mae": 0.1164476612224041,
+      "nonempty_mae": 0.4826666686835917,
+      "empty_mae": 0.04736160320598545,
+      "changed_mae": 0.5690614239545011,
+      "predicted_change_rms": 0.08657463763241048,
+      "patients": 18,
+      "triples": 33
+    },
+    "T": {
+      "mae": 0.165866402846332,
+      "tumor_mae": 0.19109149057087305,
+      "cavity_mae": 0.09019113967270895,
+      "nonempty_mae": 0.5100868480392827,
+      "empty_mae": 0.011732570063499549,
+      "changed_mae": 0.6093980372327811,
+      "predicted_change_rms": 0.0,
+      "patients": 18,
+      "triples": 33
+    },
+    "L": {
+      "mae": 0.1826484746173861,
+      "tumor_mae": 0.20492031197323896,
+      "cavity_mae": 0.11583296254982761,
+      "nonempty_mae": 0.48239302242659865,
+      "empty_mae": 0.047120011580900525,
+      "changed_mae": 0.5682280136345974,
+      "predicted_change_rms": 0.08778825085556305,
+      "patients": 18,
+      "triples": 33
+    },
+    "H": {
+      "mae": 0.18256411322089433,
+      "tumor_mae": 0.20489568153858742,
+      "cavity_mae": 0.11556940826781499,
+      "nonempty_mae": 0.481645528845031,
+      "empty_mae": 0.04728019019730434,
+      "changed_mae": 0.5675014630229717,
+      "predicted_change_rms": 0.08792115942586415,
+      "patients": 18,
+      "triples": 33
+    },
+    "S": {
+      "mae": 0.1822228777297543,
+      "tumor_mae": 0.20440928913677783,
+      "cavity_mae": 0.11566364350868362,
+      "nonempty_mae": 0.4817053467619334,
+      "empty_mae": 0.047048789688668845,
+      "changed_mae": 0.5673568010343532,
+      "predicted_change_rms": 0.08818003187389409,
+      "patients": 18,
+      "triples": 33
+    }
+  },
+  "contrasts": {
+    "L": {
+      "difference": -8.43613964917989e-05,
+      "relative_reduction": 0.0004618784617198557,
+      "ci95": [
+        -0.0005339450701014234,
+        0.0003727580928833852
+      ],
+      "ci_family2": [
+        -0.0005956111688718345,
+        0.0004383283162600874
+      ],
+      "patients": 18
+    },
+    "P": {
+      "difference": 0.016697710374562316,
+      "relative_reduction": -0.1006696358516439,
+      "ci95": [
+        0.009050568388033108,
+        0.02433744767822889
+      ],
+      "ci_family2": [
+        0.00784909527739777,
+        0.02518548452063509
+      ],
+      "patients": 18
+    }
+  },
+  "nuisance_previous_shift_2mm": {
+    "mae": 0.18258125830853061,
+    "tumor_mae": 0.20491050825424428,
+    "cavity_mae": 0.11559350847138955,
+    "nonempty_mae": 0.4816794742233959,
+    "empty_mae": 0.04728364579585215,
+    "changed_mae": 0.5675248006277752,
+    "predicted_change_rms": 0.08790297501388436,
+    "patients": 18,
+    "triples": 33
+  },
+  "selected_penalties": {
+    "L": 100.0,
+    "H": 100.0,
+    "S": 100.0
+  },
+  "trend_coefficient": 0.0,
+  "membership_sha256": "4df898761ecdb299bc87f99749fbebc8faab294043d454c4055850fcc676e2d6",
+  "models_sha256": "eee2b454565dd9337e0e8bd9202d65f6d4cda484728e255b50a9f98d20104aed",
+  "cohorts": {
+    "fitting": {
+      "patients": 99,
+      "visits": 282,
+      "valid_visits": 281,
+      "visits_with_dates": 280,
+      "issues": 1,
+      "independent_volume_reconstruction": true,
+      "source_volume_conservation": true,
+      "source_hashes": 1405,
+      "reference": {
+        "shape": [
+          240,
+          240,
+          155
+        ],
+        "affine": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            -0.0
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            239.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      }
+    },
+    "selection": {
+      "patients": 32,
+      "visits": 106,
+      "valid_visits": 106,
+      "visits_with_dates": 106,
+      "issues": 0,
+      "independent_volume_reconstruction": true,
+      "source_volume_conservation": true,
+      "source_hashes": 530,
+      "reference": {
+        "shape": [
+          240,
+          240,
+          155
+        ],
+        "affine": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            -0.0
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            239.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      }
+    },
+    "pilot_scoring": {
+      "patients": 32,
+      "visits": 93,
+      "valid_visits": 92,
+      "visits_with_dates": 92,
+      "issues": 1,
+      "independent_volume_reconstruction": true,
+      "source_volume_conservation": true,
+      "source_hashes": 460,
+      "reference": {
+        "shape": [
+          240,
+          240,
+          155
+        ],
+        "affine": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            -0.0
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            239.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      }
+    }
+  },
+  "metadata": {
+    "patients": 203,
+    "membership_sha256": "4df898761ecdb299bc87f99749fbebc8faab294043d454c4055850fcc676e2d6",
+    "clinical_extra_patients": 0,
+    "timing_parse_anomalies": 0,
+    "splits": {
+      "reserved": {
+        "patients": 40,
+        "timed_visits": 116,
+        "visit_count_histogram": {
+          "1": 11,
+          "2": 10,
+          "3": 8,
+          "5": 5,
+          "6": 6
+        },
+        "at_least_three_timed_visits": 19,
+        "nonincreasing_sequences": 0,
+        "nonconsecutive_timepoint_sequences": 6
+      },
+      "fitting": {
+        "patients": 99,
+        "timed_visits": 283,
+        "visit_count_histogram": {
+          "0": 1,
+          "1": 23,
+          "2": 23,
+          "3": 25,
+          "4": 8,
+          "5": 7,
+          "6": 12
+        },
+        "at_least_three_timed_visits": 52,
+        "nonincreasing_sequences": 1,
+        "nonconsecutive_timepoint_sequences": 17
+      },
+      "selection": {
+        "patients": 32,
+        "timed_visits": 106,
+        "visit_count_histogram": {
+          "1": 5,
+          "2": 7,
+          "3": 7,
+          "4": 5,
+          "5": 2,
+          "6": 6
+        },
+        "at_least_three_timed_visits": 20,
+        "nonincreasing_sequences": 0,
+        "nonconsecutive_timepoint_sequences": 3
+      },
+      "pilot_scoring": {
+        "patients": 32,
+        "timed_visits": 92,
+        "visit_count_histogram": {
+          "1": 7,
+          "2": 6,
+          "3": 10,
+          "4": 4,
+          "5": 3,
+          "6": 2
+        },
+        "at_least_three_timed_visits": 19,
+        "nonincreasing_sequences": 0,
+        "nonconsecutive_timepoint_sequences": 3
+      }
+    }
+  },
+  "download_inventory": {
+    "reserved": {
+      "patients": 40,
+      "released_visits": 115,
+      "files": 575,
+      "bytes": 2261740172,
+      "missing_masks": 0
+    },
+    "fitting": {
+      "patients": 99,
+      "released_visits": 282,
+      "files": 1409,
+      "bytes": 5666986244,
+      "missing_masks": 1
+    },
+    "selection": {
+      "patients": 32,
+      "released_visits": 106,
+      "files": 530,
+      "bytes": 2112014145,
+      "missing_masks": 0
+    },
+    "pilot_scoring": {
+      "patients": 32,
+      "released_visits": 93,
+      "files": 464,
+      "bytes": 1849319158,
+      "missing_masks": 1
+    },
+    "development_download_file_sizes_verified": 2403,
+    "reserved_images_absent": true
+  },
+  "metadata_eligibility": {
+    "fitting": {
+      "metadata_eligible_patients": 52,
+      "metadata_eligible_triples": 107,
+      "exclusions": {
+        "nonincreasing_patient": 1,
+        "missing_file_triple": 1
+      }
+    },
+    "selection": {
+      "metadata_eligible_patients": 20,
+      "metadata_eligible_triples": 47,
+      "exclusions": {}
+    },
+    "pilot_scoring": {
+      "metadata_eligible_patients": 18,
+      "metadata_eligible_triples": 33,
+      "exclusions": {
+        "missing_day_triple": 2,
+        "missing_file_triple": 1
+      }
+    }
+  },
+  "limitations": [
+    "Annotation-conditioned development comparison, not an MRI-token model.",
+    "Released timepoints are selected follow-ups, not complete clinical adjacency.",
+    "Future scheduling and treatment are not inputs; intervention effects are not estimated.",
+    "Reserved patients are not downloaded; foundation-model patient separation is unresolved."
+  ]
+}

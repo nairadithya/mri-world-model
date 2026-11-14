@@ -1,0 +1,10 @@
+\clearpage
+\chapter{System specifications}
+
+\section{Software requirements}
+
+The software uses Python 3.11 or later. The uv environment manager, version 0.9.8 or later, installs dependencies at fixed versions.
+
+PyTorch handles training and inference, MONAI for medical imaging operations, and NiBabel and SimpleITK handle image files and geometry. Pretrained-model adaptation uses PEFT with Transformers.
+
+Experiments require local access to their cohort data. Pretrained models require official BrainIAC weights. Training ran on an RTX 5090 with 32 Gigabytes Of VRAM and 96 Gigabytes of system memory. The retained checkpoints, configurations and metrics document the completed runs.

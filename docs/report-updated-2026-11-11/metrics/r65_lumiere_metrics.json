@@ -1,0 +1,679 @@
+{
+  "status": "verified",
+  "cohort": "LUMIERE",
+  "scope": "within-visit developmental image prediction; automated lesion proxies",
+  "cohort_counts_and_support": {
+    "fitting": {
+      "patients": 55,
+      "visits": 305,
+      "tumor_voxels": 22798361,
+      "tumor_outside_support": 1504
+    },
+    "selection": {
+      "patients": 18,
+      "visits": 178,
+      "tumor_voxels": 11430497,
+      "tumor_outside_support": 1548
+    },
+    "pilot_scoring": {
+      "patients": 18,
+      "visits": 116,
+      "tumor_voxels": 9053840,
+      "tumor_outside_support": 209
+    }
+  },
+  "seeds": [
+    17,
+    23,
+    31
+  ],
+  "arms": {
+    "A": {
+      "wholebrain_mae": {
+        "mean": 0.448904897694082,
+        "seed_values": [
+          0.4490247340709228,
+          0.4479599406756547,
+          0.4497300183356685
+        ],
+        "seed_range": [
+          0.4479599406756547,
+          0.4497300183356685
+        ]
+      },
+      "tumor_mae": {
+        "mean": 0.9061408981105789,
+        "seed_values": [
+          0.9269970361058826,
+          0.876859065699946,
+          0.9145665925259079
+        ],
+        "seed_range": [
+          0.876859065699946,
+          0.9269970361058826
+        ]
+      },
+      "coverage90": {
+        "mean": 0.882823564323946,
+        "seed_values": [
+          0.8687611541410205,
+          0.8856541272373006,
+          0.8940554115935172
+        ],
+        "seed_range": [
+          0.8687611541410205,
+          0.8940554115935172
+        ]
+      },
+      "nll": {
+        "mean": 0.8307627427259808,
+        "seed_values": [
+          0.8395617570622631,
+          0.8224903007800118,
+          0.8302361703356673
+        ],
+        "seed_range": [
+          0.8224903007800118,
+          0.8395617570622631
+        ]
+      },
+      "enhancing_mae": {
+        "mean": 1.1282464379171684,
+        "seed_values": [
+          1.087421179171851,
+          1.098081345458071,
+          1.1992367891215834
+        ],
+        "seed_range": [
+          1.087421179171851,
+          1.1992367891215834
+        ]
+      },
+      "necrotic_nonenhancing_mae": {
+        "mean": 1.0708702897118965,
+        "seed_values": [
+          1.0749891697486686,
+          1.0406181384414346,
+          1.0970035609455862
+        ],
+        "seed_range": [
+          1.0406181384414346,
+          1.0970035609455862
+        ]
+      },
+      "edema_mae": {
+        "mean": 0.8347625150705866,
+        "seed_values": [
+          0.8664612011687018,
+          0.8006696274593977,
+          0.8371567165836602
+        ],
+        "seed_range": [
+          0.8006696274593977,
+          0.8664612011687018
+        ]
+      },
+      "tumor_contrast_error": {
+        "mean": 0.6940236193479183,
+        "seed_values": [
+          0.7332114762256807,
+          0.6374680828015711,
+          0.7113912990165032
+        ],
+        "seed_range": [
+          0.6374680828015711,
+          0.7332114762256807
+        ]
+      },
+      "boundary_gradient_mae": {
+        "mean": 0.22233489491304023,
+        "seed_values": [
+          0.22305617138986664,
+          0.22083003877827215,
+          0.22311847457098194
+        ],
+        "seed_range": [
+          0.22083003877827215,
+          0.22311847457098194
+        ]
+      }
+    },
+    "B": {
+      "wholebrain_mae": {
+        "mean": 0.437852581831647,
+        "seed_values": [
+          0.434656029477761,
+          0.43879217530467973,
+          0.4401095407125002
+        ],
+        "seed_range": [
+          0.434656029477761,
+          0.4401095407125002
+        ]
+      },
+      "tumor_mae": {
+        "mean": 0.8578144654398135,
+        "seed_values": [
+          0.8969470937615984,
+          0.824195836512129,
+          0.8523004660457131
+        ],
+        "seed_range": [
+          0.824195836512129,
+          0.8969470937615984
+        ]
+      },
+      "coverage90": {
+        "mean": 0.8874766470503902,
+        "seed_values": [
+          0.8750131889735084,
+          0.8856849074706292,
+          0.9017318447070333
+        ],
+        "seed_range": [
+          0.8750131889735084,
+          0.9017318447070333
+        ]
+      },
+      "nll": {
+        "mean": 0.804874514640107,
+        "seed_values": [
+          0.8055998677008234,
+          0.8023747181232856,
+          0.8066489580962121
+        ],
+        "seed_range": [
+          0.8023747181232856,
+          0.8066489580962121
+        ]
+      },
+      "enhancing_mae": {
+        "mean": 1.1211912974516753,
+        "seed_values": [
+          1.1110066770245455,
+          1.1331045522450989,
+          1.1194626630853814
+        ],
+        "seed_range": [
+          1.1110066770245455,
+          1.1331045522450989
+        ]
+      },
+      "necrotic_nonenhancing_mae": {
+        "mean": 1.04740972317389,
+        "seed_values": [
+          1.044674116249208,
+          1.0221497712413723,
+          1.0754052820310898
+        ],
+        "seed_range": [
+          1.0221497712413723,
+          1.0754052820310898
+        ]
+      },
+      "edema_mae": {
+        "mean": 0.7966372377287841,
+        "seed_values": [
+          0.8480757607172307,
+          0.7548464573005409,
+          0.7869894951685805
+        ],
+        "seed_range": [
+          0.7548464573005409,
+          0.8480757607172307
+        ]
+      },
+      "tumor_contrast_error": {
+        "mean": 0.6849664875203061,
+        "seed_values": [
+          0.7077366949976317,
+          0.6196792102331283,
+          0.7274835573301585
+        ],
+        "seed_range": [
+          0.6196792102331283,
+          0.7274835573301585
+        ]
+      },
+      "boundary_gradient_mae": {
+        "mean": 0.2192255625992483,
+        "seed_values": [
+          0.21937728757189784,
+          0.2184063731417898,
+          0.21989302708405725
+        ],
+        "seed_range": [
+          0.2184063731417898,
+          0.21989302708405725
+        ]
+      }
+    },
+    "C": {
+      "wholebrain_mae": {
+        "mean": 0.40350240015641803,
+        "seed_values": [
+          0.4003483446051674,
+          0.4012248051585971,
+          0.4089340507054896
+        ],
+        "seed_range": [
+          0.4003483446051674,
+          0.4089340507054896
+        ]
+      },
+      "tumor_mae": {
+        "mean": 0.5929370932461787,
+        "seed_values": [
+          0.5714301374290709,
+          0.6085384134694334,
+          0.5988427288400319
+        ],
+        "seed_range": [
+          0.5714301374290709,
+          0.6085384134694334
+        ]
+      },
+      "coverage90": {
+        "mean": 0.8878359833342978,
+        "seed_values": [
+          0.8802157072251686,
+          0.8908889719915845,
+          0.89240327078614
+        ],
+        "seed_range": [
+          0.8802157072251686,
+          0.89240327078614
+        ]
+      },
+      "nll": {
+        "mean": 0.7101645326924109,
+        "seed_values": [
+          0.709191980594301,
+          0.7007854944491225,
+          0.7205161230338093
+        ],
+        "seed_range": [
+          0.7007854944491225,
+          0.7205161230338093
+        ]
+      },
+      "enhancing_mae": {
+        "mean": 0.7793104137246759,
+        "seed_values": [
+          0.7532634252180836,
+          0.8062561537454905,
+          0.7784116622104532
+        ],
+        "seed_range": [
+          0.7532634252180836,
+          0.8062561537454905
+        ]
+      },
+      "necrotic_nonenhancing_mae": {
+        "mean": 0.8202769904782841,
+        "seed_values": [
+          0.7814003320541975,
+          0.8338380728230843,
+          0.8455925665575704
+        ],
+        "seed_range": [
+          0.7814003320541975,
+          0.8455925665575704
+        ]
+      },
+      "edema_mae": {
+        "mean": 0.5265513178650787,
+        "seed_values": [
+          0.5155628128465867,
+          0.5356464871739841,
+          0.5284446535746653
+        ],
+        "seed_range": [
+          0.5155628128465867,
+          0.5356464871739841
+        ]
+      },
+      "tumor_contrast_error": {
+        "mean": 0.39866879081899326,
+        "seed_values": [
+          0.4015875935471674,
+          0.3912978921706561,
+          0.4031208867391564
+        ],
+        "seed_range": [
+          0.3912978921706561,
+          0.4031208867391564
+        ]
+      },
+      "boundary_gradient_mae": {
+        "mean": 0.20373394773686782,
+        "seed_values": [
+          0.2023251720137942,
+          0.20325163933917312,
+          0.2056250318576361
+        ],
+        "seed_range": [
+          0.2023251720137942,
+          0.2056250318576361
+        ]
+      }
+    }
+  },
+  "controls": {
+    "mean": {
+      "wholebrain_mae": 0.6681910234352942,
+      "tumor_mae": 1.5412241929124024,
+      "coverage90": null,
+      "nll": null,
+      "enhancing_mae": 1.6101379126394528,
+      "necrotic_nonenhancing_mae": 1.4746056899264344,
+      "edema_mae": 1.5233977692615828,
+      "tumor_contrast_error": 1.2863025361255134,
+      "boundary_gradient_mae": 0.24726664270788476
+    },
+    "ridge_A": {
+      "wholebrain_mae": 0.6825601553350005,
+      "tumor_mae": 1.6942862605629205,
+      "coverage90": null,
+      "nll": null,
+      "enhancing_mae": 1.411361779938122,
+      "necrotic_nonenhancing_mae": 1.6848008597953976,
+      "edema_mae": 1.7512067416339918,
+      "tumor_contrast_error": 1.3862319261703295,
+      "boundary_gradient_mae": 0.2594124635596857
+    },
+    "ridge_B": {
+      "wholebrain_mae": 0.6293709495988946,
+      "tumor_mae": 1.6147890927878492,
+      "coverage90": null,
+      "nll": null,
+      "enhancing_mae": 1.6607240226587614,
+      "necrotic_nonenhancing_mae": 1.6892547071462072,
+      "edema_mae": 1.600456244993025,
+      "tumor_contrast_error": 1.3714671502602034,
+      "boundary_gradient_mae": 0.25741065577899397
+    },
+    "ridge_C": {
+      "wholebrain_mae": 0.6260037868696109,
+      "tumor_mae": 1.5286595088010742,
+      "coverage90": null,
+      "nll": null,
+      "enhancing_mae": 1.5333835748325575,
+      "necrotic_nonenhancing_mae": 1.5704100612438308,
+      "edema_mae": 1.525581423720982,
+      "tumor_contrast_error": 1.2835977785577104,
+      "boundary_gradient_mae": 0.25285779108970957
+    }
+  },
+  "primary_contrasts": {
+    "B-A_wholebrain_mae": {
+      "patients": 18,
+      "patients_excluded": 0,
+      "visits_excluded": 0,
+      "mean": -0.011052315862435004,
+      "per_seed": {
+        "17": {
+          "mean": -0.014368704593161743,
+          "direction": "lower"
+        },
+        "23": {
+          "mean": -0.009167765370974927,
+          "direction": "lower"
+        },
+        "31": {
+          "mean": -0.009620477623168327,
+          "direction": "lower"
+        }
+      },
+      "ci95": [
+        -0.01880292436007477,
+        -0.004476947562177097
+      ],
+      "ci98_75": [
+        -0.021184280055042495,
+        -0.0028972017050899763
+      ],
+      "patients_lower_error": 14,
+      "patients_higher_error": 4,
+      "relative_error_reduction_percent": 2.4620617683629935
+    },
+    "C-B_wholebrain_mae": {
+      "patients": 18,
+      "patients_excluded": 0,
+      "visits_excluded": 0,
+      "mean": -0.03435018167522896,
+      "per_seed": {
+        "17": {
+          "mean": -0.03430768487259364,
+          "direction": "lower"
+        },
+        "23": {
+          "mean": -0.03756737014608266,
+          "direction": "lower"
+        },
+        "31": {
+          "mean": -0.031175490007010625,
+          "direction": "lower"
+        }
+      },
+      "ci95": [
+        -0.047463227040028956,
+        -0.023897597484637635
+      ],
+      "ci98_75": [
+        -0.05147799408141347,
+        -0.021647893020664076
+      ],
+      "patients_lower_error": 18,
+      "patients_higher_error": 0,
+      "relative_error_reduction_percent": 7.845147682248108
+    },
+    "B-A_tumor_mae": {
+      "patients": 18,
+      "patients_excluded": 0,
+      "visits_excluded": 4,
+      "mean": -0.04832643267076525,
+      "per_seed": {
+        "17": {
+          "mean": -0.03004994234428408,
+          "direction": "lower"
+        },
+        "23": {
+          "mean": -0.052663229187816823,
+          "direction": "lower"
+        },
+        "31": {
+          "mean": -0.06226612648019482,
+          "direction": "lower"
+        }
+      },
+      "ci95": [
+        -0.07834061862999536,
+        -0.013973712480483529
+      ],
+      "ci98_75": [
+        -0.08487989626087934,
+        -0.003050011363692625
+      ],
+      "patients_lower_error": 15,
+      "patients_higher_error": 3,
+      "relative_error_reduction_percent": 5.333213937427626
+    },
+    "C-B_tumor_mae": {
+      "patients": 18,
+      "patients_excluded": 0,
+      "visits_excluded": 4,
+      "mean": -0.2648773721936347,
+      "per_seed": {
+        "17": {
+          "mean": -0.3255169563325273,
+          "direction": "lower"
+        },
+        "23": {
+          "mean": -0.21565742304269567,
+          "direction": "lower"
+        },
+        "31": {
+          "mean": -0.2534577372056812,
+          "direction": "lower"
+        }
+      },
+      "ci95": [
+        -0.3266403837311281,
+        -0.20883375625100153
+      ],
+      "ci98_75": [
+        -0.3438511950864113,
+        -0.19727699445111857
+      ],
+      "patients_lower_error": 18,
+      "patients_higher_error": 0,
+      "relative_error_reduction_percent": 30.878165718251015
+    }
+  },
+  "excluded": {
+    "wholebrain_mae": {
+      "visits_excluded": 0,
+      "patients_excluded": 0
+    },
+    "tumor_mae": {
+      "visits_excluded": 4,
+      "patients_excluded": 0
+    },
+    "coverage90": {
+      "visits_excluded": 0,
+      "patients_excluded": 0
+    },
+    "nll": {
+      "visits_excluded": 0,
+      "patients_excluded": 0
+    },
+    "enhancing_mae": {
+      "visits_excluded": 17,
+      "patients_excluded": 0
+    },
+    "necrotic_nonenhancing_mae": {
+      "visits_excluded": 6,
+      "patients_excluded": 0
+    },
+    "edema_mae": {
+      "visits_excluded": 4,
+      "patients_excluded": 0
+    },
+    "tumor_contrast_error": {
+      "visits_excluded": 4,
+      "patients_excluded": 0
+    },
+    "boundary_gradient_mae": {
+      "visits_excluded": 4,
+      "patients_excluded": 0
+    }
+  },
+  "fit_checks": [
+    {
+      "arm": "A",
+      "seed": 17,
+      "updates_completed": 4096,
+      "selected_update": 4096,
+      "parameter_max_change": 0.13051718473434448,
+      "selection_wholebrain_mae": 0.39635178448573694,
+      "selection_tumor_mae": 0.9253893037910049
+    },
+    {
+      "arm": "B",
+      "seed": 17,
+      "updates_completed": 4096,
+      "selected_update": 4096,
+      "parameter_max_change": 0.12144282460212708,
+      "selection_wholebrain_mae": 0.38582950892158846,
+      "selection_tumor_mae": 0.8672125170174682
+    },
+    {
+      "arm": "C",
+      "seed": 17,
+      "updates_completed": 4096,
+      "selected_update": 4096,
+      "parameter_max_change": 0.10917044430971146,
+      "selection_wholebrain_mae": 0.35734354866417894,
+      "selection_tumor_mae": 0.5766155983790937
+    },
+    {
+      "arm": "A",
+      "seed": 23,
+      "updates_completed": 4096,
+      "selected_update": 4096,
+      "parameter_max_change": 0.1187581866979599,
+      "selection_wholebrain_mae": 0.39602510673320834,
+      "selection_tumor_mae": 0.8334440376755374
+    },
+    {
+      "arm": "B",
+      "seed": 23,
+      "updates_completed": 4096,
+      "selected_update": 4096,
+      "parameter_max_change": 0.18793457746505737,
+      "selection_wholebrain_mae": 0.38827600078185626,
+      "selection_tumor_mae": 0.7469564123955035
+    },
+    {
+      "arm": "C",
+      "seed": 23,
+      "updates_completed": 4096,
+      "selected_update": 4096,
+      "parameter_max_change": 0.11677518486976624,
+      "selection_wholebrain_mae": 0.35806373890151055,
+      "selection_tumor_mae": 0.5947351201841117
+    },
+    {
+      "arm": "A",
+      "seed": 31,
+      "updates_completed": 4096,
+      "selected_update": 2560,
+      "parameter_max_change": 0.1352492868900299,
+      "selection_wholebrain_mae": 0.399503265482874,
+      "selection_tumor_mae": 0.8930544702731348
+    },
+    {
+      "arm": "B",
+      "seed": 31,
+      "updates_completed": 4096,
+      "selected_update": 3072,
+      "parameter_max_change": 0.11891813576221466,
+      "selection_wholebrain_mae": 0.3926778034403166,
+      "selection_tumor_mae": 0.7985380742859863
+    },
+    {
+      "arm": "C",
+      "seed": 31,
+      "updates_completed": 4096,
+      "selected_update": 3072,
+      "parameter_max_change": 0.1340537816286087,
+      "selection_wholebrain_mae": 0.3686615231863538,
+      "selection_tumor_mae": 0.5962421101685923
+    }
+  ],
+  "matched_initialization_and_draws": true,
+  "replay": {
+    "full_assessment_including_refitted_controls": true,
+    "numeric_values_compared": 14249,
+    "maximum_absolute_difference": 0.0,
+    "independent_aggregation_max_difference": 0.0,
+    "independent_primary_bootstrap_matches": true
+  },
+  "sources": {
+    "original_metrics_sha256": "89e8383ab10008c507829473990b128577db26640ea548888dbdba02d2365a72",
+    "replay_metrics_sha256": "89e8383ab10008c507829473990b128577db26640ea548888dbdba02d2365a72",
+    "fit_lock_sha256": "e6662885423250c931a510eec630b6985c17343f32539ba52088a3d25f16336a",
+    "evaluation_script_sha256": "c3bd06b8db1a1f25f5f8ee8ac13914e0c2c1dc3c9801438d31b28cf556a3896d",
+    "runner_sha256": "a4bcab8b4f97e9671440d0992bfc93474b1f4663fd922485e477d427f76ec3fc"
+  },
+  "limits": [
+    "18 reused scoring patients",
+    "automated masks, not biological truth",
+    "full-panel upstream processing not excluded",
+    "nominal atlas spacing is not acquisition resolution",
+    "uncertainty coverage is whole-brain marginal, not lesion-conditional calibration",
+    "no acquisition-nuisance perturbation study or external replication in this run",
+    "direct image predictor, not a compressed-state or temporal world-model test"
+  ]
+}

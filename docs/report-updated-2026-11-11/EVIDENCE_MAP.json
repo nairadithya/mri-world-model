@@ -1,0 +1,22 @@
+{
+  "scope": "Report evidence index. Aggregate snapshots are bundled in metrics; their source paths are relative to the repository root. The canonical records below are already tracked in the repository.",
+  "aggregate_provenance": "metrics/provenance.json",
+  "canonical_records": {
+    "info/EXPERIMENTS.md": {
+      "sha256": "aaf06255c192deaa074066a748fafc132dab9f181f04f5eb36b702a2558ed8c8",
+      "role": "Reported measurements, controls, uncertainty and corrections, including initial representation forecasts"
+    },
+    "info/METHODS.md": {
+      "sha256": "4aacd11bf478fa688cae1af822cad5a60f41580ae8ee63fc6fa8aa68ebd589ec",
+      "role": "Definitions, protocols and scoring rules"
+    },
+    "info/NOTES_AND_INSIGHTS.md": {
+      "sha256": "a3629da4a5227e3b4335f61546348e0c3f7a5b051754fc9dfa49e8675a9a8164",
+      "role": "Interpretation and limitations"
+    },
+    "info/STUDY_SUMMARY.md": {
+      "sha256": "b12debdff58000cfacfa004a739fb21d3c54d2006ae0ddb643495aa48a99fa32",
+      "role": "Final synthesis"
+    }
+  }
+}

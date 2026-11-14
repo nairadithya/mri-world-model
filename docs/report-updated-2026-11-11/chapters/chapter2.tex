@@ -1,0 +1,50 @@
+\clearpage
+\chapter{Literature review}
+
+Qazi et al. \cite{ref2} distinguish temporal prediction, action-conditioned prediction, counterfactual rollouts, and planning or control. MeWM, proposed by Yang et al. \cite{ref5}, combines a vision-language policy model with tumor-generative dynamics for treatment planning. Bai and Xiong \cite{ref14} learn directed temporal costs from trajectories to guide planning in a latent world model. Our study concerns temporal prediction from observed MRI visits. We need to establish what anatomy a learned state retains, how well it predicts later anatomy, and whether earlier visits improve that prediction.
+
+\section{Learning features that retain anatomy}
+
+I-JEPA, introduced by Assran et al. \cite{ref3}, predicts representations of target regions from context within the same image. Moving this idea to successive MRI visits changes the task: the target now belongs to a later observation, where the anatomy may have changed. A low error between feature vectors does not tell us how accurately the model predicted that change. We still need to recover anatomy from the features.
+
+Medical adaptations of predictive learning account for anatomy and differences in image appearance. CheXWorld \cite{ref10} models local anatomical structures, their global arrangement and appearance-domain variation in radiographs. Neuro-JEPA \cite{ref11} uses a sparse latent predictive objective and a mixture-of-experts architecture to learn from T1-weighted, T2-weighted and FLAIR MRI.
+
+Mager and Hansen \cite{ref12} combine predictive and contrastive objectives for structural MRI and evaluate retrieval, segmentation and age regression. Segmentation is particularly relevant to our study because it tests whether the features support recovery of spatial anatomy. Our same-visit mask and volume readouts serve that purpose. They let us assess current-state estimation before attributing forecast error to the temporal predictor.
+
+\begin{samepage}
+The evaluation cohort also matters. Li et al. \cite{ref13} pretrain a multimodal JEPA on computed tomography (CT) and linked clinical records for pulmonary nodule diagnosis. After supervised fine-tuning, their model achieved an internal area under the receiver operating characteristic curve (AUC) of 0.91, compared with 0.73 for imaging alone. On the external cohort, the corresponding AUCs were 0.72 and 0.75. The gain was specific to the internal evaluation. Transfer therefore needs to be tested separately when judging the value of a representation or an additional modality.
+
+\end{samepage}
+
+\section{Predicting later anatomy}
+
+Predicting later anatomy also requires choosing how change enters the model. In TumorFlow, Biller et al. \cite{ref6} propagate spatial tumor-concentration fields with a biophysical growth model and condition MRI synthesis on those fields. This gives the predicted state a physical interpretation before an image is generated. In a learned feature space, we have to establish that interpretation through anatomical readouts.
+
+Other approaches condition generation on observed scans and clinical inputs. Liu et al. \cite{ref7} use sequential imaging and treatment information to generate later MRI and tumor masks with a diffusion model. Huisman et al. \cite{ref9} use a rectified-flow model conditioned on pre-radiotherapy MRI, radiation-dose maps, timing and chemotherapy information. A dose map supplies the spatial distribution of radiation dose, which is more detailed than the recorded treatment-status variables available in our forecasting comparisons.
+
+Laslo et al. \cite{ref8} make another conditioning choice explicit. Their guided diffusion model generates possible spatial growth in pediatric diffuse midline glioma from a baseline MRI slice and a target tumor area. In the longitudinal evaluation, the target area is known from the follow-up scan. The resulting comparison tests where growth occurs given its extent; it does not test whether the model can predict that extent from the baseline scan.
+
+Table~\ref{tab:2.1} lists these inputs alongside the outputs being evaluated. Generated images allow direct inspection, but a plausible image can still contain the wrong anatomical change. For our forecasting question, both generated images and decoded feature predictions need to be compared with the patient's later anatomy. We then need to establish whether earlier visits helped.
+
+\begin{table}[!htbp]\centering
+\singlespacing\small\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.25}
+\caption[Inputs and endpoints in selected prior work]{Inputs and endpoints in selected representation and prediction studies.}\label{tab:2.1}
+\begin{tabular}{>{\raggedright\arraybackslash}p{\dimexpr 0.25\linewidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr 0.38\linewidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr 0.37\linewidth-2\tabcolsep\relax}}
+\toprule \textbf{Study} & \textbf{Input or state} & \textbf{Prediction or evaluation} \\\midrule
+Assran et al. \cite{ref3} & Observed image context & Representations of target image regions \\
+Mager and Hansen \cite{ref12} & Structural MRI & Retrieval, segmentation and age regression from learned features \\
+Biller et al. \cite{ref6} & Biophysical tumor-concentration fields & Conditioned MRI synthesis \\
+Liu et al. \cite{ref7} & Sequential imaging and treatment information & Longitudinal MRI and tumor-mask generation \\
+Huisman et al. \cite{ref9} & Pre-radiotherapy MRI, dose maps, timing and chemotherapy & Post-treatment MRI prediction \\
+Laslo et al. \cite{ref8} & Baseline MRI slice and target tumor area & Spatial growth conditional on the supplied area \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Timing and the contribution of history}
+
+Clinical follow-up occurs at irregular intervals, and the date of the next scan may be unknown when a forecast is made. We therefore distinguish prediction at an unknown next-visit time from prediction at a supplied horizon, including cases where the realized interval is provided retrospectively.
+
+Chen et al. \cite{ref15} compare five conditioning configurations with a shared architecture and training dataset in the cited first version of their retinal-imaging study. Aligning the input distributions used in training and inference improved image scores; differences among the aligned frameworks were not significant on the primary metrics. The study concerns retinal imaging, but illustrates how input conditioning can affect a comparison between forecasting methods.
+
+For our study, the decisive comparison is between a model given MRI history and a matched model given only the latest MRI state, with the other inputs held fixed. Persistence establishes how well we can do by copying current anatomy. A latest-only model can improve on that baseline without using earlier scans, so beating persistence alone would not establish a benefit from history. With the current-state readouts, these comparisons let us judge anatomical recovery and the contribution of history separately.

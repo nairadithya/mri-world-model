@@ -1,0 +1,1990 @@
+{
+  "status": "completed",
+  "scope": "development selection; finite learned mixture, no independent generalization claim",
+  "timing": "LUMIERE nominal weeks; MU verified diagnosis-relative day differences",
+  "horizons": {
+    "LUMIERE:12": {
+      "targets": 112,
+      "patients": 16,
+      "targets_with_positive_past_interval": 107,
+      "methods": {
+        "persistence": {
+          "dice": 0.2761556860886554,
+          "volume_mae_ml": 11.029350693776,
+          "volume_crps_ml": 11.029350693776,
+          "volume_change_mae_ml": 10.51843117474049,
+          "coverage90": null,
+          "width90_ml": null,
+          "interval_score90_ml": null,
+          "brain_mae": 0.6209980166329052,
+          "lesion_mae": 0.7994971723018233,
+          "gradient_mae": 0.32342913830276543,
+          "anatomy_brier": null,
+          "compartments": {
+            "1": {
+              "dice": 0.15503940572151714,
+              "absent_target_fp_ml": 0.3950133333333333,
+              "crps_ml": 6.2651035157157615,
+              "coverage90": null,
+              "width90_ml": null,
+              "volume_error_ml": 6.2651035157157615,
+              "change_error_ml": null
+            },
+            "2": {
+              "dice": 0.25015938705773416,
+              "absent_target_fp_ml": 2.8593,
+              "crps_ml": 9.64973991572771,
+              "coverage90": null,
+              "width90_ml": null,
+              "volume_error_ml": 9.64973991572771,
+              "change_error_ml": null
+            },
+            "3": {
+              "dice": 0.4232682654867151,
+              "absent_target_fp_ml": 2.016,
+              "crps_ml": 17.173208730427003,
+              "coverage90": null,
+              "width90_ml": null,
+              "volume_error_ml": 17.173208730427003,
+              "change_error_ml": null
+            }
+          },
+          "by_observed_change": {
+            "stable": {
+              "targets": 17,
+              "dice": 0.3043640246002623,
+              "volume_mae_ml": 3.398564909398556,
+              "volume_crps_ml": 3.398564909398556,
+              "volume_change_mae_ml": 1.1305908375189528,
+              "coverage90": null,
+              "width90_ml": null,
+              "interval_score90_ml": null,
+              "brain_mae": 0.5970824536350039,
+              "lesion_mae": 0.5903749424550269,
+              "gradient_mae": 0.3134382234127433,
+              "anatomy_brier": null
+            },
+            "changed": {
+              "targets": 95,
+              "dice": 0.2691373578612547,
+              "volume_mae_ml": 12.090031157522684,
+              "volume_crps_ml": 12.090031157522684,
+              "volume_change_mae_ml": 11.958280156782303,
+              "coverage90": null,
+              "width90_ml": null,
+              "interval_score90_ml": null,
+              "brain_mae": 0.6174330967125681,
+              "lesion_mae": 0.8190779543998497,
+              "gradient_mae": 0.3235772776487429,
+              "anatomy_brier": null
+            }
+          }
+        },
+        "current": {
+          "dice": 0.25129760873430707,
+          "volume_mae_ml": 11.265723625043726,
+          "volume_crps_ml": 9.072480441655285,
+          "volume_change_mae_ml": 11.253556862163956,
+          "coverage90": 0.8016098565008077,
+          "width90_ml": 39.66079769180429,
+          "interval_score90_ml": 90.79368930404084,
+          "brain_mae": 0.6221700719035598,
+          "lesion_mae": 0.806982179834611,
+          "gradient_mae": 0.325144064049503,
+          "anatomy_brier": 0.057240533328458146,
+          "compartments": {
+            "1": {
+              "dice": 0.16591109231516266,
+              "absent_target_fp_ml": 0.4636133333333333,
+              "crps_ml": 5.364932535131311,
+              "coverage90": 0.811395202020202,
+              "width90_ml": 12.911227112417485,
+              "volume_error_ml": 6.514750937915718,
+              "change_error_ml": 6.2595216615216005
+            },
+            "2": {
+              "dice": 0.16774083527275602,
+              "absent_target_fp_ml": 0.003,
+              "crps_ml": 6.843487502574881,
+              "coverage90": 0.6830176767676768,
+              "width90_ml": 18.65322826406266,
+              "volume_error_ml": 8.390014666340884,
+              "change_error_ml": 11.260429459450222
+            },
+            "3": {
+              "dice": 0.42024089861500247,
+              "absent_target_fp_ml": 2.0545999999999998,
+              "crps_ml": 15.00902034559033,
+              "coverage90": 0.9104166666666667,
+              "width90_ml": 87.41793424962748,
+              "volume_error_ml": 18.892404145092677,
+              "change_error_ml": 16.240719465520044
+            }
+          },
+          "by_observed_change": {
+            "stable": {
+              "targets": 17,
+              "dice": 0.3362830051586003,
+              "volume_mae_ml": 6.283336720201705,
+              "volume_crps_ml": 3.963369149631924,
+              "volume_change_mae_ml": 4.070979618056919,
+              "coverage90": 0.953703706463178,
+              "width90_ml": 28.43711695008808,
+              "interval_score90_ml": 33.78433959616555,
+              "brain_mae": 0.5991671845316886,
+              "lesion_mae": 0.5965032312605116,
+              "gradient_mae": 0.31482459748232805,
+              "anatomy_brier": 0.025748941011261198
+            },
+            "changed": {
+              "targets": 95,
+              "dice": 0.23349904423698817,
+              "volume_mae_ml": 11.7898530722116,
+              "volume_crps_ml": 9.827275464296727,
+              "volume_change_mae_ml": 12.154131264245402,
+              "coverage90": 0.7689611986636965,
+              "width90_ml": 40.81938268410695,
+              "interval_score90_ml": 97.65221087122163,
+              "brain_mae": 0.618378404556998,
+              "lesion_mae": 0.8270279799635061,
+              "gradient_mae": 0.3252673693470739,
+              "anatomy_brier": 0.06145813009229373
+            }
+          }
+        },
+        "history": {
+          "dice": 0.24154844299217704,
+          "volume_mae_ml": 11.86435756870743,
+          "volume_crps_ml": 9.013351500901685,
+          "volume_change_mae_ml": 11.736616828944266,
+          "coverage90": 0.7873421804010492,
+          "width90_ml": 44.12934572553695,
+          "interval_score90_ml": 93.9654314173743,
+          "brain_mae": 0.6220549801171692,
+          "lesion_mae": 0.8046848098436992,
+          "gradient_mae": 0.3249387196704169,
+          "anatomy_brier": 0.05734716328553086,
+          "compartments": {
+            "1": {
+              "dice": 0.15594907726394358,
+              "absent_target_fp_ml": 0.4197466666666666,
+              "crps_ml": 5.3908346938124545,
+              "coverage90": 0.8137310606060606,
+              "width90_ml": 12.998077732420906,
+              "volume_error_ml": 6.978967069337295,
+              "change_error_ml": 6.67222281825514
+            },
+            "2": {
+              "dice": 0.1500797160354325,
+              "absent_target_fp_ml": 0.0,
+              "crps_ml": 7.270580869800302,
+              "coverage90": 0.6045454545454545,
+              "width90_ml": 16.832063429289754,
+              "volume_error_ml": 8.57518606594496,
+              "change_error_ml": 11.60823408862381
+            },
+            "3": {
+              "dice": 0.4186165356771551,
+              "absent_target_fp_ml": 2.0326,
+              "crps_ml": 14.378638053708002,
+              "coverage90": 0.94375,
+              "width90_ml": 102.55789200166862,
+              "volume_error_ml": 20.03891884552108,
+              "change_error_ml": 16.92939357995385
+            }
+          },
+          "by_observed_change": {
+            "stable": {
+              "targets": 17,
+              "dice": 0.32685933335917106,
+              "volume_mae_ml": 6.972316937976413,
+              "volume_crps_ml": 4.292624893122249,
+              "volume_change_mae_ml": 4.83530020547052,
+              "coverage90": 0.907407412926356,
+              "width90_ml": 32.13176940812005,
+              "interval_score90_ml": 46.90139825079176,
+              "brain_mae": 0.5991962626576424,
+              "lesion_mae": 0.5947208296921518,
+              "gradient_mae": 0.31466617164788424,
+              "anatomy_brier": 0.02663273164750232
+            },
+            "changed": {
+              "targets": 95,
+              "dice": 0.22388024614431407,
+              "volume_mae_ml": 12.33399722670537,
+              "volume_crps_ml": 9.657113441965215,
+              "volume_change_mae_ml": 12.501825945302212,
+              "coverage90": 0.7584287915788026,
+              "width90_ml": 45.37877910541421,
+              "interval_score90_ml": 99.22889400135301,
+              "brain_mae": 0.618213797836332,
+              "lesion_mae": 0.8241816934551587,
+              "gradient_mae": 0.3250698473530621,
+              "anatomy_brier": 0.06130587513834948
+            }
+          }
+        },
+        "volume_current": {
+          "dice": null,
+          "volume_mae_ml": 10.412639748942897,
+          "volume_crps_ml": 8.751735978220786,
+          "volume_change_mae_ml": 11.61237292091418,
+          "coverage90": 0.896869743524138,
+          "width90_ml": 46.72039411216974,
+          "interval_score90_ml": 86.7024400942705,
+          "brain_mae": null,
+          "lesion_mae": null,
+          "gradient_mae": null,
+          "anatomy_brier": null,
+          "compartments": {
+            "1": {
+              "dice": null,
+              "absent_target_fp_ml": null,
+              "crps_ml": 5.246023792941875,
+              "coverage90": 0.932165404040404,
+              "width90_ml": 20.69007894206378,
+              "volume_error_ml": 6.428546691966252,
+              "change_error_ml": 6.252696256268164
+            },
+            "2": {
+              "dice": null,
+              "absent_target_fp_ml": null,
+              "crps_ml": 7.049638669863532,
+              "coverage90": 0.8772727272727272,
+              "width90_ml": 31.951121247311434,
+              "volume_error_ml": 8.468254331619281,
+              "change_error_ml": 10.476210592323596
+            },
+            "3": {
+              "dice": null,
+              "absent_target_fp_ml": null,
+              "crps_ml": 13.959544297446957,
+              "coverage90": 0.881171085858586,
+              "width90_ml": 87.51997794156725,
+              "volume_error_ml": 16.341117114861582,
+              "change_error_ml": 18.10821191415078
+            }
+          },
+          "by_observed_change": {
+            "stable": {
+              "targets": 17,
+              "dice": null,
+              "volume_mae_ml": 3.6273438036441803,
+              "volume_crps_ml": 3.53076939549711,
+              "volume_change_mae_ml": 3.1761884017640516,
+              "coverage90": 1.0,
+              "width90_ml": 33.97068941328261,
+              "interval_score90_ml": 33.97068941328261,
+              "brain_mae": null,
+              "lesion_mae": null,
+              "gradient_mae": null,
+              "anatomy_brier": null
+            },
+            "changed": {
+              "targets": 95,
+              "dice": null,
+              "volume_mae_ml": 11.5198242680937,
+              "volume_crps_ml": 9.564967576283182,
+              "volume_change_mae_ml": 12.914482623621602,
+              "coverage90": 0.8684568963991949,
+              "width90_ml": 48.09340446450967,
+              "interval_score90_ml": 92.9769595356064,
+              "brain_mae": null,
+              "lesion_mae": null,
+              "gradient_mae": null,
+              "anatomy_brier": null
+            }
+          }
+        },
+        "volume_history": {
+          "dice": null,
+          "volume_mae_ml": 10.300024725472309,
+          "volume_crps_ml": 8.736166049710315,
+          "volume_change_mae_ml": 11.465057492895134,
+          "coverage90": 0.8727956696846193,
+          "width90_ml": 44.14424772239995,
+          "interval_score90_ml": 86.03776840743694,
+          "brain_mae": null,
+          "lesion_mae": null,
+          "gradient_mae": null,
+          "anatomy_brier": null,
+          "compartments": {
+            "1": {
+              "dice": null,
+              "absent_target_fp_ml": null,
+              "crps_ml": 5.263960369989614,
+              "coverage90": 0.8918876262626263,
+              "width90_ml": 18.981602739757207,
+              "volume_error_ml": 6.386247787867306,
+              "change_error_ml": 6.225860496772318
+            },
+            "2": {
+              "dice": null,
+              "absent_target_fp_ml": null,
+              "crps_ml": 7.067694564561613,
+              "coverage90": 0.8647727272727272,
+              "width90_ml": 29.002177556679406,
+              "volume_error_ml": 8.545123135256627,
+              "change_error_ml": 10.336101773516287
+            },
+            "3": {
+              "dice": null,
+              "absent_target_fp_ml": null,
+              "crps_ml": 13.876841973985611,
+              "coverage90": 0.8617266414141413,
+              "width90_ml": 84.44895876034943,
+              "volume_error_ml": 15.968702895354216,
+              "change_error_ml": 17.833210208396792
+            }
+          },
+          "by_observed_change": {
+            "stable": {
+              "targets": 17,
+              "dice": null,
+              "volume_mae_ml": 3.6559406750731998,
+              "volume_crps_ml": 3.5712809522946674,
+              "volume_change_mae_ml": 3.215699665189755,
+              "coverage90": 1.0,
+              "width90_ml": 32.47854821946886,
+              "interval_score90_ml": 32.47854821946886,
+              "brain_mae": null,
+              "lesion_mae": null,
+              "gradient_mae": null,
+              "anatomy_brier": null
+            },
+            "changed": {
+              "targets": 95,
+              "dice": null,
+              "volume_mae_ml": 11.38110579040337,
+              "volume_crps_ml": 9.53287821440631,
+              "volume_change_mae_ml": 12.73038624179399,
+              "coverage90": 0.838364303954924,
+              "width90_ml": 45.28706252583091,
+              "interval_score90_ml": 92.4267517092424,
+              "brain_mae": null,
+              "lesion_mae": null,
+              "gradient_mae": null,
+              "anatomy_brier": null
+            }
+          }
+        }
+      },
+      "history_minus_control": {
+        "current": {
+          "dice": {
+            "difference": -0.009749165742129981,
+            "patient_bootstrap95": [
+              -0.015215587455790493,
+              -0.005313696763418473
+            ],
+            "patients": 16
+          },
+          "volume_mae_ml": {
+            "difference": 0.598633943663703,
+            "patient_bootstrap95": [
+              0.29368794951380955,
+              0.9135999058000742
+            ],
+            "patients": 16
+          },
+          "volume_crps_ml": {
+            "difference": -0.059128940753601124,
+            "patient_bootstrap95": [
+              -0.35057650618144603,
+              0.20181320031046512
+            ],
+            "patients": 16
+          },
+          "volume_change_mae_ml": {
+            "difference": 0.48305996678031005,
+            "patient_bootstrap95": [
+              0.17992040634752182,
+              0.8060239055903976
+            ],
+            "patients": 16
+          },
+          "lesion_mae": {
+            "difference": -0.002297369990911749,
+            "patient_bootstrap95": [
+              -0.0036072422369768974,
+              -0.001045703584318887
+            ],
+            "patients": 16
+          },
+          "gradient_mae": {
+            "difference": -0.00020534437908618626,
+            "patient_bootstrap95": [
+              -0.00036273420081232594,
+              -8.688025897751335e-05
+            ],
+            "patients": 16
+          }
+        },
+        "persistence": {
+          "dice": {
+            "difference": -0.03460724309647839,
+            "patient_bootstrap95": [
+              -0.06526010263628279,
+              0.0019857020264227566
+            ],
+            "patients": 16
+          },
+          "volume_mae_ml": {
+            "difference": 0.8350068749314306,
+            "patient_bootstrap95": [
+              -0.6036142416503468,
+              2.347480959782301
+            ],
+            "patients": 16
+          },
+          "volume_crps_ml": {
+            "difference": -2.0159991928743146,
+            "patient_bootstrap95": [
+              -3.4013397626614084,
+              -0.5872065905055427
+            ],
+            "patients": 16
+          },
+          "volume_change_mae_ml": {
+            "difference": 1.2181856542037757,
+            "patient_bootstrap95": [
+              0.46360249622346295,
+              1.909528797394036
+            ],
+            "patients": 16
+          },
+          "lesion_mae": {
+            "difference": 0.0051876375418758456,
+            "patient_bootstrap95": [
+              -0.008783062858497628,
+              0.020567528596818152
+            ],
+            "patients": 16
+          },
+          "gradient_mae": {
+            "difference": 0.0015095813676514226,
+            "patient_bootstrap95": [
+              0.0010964044786657308,
+              0.001946923627787795
+            ],
+            "patients": 16
+          }
+        },
+        "volume_history": {
+          "volume_mae_ml": {
+            "difference": 1.5643328432351202,
+            "patient_bootstrap95": [
+              0.7315334959193651,
+              2.338257390399501
+            ],
+            "patients": 16
+          },
+          "volume_crps_ml": {
+            "difference": 0.2771854511913702,
+            "patient_bootstrap95": [
+              -0.1224213321307542,
+              0.6033410927430124
+            ],
+            "patients": 16
+          },
+          "volume_change_mae_ml": {
+            "difference": 0.27155933604913274,
+            "patient_bootstrap95": [
+              -0.2870918280056962,
+              0.801695866641601
+            ],
+            "patients": 16
+          }
+        }
+      }
+    },
+    "LUMIERE:24": {
+      "targets": 89,
+      "patients": 15,
+      "targets_with_positive_past_interval": 85,
+      "methods": {
+        "persistence": {
+          "dice": 0.21644910849513213,
+          "volume_mae_ml": 19.880101541107297,
+          "volume_crps_ml": 19.880101541107297,
+          "volume_change_mae_ml": 19.074090205718797,
+          "coverage90": null,
+          "width90_ml": null,
+          "interval_score90_ml": null,
+          "brain_mae": 0.669438484989146,
+          "lesion_mae": 0.8883321195746225,
+          "gradient_mae": 0.3299130495163289,
+          "anatomy_brier": null,
+          "compartments": {
+            "1": {
+              "dice": 0.1296770149563745,
+              "absent_target_fp_ml": 0.4809166666666666,
+              "crps_ml": 8.52647809733947,
+              "coverage90": null,
+              "width90_ml": null,
+              "volume_error_ml": 8.52647809733947,
+              "change_error_ml": null
+            },
+            "2": {
+              "dice": 0.18996367465275613,
+              "absent_target_fp_ml": 18.46675,
+              "crps_ml": 11.425739175474774,
+              "coverage90": null,
+              "width90_ml": null,
+              "volume_error_ml": 11.425739175474774,
+              "change_error_ml": null
+            },
+            "3": {
+              "dice": 0.32970663587626564,
+              "absent_target_fp_ml": 2.3142500000000004,
+              "crps_ml": 39.688086444101636,
+              "coverage90": null,
+              "width90_ml": null,
+              "volume_error_ml": 39.688086444101636,
+              "change_error_ml": null
+            }
+          },
+          "by_observed_change": {
+            "stable": {
+              "targets": 7,
+              "dice": 0.30170774110002513,
+              "volume_mae_ml": 1.8940973008672397,
+              "volume_crps_ml": 1.8940973008672397,
+              "volume_change_mae_ml": 0.728124872899097,
+              "coverage90": null,
+              "width90_ml": null,
+              "interval_score90_ml": null,
+              "brain_mae": 0.6259971211353937,
+              "lesion_mae": 0.6126835346221924,
+              "gradient_mae": 0.33552585169672966,
+              "anatomy_brier": null
+            },
+            "changed": {
+              "targets": 82,
+              "dice": 0.20395327781090364,
+              "volume_mae_ml": 20.40899913216394,
+              "volume_crps_ml": 20.40899913216394,
+              "volume_change_mae_ml": 19.649405088147805,
+              "coverage90": null,
+              "width90_ml": null,
+              "interval_score90_ml": null,
+              "brain_mae": 0.6713320262832616,
+              "lesion_mae": 0.8965780538777827,
+              "gradient_mae": 0.33060028045029244,
+              "anatomy_brier": null
+            }
+          }
+        },
+        "current": {
+          "dice": 0.20430860973842363,
+          "volume_mae_ml": 17.62969119908318,
+          "volume_crps_ml": 14.207903257390809,
+          "volume_change_mae_ml": 17.564690529848885,
+          "coverage90": 0.7419047690131677,
+          "width90_ml": 49.34683500057805,
+          "interval_score90_ml": 156.48665639811725,
+          "brain_mae": 0.6685110647053947,
+          "lesion_mae": 0.880665809956808,
+          "gradient_mae": 0.33172523310733215,
+          "anatomy_brier": 0.08555882428112675,
+          "compartments": {
+            "1": {
+              "dice": 0.141448077566119,
+              "absent_target_fp_ml": 0.7463333333333334,
+              "crps_ml": 7.855351870588208,
+              "coverage90": 0.7187301587301587,
+              "width90_ml": 17.775947733824218,
+              "volume_error_ml": 8.621018600044428,
+              "change_error_ml": 8.527830685802032
+            },
+            "2": {
+              "dice": 0.14230673235533545,
+              "absent_target_fp_ml": 7.857,
+              "crps_ml": 7.7522045080516495,
+              "coverage90": 0.6773544973544975,
+              "width90_ml": 20.792044154457827,
+              "volume_error_ml": 8.776394475285633,
+              "change_error_ml": 11.803856259451974
+            },
+            "3": {
+              "dice": 0.32917101929381654,
+              "absent_target_fp_ml": 2.4085,
+              "crps_ml": 27.01615208353315,
+              "coverage90": 0.8296296296296296,
+              "width90_ml": 109.47251285385202,
+              "volume_error_ml": 35.49165937259714,
+              "change_error_ml": 32.36238464429265
+            }
+          },
+          "by_observed_change": {
+            "stable": {
+              "targets": 7,
+              "dice": 0.36389367190889244,
+              "volume_mae_ml": 4.285877654949824,
+              "volume_crps_ml": 1.9568936650951705,
+              "volume_change_mae_ml": 3.6581011320878236,
+              "coverage90": 0.8750000074505806,
+              "width90_ml": 19.866390188535053,
+              "interval_score90_ml": 22.134723623593647,
+              "brain_mae": 0.6269852047165235,
+              "lesion_mae": 0.6218237181504568,
+              "gradient_mae": 0.33618372306227684,
+              "anatomy_brier": 0.01923011329381552
+            },
+            "changed": {
+              "targets": 82,
+              "dice": 0.18391730518157015,
+              "volume_mae_ml": 18.0237288827114,
+              "volume_crps_ml": 14.612882825161416,
+              "volume_change_mae_ml": 18.031443030920176,
+              "coverage90": 0.7290652628329696,
+              "width90_ml": 49.783040462574625,
+              "interval_score90_ml": 161.75962733344429,
+              "brain_mae": 0.670349681555594,
+              "lesion_mae": 0.8883736226214934,
+              "gradient_mae": 0.332427127368919,
+              "anatomy_brier": 0.08774598993060412
+            }
+          }
+        },
+        "history": {
+          "dice": 0.192423713800606,
+          "volume_mae_ml": 17.935668735024787,
+          "volume_crps_ml": 14.203674471115784,
+          "volume_change_mae_ml": 17.77523684206533,
+          "coverage90": 0.7149911893328661,
+          "width90_ml": 54.919719641801535,
+          "interval_score90_ml": 152.07114199153963,
+          "brain_mae": 0.6685603612345994,
+          "lesion_mae": 0.8796087026974512,
+          "gradient_mae": 0.33155326089005416,
+          "anatomy_brier": 0.08613801780098353,
+          "compartments": {
+            "1": {
+              "dice": 0.132632177128858,
+              "absent_target_fp_ml": 0.5253333333333333,
+              "crps_ml": 7.843569552308668,
+              "coverage90": 0.7223280423280423,
+              "width90_ml": 19.08033037629077,
+              "volume_error_ml": 8.833029212324076,
+              "change_error_ml": 8.640827585722828
+            },
+            "2": {
+              "dice": 0.11806972217822961,
+              "absent_target_fp_ml": 1.3745,
+              "crps_ml": 7.9896233830847825,
+              "coverage90": 0.5930158730158729,
+              "width90_ml": 19.88604629633699,
+              "volume_error_ml": 9.012167349473938,
+              "change_error_ml": 12.282174594619686
+            },
+            "3": {
+              "dice": 0.3265692420947305,
+              "absent_target_fp_ml": 2.3400000000000003,
+              "crps_ml": 26.777829184481707,
+              "coverage90": 0.8296296296296296,
+              "width90_ml": 125.7927770341641,
+              "volume_error_ml": 35.96180810242103,
+              "change_error_ml": 32.40270834585347
+            }
+          },
+          "by_observed_change": {
+            "stable": {
+              "targets": 7,
+              "dice": 0.36052464514424687,
+              "volume_mae_ml": 4.921438852945963,
+              "volume_crps_ml": 2.0107639798273644,
+              "volume_change_mae_ml": 4.3927293312064855,
+              "coverage90": 0.8750000074505806,
+              "width90_ml": 23.42297287782033,
+              "interval_score90_ml": 26.82797356446584,
+              "brain_mae": 0.6271866063276926,
+              "lesion_mae": 0.619094967842102,
+              "gradient_mae": 0.33622320079141194,
+              "anatomy_brier": 0.02021433764275571
+            },
+            "changed": {
+              "targets": 82,
+              "dice": 0.17166327154237038,
+              "volume_mae_ml": 18.31511073784223,
+              "volume_crps_ml": 14.616207579834752,
+              "volume_change_mae_ml": 18.223833338630147,
+              "coverage90": 0.6999294610132301,
+              "width90_ml": 55.31872651256581,
+              "interval_score90_ml": 157.281820483132,
+              "brain_mae": 0.6703774100447458,
+              "lesion_mae": 0.8874265423685156,
+              "gradient_mae": 0.33225371717302893,
+              "anatomy_brier": 0.08827593793525859
+            }
+          }
+        },
+        "volume_current": {
+          "dice": null,
+          "volume_mae_ml": 19.19137187998131,
+          "volume_crps_ml": 14.69855711927332,
+          "volume_change_mae_ml": 19.836098178363763,
+          "coverage90": 0.8029982413848241,
+          "width90_ml": 67.72078288705261,
+          "interval_score90_ml": 167.21359503323438,
+          "brain_mae": null,
+          "lesion_mae": null,
+          "gradient_mae": null,
+          "anatomy_brier": null,
+          "compartments": {
+            "1": {
+              "dice": null,
+              "absent_target_fp_ml": null,
+              "crps_ml": 8.261479289137498,
+              "coverage90": 0.8207407407407407,
+              "width90_ml": 43.72445244647838,
+              "volume_error_ml": 10.02533141611745,
+              "change_error_ml": 9.962994329083324
+            },
+            "2": {
+              "dice": null,
+              "absent_target_fp_ml": null,
+              "crps_ml": 8.054041967438485,
+              "coverage90": 0.8289947089947091,
+              "width90_ml": 36.257473165818624,
+              "volume_error_ml": 9.9438495191301,
+              "change_error_ml": 11.840802246782062
+            },
+            "3": {
+              "dice": null,
+              "absent_target_fp_ml": null,
+              "crps_ml": 27.780148831381997,
+              "coverage90": 0.7592592592592593,
+              "width90_ml": 123.18041637710793,
+              "volume_error_ml": 37.60493232509762,
+              "change_error_ml": 37.7044979592259
+            }
+          },
+          "by_observed_change": {
+            "stable": {
+              "targets": 7,
+              "dice": null,
+              "volume_mae_ml": 1.5709503392378488,
+              "volume_crps_ml": 1.5955220498144627,
+              "volume_change_mae_ml": 1.8090703998330153,
+              "coverage90": 0.9166666716337204,
+              "width90_ml": 22.204213192065556,
+              "interval_score90_ml": 22.274790813525517,
+              "brain_mae": null,
+              "lesion_mae": null,
+              "gradient_mae": null,
+              "anatomy_brier": null
+            },
+            "changed": {
+              "targets": 82,
+              "dice": null,
+              "volume_mae_ml": 19.71413904517416,
+              "volume_crps_ml": 15.130634538755215,
+              "volume_change_mae_ml": 20.400941566449568,
+              "coverage90": 0.7894179948667686,
+              "width90_ml": 68.23398097108912,
+              "interval_score90_ml": 172.90317347995818,
+              "brain_mae": null,
+              "lesion_mae": null,
+              "gradient_mae": null,
+              "anatomy_brier": null
+            }
+          }
+        },
+        "volume_history": {
+          "dice": null,
+          "volume_mae_ml": 18.874572841222328,
+          "volume_crps_ml": 14.571836316183447,
+          "volume_change_mae_ml": 19.511705996991406,
+          "coverage90": 0.7948500930600696,
+          "width90_ml": 63.50322339148748,
+          "interval_score90_ml": 162.54367092455507,
+          "brain_mae": null,
+          "lesion_mae": null,
+          "gradient_mae": null,
+          "anatomy_brier": null,
+          "compartments": {
+            "1": {
+              "dice": null,
+              "absent_target_fp_ml": null,
+              "crps_ml": 8.233239124950279,
+              "coverage90": 0.7985185185185185,
+              "width90_ml": 38.71515011572964,
+              "volume_error_ml": 9.886036616134895,
+              "change_error_ml": 9.78629363139387
+            },
+            "2": {
+              "dice": null,
+              "absent_target_fp_ml": null,
+              "crps_ml": 8.077061516731662,
+              "coverage90": 0.8223280423280424,
+              "width90_ml": 32.548162685803,
+              "volume_error_ml": 9.965056826465974,
+              "change_error_ml": 11.827547320999184
+            },
+            "3": {
+              "dice": null,
+              "absent_target_fp_ml": null,
+              "crps_ml": 27.405207374548468,
+              "coverage90": 0.7637037037037037,
+              "width90_ml": 119.24635116853412,
+              "volume_error_ml": 36.77262342324648,
+              "change_error_ml": 36.92127703858116
+            }
+          },
+          "by_observed_change": {
+            "stable": {
+              "targets": 7,
+              "dice": null,
+              "volume_mae_ml": 1.5539115443825722,
+              "volume_crps_ml": 1.6229725889861584,
+              "volume_change_mae_ml": 1.7981388369937323,
+              "coverage90": 0.9166666716337204,
+              "width90_ml": 21.315646568934124,
+              "interval_score90_ml": 21.623332420984905,
+              "brain_mae": null,
+              "lesion_mae": null,
+              "gradient_mae": null,
+              "anatomy_brier": null
+            },
+            "changed": {
+              "targets": 82,
+              "dice": null,
+              "volume_mae_ml": 19.40284807144019,
+              "volume_crps_ml": 15.01145372837309,
+              "volume_change_mae_ml": 20.080437834106817,
+              "coverage90": 0.7775661427279313,
+              "width90_ml": 63.966729234614704,
+              "interval_score90_ml": 168.27709374927338,
+              "brain_mae": null,
+              "lesion_mae": null,
+              "gradient_mae": null,
+              "anatomy_brier": null
+            }
+          }
+        }
+      },
+      "history_minus_control": {
+        "current": {
+          "dice": {
+            "difference": -0.011884895937817618,
+            "patient_bootstrap95": [
+              -0.02115750983239747,
+              -0.004261557193263871
+            ],
+            "patients": 15
+          },
+          "volume_mae_ml": {
+            "difference": 0.3059775359416134,
+            "patient_bootstrap95": [
+              -0.3390186892949715,
+              1.1897466614763565
+            ],
+            "patients": 15
+          },
+          "volume_crps_ml": {
+            "difference": -0.004228786275027299,
+            "patient_bootstrap95": [
+              -0.4996296734858955,
+              0.6133406045249411
+            ],
+            "patients": 15
+          },
+          "volume_change_mae_ml": {
+            "difference": 0.21054631221644168,
+            "patient_bootstrap95": [
+              -0.5558965538500302,
+              1.1243843618474023
+            ],
+            "patients": 15
+          },
+          "lesion_mae": {
+            "difference": -0.0010571072593567863,
+            "patient_bootstrap95": [
+              -0.0040568406104095405,
+              0.0015744505013738357
+            ],
+            "patients": 15
+          },
+          "gradient_mae": {
+            "difference": -0.0001719722172780838,
+            "patient_bootstrap95": [
+              -0.0003736053478675722,
+              -2.0759481430791157e-05
+            ],
+            "patients": 15
+          }
+        },
+        "persistence": {
+          "dice": {
+            "difference": -0.024025394694526064,
+            "patient_bootstrap95": [
+              -0.056424961299634174,
+              0.01741178065506329
+            ],
+            "patients": 15
+          },
+          "volume_mae_ml": {
+            "difference": -1.9444328060825034,
+            "patient_bootstrap95": [
+              -4.756047007420234,
+              0.4104375313918575
+            ],
+            "patients": 15
+          },
+          "volume_crps_ml": {
+            "difference": -5.676427069991511,
+            "patient_bootstrap95": [
+              -10.941641951714221,
+              -2.0391356567145618
+            ],
+            "patients": 15
+          },
+          "volume_change_mae_ml": {
+            "difference": -1.298853363653474,
+            "patient_bootstrap95": [
+              -3.4564528634586984,
+              0.38142322788273764
+            ],
+            "patients": 15
+          },
+          "lesion_mae": {
+            "difference": -0.008723416877171349,
+            "patient_bootstrap95": [
+              -0.019371390814503665,
+              0.0020519015666038165
+            ],
+            "patients": 15
+          },
+          "gradient_mae": {
+            "difference": 0.0016402113737252698,
+            "patient_bootstrap95": [
+              0.0008996880622925551,
+              0.0027024701690232422
+            ],
+            "patients": 15
+          }
+        },
+        "volume_history": {
+          "volume_mae_ml": {
+            "difference": -0.9389041061975335,
+            "patient_bootstrap95": [
+              -2.9165286257272522,
+              0.7509848838956262
+            ],
+            "patients": 15
+          },
+          "volume_crps_ml": {
+            "difference": -0.3681618450676638,
+            "patient_bootstrap95": [
+              -1.0497138373982655,
+              0.15430213135323192
+            ],
+            "patients": 15
+          },
+          "volume_change_mae_ml": {
+            "difference": -1.7364691549260773,
+            "patient_bootstrap95": [
+              -3.4812335444170506,
+              -0.4093335395147966
+            ],
+            "patients": 15
+          }
+        }
+      }
+    },
+    "MU:12": {
+      "targets": 36,
+      "patients": 18,
+      "targets_with_positive_past_interval": 36,
+      "methods": {
+        "persistence": {
+          "dice": 0.34965235048295845,
+          "volume_mae_ml": 12.774666879740026,
+          "volume_crps_ml": 12.774666879740026,
+          "volume_change_mae_ml": 11.869912007672642,
+          "coverage90": null,
+          "width90_ml": null,
+          "interval_score90_ml": null,
+          "brain_mae": 0.5804234664473269,
+          "lesion_mae": 0.7443143754369683,
+          "gradient_mae": 0.30032858976887333,
+          "anatomy_brier": null,
+          "compartments": {
+            "1": {
+              "dice": 0.3667761154905799,
+              "absent_target_fp_ml": 5.587,
+              "crps_ml": 6.903944595820374,
+              "coverage90": null,
+              "width90_ml": null,
+              "volume_error_ml": 6.903944595820374,
+              "change_error_ml": null
+            },
+            "2": {
+              "dice": 0.1908757504522708,
+              "absent_target_fp_ml": 2.8217222222222222,
+              "crps_ml": 5.0232778245376215,
+              "coverage90": null,
+              "width90_ml": null,
+              "volume_error_ml": 5.0232778245376215,
+              "change_error_ml": null
+            },
+            "3": {
+              "dice": 0.49130518550602464,
+              "absent_target_fp_ml": null,
+              "crps_ml": 26.396778106689453,
+              "coverage90": null,
+              "width90_ml": null,
+              "volume_error_ml": 26.396778106689453,
+              "change_error_ml": null
+            }
+          },
+          "by_observed_change": {
+            "stable": {
+              "targets": 6,
+              "dice": 0.4958911970774267,
+              "volume_mae_ml": 2.1798328707615533,
+              "volume_crps_ml": 2.1798328707615533,
+              "volume_change_mae_ml": 0.9375836912434955,
+              "coverage90": null,
+              "width90_ml": null,
+              "interval_score90_ml": null,
+              "brain_mae": 0.558934730788072,
+              "lesion_mae": 0.4315427765250206,
+              "gradient_mae": 0.2973844686316119,
+              "anatomy_brier": null
+            },
+            "changed": {
+              "targets": 30,
+              "dice": 0.30828391311497744,
+              "volume_mae_ml": 14.349912052645402,
+              "volume_crps_ml": 14.349912052645402,
+              "volume_change_mae_ml": 13.561573391980986,
+              "coverage90": null,
+              "width90_ml": null,
+              "interval_score90_ml": null,
+              "brain_mae": 0.5972847719402874,
+              "lesion_mae": 0.8127931444083943,
+              "gradient_mae": 0.3034436996368801,
+              "anatomy_brier": null
+            }
+          }
+        },
+        "current": {
+          "dice": 0.39976553510828416,
+          "volume_mae_ml": 12.645458963182238,
+          "volume_crps_ml": 10.093957650992605,
+          "volume_change_mae_ml": 12.82556881883548,
+          "coverage90": 0.7407407503989007,
+          "width90_ml": 56.560660945044624,
+          "interval_score90_ml": 114.23695752355788,
+          "brain_mae": 0.5821936883860164,
+          "lesion_mae": 0.7321091062492795,
+          "gradient_mae": 0.302755395985312,
+          "anatomy_brier": 0.07685515567815553,
+          "compartments": {
+            "1": {
+              "dice": 0.3574343237667424,
+              "absent_target_fp_ml": 1.983,
+              "crps_ml": 5.2940128445625305,
+              "coverage90": 0.875,
+              "width90_ml": 40.30140403906504,
+              "volume_error_ml": 7.183620532353719,
+              "change_error_ml": 6.1471229282518225
+            },
+            "2": {
+              "dice": 0.34279593642876327,
+              "absent_target_fp_ml": 3.368916666666667,
+              "crps_ml": 1.711881377397933,
+              "coverage90": 0.5416666666666666,
+              "width90_ml": 4.082250249158177,
+              "volume_error_ml": 2.294589272286329,
+              "change_error_ml": 5.252733551079221
+            },
+            "3": {
+              "dice": 0.49906634512934694,
+              "absent_target_fp_ml": null,
+              "crps_ml": 23.275977929433186,
+              "coverage90": 0.8055555555555556,
+              "width90_ml": 125.29832543267145,
+              "volume_error_ml": 28.458166493309868,
+              "change_error_ml": 27.076849977175396
+            }
+          },
+          "by_observed_change": {
+            "stable": {
+              "targets": 6,
+              "dice": 0.5692525285048509,
+              "volume_mae_ml": 7.768605987230937,
+              "volume_crps_ml": 3.663347452878952,
+              "volume_change_mae_ml": 6.213183400117689,
+              "coverage90": 0.8055555671453476,
+              "width90_ml": 43.96933571497599,
+              "interval_score90_ml": 44.27489201227824,
+              "brain_mae": 0.5601964270075163,
+              "lesion_mae": 0.43475506951411563,
+              "gradient_mae": 0.29920163502295816,
+              "anatomy_brier": 0.026263063851123054
+            },
+            "changed": {
+              "targets": 30,
+              "dice": 0.34681894306277833,
+              "volume_mae_ml": 13.486411312047172,
+              "volume_crps_ml": 11.00911002299365,
+              "volume_change_mae_ml": 13.63904760252273,
+              "coverage90": 0.6911764806684326,
+              "width90_ml": 58.24064111709595,
+              "interval_score90_ml": 125.38005346410415,
+              "brain_mae": 0.5988591098610092,
+              "lesion_mae": 0.7964933733729755,
+              "gradient_mae": 0.3059509691654467,
+              "anatomy_brier": 0.0844180809936541
+            }
+          }
+        },
+        "history": {
+          "dice": 0.4077613853286422,
+          "volume_mae_ml": 12.896453062693277,
+          "volume_crps_ml": 10.054066757361094,
+          "volume_change_mae_ml": 12.901100290752732,
+          "coverage90": 0.7962963042987717,
+          "width90_ml": 62.73789824379815,
+          "interval_score90_ml": 114.22965484195285,
+          "brain_mae": 0.582200587209728,
+          "lesion_mae": 0.7305459558135934,
+          "gradient_mae": 0.30301832635369563,
+          "anatomy_brier": 0.0770656455359939,
+          "compartments": {
+            "1": {
+              "dice": 0.37643147183968156,
+              "absent_target_fp_ml": 4.423,
+              "crps_ml": 5.199570887618595,
+              "coverage90": 0.8888888888888888,
+              "width90_ml": 41.47782142957052,
+              "volume_error_ml": 6.939245184262593,
+              "change_error_ml": 5.965110876907905
+            },
+            "2": {
+              "dice": 0.34421711056278526,
+              "absent_target_fp_ml": 2.0802500000000004,
+              "crps_ml": 1.862024491699736,
+              "coverage90": 0.6388888888888888,
+              "width90_ml": 3.594583489621679,
+              "volume_error_ml": 2.404089826763892,
+              "change_error_ml": 5.140217032758907
+            },
+            "3": {
+              "dice": 0.5026355735834598,
+              "absent_target_fp_ml": null,
+              "crps_ml": 23.10060335530175,
+              "coverage90": 0.8611111111111112,
+              "width90_ml": 143.14128626717462,
+              "volume_error_ml": 29.34602329466078,
+              "change_error_ml": 27.597972962591385
+            }
+          },
+          "by_observed_change": {
+            "stable": {
+              "targets": 6,
+              "dice": 0.564322834852307,
+              "volume_mae_ml": 9.197547594706217,
+              "volume_crps_ml": 4.1187646587689715,
+              "volume_change_mae_ml": 7.6385074990491075,
+              "coverage90": 0.9166666716337204,
+              "width90_ml": 51.63519827524821,
+              "interval_score90_ml": 51.851865450541176,
+              "brain_mae": 0.5606841742992401,
+              "lesion_mae": 0.43609238415956497,
+              "gradient_mae": 0.2995724649065071,
+              "anatomy_brier": 0.027526228843877714
+            },
+            "changed": {
+              "targets": 30,
+              "dice": 0.3567284094202091,
+              "volume_mae_ml": 13.698364243787879,
+              "volume_crps_ml": 10.94751657107297,
+              "volume_change_mae_ml": 13.634766547407672,
+              "coverage90": 0.7450980478349853,
+              "width90_ml": 64.30210809146656,
+              "interval_score90_ml": 123.8823990541346,
+              "brain_mae": 0.5989212906535935,
+              "lesion_mae": 0.7957811947254574,
+              "gradient_mae": 0.3061844264613647,
+              "anatomy_brier": 0.08479118988137035
+            }
+          }
+        },
+        "volume_current": {
+          "dice": null,
+          "volume_mae_ml": 12.273675000088083,
+          "volume_crps_ml": 10.374111511641079,
+          "volume_change_mae_ml": 12.810179550437844,
+          "coverage90": 0.8240740820765495,
+          "width90_ml": 53.56989261839125,
+          "interval_score90_ml": 123.69996825853984,
+          "brain_mae": null,
+          "lesion_mae": null,
+          "gradient_mae": null,
+          "anatomy_brier": null,
+          "compartments": {
+            "1": {
+              "dice": null,
+              "absent_target_fp_ml": null,
+              "crps_ml": 5.333955729173289,
+              "coverage90": 0.875,
+              "width90_ml": 41.11200581656562,
+              "volume_error_ml": 6.697687011626032,
+              "change_error_ml": 6.201469560878144
+            },
+            "2": {
+              "dice": null,
+              "absent_target_fp_ml": null,
+              "crps_ml": 2.1911803188009396,
+              "coverage90": 0.8888888888888888,
+              "width90_ml": 11.4979267799192,
+              "volume_error_ml": 3.49874210709499,
+              "change_error_ml": 3.8004756800494053
+            },
+            "3": {
+              "dice": null,
+              "absent_target_fp_ml": null,
+              "crps_ml": 23.59719780418608,
+              "coverage90": 0.7083333333333334,
+              "width90_ml": 108.09973790910509,
+              "volume_error_ml": 26.624594847361248,
+              "change_error_ml": 28.42859341038598
+            }
+          },
+          "by_observed_change": {
+            "stable": {
+              "targets": 6,
+              "dice": null,
+              "volume_mae_ml": 1.6742372835675876,
+              "volume_crps_ml": 2.620189756155014,
+              "volume_change_mae_ml": 1.5730376245660915,
+              "coverage90": 1.0,
+              "width90_ml": 35.921364625295006,
+              "interval_score90_ml": 35.921364625295006,
+              "brain_mae": null,
+              "lesion_mae": null,
+              "gradient_mae": null,
+              "anatomy_brier": null
+            },
+            "changed": {
+              "targets": 30,
+              "dice": null,
+              "volume_mae_ml": 13.892854674774057,
+              "volume_crps_ml": 11.351995657472049,
+              "volume_change_mae_ml": 14.635230153337961,
+              "coverage90": 0.7892156962086173,
+              "width90_ml": 56.328398059396186,
+              "interval_score90_ml": 132.82845502741196,
+              "brain_mae": null,
+              "lesion_mae": null,
+              "gradient_mae": null,
+              "anatomy_brier": null
+            }
+          }
+        },
+        "volume_history": {
+          "dice": null,
+          "volume_mae_ml": 12.175852841801113,
+          "volume_crps_ml": 10.297376033332613,
+          "volume_change_mae_ml": 12.567709211497222,
+          "coverage90": 0.8287037118441529,
+          "width90_ml": 49.06332170963287,
+          "interval_score90_ml": 123.05554746256934,
+          "brain_mae": null,
+          "lesion_mae": null,
+          "gradient_mae": null,
+          "anatomy_brier": null,
+          "compartments": {
+            "1": {
+              "dice": null,
+              "absent_target_fp_ml": null,
+              "crps_ml": 5.401431618465318,
+              "coverage90": 0.8888888888888888,
+              "width90_ml": 39.702973902225494,
+              "volume_error_ml": 6.799502639306916,
+              "change_error_ml": 6.342137635168102
+            },
+            "2": {
+              "dice": null,
+              "absent_target_fp_ml": null,
+              "crps_ml": 2.1936257678187556,
+              "coverage90": 0.8888888888888888,
+              "width90_ml": 10.832964325944582,
+              "volume_error_ml": 3.516630172936453,
+              "change_error_ml": 3.753856120721644
+            },
+            "3": {
+              "dice": null,
+              "absent_target_fp_ml": null,
+              "crps_ml": 23.297069589296978,
+              "coverage90": 0.7083333333333334,
+              "width90_ml": 96.65402046839397,
+              "volume_error_ml": 26.211424403720432,
+              "change_error_ml": 27.60713387860192
+            }
+          },
+          "by_observed_change": {
+            "stable": {
+              "targets": 6,
+              "dice": null,
+              "volume_mae_ml": 1.9279323319594066,
+              "volume_crps_ml": 2.585843046506246,
+              "volume_change_mae_ml": 1.021204153696696,
+              "coverage90": 1.0,
+              "width90_ml": 32.53314963976542,
+              "interval_score90_ml": 32.53314963976542,
+              "brain_mae": null,
+              "lesion_mae": null,
+              "gradient_mae": null,
+              "anatomy_brier": null
+            },
+            "changed": {
+              "targets": 30,
+              "dice": null,
+              "volume_mae_ml": 13.707824749105116,
+              "volume_crps_ml": 11.23679643168169,
+              "volume_change_mae_ml": 14.394505798428629,
+              "coverage90": 0.7941176571390208,
+              "width90_ml": 51.6505965906031,
+              "interval_score90_ml": 132.55935346379,
+              "brain_mae": null,
+              "lesion_mae": null,
+              "gradient_mae": null,
+              "anatomy_brier": null
+            }
+          }
+        }
+      },
+      "history_minus_control": {
+        "current": {
+          "dice": {
+            "difference": 0.007995850220358012,
+            "patient_bootstrap95": [
+              -9.598459438782244e-05,
+              0.015513064147699871
+            ],
+            "patients": 18
+          },
+          "volume_mae_ml": {
+            "difference": 0.25099409951104057,
+            "patient_bootstrap95": [
+              -0.2669106321202384,
+              0.7798948145574992
+            ],
+            "patients": 18
+          },
+          "volume_crps_ml": {
+            "difference": -0.039890893631511264,
+            "patient_bootstrap95": [
+              -0.2587316154605812,
+              0.1807593435049055
+            ],
+            "patients": 18
+          },
+          "volume_change_mae_ml": {
+            "difference": 0.07553147191725228,
+            "patient_bootstrap95": [
+              -0.4419733504121524,
+              0.5767872469027214
+            ],
+            "patients": 18
+          },
+          "lesion_mae": {
+            "difference": -0.0015631504356861115,
+            "patient_bootstrap95": [
+              -0.003427703958004713,
+              0.00018827475400434577
+            ],
+            "patients": 18
+          },
+          "gradient_mae": {
+            "difference": 0.0002629303683837251,
+            "patient_bootstrap95": [
+              0.00014565651891407607,
+              0.00040699161451171484
+            ],
+            "patients": 18
+          }
+        },
+        "persistence": {
+          "dice": {
+            "difference": 0.05810903484568375,
+            "patient_bootstrap95": [
+              0.008203973617583966,
+              0.11702370770128599
+            ],
+            "patients": 18
+          },
+          "volume_mae_ml": {
+            "difference": 0.12178618295325173,
+            "patient_bootstrap95": [
+              -1.9382856860963835,
+              2.0635473784887117
+            ],
+            "patients": 18
+          },
+          "volume_crps_ml": {
+            "difference": -2.720600122378932,
+            "patient_bootstrap95": [
+              -4.316638110743629,
+              -1.0523066895082622
+            ],
+            "patients": 18
+          },
+          "volume_change_mae_ml": {
+            "difference": 1.0311882830800887,
+            "patient_bootstrap95": [
+              -1.2203715360918677,
+              3.434408802601117
+            ],
+            "patients": 18
+          },
+          "lesion_mae": {
+            "difference": -0.013768419623374939,
+            "patient_bootstrap95": [
+              -0.02288591047335002,
+              -0.005677203130390909
+            ],
+            "patients": 18
+          },
+          "gradient_mae": {
+            "difference": 0.0026897365848223367,
+            "patient_bootstrap95": [
+              0.0018321655242255481,
+              0.0036652185781686415
+            ],
+            "patients": 18
+          }
+        },
+        "volume_history": {
+          "volume_mae_ml": {
+            "difference": 0.7206002208921645,
+            "patient_bootstrap95": [
+              -1.291449417008294,
+              2.607361262788373
+            ],
+            "patients": 18
+          },
+          "volume_crps_ml": {
+            "difference": -0.24330927597151863,
+            "patient_bootstrap95": [
+              -1.1430559518436592,
+              0.6344023559656399
+            ],
+            "patients": 18
+          },
+          "volume_change_mae_ml": {
+            "difference": 0.33339107925550887,
+            "patient_bootstrap95": [
+              -1.7575872476709336,
+              2.3018188350766033
+            ],
+            "patients": 18
+          }
+        }
+      }
+    },
+    "MU:24": {
+      "targets": 22,
+      "patients": 13,
+      "targets_with_positive_past_interval": 22,
+      "methods": {
+        "persistence": {
+          "dice": 0.2544078350623736,
+          "volume_mae_ml": 20.240435746999886,
+          "volume_crps_ml": 20.240435746999886,
+          "volume_change_mae_ml": 18.61390625412342,
+          "coverage90": null,
+          "width90_ml": null,
+          "interval_score90_ml": null,
+          "brain_mae": 0.6470021953185399,
+          "lesion_mae": 0.8517596159990017,
+          "gradient_mae": 0.31645703182006496,
+          "anatomy_brier": null,
+          "compartments": {
+            "1": {
+              "dice": 0.2506311736385194,
+              "absent_target_fp_ml": 8.377,
+              "crps_ml": 10.157192380000385,
+              "coverage90": null,
+              "width90_ml": null,
+              "volume_error_ml": 10.157192380000385,
+              "change_error_ml": null
+            },
+            "2": {
+              "dice": 0.08616923973904833,
+              "absent_target_fp_ml": 3.624944444444444,
+              "crps_ml": 5.80844864822351,
+              "coverage90": null,
+              "width90_ml": null,
+              "volume_error_ml": 5.80844864822351,
+              "change_error_ml": null
+            },
+            "3": {
+              "dice": 0.4264230918095531,
+              "absent_target_fp_ml": null,
+              "crps_ml": 44.75566663497534,
+              "coverage90": null,
+              "width90_ml": null,
+              "volume_error_ml": 44.75566663497534,
+              "change_error_ml": null
+            }
+          },
+          "by_observed_change": {
+            "stable": {
+              "targets": 2,
+              "dice": 0.3258018162516346,
+              "volume_mae_ml": 16.381832122802734,
+              "volume_crps_ml": 16.381832122802734,
+              "volume_change_mae_ml": 5.498001244664194,
+              "coverage90": null,
+              "width90_ml": null,
+              "interval_score90_ml": null,
+              "brain_mae": 0.5288041085004807,
+              "lesion_mae": 0.5189281851053238,
+              "gradient_mae": 0.3030607302983602,
+              "anatomy_brier": null
+            },
+            "changed": {
+              "targets": 20,
+              "dice": 0.23924975917496433,
+              "volume_mae_ml": 20.547858825096718,
+              "volume_crps_ml": 20.547858825096718,
+              "volume_change_mae_ml": 19.924521513035668,
+              "coverage90": null,
+              "width90_ml": null,
+              "interval_score90_ml": null,
+              "brain_mae": 0.6645105611055324,
+              "lesion_mae": 0.8919528768612788,
+              "gradient_mae": 0.31847457224741965,
+              "anatomy_brier": null
+            }
+          }
+        },
+        "current": {
+          "dice": 0.3488110227469653,
+          "volume_mae_ml": 18.8462493847578,
+          "volume_crps_ml": 14.636726996837517,
+          "volume_change_mae_ml": 18.600743201427942,
+          "coverage90": 0.7350427435758787,
+          "width90_ml": 62.850983155079376,
+          "interval_score90_ml": 179.2388416926066,
+          "brain_mae": 0.6479911850048945,
+          "lesion_mae": 0.8338515338225243,
+          "gradient_mae": 0.31853738382586044,
+          "anatomy_brier": 0.10874753644785438,
+          "compartments": {
+            "1": {
+              "dice": 0.2375886550624948,
+              "absent_target_fp_ml": 5.413,
+              "crps_ml": 6.085555302791106,
+              "coverage90": 0.782051282051282,
+              "width90_ml": 46.7085018035693,
+              "volume_error_ml": 11.396003738427773,
+              "change_error_ml": 10.510728567647627
+            },
+            "2": {
+              "dice": 0.3697825561109637,
+              "absent_target_fp_ml": 3.3049444444444442,
+              "crps_ml": 1.5559454725022452,
+              "coverage90": 0.6794871794871794,
+              "width90_ml": 6.142795123255405,
+              "volume_error_ml": 2.0261286731678037,
+              "change_error_ml": 5.656301318649919
+            },
+            "3": {
+              "dice": 0.43906185706743744,
+              "absent_target_fp_ml": null,
+              "crps_ml": 36.26867909309192,
+              "coverage90": 0.7435897435897435,
+              "width90_ml": 135.70164612012033,
+              "volume_error_ml": 43.11661331470196,
+              "change_error_ml": 39.63519971798628
+            }
+          },
+          "by_observed_change": {
+            "stable": {
+              "targets": 2,
+              "dice": 0.49356906263680006,
+              "volume_mae_ml": 18.03792715072632,
+              "volume_crps_ml": 10.912517547607422,
+              "volume_change_mae_ml": 7.9202458287278805,
+              "coverage90": 0.6666666716337204,
+              "width90_ml": 56.49716854095459,
+              "interval_score90_ml": 61.64380931854248,
+              "brain_mae": 0.5310108661651611,
+              "lesion_mae": 0.5387144684791565,
+              "gradient_mae": 0.3049613187710444,
+              "anatomy_brier": 0.06793422857299447
+            },
+            "changed": {
+              "targets": 20,
+              "dice": 0.3208594741393547,
+              "volume_mae_ml": 19.105322165366932,
+              "volume_crps_ml": 14.897479161238058,
+              "volume_change_mae_ml": 19.647041050416743,
+              "coverage90": 0.7350427435758787,
+              "width90_ml": 64.82209863418187,
+              "interval_score90_ml": 184.78970253773224,
+              "brain_mae": 0.6651460665922898,
+              "lesion_mae": 0.8685697034383432,
+              "gradient_mae": 0.3206559743764054,
+              "anatomy_brier": 0.11389665458446895
+            }
+          }
+        },
+        "history": {
+          "dice": 0.35794768853025266,
+          "volume_mae_ml": 19.145156328494732,
+          "volume_crps_ml": 14.508162419001263,
+          "volume_change_mae_ml": 18.72585403922628,
+          "coverage90": 0.8034188120793074,
+          "width90_ml": 71.0377627397195,
+          "interval_score90_ml": 170.77708963247446,
+          "brain_mae": 0.6481770128011703,
+          "lesion_mae": 0.8348951110473046,
+          "gradient_mae": 0.31896412156076515,
+          "anatomy_brier": 0.10873009742070466,
+          "compartments": {
+            "1": {
+              "dice": 0.26098156480362805,
+              "absent_target_fp_ml": 7.263,
+              "crps_ml": 6.523248695410215,
+              "coverage90": 0.8205128205128205,
+              "width90_ml": 50.052387225322235,
+              "volume_error_ml": 11.972176007735422,
+              "change_error_ml": 11.115204178943085
+            },
+            "2": {
+              "dice": 0.36888999819429197,
+              "absent_target_fp_ml": 2.457333333333333,
+              "crps_ml": 1.4673054527494318,
+              "coverage90": 0.7051282051282051,
+              "width90_ml": 6.145474721223879,
+              "volume_error_ml": 2.0770469899281845,
+              "change_error_ml": 5.272279237618652
+            },
+            "3": {
+              "dice": 0.443971502592838,
+              "absent_target_fp_ml": null,
+              "crps_ml": 35.53393213565533,
+              "coverage90": 0.8846153846153846,
+              "width90_ml": 156.9154182825333,
+              "volume_error_ml": 43.38624558081994,
+              "change_error_ml": 39.790078701117096
+            }
+          },
+          "by_observed_change": {
+            "stable": {
+              "targets": 2,
+              "dice": 0.4736469237851799,
+              "volume_mae_ml": 16.426771879196167,
+              "volume_crps_ml": 10.68923282623291,
+              "volume_change_mae_ml": 5.821367961664995,
+              "coverage90": 0.8333333432674408,
+              "width90_ml": 61.598337173461914,
+              "interval_score90_ml": 61.60167121887207,
+              "brain_mae": 0.5313108414411545,
+              "lesion_mae": 0.5375735759735107,
+              "gradient_mae": 0.30550508449474967,
+              "anatomy_brier": 0.06493689119815826
+            },
+            "changed": {
+              "targets": 20,
+              "dice": 0.3313181511867462,
+              "volume_mae_ml": 19.778539217435398,
+              "volume_crps_ml": 14.893332328551857,
+              "volume_change_mae_ml": 20.193428104538643,
+              "coverage90": 0.7905982988767135,
+              "width90_ml": 73.11116059621176,
+              "interval_score90_ml": 176.53664148770847,
+              "brain_mae": 0.6654503574738135,
+              "lesion_mae": 0.8709748937533452,
+              "gradient_mae": 0.3210981050108233,
+              "anatomy_brier": 0.11451766257866834
+            }
+          }
+        },
+        "volume_current": {
+          "dice": null,
+          "volume_mae_ml": 20.399921918908756,
+          "volume_crps_ml": 15.864722364988085,
+          "volume_change_mae_ml": 20.53579863546313,
+          "coverage90": 0.8076923180084962,
+          "width90_ml": 66.58120562480046,
+          "interval_score90_ml": 200.69928059211145,
+          "brain_mae": null,
+          "lesion_mae": null,
+          "gradient_mae": null,
+          "anatomy_brier": null,
+          "compartments": {
+            "1": {
+              "dice": null,
+              "absent_target_fp_ml": null,
+              "crps_ml": 5.819875578085581,
+              "coverage90": 0.8974358974358974,
+              "width90_ml": 56.16209113903535,
+              "volume_error_ml": 11.456883401442798,
+              "change_error_ml": 10.80413997841951
+            },
+            "2": {
+              "dice": null,
+              "absent_target_fp_ml": null,
+              "crps_ml": 1.8954563150421166,
+              "coverage90": 0.9230769230769231,
+              "width90_ml": 15.384323661143965,
+              "volume_error_ml": 3.63997704650347,
+              "change_error_ml": 3.996459878509482
+            },
+            "3": {
+              "dice": null,
+              "absent_target_fp_ml": null,
+              "crps_ml": 39.8788323035607,
+              "coverage90": 0.6025641025641025,
+              "width90_ml": 128.1971954198984,
+              "volume_error_ml": 46.10290453984187,
+              "change_error_ml": 46.806796049460395
+            }
+          },
+          "by_observed_change": {
+            "stable": {
+              "targets": 2,
+              "dice": null,
+              "volume_mae_ml": 16.811491176486015,
+              "volume_crps_ml": 11.848577380180359,
+              "volume_change_mae_ml": 7.246687643229961,
+              "coverage90": 1.0,
+              "width90_ml": 52.872145652770996,
+              "interval_score90_ml": 52.872145652770996,
+              "brain_mae": null,
+              "lesion_mae": null,
+              "gradient_mae": null,
+              "anatomy_brier": null
+            },
+            "changed": {
+              "targets": 20,
+              "dice": null,
+              "volume_mae_ml": 20.548489399445366,
+              "volume_crps_ml": 15.761183530856403,
+              "volume_change_mae_ml": 21.750830999012386,
+              "coverage90": 0.7948718059521455,
+              "width90_ml": 69.68208918204674,
+              "interval_score90_ml": 203.89530211228592,
+              "brain_mae": null,
+              "lesion_mae": null,
+              "gradient_mae": null,
+              "anatomy_brier": null
+            }
+          }
+        },
+        "volume_history": {
+          "dice": null,
+          "volume_mae_ml": 20.073382311142407,
+          "volume_crps_ml": 15.670802753705244,
+          "volume_change_mae_ml": 20.113345596495556,
+          "coverage90": 0.8205128300648469,
+          "width90_ml": 62.08990441835844,
+          "interval_score90_ml": 197.42802162659473,
+          "brain_mae": null,
+          "lesion_mae": null,
+          "gradient_mae": null,
+          "anatomy_brier": null,
+          "compartments": {
+            "1": {
+              "dice": null,
+              "absent_target_fp_ml": null,
+              "crps_ml": 5.726174956712968,
+              "coverage90": 0.9358974358974359,
+              "width90_ml": 54.55561502774557,
+              "volume_error_ml": 11.13986523487629,
+              "change_error_ml": 10.487121830192896
+            },
+            "2": {
+              "dice": null,
+              "absent_target_fp_ml": null,
+              "crps_ml": 1.9100475685718732,
+              "coverage90": 0.9230769230769231,
+              "width90_ml": 14.519883970419567,
+              "volume_error_ml": 3.6683515082949247,
+              "change_error_ml": 3.934136539799138
+            },
+            "3": {
+              "dice": null,
+              "absent_target_fp_ml": null,
+              "crps_ml": 39.37618543551518,
+              "coverage90": 0.6025641025641025,
+              "width90_ml": 117.19421066381993,
+              "volume_error_ml": 45.411928983835075,
+              "change_error_ml": 45.91877841949463
+            }
+          },
+          "by_observed_change": {
+            "stable": {
+              "targets": 2,
+              "dice": null,
+              "volume_mae_ml": 16.36786040663719,
+              "volume_crps_ml": 11.363194406032562,
+              "volume_change_mae_ml": 6.615730412304401,
+              "coverage90": 1.0,
+              "width90_ml": 48.702446937561035,
+              "interval_score90_ml": 48.702446937561035,
+              "brain_mae": null,
+              "lesion_mae": null,
+              "gradient_mae": null,
+              "anatomy_brier": null
+            },
+            "changed": {
+              "targets": 20,
+              "dice": null,
+              "volume_mae_ml": 20.299173831939697,
+              "volume_crps_ml": 15.611709961524376,
+              "volume_change_mae_ml": 21.415790175623062,
+              "coverage90": 0.8205128300648469,
+              "width90_ml": 64.95410141578087,
+              "interval_score90_ml": 200.29221862401715,
+              "brain_mae": null,
+              "lesion_mae": null,
+              "gradient_mae": null,
+              "anatomy_brier": null
+            }
+          }
+        }
+      },
+      "history_minus_control": {
+        "current": {
+          "dice": {
+            "difference": 0.009136665783287395,
+            "patient_bootstrap95": [
+              3.633471554958603e-05,
+              0.018439841799057832
+            ],
+            "patients": 13
+          },
+          "volume_mae_ml": {
+            "difference": 0.2989069437369322,
+            "patient_bootstrap95": [
+              -0.46367774926699123,
+              1.1526388382300343
+            ],
+            "patients": 13
+          },
+          "volume_crps_ml": {
+            "difference": -0.12856457783625677,
+            "patient_bootstrap95": [
+              -0.4577717839143215,
+              0.1772412663851028
+            ],
+            "patients": 13
+          },
+          "volume_change_mae_ml": {
+            "difference": 0.1251108377983369,
+            "patient_bootstrap95": [
+              -0.6211966381889913,
+              0.9191352684530814
+            ],
+            "patients": 13
+          },
+          "lesion_mae": {
+            "difference": 0.0010435772247803514,
+            "patient_bootstrap95": [
+              -0.002118869469715999,
+              0.004568042510595076
+            ],
+            "patients": 13
+          },
+          "gradient_mae": {
+            "difference": 0.00042673773490464826,
+            "patient_bootstrap95": [
+              0.0001767613121077476,
+              0.0007019275480992641
+            ],
+            "patients": 13
+          }
+        },
+        "persistence": {
+          "dice": {
+            "difference": 0.1035398534678791,
+            "patient_bootstrap95": [
+              0.026552611835940883,
+              0.1855817155087579
+            ],
+            "patients": 13
+          },
+          "volume_mae_ml": {
+            "difference": -1.095279418505155,
+            "patient_bootstrap95": [
+              -3.6043528960301323,
+              1.6699631211085186
+            ],
+            "patients": 13
+          },
+          "volume_crps_ml": {
+            "difference": -5.732273327998627,
+            "patient_bootstrap95": [
+              -7.75199415592047,
+              -3.315040345222522
+            ],
+            "patients": 13
+          },
+          "volume_change_mae_ml": {
+            "difference": 0.11194778510285855,
+            "patient_bootstrap95": [
+              -2.343639655451363,
+              2.7847856820388635
+            ],
+            "patients": 13
+          },
+          "lesion_mae": {
+            "difference": -0.01686450495169713,
+            "patient_bootstrap95": [
+              -0.02405879768805626,
+              -0.009913345483633198
+            ],
+            "patients": 13
+          },
+          "gradient_mae": {
+            "difference": 0.0025070897407001953,
+            "patient_bootstrap95": [
+              0.0016380167001078304,
+              0.003407849962066887
+            ],
+            "patients": 13
+          }
+        },
+        "volume_history": {
+          "volume_mae_ml": {
+            "difference": -0.9282259826476758,
+            "patient_bootstrap95": [
+              -3.2824842144472477,
+              1.7988548323129985
+            ],
+            "patients": 13
+          },
+          "volume_crps_ml": {
+            "difference": -1.1626403347039835,
+            "patient_bootstrap95": [
+              -2.7699802157206412,
+              0.603086095322401
+            ],
+            "patients": 13
+          },
+          "volume_change_mae_ml": {
+            "difference": -1.387491557269276,
+            "patient_bootstrap95": [
+              -3.594419926831562,
+              1.3584788351582335
+            ],
+            "patients": 13
+          }
+        }
+      }
+    }
+  },
+  "elapsed_seconds": 1037.1774416299304,
+  "nuisance_scope": "downstream temporal-context perturbation only",
+  "reserved_images_opened": 0
+}

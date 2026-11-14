@@ -1,0 +1,52 @@
+\begin{titlepage}
+\centering
+\vspace*{0.6in}
+{\fontsize{14}{17}\selectfont\bfseries \projecttitle\par}
+\vspace{10pt}
+A PROJECT REPORT\par
+\vspace{10pt}
+{\fontsize{14}{17}\selectfont\bfseries\itshape Submitted by\par}
+\vspace{14pt}
+\begin{tabular}{@{}l@{\hspace{0.45in}}l@{}}
+BL.EN.U4AID23002 & Adithya Nair\\[16pt]
+BL.EN.U4AID23005 & Avighna Reddy Katipally\\
+\end{tabular}\par
+\vspace{18pt}
+{\fontsize{14}{17}\selectfont\bfseries\itshape in partial fulfillment for the award of the degree of\par}
+\vspace{18pt}
+{\fontsize{14}{17}\selectfont\bfseries BACHELOR OF TECHNOLOGY\par}
+\vspace{16pt}
+{\small IN\par}
+\vspace{16pt}
+ARTIFICIAL INTELLIGENCE AND DATA SCIENCE\par
+\vspace{12pt}
+\includegraphics[width=1.75in]{amrita_logo.png}\par
+\vspace{12pt}
+AMRITA SCHOOL OF ARTIFICIAL INTELLIGENCE, BENGALURU\par
+\vspace{12pt}
+{\fontsize{14}{17}\selectfont AMRITA VISHWA VIDYAPEETHAM\par}
+\vspace{12pt}
+BENGALURU 560 035\par
+\vspace{12pt}
+\MakeUppercase{\monthyear}\par
+\end{titlepage}
+\pagestyle{front}\pagenumbering{roman}\setcounter{page}{1}
+\frontchapter{ACKNOWLEDGEMENTS}\begin{spacing}{1.5}\setlength{\parindent}{0.5in}
+We thank everyone whose guidance and encouragement supported this project.
+
+We offer our sincere pranams at the lotus feet of “AMMA”, MATA AMRITANANDAMAYI  DEVI who showered her blessing upon us throughout the course of this project work.
+
+We owe our gratitude to Prof. Manoj P., Director, Amrita Vishwa Vidyapeetham Bengaluru Campus. We would like to place our heartfelt gratitude to Dr. Gopalakrishnan E.A., Principal, Amrita School of Computing and Amrita School of Artificial Intelligence, Bengaluru for his valuable support and inspiration.
+
+We express our gratitude to our project guide, Dr. Manju Venugopalan, Assistant Professor (Selection Grade), Department of Computer Science and Engineering, Amrita School of Computing, Bengaluru, for her guidance and encouragement throughout the project.
+
+We thank the project panel members for their suggestions and encouragement, the faculty for their academic support, and our parents for their continued support.
+\end{spacing}
+\frontchapter{ABSTRACT}\begin{spacing}{1.5}
+  This study examines anatomical state estimation and prediction for longitudinal glioma MRI. We test methods across three data sets: LUMIERE  as the main set, SAILOR to evaluate transfer data, and MU-Glioma-Post for postoperative masks to evaluate a specific capability of our methods. Following glioma patient development over time requires more than simple MRI scans that are learned in isolation. A good signal for glioma development is understanding how anatomy changes over time. The motivating question is whether we can build a useful representation of the patient's current anatomy and does adding the history of the patient make the representation richer for predicting future anatomy. For current anatomy estimation, providing segmentation masks of MRI data reduced current-volume error from 1.500 to 1.115 log1p(mm³) on LUMIERE.Cavity supervision reduced MU core volume from 8.043 mL to 1.666 mL in terms of error. For missing sequence reconstruction, we show that adding T2 reduced FLAIR error for lesion regions by 30.88\%, while adding high resolution spatial features reduced it by another 16.09\% against the same architecture without those features. For forecasting (predicting anatomy for future visits), results depended on the goal: predicting future regional volumes had 2.68\% and 10.07\% higher error than persistence on LUMIERE and MU, respectively. A current-only MU model improved 24-week FLAIR-abnormality Dice by 0.01264 over persistence on 22 development targets. Finally, for adaptive acquisition, fixed and learned policies chose the same order of MRI sequences for every assessment visit; the new observer improved missing-FLAIR completion and reduced all-sequence anatomy Dice. In summary, earlier MRI history does not provide a consistent, practically useful forecasting gain over matched current-only models. 
+\end{spacing}
+\clearpage
+{\linespread{0.95}\selectfont\tableofcontents}
+\clearpage\phantomsection\addcontentsline{toc}{chapter}{LIST OF FIGURES}\listoffigures
+\clearpage\phantomsection\addcontentsline{toc}{chapter}{LIST OF TABLES}\listoftables
+\clearpage\pagestyle{main}\pagenumbering{arabic}\setcounter{page}{1}\onehalfspacing

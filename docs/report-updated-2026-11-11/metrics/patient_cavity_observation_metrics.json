@@ -1,0 +1,776 @@
+{
+  "date": "2026-11-06",
+  "status": "training, matched full selection evaluation and timeline exports complete",
+  "scope": "Development selection; single seed; conditional LUMIERE scores do not validate native cavity output",
+  "checkpoints": {
+    "baseline": "87e2349c54fafd133a08246fd0d920956687faf640c8a080edc2f2cd1dc3ae59",
+    "new": "d006424493442bd1bcd8fd5b15888b197aa3a95ef3f87aeed5df2f52e86ccacb"
+  },
+  "catalogue_sha256": "d0a562f8296cec97b62c204e537b7a48cc3120418ec23fcbe933143cea6a536f",
+  "datasets": {
+    "LUMIERE": {
+      "scored_compartment_dice": {
+        "baseline": 0.7104463479369327,
+        "new": 0.7190424734752012,
+        "new_minus_baseline": 0.008596125538268606,
+        "paired_patient_ci95": [
+          -0.0036482243877846124,
+          0.023937263457226073
+        ],
+        "patients": 18,
+        "visits": 178
+      },
+      "native_available_label_dice": {
+        "baseline": 0.7104463479369327,
+        "new": 0.5925609318555295,
+        "new_minus_baseline": -0.11788541608140322,
+        "paired_patient_ci95": [
+          -0.15097453242506592,
+          -0.07963653364134532
+        ],
+        "patients": 18,
+        "visits": 178
+      },
+      "common_foreground_three_compartment_dice": {
+        "baseline": 0.7104821416878899,
+        "new": 0.7193506536459118,
+        "new_minus_baseline": 0.00886851195802176,
+        "paired_patient_ci95": [
+          -0.00339508449531425,
+          0.02420127401124377
+        ],
+        "patients": 18,
+        "visits": 178
+      },
+      "core_in_reference_cavity_ml": null,
+      "cavity_in_reference_core_ml": null,
+      "intensity_times_1_05_dice": {
+        "baseline": 0.710012419182293,
+        "new": 0.7187212634679946,
+        "new_minus_baseline": 0.008708844285701511,
+        "paired_patient_ci95": [
+          -0.003531346533815502,
+          0.024064672145589938
+        ],
+        "patients": 18,
+        "visits": 178
+      },
+      "class_1_dice": {
+        "baseline": 0.6748212222502142,
+        "new": 0.6902859179155052,
+        "new_minus_baseline": 0.015464695665291017,
+        "paired_patient_ci95": [
+          -0.018609878454116713,
+          0.05573044489153486
+        ],
+        "patients": 18,
+        "visits": 178
+      },
+      "class_1_nonempty_dice": {
+        "baseline": 0.7206259548076198,
+        "new": 0.7212511569760728,
+        "new_minus_baseline": 0.0006252021684530886,
+        "paired_patient_ci95": [
+          -0.007002867342858314,
+          0.0076293463895985856
+        ],
+        "patients": 18,
+        "visits": 159
+      },
+      "class_1_volume_error_ml": {
+        "baseline": 1.5818719365238973,
+        "new": 1.4480930964551062,
+        "new_minus_baseline": -0.133778840068791,
+        "paired_patient_ci95": [
+          -0.25742477578567036,
+          -0.02093715141612202
+        ],
+        "patients": 18,
+        "visits": 178
+      },
+      "class_1_empty_reference_fp_ml": {
+        "baseline": 0.24165555555555554,
+        "new": 0.2379190476190476,
+        "new_minus_baseline": -0.003736507936507929,
+        "paired_patient_ci95": [
+          -0.06570535714285711,
+          0.05211805555555558
+        ],
+        "patients": 6,
+        "visits": 19
+      },
+      "class_2_dice": {
+        "baseline": 0.6248218841696693,
+        "new": 0.631940557656633,
+        "new_minus_baseline": 0.007118673486963773,
+        "paired_patient_ci95": [
+          -0.009693793053333483,
+          0.025654870447047062
+        ],
+        "patients": 18,
+        "visits": 178
+      },
+      "class_2_nonempty_dice": {
+        "baseline": 0.6475597017144804,
+        "new": 0.6509668440894174,
+        "new_minus_baseline": 0.003407142374937009,
+        "paired_patient_ci95": [
+          -0.011285474676916594,
+          0.019439808779684906
+        ],
+        "patients": 18,
+        "visits": 171
+      },
+      "class_2_volume_error_ml": {
+        "baseline": 6.323698291496086,
+        "new": 5.892470596814223,
+        "new_minus_baseline": -0.4312276946818618,
+        "paired_patient_ci95": [
+          -1.5739407469305393,
+          0.49151181424670987
+        ],
+        "patients": 18,
+        "visits": 178
+      },
+      "class_2_empty_reference_fp_ml": {
+        "baseline": 2.5944000000000003,
+        "new": 2.5203333333333333,
+        "new_minus_baseline": -0.07406666666666657,
+        "paired_patient_ci95": [
+          -0.8899999999999997,
+          0.6649999999999999
+        ],
+        "patients": 3,
+        "visits": 7
+      },
+      "class_3_dice": {
+        "baseline": 0.8316959373909147,
+        "new": 0.8349009448534657,
+        "new_minus_baseline": 0.0032050074625510844,
+        "paired_patient_ci95": [
+          -0.0007067178033245729,
+          0.007980261971892395
+        ],
+        "patients": 18,
+        "visits": 178
+      },
+      "class_3_nonempty_dice": {
+        "baseline": 0.8502510758404725,
+        "new": 0.8532671640811511,
+        "new_minus_baseline": 0.003016088240678622,
+        "paired_patient_ci95": [
+          -0.0009912419985538211,
+          0.00786004125982017
+        ],
+        "patients": 18,
+        "visits": 173
+      },
+      "class_3_volume_error_ml": {
+        "baseline": 7.564001219006122,
+        "new": 7.620008579927697,
+        "new_minus_baseline": 0.056007360921576495,
+        "paired_patient_ci95": [
+          -0.7082845600180954,
+          0.7844229553541504
+        ],
+        "patients": 18,
+        "visits": 178
+      },
+      "class_3_empty_reference_fp_ml": {
+        "baseline": 0.8684000000000001,
+        "new": 1.7550000000000001,
+        "new_minus_baseline": 0.8866,
+        "paired_patient_ci95": [
+          0.8866,
+          0.8866
+        ],
+        "patients": 1,
+        "visits": 5
+      },
+      "missing_CT1_brain_mae": {
+        "baseline": 0.3892200327500549,
+        "new": 0.38318691380884223,
+        "new_minus_baseline": -0.006033118941212754,
+        "paired_patient_ci95": [
+          -0.007044195091025127,
+          -0.0050228191443728795
+        ],
+        "patients": 18,
+        "visits": 178
+      },
+      "missing_CT1_lesion_mae": {
+        "baseline": 0.41186692471836683,
+        "new": 0.3964611386200377,
+        "new_minus_baseline": -0.015405786098329202,
+        "paired_patient_ci95": [
+          -0.020087710403150046,
+          -0.010701687482184589
+        ],
+        "patients": 18,
+        "visits": 173
+      },
+      "missing_CT1_cavity_mae": null,
+      "missing_CT1_gradient_mae": {
+        "baseline": 0.2232739576327441,
+        "new": 0.22132818245002847,
+        "new_minus_baseline": -0.0019457751827156187,
+        "paired_patient_ci95": [
+          -0.0022236776137022052,
+          -0.0016790234844061408
+        ],
+        "patients": 18,
+        "visits": 178
+      },
+      "missing_T1_brain_mae": {
+        "baseline": 0.33010936595385176,
+        "new": 0.32988481076747794,
+        "new_minus_baseline": -0.0002245551863738189,
+        "paired_patient_ci95": [
+          -0.0020224741768805005,
+          0.0016803729067357087
+        ],
+        "patients": 18,
+        "visits": 178
+      },
+      "missing_T1_lesion_mae": {
+        "baseline": 0.34224898297904177,
+        "new": 0.33815656406820893,
+        "new_minus_baseline": -0.004092418910832791,
+        "paired_patient_ci95": [
+          -0.011257905847644164,
+          0.003085044966034687
+        ],
+        "patients": 18,
+        "visits": 173
+      },
+      "missing_T1_cavity_mae": null,
+      "missing_T1_gradient_mae": {
+        "baseline": 0.1704340207247457,
+        "new": 0.17147273217968284,
+        "new_minus_baseline": 0.0010387114549371412,
+        "paired_patient_ci95": [
+          0.0008424560815194014,
+          0.001219680448929386
+        ],
+        "patients": 18,
+        "visits": 178
+      },
+      "missing_T2_brain_mae": {
+        "baseline": 0.381346500401084,
+        "new": 0.3755428524638848,
+        "new_minus_baseline": -0.005803647937199199,
+        "paired_patient_ci95": [
+          -0.007706768012281242,
+          -0.003737761023005948
+        ],
+        "patients": 18,
+        "visits": 178
+      },
+      "missing_T2_lesion_mae": {
+        "baseline": 0.45613966882797574,
+        "new": 0.46336592106041485,
+        "new_minus_baseline": 0.007226252232439136,
+        "paired_patient_ci95": [
+          5.116519846849896e-05,
+          0.015261845966938813
+        ],
+        "patients": 18,
+        "visits": 173
+      },
+      "missing_T2_cavity_mae": null,
+      "missing_T2_gradient_mae": {
+        "baseline": 0.2244528939100089,
+        "new": 0.22273292914406578,
+        "new_minus_baseline": -0.0017199647659430788,
+        "paired_patient_ci95": [
+          -0.001989081282952517,
+          -0.0014737532451650432
+        ],
+        "patients": 18,
+        "visits": 178
+      },
+      "missing_FLAIR_brain_mae": {
+        "baseline": 0.3906959751086103,
+        "new": 0.39001228922301,
+        "new_minus_baseline": -0.0006836858856002708,
+        "paired_patient_ci95": [
+          -0.004743509192069165,
+          0.003296215502153553
+        ],
+        "patients": 18,
+        "visits": 178
+      },
+      "missing_FLAIR_lesion_mae": {
+        "baseline": 0.5737279124809155,
+        "new": 0.5904003658986786,
+        "new_minus_baseline": 0.016672453417763057,
+        "paired_patient_ci95": [
+          0.004579476156733868,
+          0.02658407965146022
+        ],
+        "patients": 18,
+        "visits": 173
+      },
+      "missing_FLAIR_cavity_mae": null,
+      "missing_FLAIR_gradient_mae": {
+        "baseline": 0.21858369570885536,
+        "new": 0.21846461196965322,
+        "new_minus_baseline": -0.0001190837392021653,
+        "paired_patient_ci95": [
+          -0.0005718784155817984,
+          0.00033262933029836985
+        ],
+        "patients": 18,
+        "visits": 178
+      }
+    },
+    "MU": {
+      "scored_compartment_dice": {
+        "baseline": 0.4942019706905574,
+        "new": 0.6261879945232862,
+        "new_minus_baseline": 0.13198602383272884,
+        "paired_patient_ci95": [
+          0.08241087986090043,
+          0.17761148553863051
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "native_available_label_dice": {
+        "baseline": 0.6294220720318542,
+        "new": 0.6639199760426915,
+        "new_minus_baseline": 0.034497904010837264,
+        "paired_patient_ci95": [
+          0.012392989036986516,
+          0.05975975872627587
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "common_foreground_three_compartment_dice": {
+        "baseline": 0.6294521312855574,
+        "new": 0.6646307705447381,
+        "new_minus_baseline": 0.03517863925918054,
+        "paired_patient_ci95": [
+          0.012774272929547446,
+          0.06047745630319009
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "core_in_reference_cavity_ml": {
+        "baseline": 6.142765104166667,
+        "new": 0.7837557291666667,
+        "new_minus_baseline": -5.359009374999999,
+        "paired_patient_ci95": [
+          -8.7721404296875,
+          -2.697878476562499
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "cavity_in_reference_core_ml": {
+        "baseline": 0.0,
+        "new": 0.5146171875000001,
+        "new_minus_baseline": 0.5146171875000001,
+        "paired_patient_ci95": [
+          0.20374088541666668,
+          0.9123723958333335
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "intensity_times_1_05_dice": {
+        "baseline": 0.4939759152286915,
+        "new": 0.6262292482292895,
+        "new_minus_baseline": 0.13225333300059788,
+        "paired_patient_ci95": [
+          0.08263663749813373,
+          0.1778790236567118
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "class_1_dice": {
+        "baseline": 0.7319156736432517,
+        "new": 0.7502878167673768,
+        "new_minus_baseline": 0.0183721431241251,
+        "paired_patient_ci95": [
+          0.001646036775265609,
+          0.03397050076726151
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "class_1_nonempty_dice": {
+        "baseline": 0.7368427005554021,
+        "new": 0.7559524657367347,
+        "new_minus_baseline": 0.019109765181332602,
+        "paired_patient_ci95": [
+          0.0019273867182559193,
+          0.03545901323815796
+        ],
+        "patients": 32,
+        "visits": 104
+      },
+      "class_1_volume_error_ml": {
+        "baseline": 3.117461979166667,
+        "new": 2.9957739583333334,
+        "new_minus_baseline": -0.12168802083333338,
+        "paired_patient_ci95": [
+          -1.01300875,
+          0.9885221223958335
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "class_1_empty_reference_fp_ml": {
+        "baseline": 8.273,
+        "new": 3.905,
+        "new_minus_baseline": -4.368,
+        "paired_patient_ci95": [
+          -5.3870000000000005,
+          -3.349
+        ],
+        "patients": 2,
+        "visits": 2
+      },
+      "class_2_dice": {
+        "baseline": 0.2986954697675789,
+        "new": 0.37922413114880227,
+        "new_minus_baseline": 0.08052866138122339,
+        "paired_patient_ci95": [
+          0.023841917699912753,
+          0.146788236557919
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "class_2_nonempty_dice": {
+        "baseline": 0.4148056650751869,
+        "new": 0.44515026747862607,
+        "new_minus_baseline": 0.030344602403439207,
+        "paired_patient_ci95": [
+          -0.009428675135441591,
+          0.07596997429861937
+        ],
+        "patients": 26,
+        "visits": 58
+      },
+      "class_2_volume_error_ml": {
+        "baseline": 8.042979687499999,
+        "new": 1.6659463541666666,
+        "new_minus_baseline": -6.377033333333333,
+        "paired_patient_ci95": [
+          -9.980084127604167,
+          -3.4084090364583335
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "class_2_empty_reference_fp_ml": {
+        "baseline": 9.770645833333333,
+        "new": 1.2575991666666666,
+        "new_minus_baseline": -8.513046666666666,
+        "paired_patient_ci95": [
+          -15.048933125000001,
+          -3.5836328333333327
+        ],
+        "patients": 20,
+        "visits": 48
+      },
+      "class_3_dice": {
+        "baseline": 0.8576550726847323,
+        "new": 0.8622479802118955,
+        "new_minus_baseline": 0.00459290752716332,
+        "paired_patient_ci95": [
+          -0.0027452544126298495,
+          0.012180740930077287
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "class_3_nonempty_dice": {
+        "baseline": 0.8576550726847323,
+        "new": 0.8622479802118955,
+        "new_minus_baseline": 0.00459290752716332,
+        "paired_patient_ci95": [
+          -0.0027452544126298495,
+          0.012180740930077287
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "class_3_volume_error_ml": {
+        "baseline": 6.7332671875,
+        "new": 5.7932354166666675,
+        "new_minus_baseline": -0.9400317708333332,
+        "paired_patient_ci95": [
+          -1.9523722005208335,
+          -0.025459231770832893
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "class_3_empty_reference_fp_ml": null,
+      "class_4_dice": {
+        "baseline": 0.08854166666666666,
+        "new": 0.5129920499650703,
+        "new_minus_baseline": 0.4244503832984036,
+        "paired_patient_ci95": [
+          0.2559772216867408,
+          0.5712501132897981
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "class_4_nonempty_dice": {
+        "baseline": 0.0,
+        "new": 0.5578304003346356,
+        "new_minus_baseline": 0.5578304003346356,
+        "paired_patient_ci95": [
+          0.47428089180693367,
+          0.638029307183047
+        ],
+        "patients": 30,
+        "visits": 97
+      },
+      "class_4_volume_error_ml": {
+        "baseline": 13.064055208333333,
+        "new": 5.849694270833334,
+        "new_minus_baseline": -7.214360937499999,
+        "paired_patient_ci95": [
+          -15.37177860677083,
+          -0.9184416536458333
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "class_4_empty_reference_fp_ml": {
+        "baseline": 0.0,
+        "new": 4.112433333333334,
+        "new_minus_baseline": 4.112433333333334,
+        "paired_patient_ci95": [
+          2.0351999999999997,
+          6.306633333333333
+        ],
+        "patients": 5,
+        "visits": 9
+      },
+      "missing_CT1_brain_mae": {
+        "baseline": 0.40454637488971157,
+        "new": 0.40375087863455217,
+        "new_minus_baseline": -0.0007954962551593794,
+        "paired_patient_ci95": [
+          -0.0020218863051074277,
+          0.00044350543719094953
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "missing_CT1_lesion_mae": {
+        "baseline": 0.5535077950063472,
+        "new": 0.5538532988944401,
+        "new_minus_baseline": 0.0003455038880929365,
+        "paired_patient_ci95": [
+          -0.00667459451283018,
+          0.007409272897057237
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "missing_CT1_cavity_mae": {
+        "baseline": 0.553412361840407,
+        "new": 0.5254771695699957,
+        "new_minus_baseline": -0.02793519227041139,
+        "paired_patient_ci95": [
+          -0.04576438200018472,
+          -0.009077360431353243
+        ],
+        "patients": 30,
+        "visits": 97
+      },
+      "missing_CT1_gradient_mae": {
+        "baseline": 0.23305242457168385,
+        "new": 0.2319222170781965,
+        "new_minus_baseline": -0.0011302074934873337,
+        "paired_patient_ci95": [
+          -0.0013520319430002292,
+          -0.0008976773653153495
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "missing_T1_brain_mae": {
+        "baseline": 0.3138758756375561,
+        "new": 0.31276845048802593,
+        "new_minus_baseline": -0.001107425149530169,
+        "paired_patient_ci95": [
+          -0.0031817881900739536,
+          0.00097294058902966
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "missing_T1_lesion_mae": {
+        "baseline": 0.3775973041619485,
+        "new": 0.36904690392160167,
+        "new_minus_baseline": -0.008550400240346794,
+        "paired_patient_ci95": [
+          -0.020674141127189315,
+          0.002499259263083027
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "missing_T1_cavity_mae": {
+        "baseline": 0.5989192090928555,
+        "new": 0.5692313523424997,
+        "new_minus_baseline": -0.029687856750355835,
+        "paired_patient_ci95": [
+          -0.05108922580670979,
+          -0.013525590867218053
+        ],
+        "patients": 30,
+        "visits": 97
+      },
+      "missing_T1_gradient_mae": {
+        "baseline": 0.1671903492546537,
+        "new": 0.16707803591723658,
+        "new_minus_baseline": -0.00011231333741711091,
+        "paired_patient_ci95": [
+          -0.00044819894634808,
+          0.00022684592016351774
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "missing_T2_brain_mae": {
+        "baseline": 0.3558285894958923,
+        "new": 0.3475483539669464,
+        "new_minus_baseline": -0.008280235528945919,
+        "paired_patient_ci95": [
+          -0.010820237837809443,
+          -0.006132220900229488
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "missing_T2_lesion_mae": {
+        "baseline": 0.39110044805953903,
+        "new": 0.3878318405710161,
+        "new_minus_baseline": -0.003268607488522925,
+        "paired_patient_ci95": [
+          -0.008839032022515307,
+          0.00292855842659871
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "missing_T2_cavity_mae": {
+        "baseline": 0.8710411368144882,
+        "new": 0.8941127076910603,
+        "new_minus_baseline": 0.023071570876571867,
+        "paired_patient_ci95": [
+          0.002340336677928766,
+          0.04381308986205195
+        ],
+        "patients": 30,
+        "visits": 97
+      },
+      "missing_T2_gradient_mae": {
+        "baseline": 0.1798017941117804,
+        "new": 0.17727995806037344,
+        "new_minus_baseline": -0.002521836051406957,
+        "paired_patient_ci95": [
+          -0.002914788994142627,
+          -0.00213005233578668
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "missing_FLAIR_brain_mae": {
+        "baseline": 0.3926756811638673,
+        "new": 0.3980865133460611,
+        "new_minus_baseline": 0.005410832182193797,
+        "paired_patient_ci95": [
+          -0.0022984457691200013,
+          0.013009801442967733
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "missing_FLAIR_lesion_mae": {
+        "baseline": 0.588541735506927,
+        "new": 0.5944466633722186,
+        "new_minus_baseline": 0.005904927865291641,
+        "paired_patient_ci95": [
+          -0.003062468165686968,
+          0.015245983047255626
+        ],
+        "patients": 32,
+        "visits": 106
+      },
+      "missing_FLAIR_cavity_mae": {
+        "baseline": 0.9221115634507603,
+        "new": 0.9187320090664758,
+        "new_minus_baseline": -0.0033795543842845516,
+        "paired_patient_ci95": [
+          -0.03612717284013828,
+          0.030350937480727848
+        ],
+        "patients": 30,
+        "visits": 97
+      },
+      "missing_FLAIR_gradient_mae": {
+        "baseline": 0.19197260797696397,
+        "new": 0.1916218294128258,
+        "new_minus_baseline": -0.0003507785641381411,
+        "paired_patient_ci95": [
+          -0.0013358453460387057,
+          0.0006079268740722831
+        ],
+        "patients": 32,
+        "visits": 106
+      }
+    }
+  },
+  "intervals": "4000 paired patient bootstrap draws, seed 17; patient means across eligible visits; exploratory unadjusted intervals",
+  "selected_update": 8750,
+  "boundary": [
+    {
+      "step": 10000,
+      "selection_score": 0.6526229628739421
+    },
+    {
+      "step": 11250,
+      "selection_score": 0.6524582782313667
+    },
+    {
+      "step": 12500,
+      "selection_score": 0.6527717882032503
+    }
+  ],
+  "timelines": [
+    {
+      "tree": "timeline-cavity-v1",
+      "visits": 3,
+      "map_volume_agreement": true,
+      "forecast_method": "persistence"
+    },
+    {
+      "tree": "timeline-cavity-v1",
+      "visits": 2,
+      "map_volume_agreement": true,
+      "forecast_method": "persistence"
+    },
+    {
+      "tree": "timeline-cavity-missing-flair-v1",
+      "visits": 3,
+      "map_volume_agreement": true,
+      "forecast_method": "persistence"
+    }
+  ],
+  "reserved_images_opened": 0,
+  "new_learned_forecast_assessment": false
+}

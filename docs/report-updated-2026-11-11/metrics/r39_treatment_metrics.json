@@ -1,0 +1,238 @@
+{
+  "experiment": "R39",
+  "status": "COMPLETE",
+  "treatment_feasibility_supported": false,
+  "history_followup_supported": false,
+  "patients": 27,
+  "pairs": 242,
+  "scores": {
+    "L": {
+      "crps": 1.2811336295403715,
+      "mae": 1.7755534951103373
+    },
+    "LT": {
+      "crps": 1.2360698869850337,
+      "mae": 1.6975390808486013
+    },
+    "H": {
+      "crps": 1.2640746952261208,
+      "mae": 1.7404419023375135
+    },
+    "HT": {
+      "crps": 1.2651258665766834,
+      "mae": 1.7223332433635798
+    },
+    "time_only": {
+      "crps": 1.453797501968101,
+      "mae": 2.0337259145737656
+    },
+    "phase_time": {
+      "crps": 1.4683820036374926,
+      "mae": 2.0647410750049042
+    },
+    "persistence": {
+      "crps": 1.8859252589337299,
+      "mae": 2.3918792949662833
+    },
+    "measured_persistence": {
+      "crps": 0.8403622979175983,
+      "mae": 0.9430038400370039
+    }
+  },
+  "comparisons": {
+    "HT_vs_H": {
+      "difference": 0.0010511713505628678,
+      "ci99": [
+        -0.08080939131700052,
+        0.08154488094414579
+      ],
+      "relative_reduction": -0.0008315737626363173
+    },
+    "HT_vs_LT": {
+      "difference": 0.02905597959164979,
+      "ci99": [
+        -0.024578785460019695,
+        0.0933104270193623
+      ],
+      "relative_reduction": -0.02350674496449523
+    },
+    "HT_vs_persistence": {
+      "difference": -0.6207993923570463,
+      "ci99": [
+        -1.0441166404915077,
+        -0.24645848760968803
+      ],
+      "relative_reduction": 0.32917497096785053
+    },
+    "HT_vs_phase_time": {
+      "difference": -0.20325613706080947,
+      "ci99": [
+        -0.42088188522625386,
+        -0.017002855648814885
+      ],
+      "relative_reduction": 0.1384218388384636
+    },
+    "LT_vs_L": {
+      "difference": -0.045063742555337676,
+      "ci99": [
+        -0.11724747535214451,
+        0.0158434020672718
+      ],
+      "relative_reduction": 0.03517489629204806
+    }
+  },
+  "subsets": {
+    "known_status": {
+      "patients": 27,
+      "pairs": 212,
+      "scores": {
+        "L": 1.2421848505755426,
+        "LT": 1.1912229183529026,
+        "H": 1.2284488179527744,
+        "HT": 1.2260495090922854,
+        "time_only": 1.4125520693294846,
+        "phase_time": 1.42022069318398,
+        "persistence": 1.8555433707951687,
+        "measured_persistence": 0.8056174169847931
+      }
+    },
+    "history_available": {
+      "patients": 27,
+      "pairs": 215,
+      "scores": {
+        "L": 1.2989198551533387,
+        "LT": 1.2527982204645969,
+        "H": 1.284376909613884,
+        "HT": 1.2812777111034335,
+        "time_only": 1.4836381286248534,
+        "phase_time": 1.4999353555604225,
+        "persistence": 1.9064689321281947,
+        "measured_persistence": 0.8598035740798777
+      }
+    }
+  },
+  "selected_alphas": {
+    "L": [
+      1.0,
+      10.0,
+      1.0,
+      1.0,
+      0.1
+    ],
+    "LT": [
+      0.1,
+      0.1,
+      0.1,
+      0.1,
+      0.1
+    ],
+    "H": [
+      1.0,
+      10.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "HT": [
+      0.1,
+      0.1,
+      1.0,
+      0.1,
+      0.1
+    ],
+    "time_only": [
+      10.0,
+      1.0,
+      100.0,
+      10.0,
+      0.1
+    ],
+    "phase_time": [
+      10.0,
+      10.0,
+      100.0,
+      10.0,
+      0.1
+    ]
+  },
+  "elapsed_seconds": 0.19799174700165167,
+  "rows_sha256": "cd57be9f40ef1d41300c560055e0ab92a85d4a9d9e96a2a66fa285dc39f61dac",
+  "limitations": [
+    "reused SAILOR development cohort",
+    "observational current status, not planned intervention",
+    "prospective status availability unverified",
+    "approximate recorded past intervals",
+    "automated anatomical proxy targets",
+    "compressed MRI states, no new representation learning",
+    "constant Gaussian uncertainty",
+    "bootstrap conditions on fitted folds",
+    "no acquisition-robustness or causal treatment-effect evidence"
+  ],
+  "coverage": {
+    "patients": 27,
+    "pairs": 242,
+    "history_pairs": 215,
+    "source_phase_counts": {
+      "CRT": 101,
+      "TMZ": 95,
+      "no": 16,
+      "unknown": 30
+    },
+    "excluded": {},
+    "inventory_sha256": "0ecc6bccd7f938a41bab9e6b2d98c47b828a6b4824e498788188dec2ad78f65a",
+    "predictions_sha256": "2b9a58d890d1c586c38878dd2645b0b5b3e396e61ee898e61bbfa2b6cc2af59d",
+    "rows_sha256": "cd57be9f40ef1d41300c560055e0ab92a85d4a9d9e96a2a66fa285dc39f61dac"
+  },
+  "provenance": {
+    "date_utc": "2026-10-30T10:38:34.956503+00:00",
+    "base_git_sha": "47871745a4fb5e6ce7b2ee0a8a4a0f6818f1ca1e",
+    "source_state": "new R39 source files on exp/r39-treatment-conditioned; exact hashes below",
+    "source_sha256": {
+      "src/harness/analysis/treatment_forecast.py": "699a7789e3a2ae12270b6c4eab708d33e3c5a48faa2cd3d66ec52f53e4ef15a2",
+      "scripts/run_treatment_forecast.py": "63d0946cbdc725d5266cf359b20e1a4660598b0f2be0b113a954ef66b68afaf0",
+      "scripts/check_treatment_forecast.py": "c333d0c1810273ec8867fb851916595b83834f89a5ac50d331164f977fbe7c4f",
+      "tests/test_treatment_forecast.py": "070b3f0d64a894b30f41f2653045ef12b27df23803cd248a5e18afe623c381b1"
+    },
+    "protocol": "info/METHODS.md#r39-cutoff-treatment-phase-forecasting-feasibility",
+    "protocol_file_sha256_at_run": "987077b2fa434ff37df265ab4a40a053a52ac3e7ea213a727e3a5a54e668a78e",
+    "sailor_descriptor_sha256": "58e01bb0d74756c7fbc31d0a65deb7248c61244aa36efc72350f73d0f19d7faa",
+    "descriptor": "Hovden et al., Brain tumor MRI: Serial assessments in longitudinal oncological research (SAILOR), version 1, summary and methods pp. 1-2",
+    "state_predictions": "R35 seed42 state-only direct head trained on LUMIERE source52; cached per-visit SAILOR estimates",
+    "software": {
+      "python": "3.12.14",
+      "numpy": "2.2.6",
+      "scipy": "1.15.3",
+      "scikit_learn": "1.7.2"
+    },
+    "host": "mosaic-gpu",
+    "gpu_training": false,
+    "transferred": "numeric anonymous-group rows only; no SAILOR images or participant mapping",
+    "private_artifacts": "outputs/r39-treatment-conditioned/",
+    "runtime_process_seconds": {
+      "wall": 0.53,
+      "user_cpu": 0.49,
+      "system_cpu": 0.03
+    },
+    "runtime_scope": "fixed comparison process, not all preparation, tests or replay",
+    "raw_metrics_sha256": "826ed2fe16c429058b4537fcbb53d51ec2fa6d7e7b44c0f3eecd8f9fffb7ea55"
+  },
+  "verification": {
+    "behavioral_tests": 7,
+    "real_canary": {
+      "status": "ENGINEERING_CANARY",
+      "patients": 6,
+      "pairs": 55,
+      "checkpoint_reload": true
+    },
+    "replay": {
+      "status": "PASS",
+      "patients": 27,
+      "pairs": 242,
+      "replayed_models": 40,
+      "scored_arms": 8,
+      "recomputed_contrasts": 5,
+      "scope": "saved-weight predictions, source-only standardization, CRPS, MAE and paired bootstrap; not independent scientific review"
+    },
+    "independent_scientific_review": false
+  }
+}

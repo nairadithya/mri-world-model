@@ -1,0 +1,19 @@
+\clearpage
+\chapter{Conclusion}
+\begingroup
+\clubpenalty=10000
+\makeatletter\@clubpenalty=10000\makeatother
+\widowpenalty=10000
+\brokenpenalty=10000
+
+We set out to learn a patient state that describes current anatomy and uses earlier MRI to predict future anatomy. The results give stronger support to current-state estimation. Mask supervision improves volume estimates, additional sequences improve FLAIR completion, and higher-resolution features preserve detail lost by compact states. Explicit cavity supervision also reduces confusion between postoperative cavity and core.
+
+These improvements do not consistently carry over to forecasting. Earlier MRI provides no established practical gain over matched current-only models in the tested cohorts. Regional forecasts favor persistence on LUMIERE and MU. Measured anatomy and retrospective timing improve LUMIERE forecasts, but this advantage does not transfer to SAILOR. Completion adaptation likewise improves current FLAIR without improving its forecast.
+
+The structured model gives a narrower positive result: current-only MU FLAIR-abnormality Dice improves by 0.01264 over persistence at 24 weeks on 22 development targets. Most of the larger aggregate Dice gain comes from empty core compartments, and volume-distribution performance remains weaker. The positive claim is specific to the FLAIR segmentation endpoint and requires independent confirmation.
+
+For acquisition, fixed and learned policies select the same sequence order. The observer improves missing-FLAIR completion while reducing all-sequence anatomical agreement. A state intended for several tasks therefore needs to be assessed through each readout.
+
+MRI results come from reused development cohorts. Patient-level partitions separate fitting and scoring, but subsequent model choices draw on earlier results. LUMIERE and SAILOR use automated anatomical references; MU provides reviewed per-scan masks without independent longitudinal adjudication. Clinical interpretation also requires treatment context verified at the prediction cutoff. The work supports useful anatomical and completion representations, while a reliable, transferable benefit from patient history remains unestablished.
+
+\endgroup

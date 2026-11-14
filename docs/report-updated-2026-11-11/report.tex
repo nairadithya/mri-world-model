@@ -1,0 +1,151 @@
+% Longitudinal MRI project report using the supplied AIDS LaTeX template.
+% Main file: report.tex. Compile with XeLaTeX three times after a clean build.
+\documentclass[12pt]{report}
+
+% ---------------- Page setup (same as the Word file) -----------------
+\usepackage[letterpaper,
+            top=1.38in, bottom=1.18in, left=1.58in, right=1.18in,
+            headsep=0.38in, footskip=0.5in]{geometry}
+
+% ---------------- Fonts ----------------------------------------------
+\usepackage{fontspec}
+% Body: Times New Roman (falls back to a Times clone if not installed)
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{%
+  \IfFontExistsTF{TeX Gyre Termes}{\setmainfont{TeX Gyre Termes}}{%
+    \setmainfont{Liberation Serif}}}
+% Header / footer: Calibri (falls back to Carlito, its metric clone)
+\IfFontExistsTF{Calibri}{\newfontfamily\hffont{Calibri}}{%
+  \IfFontExistsTF{Carlito}{\newfontfamily\hffont{Carlito}}{%
+    \newfontfamily\hffont{Liberation Sans}}}
+
+% ---------------- Packages -------------------------------------------
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{setspace}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{titletoc}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage[labelsep=colon]{caption}
+\usepackage[numbers,square,sort&compress]{natbib}
+\usepackage[hidelinks]{hyperref}   % clickable TOC entries, no coloured boxes
+
+\definecolor{wordred}{HTML}{FF0000}
+\newcommand{\red}[1]{\textcolor{wordred}{#1}}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+% =====================================================================
+%  EDIT THESE DETAILS
+% =====================================================================
+\newcommand{\projecttitle}{World Models for Longitudinal Glioma MRI}
+\newcommand{\monthyear}{November 2026}       % header (right) and title page
+\newcommand{\guidename}{Dr. Manju Venugopalan, Assistant Professor (Selection Grade)}
+
+% ---------------- Headers and footers --------------------------------
+% Front matter: centred roman page number only
+\fancypagestyle{front}{%
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0pt}
+  \fancyfoot[C]{\thepage}}
+
+% Main chapters: CURRENT CHAPTER NAME (left, automatic) | Month, year (right)
+% Footer: Dept. of CSE, ASC, Bengaluru (left) | Page | n (right)
+\fancypagestyle{main}{%
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0pt}
+  \fancyhead[L]{\hffont\small\leftmark}
+  \fancyhead[R]{\hffont\small\monthyear}
+  \fancyfoot[L]{\hffont\small\vspace*{\baselineskip}Dept. of CSE, ASAI, Bengaluru}
+  \fancyfoot[R]{\hffont\small Page | \thepage\vspace*{\baselineskip}}}
+\fancypagestyle{plain}{}          % chapter pages keep the same header
+
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}   % header = chapter title
+\renewcommand{\sectionmark}[1]{}
+
+% \chapter does NOT start a new page by itself (so notes can sit above
+% the heading). Put \clearpage before every \chapter.
+\makeatletter
+\renewcommand{\chapter}{\global\@topnum\z@\@afterindentfalse
+  \secdef\@chapter\@schapter}
+\makeatother
+
+% ---------------- Headings -------------------------------------------
+% Chapter:  "CHAPTER - n"  and the title below, centred, bold, 14 pt
+\titleformat{\chapter}[display]
+  {\normalfont\fontsize{14}{17}\bfseries\centering}
+  {CHAPTER - \thechapter}{6pt}{\MakeUppercase}
+\titlespacing*{\chapter}{0pt}{0pt}{18pt}
+% Section 1.1 (bold 12 pt), Subsection 1.1.1 (bold 12 pt)
+\titleformat{\section}{\normalfont\fontsize{12}{14}\bfseries}{\thesection}{0.6em}{}
+\titlespacing*{\section}{0pt}{12pt}{6pt}
+\titleformat{\subsection}{\normalfont\fontsize{12}{14}\bfseries}{\thesubsection}{0.6em}{}
+\titlespacing*{\subsection}{0pt}{10pt}{4pt}
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}          % TOC shows chapters, sections, subsections
+
+% ---------------- Table of Contents style ----------------------------
+\contentsmargin{0.5in}
+\newcommand{\tocdots}{\titlerule*[0.6pc]{.}}
+% Chapters: "CHAPTER 1 – INTRODUCTION ........ 1"
+\titlecontents{chapter}[0pt]{\addvspace{3pt}}
+  {CHAPTER \thecontentslabel\ -- \MakeUppercase}
+  {\hspace*{0.25in}\MakeUppercase}            % un-numbered entries
+  {\tocdots\contentspage}
+% Sections: "1.1 INTRODUCTION TO ....... 2"
+\titlecontents{section}[0.95in]{}
+  {\contentslabel{0.45in}\MakeUppercase}{\MakeUppercase}
+  {\tocdots\contentspage}
+% Subsections: "5.2.1 ..........  4"
+\titlecontents{subsection}[1.55in]{}
+  {\contentslabel{0.6in}\MakeUppercase}{\MakeUppercase}
+  {\tocdots\contentspage}
+% Figures and tables: "1.1   Role hierarchy ........ 5"
+\titlecontents{figure}[0.55in]{\addvspace{2pt}}
+  {\contentslabel{0.55in}}{}{\tocdots\contentspage}
+\titlecontents{table}[0.55in]{\addvspace{2pt}}
+  {\contentslabel{0.55in}}{}{\tocdots\contentspage}
+
+\renewcommand{\contentsname}{TABLE OF CONTENTS}
+\renewcommand{\listfigurename}{List Of Figures}
+\renewcommand{\listtablename}{List Of Tables}
+\renewcommand{\bibname}{REFERENCES}
+
+% ---------------- Captions -------------------------------------------
+% Figures: "Fig. 1.1: Title" below the figure; Tables: "Table 1.1: Title" above
+\captionsetup[figure]{name=Fig., font=bf, labelfont=bf, skip=6pt}
+\captionsetup[table]{name=Table, font=bf, labelfont=bf, position=top, skip=6pt}
+
+% ---------------- References (IEEE style numbering "[1].") -----------
+\renewcommand{\bibnumfmt}[1]{[#1].}
+\setlength{\bibsep}{2pt}
+\renewcommand{\bibpreamble}{}
+
+
+\usepackage{longtable}
+\usepackage{float}
+\usepackage[section]{placeins}
+\usepackage{microtype}
+\setlength{\headheight}{14pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\bottomfraction}{0.75}
+\renewcommand{\textfraction}{0.10}
+\renewcommand{\floatpagefraction}{0.65}
+\newcommand{\frontchapter}[1]{\clearpage\phantomsection\addcontentsline{toc}{chapter}{#1}\chapter*{#1}}
+
+\begin{document}\addtocontents{toc}{\protect\hfill\textbf{Page No.}\protect\par}
+\input{frontmatter}
+\input{chapters/chapter1}
+\input{chapters/chapter2}
+\input{chapters/chapter3}
+\input{chapters/chapter4}
+\input{chapters/chapter5}
+\input{chapters/chapter6}
+\input{chapters/chapter7}
+\input{chapters/chapter8}
+\input{references}\end{document}

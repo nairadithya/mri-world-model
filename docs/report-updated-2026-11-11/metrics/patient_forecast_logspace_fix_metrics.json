@@ -1,0 +1,133 @@
+{
+  "date": "2026-11-08",
+  "change": "Stable log-space anatomical mixture cross-entropy, replacing probability flooring inside the cutoff-observed inference domain.",
+  "status": "Numerical defect repaired; fixed update-6000 candidate fails all six nonempty-core development-selection conditions. No checkpoint promoted.",
+  "scope": "Correctness repair and one bounded candidate, not the proposed presence/amount/location redesign. Prior experiment closures remain unchanged.",
+  "gradient_check": {
+    "scope": "one real fitting pair; no selection or reserved cases",
+    "horizon": 24,
+    "current_predicted_core_ml": 0.14499999582767487,
+    "target_core_ml": 50.3120002746582,
+    "positive_core_coarse_cells": 8144,
+    "positive_core_cells_below_old_floor": 6879,
+    "old_ce": 0.2190784066915512,
+    "new_ce": 0.36255061626434326,
+    "gradient_scope": "true-core likelihood term on cells below the old probability floor",
+    "old_true_core_logit_gradient_l1": 0,
+    "new_true_core_logit_gradient_l1": 0.004544578958302736,
+    "new_gradient_finite": true,
+    "selected_checkpoint_inference_exact": true
+  },
+  "full_assessment": {
+    "status": "no eligible checkpoint",
+    "steps": 6000,
+    "new_updates": 5500,
+    "resumed_from_update": 500,
+    "candidate_step": 6000,
+    "gate_passed": false,
+    "selected_update": null,
+    "selection_targets": 58,
+    "gate_horizons": {
+      "12": {
+        "eligible": false,
+        "conditions": {
+          "expected_dice_at_least_persistence": false,
+          "mean_volume_mae_no_worse_than_persistence": false,
+          "volume_crps_no_worse_than_frozen_scalar": false
+        },
+        "patients": 15,
+        "targets": 21,
+        "means": {
+          "expected_core_dice": 0.02061963272040788,
+          "persistence_core_dice": 0.18282560888838298,
+          "core_mean_volume_mae_ml": 2.8629137894863055,
+          "persistence_core_mae_ml": 1.6919166099694039,
+          "core_crps_ml": 2.8229972908945964,
+          "scalar_core_crps_ml": 1.6929129439923498,
+          "core_coverage90": 0,
+          "core_width90_ml": 0.256600030263265,
+          "core_vote_dice": 0.02118233366688249,
+          "old_spatial_core_vote_dice": 0.0184270587161826,
+          "old_spatial_core_mae_ml": 2.9331469845958056,
+          "old_spatial_core_crps_ml": 2.865655654642938,
+          "old_spatial_core_coverage90": 0.06666666666666667,
+          "old_spatial_core_width90_ml": 0.35438889465812184
+        }
+      },
+      "24": {
+        "eligible": false,
+        "conditions": {
+          "expected_dice_at_least_persistence": false,
+          "mean_volume_mae_no_worse_than_persistence": false,
+          "volume_crps_no_worse_than_frozen_scalar": false
+        },
+        "patients": 8,
+        "targets": 12,
+        "means": {
+          "expected_core_dice": 0,
+          "persistence_core_dice": 0.13613984089043807,
+          "core_mean_volume_mae_ml": 3.7719373378010155,
+          "persistence_core_mae_ml": 1.280645814180995,
+          "core_crps_ml": 3.766791181425409,
+          "scalar_core_crps_ml": 1.3701663774748642,
+          "core_coverage90": 0.125,
+          "core_width90_ml": 0.07312500476837158,
+          "core_vote_dice": 0,
+          "old_spatial_core_vote_dice": 0.012258857783803182,
+          "old_spatial_core_mae_ml": 3.597085374970144,
+          "old_spatial_core_crps_ml": 3.528148816685037,
+          "old_spatial_core_coverage90": 0,
+          "old_spatial_core_width90_ml": 0.34652084938716143
+        }
+      }
+    },
+    "patient_averaged_metrics": {
+      "12": {
+        "patients": 18,
+        "targets": 36,
+        "dice": 0.339396056908741,
+        "volume_mae_ml": 11.526594930224949,
+        "volume_crps_ml": 9.56164431737529,
+        "coverage90": 0.4930555555555556,
+        "width90_ml": 31.558681362205082,
+        "dice_definition": "Weighted-vote map, mean of four compartments; not expected scenario Dice"
+      },
+      "24": {
+        "patients": 13,
+        "targets": 22,
+        "dice": 0.35363353120488294,
+        "volume_mae_ml": 18.245445346220944,
+        "volume_crps_ml": 15.217562310206583,
+        "coverage90": 0.5224358974358975,
+        "width90_ml": 40.13784834666129,
+        "dice_definition": "Weighted-vote map, mean of four compartments; not expected scenario Dice"
+      }
+    },
+    "training_seconds": 384.1108583320165,
+    "selection_seconds": 240.2410994200036,
+    "elapsed_seconds": 624.3699533789186,
+    "reload_passed": true,
+    "reserved_images_opened": 0,
+    "scope": "One fixed corrected-loss candidate at update 6000, evaluated once on all 58 development targets; no checkpoint competition"
+  },
+  "verification": {
+    "host": "mosaic-gpu",
+    "focused_tests_passed": 10,
+    "existing_checkpoint_inference_unchanged_on_real_fitting_pair": true,
+    "full_candidate_fitting_pair_reload_exact": true
+  },
+  "artifacts": {
+    "gpu_root": "/home/aditya/experiments/world-model-logspace-fix-20261108",
+    "source": "src/patient_state/structured.py",
+    "regression_test": "tests/test_anatomical_likelihood.py",
+    "training_scripts": "patch/pilot.py and patch/finish_corrected.py",
+    "checkpoint": "complete/last.pt",
+    "assessment": "complete/selection.json and complete/gate.json"
+  },
+  "limitations": [
+    "Development-selection evidence only; reserved patients unopened.",
+    "The 500-update pilot and retained old final-checkpoint check used a 12-target subset and were diagnostics, not full acceptance assessments.",
+    "Expected sample-wise core Dice is distinct from weighted-vote-map Dice.",
+    "The corrected candidate was evaluated at one fixed endpoint; this is not evidence that no other checkpoint or formulation could work."
+  ]
+}

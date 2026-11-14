@@ -1,0 +1,146 @@
+{
+  "r65_lumiere_metrics.json": {
+    "source": "info/r65_lumiere_metrics.json",
+    "sha256": "7fcb731e3dd260c91643f46aa74857de1a4a8bb6048ff04db32e917670f54b45"
+  },
+  "r69_spatial_access_metrics.json": {
+    "source": "info/r69_spatial_access_metrics.json",
+    "sha256": "ae3677d87a0319fc9676dcb60d94ba7965bd8c49eea2689701bec2e2bb63be36"
+  },
+  "patient_cavity_observation_metrics.json": {
+    "source": "info/patient_cavity_observation_metrics.json",
+    "sha256": "479dd49015e8c83bb256972cd348cd7c37c25e6a0dcacf809ce2fca82c093365"
+  },
+  "patient_structured_forecasting_metrics.json": {
+    "source": "info/patient_structured_forecasting_metrics.json",
+    "sha256": "a104daf3f4d4a348cb8549cd5def58c0d4e6376f3f66508b707bf4d5e8aca53f"
+  },
+  "patient_forecast_interpretation_metrics.json": {
+    "source": "info/patient_forecast_interpretation_metrics.json",
+    "sha256": "e47b061eb68bcca3bed1ba0e583565d7b42c8c634e5fdf1ae8868d7797dc83f9"
+  },
+  "patient_acquisition_jepa_metrics.json": {
+    "source": "info/patient_acquisition_jepa_metrics.json",
+    "sha256": "80d95e09ee859432085dec543313759e8b7044aa2d53eaf5f54abe3d09f755bb"
+  },
+  "reviewed_reference_metrics.json": {
+    "source": "info/plots/reviewed_reference_metrics.json",
+    "sha256": "35e4048d6219144f967d35abf0355368b038035b67b2c633d4b5dbfd83d201ae",
+    "report_use": "Current-anatomy supervision and corrected reference comparisons"
+  },
+  "r36_phase1_metrics.json": {
+    "source": "info/r36_phase1_metrics.json",
+    "sha256": "5fd08fb735011ab90203b1d79bee869e7c30aeae6f7c48315166fb53854660a6",
+    "report_use": "Observed anatomical change"
+  },
+  "r37_full_metrics.json": {
+    "source": "info/r37_full_metrics.json",
+    "sha256": "bf36341fbe581329a9bd2cc11a49deef8a552a455dcab0fb66b4b13074b12b9f",
+    "report_use": "Frozen-state history forecasting"
+  },
+  "r38_full_metrics.json": {
+    "source": "info/r38_full_metrics.json",
+    "sha256": "0bdc7fd9b802f7c3b2d256314b7b86ee83ddb69622692bd30d88497a55a54d83",
+    "report_use": "Joint encoder and forecast training"
+  },
+  "r39_treatment_metrics.json": {
+    "source": "info/r39_treatment_metrics.json",
+    "sha256": "df41f0855a5c64807b72e129ad8738aeed92e1bd119df73c9c798bda4db228ab",
+    "report_use": "Treatment-status inputs"
+  },
+  "r40_full_metrics.json": {
+    "source": "info/r40_full_metrics.json",
+    "sha256": "89bf1e240da91fc4356261e72b64e32ab1b5dff8bef7913c6dcefd1fd23ef7c8",
+    "report_use": "Supplied-horizon history forecasting"
+  },
+  "r47_anatomical_signal_metrics.json": {
+    "source": "info/r47_anatomical_signal_metrics.json",
+    "sha256": "ffa5b6e4bcf17e5dbca00a057a92d6f65f14e3d479e51d4050729caab9bd7c35",
+    "report_use": "Measured current anatomy and transfer"
+  },
+  "r49_pretraining_state_metrics.json": {
+    "source": "info/r49_pretraining_state_metrics.json",
+    "sha256": "ebda6008b35be832ef28cf9c2501c40f250ba35e04834dacc3168108768c0e6c",
+    "report_use": "Matched pretrained and random initialization"
+  },
+  "r50_r51_v3_clinical_metrics.json": {
+    "source": "info/r50_r51_v3_clinical_metrics.json",
+    "sha256": "8ea94f089bb3fb3061ea180eb715c27275d7ea6b1e47ea2e2cda23dbebe9f369",
+    "report_use": "Clinical objective comparisons"
+  },
+  "r53_flair_prediction_metrics.json": {
+    "source": "info/r53_flair_prediction_metrics.json",
+    "sha256": "3186b3dde3df31ed658ffa16426a6a17b529200708f2b58c0caa13c3bc3108c3",
+    "report_use": "FLAIR completion and forecasting"
+  },
+  "r54_flair_learnability_metrics.json": {
+    "source": "info/r54_flair_learnability_metrics.json",
+    "sha256": "0f36a8f3fdc80dc615f03a1cdfdfbe55319b9740355568d313916c79fe082551",
+    "report_use": "Two-patient fitting diagnostic"
+  },
+  "r55_decoder_capacity_metrics.json": {
+    "source": "info/r55_decoder_capacity_metrics.json",
+    "sha256": "93e23454964a52f42aee3df8f0e62d1f97ba13aefae3daf249b67bf87932957f",
+    "report_use": "Direct spatial-code fitting diagnostic"
+  },
+  "r60_regional_source_target_metrics.json": {
+    "source": "info/r60_regional_source_target_metrics.json",
+    "sha256": "62791c6e15815504013e9bbdc2d24a4df73847424903799cec75d8e68443c032",
+    "report_use": "Source-volume conservation and coarse-sampling discrepancies"
+  },
+  "r61_corrected_history_metrics.json": {
+    "source": "info/r61_corrected_history_metrics.json",
+    "sha256": "35ce04e12e9b207a283e8581951267d5491ef185cfca8625c281049b4d626bf9",
+    "report_use": "Corrected LUMIERE regional history"
+  },
+  "r62_mu_history_metrics.json": {
+    "source": "info/r62_mu_history_metrics.json",
+    "sha256": "d1ea5dd40e1a4721cb6e59b6a9e235265d85c9ad590b2d4a2990e1f09ee473cd",
+    "report_use": "MU regional measured history"
+  },
+  "r63_observable_state_metrics.json": {
+    "source": "info/r63_observable_state_metrics.json",
+    "sha256": "a1697efcb8d88c0f699a6a3da6746f527ddaf105da1aaaf75cf7e03c603002c7",
+    "report_use": "Shape-and-activity simulator"
+  },
+  "r67_history_metrics.json": {
+    "source": "info/r67_history_metrics.json",
+    "sha256": "7b0e3b5b8045cdb7b59b8228a45c1477297276a2127b34fb1552ebe54acb57bc",
+    "report_use": "History-assisted current-FLAIR completion"
+  },
+  "r70_frozen_readout_metrics.json": {
+    "source": "info/r70_frozen_readout_metrics.json",
+    "sha256": "4a43c0bb7bf726feeeba23f2aaf2c582d68698038f55df26950c7ab9c5400687",
+    "report_use": "New readouts of frozen compact states"
+  },
+  "r71_complete_reuse_metrics.json": {
+    "source": "info/r71_complete_reuse_metrics.json",
+    "sha256": "b5a7e1c987c00f51f5f61f79fb5c3d6952ad2759b4cee8d96f2e6e4c8a65461a",
+    "report_use": "Segmentation from the full frozen state and its storage cost"
+  },
+  "patient_cavity_forecasting_metrics.json": {
+    "source": "info/patient_cavity_forecasting_metrics.json",
+    "sha256": "1d8340bfac2b705e4ef7b26b831eee5bd197aa28ae51759bb4b52e576b14e6f6",
+    "report_use": "Forecasts from the cavity-supervised observation state"
+  },
+  "patient_amount_first_metrics.json": {
+    "source": "info/patient_amount_first_metrics.json",
+    "sha256": "7cf134fcd007dd8bd51fede9fa3624e876667f386e68efe2ada8e71406883897",
+    "report_use": "Presence and quantity fitting"
+  },
+  "patient_gaussian_count_metrics.json": {
+    "source": "info/patient_gaussian_count_metrics.json",
+    "sha256": "734c8c744d160b5d3f24ef8c31d8c01d226596752ed24daa1f27dbeef4bbc69d",
+    "report_use": "Gaussian quantity distributions and exact scoring"
+  },
+  "patient_linear_quantity_metrics.json": {
+    "source": "info/patient_linear_quantity_metrics.json",
+    "sha256": "4cd04de1764c1c4901b8583dccf4d32da3c8d296403dbb616af5cf9aa6496c26",
+    "report_use": "Regularized scalar and PCA-MRI quantity models"
+  },
+  "patient_forecast_logspace_fix_metrics.json": {
+    "source": "info/patient_forecast_logspace_fix_metrics.json",
+    "sha256": "289984e3f1788bac0b2c15105d3f9b0a863db4b15e5f8b2d95010f0b545cca1f",
+    "report_use": "Stable forecast likelihood and unchanged inference"
+  }
+}

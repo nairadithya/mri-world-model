@@ -52,6 +52,10 @@ Thumbs.db
 # Local report includes controlled-access research figures (previously under outputs).
 /docs/report/
 
+# Keep the updated report and its vector figures with their LaTeX sources.
+!/docs/report-updated-2026-11-11/report.pdf
+!/docs/report-updated-2026-11-11/figures/*.pdf
+
 # Private case provenance and local research workspaces
 /scratch/
 /.audit/
